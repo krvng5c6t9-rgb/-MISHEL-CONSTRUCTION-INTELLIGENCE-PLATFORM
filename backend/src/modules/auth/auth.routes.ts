@@ -185,7 +185,7 @@ authRouter.post('/bootstrap-admin', asyncHandler(async (req, res) => {
     `, [orgId, body.role_name]);
     const role = roleResult.rows[0];
 
-    const modules = ['admin','projects','boq','procurement','finance','cost_control','approvals','technical_office','planning','site','hr','assets','qaqc','hse','edms','dashboards','reports','portals','system','crm','tendering','contracts','notifications','ai_platform','commercial_platform','automation','knowledge'];
+    const modules = ['admin','projects','boq','procurement','finance','cost_control','approvals','technical_office','planning','site','hr','assets','qaqc','hse','edms','dashboards','reports','portals','system','crm','tendering','contracts','notifications','ai_platform','commercial_platform','automation','knowledge','vendors'];
     const actions = ['view','create','edit','approve','delete','export','manage','post'];
     for (const module of modules) {
       for (const action of actions) {

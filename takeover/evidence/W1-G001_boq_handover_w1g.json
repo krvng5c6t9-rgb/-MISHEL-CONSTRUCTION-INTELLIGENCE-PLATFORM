@@ -1,7 +1,7 @@
 {
   "suite": "wave1_boq_handover",
-  "run": "w1b",
-  "tag": "w1b",
+  "run": "w1g",
+  "tag": "w1g",
   "steps": [
     {
       "name": "confirm fixture DOA contract_signing L1",

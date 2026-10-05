@@ -1,0 +1,585 @@
+{
+  "suite": "wave1_vendor_master",
+  "run": "w1g",
+  "tag": "w1g",
+  "steps": [
+    {
+      "name": "viewer cannot create vendor",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: vendors.create\""
+    },
+    {
+      "name": "invalid email rejected",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "clerk creates vendor V1 (pending prequalification)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "new vendor is pending, active, not blacklisted, no bank",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "duplicate tax id in same tenant refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint uq_vendor_tax_id_per_org\""
+    },
+    {
+      "name": "RFQ with unqualified vendor refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Vendor 2 is not eligible (active=t, blacklisted=f, prequalification=pending)\""
+    },
+    {
+      "name": "PO with unqualified vendor refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Vendor 2 is not eligible (active=t, blacklisted=f, prequalification=pending)\""
+    },
+    {
+      "name": "subcontract with unqualified vendor refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Vendor 2 is not eligible (active=t, blacklisted=f, prequalification=pending)\""
+    },
+    {
+      "name": "creator cannot prequalify own vendor (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the user who created the vendor cannot decide its prequalification\""
+    },
+    {
+      "name": "clerk without vendors.approve cannot prequalify",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: vendors.approve\""
+    },
+    {
+      "name": "prequalification needs a reason",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "approver prequalifies V1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "RFQ with prequalified vendor accepted",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approver A1 blacklists V1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "quotation from blacklisted vendor refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Vendor 2 is not eligible (active=t, blacklisted=t, prequalification=approved)\""
+    },
+    {
+      "name": "blacklisted vendor cannot be prequalified",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"A blacklisted vendor cannot be prequalified\""
+    },
+    {
+      "name": "same approver cannot lift own blacklist (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the user who blacklisted the vendor cannot lift the blacklist\""
+    },
+    {
+      "name": "second approver lifts blacklist",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "quotation accepted after lift",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "bank details cannot be set through edit",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"No fields to update\""
+    },
+    {
+      "name": "clerk requests bank change",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "second pending request refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"A bank change request is already pending for this vendor\""
+    },
+    {
+      "name": "approval without verification refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "approver verifies by callback and approves",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "viewer sees masked account, approver sees full",
+      "outcome": "PASS",
+      "detail": "****0001 / EG00w1g0001"
+    },
+    {
+      "name": "requester cannot approve own bank change (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the requester cannot decide their own bank change\""
+    },
+    {
+      "name": "account already used by another vendor refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"This bank account is already registered to another active vendor\""
+    },
+    {
+      "name": "duplicate-account request rejected with note",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "event trail complete",
+      "outcome": "PASS",
+      "detail": "created,prequalification_approved,blacklisted,unblacklisted,bank_details_changed"
+    },
+    {
+      "name": "DB: app role cannot unblacklist/requalify directly",
+      "outcome": "PASS",
+      "detail": "ERROR:  Vendor status, prequalification, blacklist and bank details change only through governed workflows"
+    },
+    {
+      "name": "DB: app role cannot change bank account directly",
+      "outcome": "PASS",
+      "detail": "ERROR:  Vendor status, prequalification, blacklist and bank details change only through governed workflows"
+    },
+    {
+      "name": "DB: app role cannot insert pre-approved vendor",
+      "outcome": "PASS",
+      "detail": "ERROR:  New vendors start pending prequalification, active, not blacklisted and without bank details"
+    },
+    {
+      "name": "DB: vendor cannot be deleted (owner role)",
+      "outcome": "PASS",
+      "detail": "ERROR:  Vendors cannot be deleted; deactivate instead"
+    },
+    {
+      "name": "DB: vendor event log is append-only (owner role)",
+      "outcome": "PASS",
+      "detail": "ERROR:  vendor_status_events is append-only"
+    },
+    {
+      "name": "DB: decided bank change cannot be edited (owner role)",
+      "outcome": "PASS",
+      "detail": "ERROR:  vendor bank change request: only pending -> approved/rejected is permitted"
+    },
+    {
+      "name": "DB: contact details still editable directly",
+      "outcome": "PASS",
+      "detail": "UPDATE 1"
+    },
+    {
+      "name": "tenant B cannot read tenant A vendor",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Vendor not found\""
+    },
+    {
+      "name": "tenant B cannot prequalify tenant A vendor",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Vendor not found\""
+    },
+    {
+      "name": "tenant B cannot decide tenant A bank change",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Bank change request not found\""
+    },
+    {
+      "name": "tenant B vendor list has no tenant A vendors",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot put tenant A vendor on its PO",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Cross-tenant vendor on PO\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: vendors.create"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint uq_vendor_tax_id_per_org"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/rfqs",
+      "status": 422,
+      "ok": false,
+      "error": "Vendor 2 is not eligible (active=t, blacklisted=f, prequalification=pending)"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders",
+      "status": 422,
+      "ok": false,
+      "error": "Vendor 2 is not eligible (active=t, blacklisted=f, prequalification=pending)"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts",
+      "status": 422,
+      "ok": false,
+      "error": "Vendor 2 is not eligible (active=t, blacklisted=f, prequalification=pending)"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/4/prequalification",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the user who created the vendor cannot decide its prequalification"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/2/prequalification",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: vendors.approve"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/2/prequalification",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/2/prequalification",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/rfqs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/2/blacklist",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/rfqs/4/vendor-quotations",
+      "status": 422,
+      "ok": false,
+      "error": "Vendor 2 is not eligible (active=t, blacklisted=t, prequalification=approved)"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/2/prequalification",
+      "status": 409,
+      "ok": false,
+      "error": "A blacklisted vendor cannot be prequalified"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/2/unblacklist",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the user who blacklisted the vendor cannot lift the blacklist"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/2/unblacklist",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/rfqs/4/vendor-quotations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/vendors/2",
+      "status": 400,
+      "ok": false,
+      "error": "No fields to update"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/2/bank-change-requests",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/2/bank-change-requests",
+      "status": 409,
+      "ok": false,
+      "error": "A bank change request is already pending for this vendor"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/1/approve",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/1/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/vendors/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/vendors/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/5/bank-change-requests",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/2/approve",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the requester cannot decide their own bank change"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/2/approve",
+      "status": 409,
+      "ok": false,
+      "error": "This bank account is already registered to another active vendor"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/2/reject",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/vendors/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/vendors/2",
+      "status": 404,
+      "ok": false,
+      "error": "Vendor not found"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/5/prequalification",
+      "status": 404,
+      "ok": false,
+      "error": "Vendor not found"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/1/reject",
+      "status": 404,
+      "ok": false,
+      "error": "Bank change request not found"
+    },
+    {
+      "method": "GET",
+      "path": "/vendors",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders",
+      "status": 422,
+      "ok": false,
+      "error": "Cross-tenant vendor on PO"
+    }
+  ]
+}

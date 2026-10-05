@@ -57,7 +57,7 @@ gc('GC-05', 'BOQ/QTO/Estimate', [
 ])
 gc('GC-06', 'Procurement Package', [
     ('Raise material requisition from approved demand', 'Site/engineer', 'BOQ line, activity', 'MR', 'MR qty <= remaining BOQ qty unless flagged', 'SOD15-001', 'L2', 'RUNTIME', 'MR + approval (chain)', ''),
-    ('Vendor prequalification and integrity screening', 'Procurement', 'vendor data', 'approved vendor list', 'screening hits block award', 'vendor-master editor != payment approver', 'L1 screening summary', 'ABSENT', 'F-02 no vendor API; seeded by SQL', 'G-002,NDC-019'),
+    ('Vendor prequalification and integrity screening', 'Procurement', 'vendor data', 'approved vendor list', 'only prequalified, active, non-blacklisted vendors can be engaged (DB-enforced)', 'creator != prequalifier; bank change requester != decider (CC-016)', 'L1 screening summary', 'PARTIAL', 'CC-016 vendor master 41/41; integrity screening (beneficial owner, sanctions) still NDC-019', 'G-002,NDC-019'),
     ('RFQ issue', 'Buyer', 'MR, vendors', 'RFQ', 'min number of bidders = tenant configuration', 'none', 'L2', 'RUNTIME', 'RFQ (chain)', ''),
     ('Receive quotations and clarify', 'Buyer', 'quotes', 'quotation records', 'sealed until bid close (configurable)', 'none', 'L2 normalisation', 'RUNTIME', 'vendor-quotations (chain)', ''),
     ('Comparative statement and recommendation', 'Buyer + technical evaluator', 'quotes', 'comparison, recommendation', 'technical compliance before price', 'SOD15-021', 'L2', 'RUNTIME', 'comparative-statements (chain)', ''),

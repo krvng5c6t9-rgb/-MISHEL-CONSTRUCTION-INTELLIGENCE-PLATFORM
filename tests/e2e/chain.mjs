@@ -4,9 +4,8 @@
 // EVERY amount, DOA threshold, account code and permission grant below is a TEST FIXTURE chosen to
 // exercise code paths. None of them is an owner-approved business value.
 //
-// Exception to "API only": vendors_subcontractors has no create endpoint in v0.2, so the harness
-// inserts one vendor row via SQL (see seedVendor). That gap is itself a finding (F-R0-VENDOR-API).
-import { execFileSync } from 'node:child_process';
+// Vendors are created and prequalified through the governed vendor API (CC-016, G-002). Until CC-016
+// the harness seeded one vendor by SQL because no vendor API existed (finding F-02).
 import { createHash } from 'node:crypto';
 import { writeFileSync } from 'node:fs';
 import { api, must, log } from './lib.mjs';
@@ -15,7 +14,6 @@ const RUN = process.env.RUN_ID ?? String(Date.now()).slice(-6);
 // Business codes have DB length limits (e.g. account_code <= 20); use a short tag derived from RUN.
 const TAG = /^[A-Za-z0-9]{1,8}$/.test(RUN) ? RUN : createHash('sha256').update(RUN).digest('hex').slice(0, 8);
 const ADMIN = { email: process.env.ADMIN_EMAIL ?? 'admin.a@test.local', password: process.env.ADMIN_PASSWORD ?? 'Passw0rd!A', org_id: Number(process.env.ORG_ID ?? 1) };
-const PSQL = process.env.PSQL_URL;
 const steps = [];
 function step(name, outcome, detail = '') { steps.push({ name, outcome, detail }); console.log(`${outcome.padEnd(5)} ${name}${detail ? ' :: ' + detail : ''}`); }
 async function run(name, fn) { try { const v = await fn(); step(name, 'PASS'); return v; } catch (e) { step(name, 'FAIL', e.message.slice(0, 300)); throw e; } }
@@ -28,15 +26,6 @@ async function expectFail(name, fn, status) {
 }
 const login = async (email, password, org_id = ADMIN.org_id) => must(await api('POST', '/auth/login', null, { email, password, org_id }), `login ${email}`).token;
 
-function seedVendor(orgId, name) {
-  // PSQL_URL: a connection string for a role allowed to write vendors_subcontractors.
-  if (!PSQL) throw new Error('PSQL_URL not set; cannot seed vendor (no vendor create API exists)');
-  const sql = `insert into vendors_subcontractors(org_id,vendor_name,vendor_type) values(${Number(orgId)},$v$${name}$v$,'supplier') returning id`;
-  const out = execFileSync('psql', [PSQL, '-At', '-v', 'ON_ERROR_STOP=1', '-c', sql]).toString().trim();
-  const vid = Number(out.split('\n')[0]);
-  if (!Number.isInteger(vid) || vid <= 0) throw new Error(`vendor seed returned ${JSON.stringify(out)}`);
-  return vid;
-}
 
 const today = new Date().toISOString().slice(0, 10);
 const ids = {};
@@ -52,7 +41,8 @@ try {
   for (const rid of [R.proc, R.fin]) {
     await run(`grant fixture permissions to role ${rid}`, async () => must(await api('PUT', `/roles/${rid}/permissions`, admin, { permissions: [
       { module: 'approvals', action: 'view', scope: 'all' }, { module: 'approvals', action: 'approve', scope: 'all' },
-      { module: 'procurement', action: 'view', scope: 'all' }, { module: 'finance', action: 'view', scope: 'all' }] }), 'perm'));
+      { module: 'procurement', action: 'view', scope: 'all' }, { module: 'finance', action: 'view', scope: 'all' },
+      { module: 'vendors', action: 'view', scope: 'all' }, { module: 'vendors', action: 'approve', scope: 'all' }] }), 'perm'));
   }
 
   const mkUser = async (key, role_id) => {
@@ -89,7 +79,10 @@ try {
   await run('add rate build-up', async () => must(await api('POST', `/boq/master/${ids.boq}/rate-buildup`, admin, { resource_type: 'material', quantity_per_unit: 1, unit_cost: 200 }), 'rb'));
 
   // --- Procurement
-  ids.vendor = await run('seed vendor via SQL (no API exists)', async () => seedVendor(ADMIN.org_id, `E2E Vendor ${TAG}`));
+  ids.vendor = await run('create vendor (API)', async () => must(await api('POST', '/vendors', admin, { vendor_name: `E2E Vendor ${TAG}`, vendor_type: 'supplier' }), 'vendor').id);
+  await expectFail('RFQ with unqualified vendor rejected', () => api('POST', '/procurement/rfqs', admin, { project_id: ids.project, rfq_ref: `RFQX-${TAG}`, vendor_ids: [ids.vendor] }), 422);
+  await expectFail('SoD: vendor creator cannot prequalify', () => api('POST', `/vendors/${ids.vendor}/prequalification`, admin, { decision: 'approved', reason: 'e2e fixture' }), 403);
+  await run('prequalify vendor (Procurement Manager)', async () => must(await api('POST', `/vendors/${ids.vendor}/prequalification`, U.proc, { decision: 'approved', reason: 'e2e fixture prequalification' }), 'preq'));
   ids.wh = await run('create warehouse', async () => must(await api('POST', '/inventory/warehouses', admin, { project_id: ids.project, code: `WH-${TAG}`, name: 'E2E WH' }), 'wh').id);
   ids.item = await run('create inventory item', async () => must(await api('POST', '/inventory/items', admin, { item_code: `IT-${TAG}`, description: 'E2E item', unit_of_measure: 'm2', cost_code_id: 2 }), 'item').id);
   ids.mr = await run('create MR', async () => must(await api('POST', '/procurement/material-requisitions', admin, { project_id: ids.project, mr_no: `MR-${TAG}`, lines: [{ item_description: 'E2E material', unit_of_measure: 'm2', quantity: 100 }] }), 'mr').id);
