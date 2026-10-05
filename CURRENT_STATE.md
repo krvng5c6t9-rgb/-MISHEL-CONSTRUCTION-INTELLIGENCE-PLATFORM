@@ -7,7 +7,7 @@
 | Git commit | Exact snapshot commit SHA is in `SNAPSHOT_COMMIT.txt` inside the archive (this file cannot contain the SHA of the commit that adds it). R0 suites were last executed on that exact code (see archive verification below) |
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
-| PostgreSQL tested | 16.14 (docker-compose specifies 17: **PG 17 is UNVERIFIED**) |
+| PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI (CI run 37272015775 (jobs 111640832716 PG 16.15, 111640833225 PG 17.11), commit 60db79c): build, migrations 001–037, E2E chain and negative suite all passed |
 | Migrations | 37 (`database/migrations/001…037`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
@@ -52,7 +52,7 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 F-01 no execution-BOQ (`project_boq`) creation path · F-02 no vendor API · F-03 no tenant provisioning · F-04 no DOA create API / approver permissions; DOA values are placeholders/test fixtures · F-05 IPC revenue/retention posting: OPEN accounting design decision · F-06 `/projects` lacks `authorize()` · F-07 DB exceptions return HTTP 500 · F-08 unlimited bootstrap-token tenant creation · F-09 inherited static checks are not functional evidence · F-10 documentation drift · F-11 three Drive archives > 10 MB UNREAD.
 
 ## Install / build / migrate / run / test from zero
-Prerequisites: Node 22, npm 10, PostgreSQL 16+ (17 per compose, unverified).
+Prerequisites: Node 22, npm 10, PostgreSQL 16 or 17 (both verified in CI).
 ```bash
 # 1. Database roles (as a PostgreSQL superuser)
 psql -c "create role erp_owner login bypassrls password '<OWNER_PW>'"
@@ -88,6 +88,6 @@ Docker alternative: set `POSTGRES_PASSWORD`, `APP_DB_PASSWORD`, `JWT_SECRET`, `B
 ## VERIFIED vs UNVERIFIED
 **VERIFIED (executed, logs in `takeover/evidence/`):** build, migrations from zero on PG 16.14, API authentication, DOA-driven approvals with SoD and wrong-role rejection, the commercial-procurement-finance chain to a balanced GL, AP/AR creation, idempotency of GRN confirm and GL posting, cross-tenant read/write/approval isolation at API and DB level, bootstrap refusal on orgs with active users.
 
-**UNVERIFIED:** docker-compose runtime; PostgreSQL 17; frontend behaviour in a browser; every module outside the chain (HR/payroll, assets/plant, QA/QC, HSE, EDMS/CDE, planning, site, subcontracts, claims, variations, inventory transfers, portals, dashboards/reports, AI platform, automation, knowledge); performance/load; backup/restore/DR; penetration testing; production readiness of any kind. All DOA thresholds, CoA codes, GL rules and amounts used in tests are **TEST FIXTURES**, not owner-approved values.
+**UNVERIFIED:** docker-compose runtime; frontend behaviour in a browser; every module outside the chain (HR/payroll, assets/plant, QA/QC, HSE, EDMS/CDE, planning, site, subcontracts, claims, variations, inventory transfers, portals, dashboards/reports, AI platform, automation, knowledge); performance/load; backup/restore/DR; penetration testing; production readiness of any kind. All DOA thresholds, CoA codes, GL rules and amounts used in tests are **TEST FIXTURES**, not owner-approved values.
 
 No secrets are included: credentials appear only as `<placeholders>` and as test-only fixture passwords inside `tests/e2e`.

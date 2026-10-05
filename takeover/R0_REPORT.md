@@ -15,7 +15,7 @@ Scope: v0.2 baseline (`MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip`, SHA ver
 ## Does not work / not verified
 - Execution BOQ (`project_boq`) has no creation path. BOQ-linked PO lines, IPC lines, progress and variations cannot be exercised (F-01).
 - No vendor create API (F-02), no DOA create API (F-04), and no tenant provisioning (F-03). A new tenant cannot operate.
-- Not run: the full `docker compose` stack (no daemon), PG 17, the frontend in a browser, and the modules outside the chain (HR, assets, HSE, QA/QC, EDMS, planning, site, portals, AI/automation/knowledge). Load, performance, backup/restore and security pentest were also not run.
+- PG 17.11: verified later in CI (run 37272015775). Not run: the full `docker compose` stack (no daemon), the frontend in a browser, and the modules outside the chain (HR, assets, HSE, QA/QC, EDMS, planning, site, portals, AI/automation/knowledge). Load, performance, backup/restore and security pentest were also not run.
 
 ## Top 10 blockers (to commercial pilot)
 1. F-01: estimating→execution BOQ handover is missing, and so is the `project_boq` API.
@@ -26,7 +26,7 @@ Scope: v0.2 baseline (`MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip`, SHA ver
 6. F-08: the bootstrap-token tenant creation model is unsafe for multi-tenant SaaS.
 7. F-06/F-07: missing `authorize` on `/projects`; DB errors return 500.
 8. Runtime coverage of ~25 other modules is zero. They need the same E2E treatment (expect similar defect density).
-9. Deployment: compose with role separation is UNVERIFIED at runtime, and there is no PG 17 run, CI pipeline, backup or monitoring.
+9. Deployment: compose with role separation is UNVERIFIED at runtime, there is no backup or monitoring yet (CI gate on PG 16/17 now exists).
 10. F-09: test discipline. The repo's checks are grep-based, so the runtime E2E and isolation suites must become the CI gate.
 
 Next (per §23/§29): close F-06/F-07 (small), then the BOQ handover and tenant provisioning design. In parallel, start the M01–M11 / D01–D20 coverage map against the code. R0 is not the product scope.
