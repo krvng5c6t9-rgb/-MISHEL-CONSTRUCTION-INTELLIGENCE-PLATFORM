@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { query } from '../../db/pool.js';
+import { getClient, query, releaseClient } from '../../db/pool.js';
 import { asyncHandler } from '../../middleware/asyncHandler.js';
 import { authorize } from '../../middleware/authorize.js';
 import { AppError } from '../../middleware/errors.js';
@@ -38,4 +38,91 @@ boqRouter.post('/resources',authorize('boq','create'),asyncHandler(async(req,res
 boqRouter.get('/project/:projectId', asyncHandler(async (req, res) => {
   const rows = await query(`select id,item_no,section,description,unit_of_measure,contract_quantity,contract_unit_rate,contract_amount,revised_quantity,revised_amount,cost_code_id,is_locked from project_boq where project_id=$1 order by item_no`, [Number(req.params.projectId)]);
   res.json({ success: true, data: rows });
+}));
+
+// G-001: estimating -> execution BOQ handover (migration 038). A zero difference between the
+// handed-over BOQ total and the contract value completes immediately; any difference waits for
+// acceptance by a different user holding boq.approve, who must give a reason.
+const handoverSchema = z.object({
+  contract_id: z.number().int().positive(),
+  source_tender_id: z.number().int().positive().optional().nullable(),
+  difference_reason: z.string().trim().min(10).max(2000).optional().nullable()
+});
+
+async function sourceRows(client: import('pg').PoolClient, projectId: number, tenderId: number | null) {
+  const where = tenderId ? 'tender_id=$1' : 'project_id=$1';
+  return (await client.query(`select id,item_no,section,description,unit_of_measure,quantity,total_rate,cost_code_id from boq_master where ${where} order by item_no for update`, [tenderId ?? projectId])).rows;
+}
+const cents = (v: unknown) => Math.round(Number(v) * 100);
+
+async function completeHandover(client: import('pg').PoolClient, h: any, rows: any[]) {
+  for (const r of rows) {
+    await client.query(`insert into project_boq(org_id,project_id,boq_master_id,item_no,section,description,unit_of_measure,contract_quantity,contract_unit_rate,cost_code_id,is_locked,handover_id) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,true,$11)`,
+      [h.org_id, h.project_id, r.id, r.item_no, r.section, r.description, r.unit_of_measure, r.quantity, r.total_rate, r.cost_code_id, h.id]);
+  }
+}
+
+boqRouter.get('/project/:projectId/handovers', asyncHandler(async (req, res) => {
+  res.json({ success: true, data: await query(`select * from boq_handovers where project_id=$1 order by id desc`, [Number(req.params.projectId)]) });
+}));
+
+boqRouter.post('/project/:projectId/handover', authorize('boq', 'create'), asyncHandler(async (req, res) => {
+  const user = req.user!;
+  const projectId = Number(req.params.projectId);
+  if (!Number.isSafeInteger(projectId) || projectId <= 0) throw new AppError(400, 'Invalid project id');
+  const b = handoverSchema.parse(req.body);
+  const client = await getClient();
+  try {
+    await client.query('begin');
+    const project = (await client.query(`select id,org_id from projects where id=$1 for update`, [projectId])).rows[0];
+    if (!project) throw new AppError(404, 'Project not found');
+    const contract = (await client.query(`select id,contract_value,contract_status from contracts where id=$1 and project_id=$2 for share`, [b.contract_id, projectId])).rows[0];
+    if (!contract) throw new AppError(422, 'Contract not found for this project');
+    if (!['signed', 'active'].includes(contract.contract_status)) throw new AppError(409, 'Execution BOQ can only be created from a signed or active contract');
+    if ((await client.query(`select 1 from boq_handovers where project_id=$1 and status in ('pending_acceptance','completed')`, [projectId])).rows[0]) throw new AppError(409, 'Project already has a pending or completed BOQ handover');
+    if ((await client.query(`select 1 from project_boq where project_id=$1 limit 1`, [projectId])).rows[0]) throw new AppError(409, 'Project already has execution BOQ items');
+    const tenderId = b.source_tender_id ?? null;
+    if (tenderId && !(await client.query(`select 1 from tenders where id=$1`, [tenderId])).rows[0]) throw new AppError(422, 'Source tender not found');
+    const rows = await sourceRows(client, projectId, tenderId);
+    if (!rows.length) throw new AppError(422, 'No estimating BOQ items to hand over');
+    const dup = rows.map(r => r.item_no).find((v, i, a) => a.indexOf(v) !== i);
+    if (dup) throw new AppError(422, `Duplicate item number in source BOQ: ${dup}`);
+    const totalCents = rows.reduce((s, r) => s + Math.round(Number(r.quantity) * Number(r.total_rate) * 100), 0);
+    const diffCents = cents(contract.contract_value) - totalCents;
+    const status = diffCents === 0 ? 'completed' : 'pending_acceptance';
+    const h = (await client.query(`insert into boq_handovers(org_id,project_id,contract_id,source_type,source_tender_id,item_count,boq_total,contract_value,difference,status,difference_reason,prepared_by) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning *`,
+      [project.org_id, projectId, b.contract_id, tenderId ? 'tender' : 'project', tenderId, rows.length, (totalCents / 100).toFixed(2), contract.contract_value, (diffCents / 100).toFixed(2), status, b.difference_reason ?? null, user.id])).rows[0];
+    if (status === 'completed') await completeHandover(client, h, rows);
+    await client.query('commit');
+    res.status(201).json({ success: true, data: { handover: h, items_created: status === 'completed' ? rows.length : 0 } });
+  } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
+}));
+
+boqRouter.post('/handovers/:id/:decision(accept|reject)', authorize('boq', 'approve'), asyncHandler(async (req, res) => {
+  const user = req.user!;
+  const id = Number(req.params.id);
+  if (!Number.isSafeInteger(id) || id <= 0) throw new AppError(400, 'Invalid handover id');
+  const b = z.object({ difference_reason: z.string().trim().min(10).max(2000).optional().nullable() }).parse(req.body ?? {});
+  const client = await getClient();
+  try {
+    await client.query('begin');
+    const h = (await client.query(`select * from boq_handovers where id=$1 for update`, [id])).rows[0];
+    if (!h) throw new AppError(404, 'Handover not found');
+    if (h.status !== 'pending_acceptance') throw new AppError(409, 'Handover is not pending acceptance');
+    if (Number(h.prepared_by) === user.id) throw new AppError(403, 'Segregation of duties: the preparer cannot accept or reject their own handover');
+    if (req.params.decision === 'reject') {
+      const r = (await client.query(`update boq_handovers set status='rejected',accepted_by=$2,accepted_at=now() where id=$1 returning *`, [id, user.id])).rows[0];
+      await client.query('commit');
+      return res.json({ success: true, data: { handover: r, items_created: 0 } });
+    }
+    const reason = b.difference_reason ?? h.difference_reason;
+    if (!reason) throw new AppError(422, 'A reason is required to accept a BOQ total that differs from the contract value');
+    const rows = await sourceRows(client, Number(h.project_id), h.source_tender_id ? Number(h.source_tender_id) : null);
+    const totalCents = rows.reduce((s, r) => s + Math.round(Number(r.quantity) * Number(r.total_rate) * 100), 0);
+    if (rows.length !== Number(h.item_count) || totalCents !== cents(h.boq_total)) throw new AppError(409, 'Source BOQ changed since the handover was prepared; reject and prepare a new handover');
+    const r = (await client.query(`update boq_handovers set status='completed',accepted_by=$2,accepted_at=now(),difference_reason=$3 where id=$1 returning *`, [id, user.id, reason])).rows[0];
+    await completeHandover(client, r, rows);
+    await client.query('commit');
+    res.json({ success: true, data: { handover: r, items_created: rows.length } });
+  } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
 }));

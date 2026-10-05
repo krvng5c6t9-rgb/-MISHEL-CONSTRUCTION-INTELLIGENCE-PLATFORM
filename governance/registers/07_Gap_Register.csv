@@ -1,5 +1,5 @@
 G_ID,Description,Priority,Tier,Linked_REQ,Status,CreatedIn,LastUpdated,Notes
-G-001,No execution BOQ (project_boq) creation path; estimating->execution handover missing,P1,T1,D03/D07/GC-02,OPEN,2026-10-05,2026-10-05,F-01
+G-001,No execution BOQ (project_boq) creation path; estimating->execution handover missing,P1,T1,D03/D07/GC-02,CLOSED,2026-10-05,2026-10-05,"F-01; closed by CC-015 (wave1 suite 41/41, E1)"
 G-002,No vendor/subcontractor create API,P1,T1,D06,OPEN,2026-10-05,2026-10-05,F-02
 G-003,No tenant provisioning (roles/DOA/CoA/GL rules/cost codes/fiscal),P1,T0,D20/GC-31,OPEN,2026-10-05,2026-10-05,F-03; STEP16 contracts available
 G-004,No DOA create/version API; approver roles lack approvals.approve,P1,T0,D01,OPEN,2026-10-05,2026-10-05,F-04

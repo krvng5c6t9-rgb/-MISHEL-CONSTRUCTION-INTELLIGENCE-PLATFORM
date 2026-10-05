@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runtime regression gate: fresh database -> migrate -> start API -> bootstrap -> E2E chain -> negative suite.
+# Runtime regression gate: fresh database -> migrate -> start API -> bootstrap -> E2E chain -> negative suite -> wave suites.
 # Required env:
 #   PG_ADMIN_URL   superuser URL to a maintenance DB (used to drop/create the test DB)
 #   OWNER_URL_BASE owner (BYPASSRLS) URL without database name, e.g. postgresql://erp_owner:pw@localhost:5432
@@ -28,3 +28,4 @@ export API_BASE="http://localhost:$PORT_/api"
 node probe.mjs | head -2
 PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node chain.mjs
 APP_PSQL_URL="$APP_URL_BASE/$DB$Q" node isolation.mjs "out/chain_$RUN.json"
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_boq_handover.mjs

@@ -1,0 +1,683 @@
+{
+  "suite": "wave1_boq_handover",
+  "run": "w1b",
+  "tag": "w1b",
+  "steps": [
+    {
+      "name": "confirm fixture DOA contract_signing L1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirm fixture DOA contract_signing L2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create project P1 with estimating BOQ (20,000) and contract 20,000",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "handover refused while contract is draft",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Execution BOQ can only be created from a signed or active contract\""
+    },
+    {
+      "name": "sign contract P1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "contract signed through 2-level DOA",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "user without boq.create cannot hand over",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: boq.create\""
+    },
+    {
+      "name": "hand over P1 (zero difference)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "P1 handover completed with 2 items",
+      "outcome": "PASS",
+      "detail": "{\"id\":1,\"org_id\":1,\"project_id\":2,\"contract_id\":2,\"source_type\":\"project\",\"source_tender_id\":null,\"item_count\":2,\"boq_total\":\"20000.00\",\"contract_value\":\"20000.00\",\"difference\":\"0.00\",\"status\":\"comple"
+    },
+    {
+      "name": "execution BOQ total equals contract value",
+      "outcome": "PASS",
+      "detail": "items=2 total=20000"
+    },
+    {
+      "name": "execution rate = estimating total rate (1.1 = 150.00)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "second handover of same project refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Project already has a pending or completed BOQ handover\""
+    },
+    {
+      "name": "estimating BOQ item frozen after handover (edit)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"BOQ item 3 is part of a handover to execution and cannot be changed\""
+    },
+    {
+      "name": "estimating BOQ item frozen after handover (delete)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"BOQ item 3 is part of a handover to execution and cannot be changed\""
+    },
+    {
+      "name": "rate build-up frozen after handover",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Rate build-up of BOQ item 3 is frozen by handover\""
+    },
+    {
+      "name": "DB: locked execution BOQ rate cannot change (even as owner role)",
+      "outcome": "PASS",
+      "detail": "ERROR:  Execution BOQ item 1 is locked; contract baseline changes only through approved variations"
+    },
+    {
+      "name": "DB: locked execution BOQ item cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Locked execution BOQ item 1 cannot be deleted"
+    },
+    {
+      "name": "DB: revised quantity (variation path) may change",
+      "outcome": "PASS",
+      "detail": "UPDATE 1"
+    },
+    {
+      "name": "DB: completed handover record cannot be altered",
+      "outcome": "PASS",
+      "detail": "ERROR:  boq_handovers: only pending_acceptance -> completed/rejected is permitted"
+    },
+    {
+      "name": "create project P2 with BOQ 20,000 and contract 25,000",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "sign contract P2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "hand over P2 (difference 5,000)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "P2 handover pending acceptance, no items created",
+      "outcome": "PASS",
+      "detail": "{\"id\":2,\"org_id\":1,\"project_id\":3,\"contract_id\":3,\"source_type\":\"project\",\"source_tender_id\":null,\"item_count\":2,\"boq_total\":\"20000.00\",\"contract_value\":\"25000.00\",\"difference\":\"5000.00\",\"status\":\"pen"
+    },
+    {
+      "name": "no execution BOQ while pending",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "preparer cannot accept own handover (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the preparer cannot accept or reject their own handover\""
+    },
+    {
+      "name": "user without boq.approve cannot accept",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: boq.approve\""
+    },
+    {
+      "name": "acceptance without reason refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A reason is required to accept a BOQ total that differs from the contract value\""
+    },
+    {
+      "name": "independent approver accepts with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "P2 completed with 2 items, accepted_by != prepared_by",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "accepting an already completed handover refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Handover is not pending acceptance\""
+    },
+    {
+      "name": "create project P3 (difference)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "sign contract P3",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "estimating BOQ frozen while handover pending",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"BOQ item 8 is part of a handover to execution and cannot be changed\""
+    },
+    {
+      "name": "approver rejects P3 handover",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "P3 rejected",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "estimating BOQ editable again after rejection (qty 1.2 -> 20)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "new handover after correction",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "corrected BOQ (25,000 vs 30,000) pending again; history keeps both records",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot hand over tenant A project",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Project not found\""
+    },
+    {
+      "name": "tenant B cannot accept tenant A handover",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Handover not found\""
+    },
+    {
+      "name": "tenant B sees no tenant A handovers",
+      "outcome": "PASS",
+      "detail": ""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/roles",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/7",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/8",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/2/handover",
+      "status": 409,
+      "ok": false,
+      "error": "Execution BOQ can only be created from a signed or active contract"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/2/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/7/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/7/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contracts/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/2/handover",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: boq.create"
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/2/handover",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/2/handover",
+      "status": 409,
+      "ok": false,
+      "error": "Project already has a pending or completed BOQ handover"
+    },
+    {
+      "method": "PATCH",
+      "path": "/boq/master/3",
+      "status": 422,
+      "ok": false,
+      "error": "BOQ item 3 is part of a handover to execution and cannot be changed"
+    },
+    {
+      "method": "DELETE",
+      "path": "/boq/master/3",
+      "status": 422,
+      "ok": false,
+      "error": "BOQ item 3 is part of a handover to execution and cannot be changed"
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master/3/rate-buildup",
+      "status": 422,
+      "ok": false,
+      "error": "Rate build-up of BOQ item 3 is frozen by handover"
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/3/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/8/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/8/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contracts/3",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/3/handover",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/3",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/handovers/2/accept",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the preparer cannot accept or reject their own handover"
+    },
+    {
+      "method": "POST",
+      "path": "/boq/handovers/2/accept",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: boq.approve"
+    },
+    {
+      "method": "POST",
+      "path": "/boq/handovers/2/accept",
+      "status": 422,
+      "ok": false,
+      "error": "A reason is required to accept a BOQ total that differs from the contract value"
+    },
+    {
+      "method": "POST",
+      "path": "/boq/handovers/2/accept",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/handovers/2/accept",
+      "status": 409,
+      "ok": false,
+      "error": "Handover is not pending acceptance"
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/4/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/9/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/9/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contracts/4",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/4/handover",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/boq/master/8",
+      "status": 422,
+      "ok": false,
+      "error": "BOQ item 8 is part of a handover to execution and cannot be changed"
+    },
+    {
+      "method": "POST",
+      "path": "/boq/handovers/3/reject",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/boq/master/8",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/4/handover",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/4/handovers",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/2/handover",
+      "status": 404,
+      "ok": false,
+      "error": "Project not found"
+    },
+    {
+      "method": "POST",
+      "path": "/boq/handovers/4/accept",
+      "status": 404,
+      "ok": false,
+      "error": "Handover not found"
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/2/handovers",
+      "status": 200,
+      "ok": true,
+      "error": null
+    }
+  ]
+}
