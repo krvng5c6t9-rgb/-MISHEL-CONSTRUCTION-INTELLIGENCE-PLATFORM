@@ -1,0 +1,733 @@
+wave,phase,section,item
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,deterministic local dev environment
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,PostgreSQL runtime
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,backend/frontend dependency locks
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,containerized local stack
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,secrets handling
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,env validation
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,seed data
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,migration runner
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,smoke tests
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,health endpoints
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,developer bootstrap
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Build,CI baseline
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,clean clone → one documented bootstrap path
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,all migrations 001–034 run from empty DB
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,backend build PASS
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,frontend build PASS
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,smoke login PASS
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,seed tenant PASS
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,no manual DB repair required
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,missing env vars
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,rerun migrations
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,partial migration failure
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,invalid seed
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,container restart
+WAVE 1 — RUNTIME FOUNDATION,PHASE 1 — Reproducible Development & Runtime Environment,Acceptance,schema drift
+WAVE 1 — RUNTIME FOUNDATION,PHASE 2 — Canonical Data Architecture & Master Data,Acceptance,each master object has unique ID strategy
+WAVE 1 — RUNTIME FOUNDATION,PHASE 2 — Canonical Data Architecture & Master Data,Acceptance,no business transaction depends on free-text master substitutes
+WAVE 1 — RUNTIME FOUNDATION,PHASE 2 — Canonical Data Architecture & Master Data,Acceptance,controlled numbering supports per-company/project/document type
+WAVE 1 — RUNTIME FOUNDATION,PHASE 2 — Canonical Data Architecture & Master Data,Acceptance,duplicate vendor/customer tests
+WAVE 1 — RUNTIME FOUNDATION,PHASE 2 — Canonical Data Architecture & Master Data,Acceptance,multi-company master-sharing policy test
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,users
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,employees
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,positions
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,jobs
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,organizational units
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,matrix reporting
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,service identities
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,agent identities
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,external portal identities
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,joiner/mover/leaver
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,role assignment
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,project assignment
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,temporary assignment
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,delegation
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,expiry
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 3 — Identity / IAM / Organization Engine,Build,access review
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,role permissions
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,project/company scopes
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,data scopes
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,action-level permissions
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,approval authority
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,financial and nonfinancial DOA
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,maker/checker
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,escalation
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,acting authority
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,conflict-of-interest controls
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,self-approval prevention
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,transaction-changed-after-approval invalidation
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Build,threshold splitting detection framework
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Acceptance,2-tenant runtime isolation
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Acceptance,unauthorized row access blocked
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Acceptance,HOD-maker escalates
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Acceptance,expired delegation blocked
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Acceptance,modified transaction requires reapproval
+"WAVE 2 — IDENTITY, ORGANIZATION, AUTHORITY",PHASE 4 — RBAC + ABAC + DOA + SoD,Acceptance,privileged access logged
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,custom fields
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,entity extensions
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,enums/reference lists
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,configurable forms
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,grids/views
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,role workspaces
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,saved filters
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,configurable validations
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,formulas
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,numbering
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,conditional logic
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,tenant configuration packs
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,effective dating
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,publish/version/rollback
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 5 — Metadata & Configuration Platform,Build,sandbox vs production config
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,state machines
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,sequential/parallel approvals
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,conditional routing
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,SLAs
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,reminders
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,escalations
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,rejection/rework
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,delegation
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,pause/wait
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,subprocesses
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,event initiation
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,compensation
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,workflow versioning
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,runtime instance history
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,visual audit trail
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Build,exceed generic ERP configurability for construction-specific processes.
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Acceptance,workflow can be configured without code
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Acceptance,active instances remain pinned to workflow version
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Acceptance,changed workflow affects only new instances unless migrated
+WAVE 3 — DYNAMIC PLATFORM / ODOO-PLUS CONFIGURABILITY,PHASE 6 — Workflow / BPM / Approval Builder,Acceptance,failed external action reconciles safely
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,leads
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,opportunities
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,accounts/contacts
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,consultants/developers
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,meetings/actions
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,pipeline
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,probability/stage
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,key accounts
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,opportunity scoring
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,market/competitor data
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,BD dashboards
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,win/loss
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,prequalification
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 7 — CRM / Business Development,Build,handover to tender
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,tender register
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,bid/no-bid
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,tender documents
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,addenda
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,tender queries
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,site visit
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,responsibility matrix
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,takeoff
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,BOQ
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,rate analysis
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,resources/productivity
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,vendor/subcontract RFQs
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,commercial comparison
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,preliminaries
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,overheads
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,risk/contingency
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,markups
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,tender schedule
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,technical proposal
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,commercial proposal
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,qualifications/exclusions
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,approvals
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,submission
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,negotiation
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Build,award handover
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Acceptance,tender→award creates controlled project handover package
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Acceptance,no lost qualification/exclusion
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Acceptance,estimate traceable to BOQ/rates/quotes
+WAVE 4 — COMMERCIAL FRONT END OF THE BUSINESS,PHASE 8 — Tendering / Estimation / Preconstruction,Acceptance,revision comparison supported
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,project charter
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,project type
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,lifecycle stage gates
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,project organization
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,stakeholders
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,objectives
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,deliverables
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,risks/issues/actions/decisions
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,portfolio/program hierarchy
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,executive health
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,lessons learned
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 9 — Project & Portfolio Core,Build,closeout
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,WBS
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,activities
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,relationships FS/SS/FF/SF
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,calendars
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,lags
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,milestones
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,constraints
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,baselines
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,updates
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,progress
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,out-of-sequence rules
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,ES/EF/LS/LF
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,TF/FF
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,critical path
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,resource/cost loading
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,lookahead
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,recovery
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,schedule comparison
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Build,P6/MSP import/export/integration layer
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Acceptance,deterministic CPM test dataset
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Acceptance,baseline/current comparison
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Acceptance,critical path changes
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Acceptance,calendar edge cases
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 10 — Planning & Scheduling Engine,Acceptance,negative lag/constraints validation
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,progress measurement rules
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,PV/EV/AC
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,CPI/SPI
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,BAC/EAC/ETC/VAC/TCPI
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,S-curves
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,period cutoffs
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,trend logs
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,productivity
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,forecast
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,schedule/cost integration
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,portfolio rollups
+WAVE 5 — PROJECT / PORTFOLIO / PLANNING / CONTROLS,PHASE 11 — Project Controls / EVM / Forecast,Build,dashboard drilldown to source
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,BOQ hierarchy
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,quantities
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,measurement sheets
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,budget
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,commitments
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,actuals
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,accruals
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,forecasts
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,contingency
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,budget transfer
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,cost adjustments
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,rate libraries
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,cost code mapping
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,cost-to-complete
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,variance
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,remeasurement
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 12 — BOQ / QS / Cost Control,Build,earned quantities
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,contract register
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,obligations
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,clauses
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,notices
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,time bars
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,subcontracts
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,scope/SOV
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,variations
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,change orders
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,dayworks
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,claims
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,EOT
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,disruption/prolongation evidence
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,bonds
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,guarantees
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,insurance
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,retention
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,LDs
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,final account
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,dispute chronology
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Build,evidence room
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Acceptance,notice deadline alerts
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Acceptance,change propagates cost/contract correctly
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Acceptance,no claim value without evidence links
+WAVE 6 — COMMERCIAL / COST / CONTRACTS,PHASE 13 — Contracts / Subcontracts / Claims,Acceptance,final account closes controlled balances
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,vendor prequalification
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,approved vendor list
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,long-lead register
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,procurement schedule
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,package strategy
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,bid leveling
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,approval routing
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,PO amendments
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,expediting
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,delivery status
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 14 — Procurement,Build,supplier performance
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,warehouses
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,locations
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,items
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,batches/serials where applicable
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,on-hand
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,reservations
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,receipts
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,issues
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,transfers
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,returns
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,counts
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,adjustments
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,valuation
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,min/max
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,aging
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,project allocation
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,negative stock controls
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Build,logistics/import hooks
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Acceptance,inventory ledger reconciles
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Acceptance,no unauthorized adjustment
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Acceptance,issue affects project cost correctly
+WAVE 7 — PROCUREMENT / INVENTORY / LOGISTICS,PHASE 15 — Inventory / Warehouse / Logistics,Acceptance,transfer preserves quantity/value
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,COA
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,fiscal periods
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,GL
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,AP
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,AR
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,journals
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,posting engine
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,reversal
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,accrual
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,fixed assets
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,bank/cash
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,payment batches
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,reconciliation
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,receivables
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,payables
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,client IPC revenue link
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,vendor/subcontract payable link
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,balanced journals
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,append-only posted evidence
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,single posting per source
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,currency validation
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,period locks
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 16 — Financial Core,Build,source-to-ledger trace
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,cash position
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,forecasts
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,facilities/loans
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,LC/LG
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,guarantees
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,WHT/VAT config
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,e-invoice integration interface
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,multi-currency
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,FX
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,statutory reporting adapters
+WAVE 8 — FINANCE / TREASURY / TAX,PHASE 17 — Treasury / Tax / Statutory Layer,Build,country-pack configuration
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,drawing register
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,shop drawings
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,material submittals
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,RFIs
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,TQs
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,method statements
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,design reviews
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,transmittals
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,consultant comments
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,status/revision
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,technical queries
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,material approvals
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,document response SLA
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,current-revision enforcement
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,interface matrix
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 18 — Technical Office,Build,design responsibility matrix
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,specifications
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,methods
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,ITPs
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,checklists
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,material data
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,acceptance criteria
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,tolerances
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,engineering calculations registry
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,standard details
+WAVE 9 — TECHNICAL OFFICE / ENGINEERING / BIM / CDE,PHASE 19 — Engineering Knowledge / Specifications / ITP,Build,lessons learned
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,daily reports
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,work fronts
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,manpower
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,equipment
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,quantities
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,productivity
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,site diaries
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,photos/evidence
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,constraints
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,permits
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,instructions
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,daily/weekly targets
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,lookahead links
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,subcontractor tracking
+WAVE 10 — FIELD / QAQC / HSE,PHASE 21 — Site Execution & Field Management,Build,field offline capture
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,PQP
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,ITP
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,MIR
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,IR
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,inspections
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,testing
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,NCR
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,CAPA
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,root cause
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,reinspection
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,calibration
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,mockups
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,snagging
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,quality audits
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,dossier
+WAVE 10 — FIELD / QAQC / HSE,PHASE 22 — QA/QC,Build,handover quality records
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,HSE plans
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,RA/JSA
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,PTW
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,toolbox
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,inspections
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,observations
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,incidents
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,near misses
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,investigations
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,actions
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,emergency response
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,competencies
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,environmental aspects
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,waste
+WAVE 10 — FIELD / QAQC / HSE,PHASE 23 — HSE / Environmental,Build,leading/lagging KPIs
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,employee master
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,recruitment/onboarding
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,assignments
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,attendance/timesheets
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,leave
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,payroll integration
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,competencies
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,certifications
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,training
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,expiry alerts
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,performance
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,manpower planning
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 24 — HR / Workforce / Competency,Build,mobilization/demobilization
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,plant/equipment
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,ownership/rental
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,utilization
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,maintenance
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,fuel
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,operators
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,certifications
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,downtime
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,cost/hour
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,allocation
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,asset register
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,warranties
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,work orders
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,preventive/corrective maintenance
+WAVE 11 — PEOPLE / ASSETS / FACILITIES,PHASE 25 — Plant / Assets / Facilities,Build,lifecycle hooks
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,actual object storage
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,metadata
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,revision/version
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,check-in/out where applicable
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,superseded/void/current
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,transmittals
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,letters
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,notices
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,emails/reference links
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,retention
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,legal hold
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,permissions
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,checksum
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,full audit
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,search/index
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 26 — Enterprise EDMS / Correspondence,Build,OCR/extraction as derived data only
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,Word/PDF/Excel/PowerPoint/report templates
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,numbering
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,branding
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,language
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,variable mapping
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,controlled output generation
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,approval before issue
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,issued copies
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,supersession
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,digital signature hooks
+WAVE 12 — DOCUMENTS / OUTPUTS / COMMUNICATION,PHASE 27 — Template & Output Factory,Build,bulk generation
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,OLTP authority map
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,historical snapshots
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,event log
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,analytics store
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,lineage
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,data quality
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,reconciliation
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,retention/archive
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,semantic model
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 28 — Data Platform,Build,KPI dictionary
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,role dashboards
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,project
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,portfolio
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,finance
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,cost
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,planning
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,procurement
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,contracts
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,QA/HSE
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,HR
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,executive
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,drilldown
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,filters
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,thresholds
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,trends
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,actions
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,freshness
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,source lineage
+WAVE 13 — DATA / ANALYTICS / BI,PHASE 29 — Dashboards / BI / Executive Intelligence,Build,exports
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,provider abstraction
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,model registry
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,model versions
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,model routing
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,capability/cost/latency profiles
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,region/privacy policy
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,fallback rules
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,token/cost metering
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,budgets
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,quotas
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,kill switch
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,provider health
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 30 — AI Gateway & Model Platform,Build,model-change regression
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Agent Registry
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Skill Registry
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Tool Registry
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,MCP Registry
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Prompt Registry
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Run Envelope
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,typed tool schemas
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,permissions
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,memory policy
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,human checkpoints
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,output schemas
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,budgets
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,evaluation suites
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,monitoring
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,incident policy
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,agent versioning
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,shadow mode
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,promotion to production
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Project Manager
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Planning
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Project Controls
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,QS
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Cost Control
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Procurement
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Contracts
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Claims
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Technical Office
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Document Control
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,QAQC
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,HSE
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Finance
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,HR
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Executive
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Tendering
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,BIM/Engineering
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Customer/Support
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Admin/Configuration
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 31 — Agent / Skill / Tool Factory,Build,Developer/Platform
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,orchestrator
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,delegation
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,handoffs
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,child authority limits
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,fanout/depth limits
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,concurrency
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,run trace
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,cancellation
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,compensation
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,non-convergence handling
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,consensus/independent review patterns
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 32 — Multi-Agent Orchestration,Build,specialist escalation
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,golden datasets
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,grounded QA datasets
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,tool-call ground truth
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,authorization tests
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,hallucination tests
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,citation tests
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,prompt injection
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,memory poisoning
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,privacy leakage
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,unsafe action tests
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,abstention
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,cost
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,latency
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,reliability
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,regression
+WAVE 14 — AI PLATFORM / DIGITAL FTE / AGENT FACTORY,PHASE 33 — AI Evaluation & Assurance Lab,Build,red-team suites
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,sources
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,revisions
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,effective dates
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,jurisdiction
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,applicability
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,authority level
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,chunking
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,embeddings
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,vector store
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,hybrid retrieval
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,metadata filters
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,permission-aware retrieval
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,citations
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,source version pinning
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,superseded-source handling
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,ingestion
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,reindexing
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,deletion/revocation
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 34 — Knowledge & RAG Platform,Build,RAG evaluation
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,standard family
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,edition
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,issuing body
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,jurisdiction
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,status
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,effective date
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,superseded-by
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,contractual applicability
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,discipline tags
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,clause references
+WAVE 15 — KNOWLEDGE / RAG / STANDARDS,PHASE 35 — Standards / Codes / References Engine,Build,client/project overlays
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,triggers
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,schedules
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,webhooks
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,event bus
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,queues
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,workers
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,retries
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,backoff
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,idempotency
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,dead letter
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,timeouts
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,circuit breakers
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,compensation
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,execution log
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 36 — Automation Runtime,Build,credential references
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,managed connection
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,workflow registry
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,template library
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,execution status
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,callback/webhook
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,tenant credentials
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,approved-node policy
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,error workflows
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,subflows
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,queue mode
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,scaling
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,backup
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,audit
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,version pinning
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,Daily report → analysis → dashboard
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,IR/MIR/NCR routing
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,Procurement reminders
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,Tender follow-up
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,Contract notice clock
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,Lookahead update
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,Cost variance alert
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,Invoice intake
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,Document ingestion/RAG
+WAVE 16 — AUTOMATION / N8N / EVENT PLATFORM,PHASE 37 — n8n Integration Layer,Build,Executive daily brief
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,REST API
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,webhook API
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,API keys
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,OAuth
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,service accounts
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,rate limits
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,schemas
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,versioning
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,developer docs
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,sandbox
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,deprecation
+WAVE 17 — INTEGRATIONS / MCP / API MARKETPLACE,PHASE 38 — API Platform,Build,telemetry
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,PWA/mobile shell
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,offline records
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,queued sync
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,conflict resolution
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,photo/file capture
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,QR/barcode
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,inspections
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,daily reports
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,site approvals
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 40 — Mobile / Offline Field,Build,sync diagnostics
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,Client
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,Consultant
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,Vendor
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,Subcontractor
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,Employee
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,Customer support
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,scoped access
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,controlled uploads
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,actions
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,status
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,correspondence
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,approvals where allowed
+WAVE 18 — MOBILE / OFFLINE / PORTALS,PHASE 41 — External Portals,Build,audit
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,signup/invite
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,trial
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,provisioning
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,tenant template
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,region
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,branding
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,language
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,industry pack
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,country pack
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,suspension
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,export
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,offboarding
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 42 — Tenant Lifecycle,Build,deletion/retention
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,plans
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,entitlements
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,seats
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,usage
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,AI credits
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,storage
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,connectors
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,premium agent packs
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,billing adapter
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,invoices
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,trial conversion
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,grace period
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,overage
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,limits
+WAVE 19 — COMMERCIAL SaaS PRODUCTIZATION,PHASE 43 — Licensing / Subscription / Usage,Build,admin portal
+WAVE 20 — SECURITY / PRIVACY / DEVSECOPS,PHASE 47 — Privacy / Compliance,Build,data classification
+WAVE 20 — SECURITY / PRIVACY / DEVSECOPS,PHASE 47 — Privacy / Compliance,Build,purpose
+WAVE 20 — SECURITY / PRIVACY / DEVSECOPS,PHASE 47 — Privacy / Compliance,Build,retention
+WAVE 20 — SECURITY / PRIVACY / DEVSECOPS,PHASE 47 — Privacy / Compliance,Build,residency
+WAVE 20 — SECURITY / PRIVACY / DEVSECOPS,PHASE 47 — Privacy / Compliance,Build,subject request framework
+WAVE 20 — SECURITY / PRIVACY / DEVSECOPS,PHASE 47 — Privacy / Compliance,Build,processor/subprocessor register
+WAVE 20 — SECURITY / PRIVACY / DEVSECOPS,PHASE 47 — Privacy / Compliance,Build,sensitive access audit
+WAVE 20 — SECURITY / PRIVACY / DEVSECOPS,PHASE 47 — Privacy / Compliance,Build,breach workflow
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,protected branches
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,PR checks
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,migrations gate
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,unit/integration/E2E
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,security scans
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,artifact build
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,release notes
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,approval
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,deployment
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,rollback
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 48 — CI/CD & Environments,Build,feature flags
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,logs
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,metrics
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,traces
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,correlation IDs
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,audit correlation
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,AI trace
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,workflow trace
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,dashboards
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,alerts
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,SLOs
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,error budget
+WAVE 21 — DEVOPS / SRE / RESILIENCE,PHASE 49 — Observability,Build,incident management
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,Excel/CSV import
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,mapping
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,validation
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,duplicate detection
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,trial migration
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,reconciliation
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,rollback
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,migration evidence
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,legacy document import
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,opening balances
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 56 — Migration Framework,Build,master data import
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,discovery questionnaire
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,org setup
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,DOA
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,workflows
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,COA
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,cost codes
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,branding
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,roles
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,data migration
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,training
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,UAT
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 57 — Customer Onboarding,Build,go-live checklist
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,support portal
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,incidents
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,requests
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,bugs
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,SLA
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,priority
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,escalation
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,known errors
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,knowledge articles
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,release communication
+WAVE 24 — MIGRATION / CUSTOMER ONBOARDING / SUPPORT,PHASE 58 — Support / Service Management,Build,customer health
