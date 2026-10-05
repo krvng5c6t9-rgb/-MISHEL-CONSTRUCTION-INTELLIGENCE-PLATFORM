@@ -42,7 +42,7 @@ export async function postActualCostForVendorInvoice(client: PoolClient, invoice
     from vendor_invoices vi
     left join purchase_orders po on po.id = vi.po_id
     where vi.id = $1
-    for update
+    for update of vi
   `, [invoiceId]);
   const invoice = invoiceResult.rows[0];
   if (!invoice) throw new AppError(404, 'Vendor invoice not found');

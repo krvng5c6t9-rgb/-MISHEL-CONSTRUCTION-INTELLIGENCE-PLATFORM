@@ -74,6 +74,11 @@ export async function postCostTransactionToGl(client: PoolClient, costTransactio
   const ct = result.rows[0];
   if (!ct) throw new AppError(404, 'Cost transaction not found');
   if (ct.is_posted_to_gl) throw new AppError(409, 'Cost transaction already posted to GL');
+  // CC-008: committed cost (PO commitment) is a budget-control figure, not an accounting
+  // event. Both committed and actual rows share source_module 'procurement' and therefore
+  // the same GL rule, so posting a commitment would double-count expense/AP once the
+  // invoice's actual cost posts. Encumbrance accounting, if wanted, needs its own rule.
+  if (ct.transaction_type !== 'actual') throw new AppError(422, `Only actual cost transactions post to GL (got ${ct.transaction_type})`);
 
   const rule = await getActiveRule(client, Number(ct.org_id), 'cost_transaction', ct.source_module ?? null);
   if (!rule) throw new AppError(422, `No active GL posting rule for cost_transaction / ${ct.source_module}`);

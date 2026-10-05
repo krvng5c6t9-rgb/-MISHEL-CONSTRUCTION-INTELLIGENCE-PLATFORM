@@ -2,6 +2,16 @@ import pg from 'pg';
 import { env } from '../config/env.js';
 import { currentDbContext } from './context.js';
 
+// CC-004: pg returns int8 (bigint) as string by default. All ids are bigserial and the
+// codebase compares them strictly against numbers (e.g. authenticate.ts org check), which
+// made every authenticated request fail with 401. Ids stay far below 2^53, so parse to
+// number; reject values that would lose precision rather than silently corrupt them.
+pg.types.setTypeParser(20, (value: string) => {
+  const n = Number(value);
+  if (!Number.isSafeInteger(n)) throw new Error(`int8 value ${value} exceeds safe integer range`);
+  return n;
+});
+
 export const pool = new pg.Pool({
   connectionString: env.DATABASE_URL,
   max: 10,
