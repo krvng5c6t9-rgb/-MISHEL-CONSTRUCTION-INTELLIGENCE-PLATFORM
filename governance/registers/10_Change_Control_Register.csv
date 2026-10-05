@@ -1,0 +1,15 @@
+CC_ID,Change,Reason,Impact,Decision,Status,CreatedIn,LastUpdated,Notes
+CC-001,Generate backend/frontend lockfiles,npm ci required; no lockfiles,Reproducible installs,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-002,Type-only TS fixes,tsc 25+1 errors,Build possible,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-003,Migrations from zero + migrator/app role separation,Shipped chain failed at 011..032,DB creatable; RLS enforced,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-004,pg int8 parser,All authenticated calls 401,API usable,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-005,DOA confirm cast,DOA confirm 500,Approvals possible,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-006,Migration 035 status guard per table,Tender/contract/variation updates impossible,State machines work,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-007,Typed tender conversion; FOR UPDATE OF vi; migration 036,"Tender conversion, invoice approval, cost->GL impossible",Chain completes,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-008,Only actual cost posts to GL,Commitments double-counted,Correct books,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-009,Migration 037 organizations RLS,Cross-tenant org data readable,Isolation complete,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-010,Compose app role erp_app,API ran as superuser,RLS effective in deployment (compose runtime UNVERIFIED),"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-011,Check-script/lint alignment,rev5 FAIL; lint TS5094,Checks green,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-012,Migrator needs only DB settings,Migrator demanded API secrets,Least privilege,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-013,projects.create permission; SQLSTATE error mapping,View-only could create projects; 500s leaked SQL,4xx + no leakage,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md
+CC-014,CI runtime gate PG16/17,Static checks only,Every push runtime-gated,"APPLIED (§28 autonomous, reversible)",CLOSED,2026-10-05,2026-10-05,governance/DECISION_LEDGER.md

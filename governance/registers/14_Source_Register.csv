@@ -1,0 +1,3 @@
+S_ID,Title,URL,Tier,DateViewed,OpenedInConversation,Status,CreatedIn,LastUpdated,Notes
+S-INDEX,"Full content register (4,936 files, 1,268 unique by SHA-256)",governance/SOURCE_REGISTER.csv,owner-source,2026-10-05,YES,IN_PROGRESS,2026-10-05,2026-10-05,read status per file
+S-ARCH-UNREAD,3 Drive archives > 10 MB,Drive folder 1Mj7gO7PAW4orYse0arQMcQZO2wS7NFbk,owner-source,,NO,UNREAD,2026-10-05,2026-10-05,owner action required

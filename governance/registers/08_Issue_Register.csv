@@ -1,0 +1,13 @@
+I_ID,Severity,Module,Description,Raised_By,ClosedWithEvidence,Status,CreatedIn,LastUpdated,Notes
+I-001,Critical,auth,Every authenticated request 401 (bigint as string),R0,CC-004 + R0-4 log,CLOSED,2026-10-05,2026-10-05,
+I-002,Critical,approvals,DOA confirm endpoint 500,R0,CC-005 + R0-4 log,CLOSED,2026-10-05,2026-10-05,
+I-003,Critical,db/state-machines,guard_phase2_status blocks all tender/contract/variation updates,R0,CC-006 + R0-4,CLOSED,2026-10-05,2026-10-05,
+I-004,Critical,crm,convert-to-tender 500 (untyped params),R0,CC-007 + R0-4,CLOSED,2026-10-05,2026-10-05,
+I-005,Critical,procurement,vendor invoice approval 500 (FOR UPDATE outer join),R0,CC-007 + R0-4,CLOSED,2026-10-05,2026-10-05,
+I-006,Critical,finance,cost->GL always rolled back (append-only trigger),R0,CC-007 + R0-4,CLOSED,2026-10-05,2026-10-05,
+I-007,Major,finance,committed cost could post to GL (double count),R0,CC-008 + R0-4,CLOSED,2026-10-05,2026-10-05,
+I-008,Critical,security,organizations readable cross-tenant,R0-5,CC-009 + R0-5,CLOSED,2026-10-05,2026-10-05,
+I-009,Critical,deployment,compose API as superuser bypassing RLS,R0,CC-010 (compose runtime UNVERIFIED),CLOSED_PARTIAL,2026-10-05,2026-10-05,docker daemon unavailable
+I-010,Major,projects,POST /projects with view permission only,post-R0 scan,CC-013 + negative suite 36/36,CLOSED,2026-10-05,2026-10-05,
+I-011,Major,api,DB errors 500 and leak SQL/schema text,R0-5,CC-013 + negative suite,CLOSED,2026-10-05,2026-10-05,
+I-012,Major,ops,migrator required API secrets,snapshot verification,CC-012,CLOSED,2026-10-05,2026-10-05,

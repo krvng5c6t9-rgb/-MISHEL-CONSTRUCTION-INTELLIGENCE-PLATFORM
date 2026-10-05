@@ -1,0 +1,4 @@
+R_ID,Risk,Likelihood,Impact,Mitigation,Owner,Status,CreatedIn,LastUpdated,Notes
+RK-001,Unread archives contain decisions that change scope,M,H,Read before final reconciliation claim,Owner/Claude,OPEN,2026-10-05,2026-10-05,
+RK-002,Templated sources mistaken for specifications,H,H,Content-level checks (R01/R02/R04) before reuse,Claude,MITIGATING,2026-10-05,2026-10-05,
+RK-003,Similar defect density in untested modules,H,H,Extend runtime E2E per Golden Case before claims,Claude,OPEN,2026-10-05,2026-10-05,R0 found 9 blocking defects in one chain

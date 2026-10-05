@@ -1,0 +1,10 @@
+E_ID,Grade,Location,Date,By,Linked_ID,Status,CreatedIn,LastUpdated,Notes
+E-001,E1,takeover/evidence/C1_*.log,2026-10-05,Claude,Build before CC,VALID,2026-10-05,2026-10-05,
+E-002,E1,takeover/evidence/C2*.log,2026-10-05,Claude,Migration failures,VALID,2026-10-05,2026-10-05,
+E-003,E1,takeover/evidence/C4_migrate_from_zero_after_CC009.log,2026-10-05,Claude,MIGRATIONS_OK 37,VALID,2026-10-05,2026-10-05,
+E-004,E1,takeover/evidence/R0-4_e2e_chain.log,2026-10-05,Claude,74/74,VALID,2026-10-05,2026-10-05,
+E-005,E1,takeover/evidence/R0-5_tenant_isolation.log,2026-10-05,Claude,32/32,VALID,2026-10-05,2026-10-05,
+E-006,E1,takeover/evidence/R0-6_existing_check_scripts.log,2026-10-05,Claude,26/26,VALID,2026-10-05,2026-10-05,
+E-007,E1,GitHub Actions run 37272015775,2026-10-05,Claude,PG16.15+PG17.11 green,VALID,2026-10-05,2026-10-05,
+E-008,E1,snapshot from-zero verification log,2026-10-05,Claude,"manifest OK, 37, 74/74, 32/32",VALID,2026-10-05,2026-10-05,
+E-009,E1,tests/e2e run CC013 (local),2026-10-05,Claude,"chain 74/74, negative 36/36",VALID,2026-10-05,2026-10-05,

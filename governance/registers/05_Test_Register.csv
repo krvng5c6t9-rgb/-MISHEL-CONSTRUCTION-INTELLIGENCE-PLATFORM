@@ -1,0 +1,4 @@
+T_ID,REQ_ID,Level,Result,RunDate,CommitHash,Evidence_ID,Status,CreatedIn,LastUpdated,Notes
+T-R0-CHAIN,GC-01/06/12/13 (partial),E2E,PASS 74/74,2026-10-05,60db79c,E-007,PASS,2026-10-05,2026-10-05,tests/e2e/chain.mjs
+T-R0-NEG,D01/D20 isolation,Negative/Security,PASS 36/36,2026-10-05,60db79c,E-007,PASS,2026-10-05,2026-10-05,tests/e2e/isolation.mjs
+T-R0-MIG,D20,Migration,PASS 37,2026-10-05,60db79c,E-007,PASS,2026-10-05,2026-10-05,run_from_zero.sh
