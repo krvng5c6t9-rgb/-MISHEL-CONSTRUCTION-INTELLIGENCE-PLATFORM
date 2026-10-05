@@ -1,0 +1,850 @@
+{
+  "suite": "hostile_concurrency",
+  "run": "hc2",
+  "tag": "hc2",
+  "steps": [
+    {
+      "name": "8 parallel PO approvals -> exactly one succeeds",
+      "outcome": "PASS",
+      "detail": "200,409,409,409,409,409,409,409"
+    },
+    {
+      "name": "exactly one committed cost row for the PO",
+      "outcome": "PASS",
+      "detail": "rows=1"
+    },
+    {
+      "name": "8 parallel PO issues -> exactly one succeeds",
+      "outcome": "PASS",
+      "detail": "409,409,409,409,409,409,409,200"
+    },
+    {
+      "name": "8 parallel GRN confirmations -> exactly one succeeds",
+      "outcome": "PASS",
+      "detail": "409,409,409,409,409,409,409,200"
+    },
+    {
+      "name": "stock received once (10, not 10 x N)",
+      "outcome": "PASS",
+      "detail": "{\"warehouse_id\":2,\"inventory_item_id\":2,\"quantity_on_hand\":\"10.000\"}"
+    },
+    {
+      "name": "8 parallel cost->GL postings -> exactly one succeeds",
+      "outcome": "PASS",
+      "detail": "200,409,409,409,409,409,409,409"
+    },
+    {
+      "name": "one balanced GL batch for the cost (2 lines, debit = credit)",
+      "outcome": "PASS",
+      "detail": "lines=2"
+    },
+    {
+      "name": "8 parallel payment->GL postings -> exactly one succeeds",
+      "outcome": "PASS",
+      "detail": "409,409,409,200,409,409,409,409"
+    },
+    {
+      "name": "parallel bank-change approvals by two approvers -> exactly one succeeds",
+      "outcome": "PASS",
+      "detail": "200,409,409,409"
+    },
+    {
+      "name": "posting a journal dated in a closed period is refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Accounting period is closed for transaction date 2020-01-15\""
+    },
+    {
+      "name": "posting a journal dated where no fiscal period is defined is refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"No fiscal period is defined for transaction date 2019-06-15\""
+    },
+    {
+      "name": "the user who closed a period cannot reopen it (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the user who closed a period cannot reopen it\""
+    },
+    {
+      "name": "reopen without reason refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A reason is required to reopen a closed period\""
+    },
+    {
+      "name": "a different controller reopens with a reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "posting into the reopened period now succeeds",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "token works before deactivation",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "token of a deactivated user is refused on next request",
+      "outcome": "PASS",
+      "detail": "HTTP 401 \"User is inactive or not found\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/vendors",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/13/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/13/actions",
+      "status": 409,
+      "ok": false,
+      "error": "Approval instance is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/13/actions",
+      "status": 409,
+      "ok": false,
+      "error": "Approval instance is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/13/actions",
+      "status": 409,
+      "ok": false,
+      "error": "Approval instance is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/13/actions",
+      "status": 409,
+      "ok": false,
+      "error": "Approval instance is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/13/actions",
+      "status": 409,
+      "ok": false,
+      "error": "Approval instance is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/13/actions",
+      "status": 409,
+      "ok": false,
+      "error": "Approval instance is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/13/actions",
+      "status": 409,
+      "ok": false,
+      "error": "Approval instance is not pending"
+    },
+    {
+      "method": "GET",
+      "path": "/cost-transactions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved purchase orders can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved purchase orders can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved purchase orders can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved purchase orders can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved purchase orders can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved purchase orders can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved purchase orders can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/warehouses",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/procurement/purchase-orders/5/details",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/5/grns",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/2/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/2/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft GRN can be confirmed"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/2/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft GRN can be confirmed"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/2/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft GRN can be confirmed"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/2/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft GRN can be confirmed"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/2/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft GRN can be confirmed"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/2/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft GRN can be confirmed"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/2/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft GRN can be confirmed"
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/vendor-invoices",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/vendor-invoices/2/match",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/vendor-invoices/2/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/14/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/5/post-gl",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/5/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Cost transaction already posted to GL"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/5/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Cost transaction already posted to GL"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/5/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Cost transaction already posted to GL"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/5/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Cost transaction already posted to GL"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/5/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Cost transaction already posted to GL"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/5/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Cost transaction already posted to GL"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/5/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Cost transaction already posted to GL"
+    },
+    {
+      "method": "GET",
+      "path": "/finance/gl",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/finance/bank-accounts",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/finance/ap",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/2/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/15/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/2/post-gl",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/2/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved payment can be posted"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/2/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved payment can be posted"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/2/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved payment can be posted"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/2/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved payment can be posted"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/2/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved payment can be posted"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/2/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved payment can be posted"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/2/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved payment can be posted"
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/1/bank-change-requests",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/3/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/3/approve",
+      "status": 409,
+      "ok": false,
+      "error": "Bank change request is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/3/approve",
+      "status": 409,
+      "ok": false,
+      "error": "Bank change request is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/bank-change-requests/3/approve",
+      "status": 409,
+      "ok": false,
+      "error": "Bank change request is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/48/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/finance/chart-of-accounts",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/fiscal-periods",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/fiscal-periods/3/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/manual-journals",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/manual-journals/1/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/16/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/manual-journals/1/post-gl",
+      "status": 422,
+      "ok": false,
+      "error": "Accounting period is closed for transaction date 2020-01-15"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/manual-journals",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/manual-journals/2/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/17/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/manual-journals/2/post-gl",
+      "status": 422,
+      "ok": false,
+      "error": "No fiscal period is defined for transaction date 2019-06-15"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/fiscal-periods/3/status",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the user who closed a period cannot reopen it"
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/fiscal-periods/3/status",
+      "status": 422,
+      "ok": false,
+      "error": "A reason is required to reopen a closed period"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/fiscal-periods/3/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/manual-journals/1/post-gl",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/projects",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/users",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/42/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/projects",
+      "status": 401,
+      "ok": false,
+      "error": "User is inactive or not found"
+    }
+  ]
+}

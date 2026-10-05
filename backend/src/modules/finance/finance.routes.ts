@@ -500,6 +500,29 @@ financeRouter.get('/cost-summary', asyncHandler(async (req, res) => {
 
 financeRouter.get('/fiscal-periods',asyncHandler(async(_req,res)=>res.json({success:true,data:await query(`select * from fiscal_periods order by fiscal_year desc,period_no`)})));
 financeRouter.post('/fiscal-periods',authorize('finance','manage'),asyncHandler(async(req,res)=>{const b=z.object({fiscal_year:z.number().int(),period_no:z.number().int().min(1).max(13),start_date:z.string(),end_date:z.string()}).parse(req.body);const [r]=await query(`insert into fiscal_periods(org_id,fiscal_year,period_no,start_date,end_date) values($1,$2,$3,$4,$5) returning *`,[req.user!.org_id,b.fiscal_year,b.period_no,b.start_date,b.end_date]);res.status(201).json({success:true,data:r});}));
-financeRouter.post('/fiscal-periods/:id/status',authorize('finance','manage'),asyncHandler(async(req,res)=>{const b=z.object({status:z.enum(['open','soft_closed','closed'])}).parse(req.body);const [r]=await query(`update fiscal_periods set status=$2,closed_by=case when $2='closed' then $3 else null end,closed_at=case when $2='closed' then now() else null end where id=$1 returning *`,[Number(req.params.id),b.status,req.user!.id]);if(!r)throw new AppError(404,'Fiscal period not found');res.json({success:true,data:r});}));
+// F-14 fix + reopen SoD (migration 045). Closing: finance.manage. Reopening a closed period: finance.approve,
+// a different user from the closer, with a reason.
+financeRouter.post('/fiscal-periods/:id/status',authorize('finance','manage'),asyncHandler(async(req,res)=>{
+  const b=z.object({status:z.enum(['open','soft_closed','closed']),reason:z.string().trim().min(10).max(2000).optional()}).parse(req.body);
+  const { id } = idParam.parse(req.params);
+  const cur=(await query<any>(`select id,status,closed_by from fiscal_periods where id=$1`,[id]))[0];
+  if(!cur)throw new AppError(404,'Fiscal period not found');
+  if(cur.status===b.status)throw new AppError(409,`Fiscal period is already ${b.status}`);
+  const reopening = cur.status==='closed';
+  if(reopening){
+    const granted: { module: string; action: string }[] = req.user!.permissions;
+    if(!granted.some(g=>g.module==='finance'&&g.action==='approve'))throw new AppError(403,'Missing permission: finance.approve (reopening a closed period)');
+    if(Number(cur.closed_by)===req.user!.id)throw new AppError(403,'Segregation of duties: the user who closed a period cannot reopen it');
+    if(!b.reason)throw new AppError(422,'A reason is required to reopen a closed period');
+  }
+  const [r]=await query(`update fiscal_periods set status=$2::varchar,
+      closed_by=case when $2::varchar='closed' then $3::bigint else closed_by end,
+      closed_at=case when $2::varchar='closed' then now() else closed_at end,
+      reopened_by=case when $4::boolean then $3::bigint else reopened_by end,
+      reopened_at=case when $4::boolean then now() else reopened_at end,
+      reopen_reason=case when $4::boolean then $5::text else reopen_reason end
+    where id=$1 returning *`,[id,b.status,req.user!.id,reopening,b.reason??null]);
+  res.json({success:true,data:r});
+}));
 financeRouter.get('/exchange-rates',asyncHandler(async(_req,res)=>res.json({success:true,data:await query(`select e.*,c.code currency_code from exchange_rates e join currencies c on c.id=e.currency_id order by rate_date desc,c.code limit 500`)})));
 financeRouter.post('/exchange-rates',authorize('finance','manage'),asyncHandler(async(req,res)=>{const b=z.object({currency_id:z.number().int().positive(),rate_date:z.string(),rate_to_base:z.number().positive(),source:z.string().max(100).optional().nullable()}).parse(req.body);const [r]=await query(`insert into exchange_rates(org_id,currency_id,rate_date,rate_to_base,source) values($1,$2,$3,$4,$5) on conflict(org_id,currency_id,rate_date) do update set rate_to_base=excluded.rate_to_base,source=excluded.source returning *`,[req.user!.org_id,b.currency_id,b.rate_date,b.rate_to_base,b.source??null]);res.status(201).json({success:true,data:r});}));

@@ -35,3 +35,4 @@ OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_doa_governance.m
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_tenant_onboarding.mjs
 RUN_ID="$RUN" node wave1_subcontract_ipc.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave2_notice_engine.mjs
+RUN_ID="$RUN" node hostile_concurrency.mjs

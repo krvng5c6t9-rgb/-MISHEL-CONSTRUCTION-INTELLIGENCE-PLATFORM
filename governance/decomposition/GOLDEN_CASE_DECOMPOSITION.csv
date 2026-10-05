@@ -131,7 +131,7 @@ GC-25,Corporate Month-End,2,Subledger to GL reconciliation,Accountant,"AP, AR, c
 GC-25,Corporate Month-End,3,Bank reconciliation,Treasury,bank statements,reconciliation,unreconciled items aged,SOD15-019,L2 matching,SCHEMA,bank_reconciliation table,,T-GC-25-03
 GC-25,Corporate Month-End,4,Project cost and revenue alignment,Financial controller,project reports,WIP/contract balances,revenue policy per DEC-009,none,L1,ABSENT,,DEC-009,T-GC-25-04
 GC-25,Corporate Month-End,5,Management reporting snapshot,Financial controller,ledgers,KPI snapshot,data-as-of frozen,none,L1 narrative,PARTIAL,reports routes,,T-GC-25-05
-GC-25,Corporate Month-End,6,Period lock,Finance manager,checklist,locked period,no posting into locked period,SOD15-015,L0,SCHEMA,fiscal_periods table; lock enforcement unverified (G-010),G-010,T-GC-25-06
+GC-25,Corporate Month-End,6,Period lock,Finance manager,checklist,locked period,no posting into locked or undefined period,closer != reopener (CC-022),L0,RUNTIME,CC-022 hostile_concurrency 17/17,G-010,T-GC-25-06
 GC-26,Risk-to-Action,1,Identify and assess risk/opportunity,Risk owner,project data,risk register entry,probability/impact scales configured,none,L1 risk suggestions,ABSENT,no risk table,,T-GC-26-01
 GC-26,Risk-to-Action,2,"Response, owner, due date, links",Risk owner,risk,actions,linked to cost/schedule/contract,none,L1,ABSENT,,,T-GC-26-02
 GC-26,Risk-to-Action,3,"Monitor triggers, escalate, close, lesson",PM,triggers,closure + lesson,lesson feeds knowledge loop,none,L1,ABSENT,,NDC-026,T-GC-26-03

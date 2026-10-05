@@ -117,7 +117,7 @@ gc('GC-25', 'Corporate Month-End', [
     ('Bank reconciliation', 'Treasury', 'bank statements', 'reconciliation', 'unreconciled items aged', 'SOD15-019', 'L2 matching', 'SCHEMA', 'bank_reconciliation table', ''),
     ('Project cost and revenue alignment', 'Financial controller', 'project reports', 'WIP/contract balances', 'revenue policy per DEC-009', 'none', 'L1', 'ABSENT', '', 'DEC-009'),
     ('Management reporting snapshot', 'Financial controller', 'ledgers', 'KPI snapshot', 'data-as-of frozen', 'none', 'L1 narrative', 'PARTIAL', 'reports routes', ''),
-    ('Period lock', 'Finance manager', 'checklist', 'locked period', 'no posting into locked period', 'SOD15-015', 'L0', 'SCHEMA', 'fiscal_periods table; lock enforcement unverified (G-010)', 'G-010'),
+    ('Period lock', 'Finance manager', 'checklist', 'locked period', 'no posting into locked or undefined period', 'closer != reopener (CC-022)', 'L0', 'RUNTIME', 'CC-022 hostile_concurrency 17/17', 'G-010'),
 ])
 
 # ---------------------------------------------------------------- engineering / site / quality
