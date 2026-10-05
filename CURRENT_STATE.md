@@ -1,4 +1,4 @@
-# CURRENT STATE — MISHEL Construction Intelligence Platform (POST-R0)
+# CURRENT STATE — MISHEL Construction Intelligence Platform (POST-R0 + Investigation R01–R09)
 
 | Item | Value |
 |---|---|
@@ -15,14 +15,21 @@
 - `backend/`: Express + TypeScript API (37 module routers), `src/db/migrate.ts` migrator, `scripts/` security checks
 - `frontend/`: React + Vite UI
 - `database/migrations/`: schema and RLS. `database/docker-init/`: app-role creation for compose
-- `tests/e2e/`: R0 runtime suites (`chain.mjs` E2E, `isolation.mjs` tenant negative tests, `lib.mjs`, `probe.mjs`)
+- `tests/e2e/`: runtime suites (`chain.mjs` E2E, `isolation.mjs` negative/isolation/authorization/error-hygiene, `run_from_zero.sh` full gate, `lib.mjs`, `probe.mjs`)
+- `.github/workflows/runtime-gate.yml`: CI gate on PostgreSQL 16 + 17 (build, lint, static checks, runtime from zero)
+- `governance/HANDOFF.md`: current position, open gaps, owner decisions, next step (M09 template)
+- `governance/registers/`: the 20 M09 registers (05 tests, 06 evidence, 07 gaps, 08 issues, 09 decisions, 10 change control, 12 risks, 14 sources populated)
+- `governance/reconciliation/`: R01–R09 reconciliation records + extracted datasets (table inventory, carry-through map, D-entity coverage, scenarios, SOP skeleton, v1 feature inventory, agent archetypes)
+- `governance/discovery/NEWLY_DISCOVERED_CAPABILITY_REGISTER.csv`: NDC-001…009 + dropped-frozen-scope DFS-001…006
+- `governance/SOURCE_REGISTER.csv`: 4,936 source files, 1,268 unique by SHA-256, read status per file, version families
+- `governance/tools/`: `mark_read.py` (register status), `d_entity_map.py` (manual D-entity mapping)
 - `takeover/R0_REPORT.md`, `takeover/evidence/`: R0 verdict and raw logs
 - `governance/DECISION_LEDGER.md`: Controlled Changes, autonomous decisions, open findings
 - `governance/owner_directives/`: governing owner directives (Product Constitution, post-R0 execution directive, start prompts)
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-012
+## Controlled Changes CC-001 → CC-014
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -37,6 +44,8 @@
 | CC-010 | docker-compose: backend runs as non-superuser `erp_app` |
 | CC-011 | Check script / frontend lint alignment |
 | CC-012 | Migrator needs only DB settings (found by verifying this snapshot from zero) |
+| CC-013 | `POST /projects` requires `projects.create`; PostgreSQL SQLSTATE → 4xx mapping; generic 500 with reference id (no SQL leakage) |
+| CC-014 | CI runtime gate (PG 16 + 17); test harness short tag for business codes |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -45,11 +54,27 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | Backend + frontend `tsc` | clean | (CI-equivalent: `npm run lint`) |
 | Migrations from zero | `MIGRATIONS_OK 37` | `takeover/evidence/C4_migrate_from_zero_after_CC009.log` |
 | E2E chain Lead→…→Payment→GL (API only) | 74/74 PASS, GL balanced | `takeover/evidence/R0-4_e2e_chain.log` |
-| Tenant isolation negative tests | 32/32 PASS | `takeover/evidence/R0-5_tenant_isolation.log` |
+| Tenant isolation negative tests (R0) | 32/32 PASS | `takeover/evidence/R0-5_tenant_isolation.log` |
+| Negative suite after CC-013 (isolation + authorization + error hygiene) | 36/36 PASS | `tests/e2e/run_from_zero.sh`; CI run 37272015775 |
+| CI runtime gate | PASS on PG 16.15 and PG 17.11 | GitHub Actions run 37272015775 |
 | Inherited static check scripts | 26/26 PASS | `takeover/evidence/R0-6_existing_check_scripts.log` |
 
-## Known open issues (see ledger §3)
-F-01 no execution-BOQ (`project_boq`) creation path · F-02 no vendor API · F-03 no tenant provisioning · F-04 no DOA create API / approver permissions; DOA values are placeholders/test fixtures · F-05 IPC revenue/retention posting: OPEN accounting design decision · F-06 `/projects` lacks `authorize()` · F-07 DB exceptions return HTTP 500 · F-08 unlimited bootstrap-token tenant creation · F-09 inherited static checks are not functional evidence · F-10 documentation drift · F-11 three Drive archives > 10 MB UNREAD.
+## Investigation status (R01–R09, `governance/reconciliation/`)
+- R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).
+- R02: activation-pack operating model = valuable skeleton (159 positions, ~70 disciplines, DOA/control/KPI models); job descriptions/SOP bodies templated.
+- R03: v5 "TRUE FINAL" evidence is 100% name-mapping; 787 vs 833 and 531 vs 1,660 resolved.
+- R04: STEP_01 DNA + 38 Golden Cases adopted as acceptance backbone; Golden Cases 0 refs in 4,602; ≤12% of STEP03-16 tables cited by STEP17.
+- R05: D01–D20 vs schema (manual, 329 entities): R 27 / S 47 / T 85 / A 170; 193 scenarios, 596 test IDs pending.
+- R06: STEP18 = ~1.7k-line generic Python prototype (its own committee: NOT FIT FOR FREEZE); 170 agent archetypes extracted.
+- R07: STEP03/04/05 adopted (12-dimension DOA, 32 handoffs, 30 value streams, architecture principles, derived stores).
+- R08: original scope requires ONE application (ERP + expert/knowledge command layer), not parallel tracks.
+- R09: research-board synthesis → NDC-001…009; Egypt-first jurisdiction layering; never-invent activation inputs.
+- Source coverage (unique files): READ_FULL 26 · PARSED_FULL 38 · SAMPLED 9 · INVENTORIED 513 · READ_RUNTIME 180 · CONTAINER 15 · UNREAD 487; plus 3 Drive archives > 10 MB UNREAD (owner action G-012).
+
+## Open gaps / risks / owner decisions (see `governance/registers/07,09,12`)
+- Gaps: G-001 BOQ handover · G-002 vendor API · G-003 tenant provisioning · G-004 DOA API/versioning · G-005 IPC/retention posting (OPEN owner decision DEC-009) · G-006 bootstrap model · G-007 Golden Cases undecomposed · G-008 dropped frozen scope · G-009 D-pack coverage · G-010 hostile concurrency tests · G-011 STEP02 atlas · G-012 unread archives.
+- Closed since POST-R0 snapshot: F-06 (projects.create) and F-07 (DB error mapping) by CC-013; PG 17 verification by CI.
+- Risks: RK-001 unread archives may change scope · RK-002 templated sources mistaken for specification · RK-003 similar defect density in untested modules.
 
 ## Install / build / migrate / run / test from zero
 Prerequisites: Node 22, npm 10, PostgreSQL 16 or 17 (both verified in CI).
@@ -86,7 +111,7 @@ for f in scripts/*.mjs; do node "$f"; done
 Docker alternative: set `POSTGRES_PASSWORD`, `APP_DB_PASSWORD`, `JWT_SECRET`, `BOOTSTRAP_ADMIN_TOKEN`, then `docker compose up --build`. **UNVERIFIED at runtime.**
 
 ## VERIFIED vs UNVERIFIED
-**VERIFIED (executed, logs in `takeover/evidence/`):** build, migrations from zero on PG 16.14, API authentication, DOA-driven approvals with SoD and wrong-role rejection, the commercial-procurement-finance chain to a balanced GL, AP/AR creation, idempotency of GRN confirm and GL posting, cross-tenant read/write/approval isolation at API and DB level, bootstrap refusal on orgs with active users.
+**VERIFIED (executed, logs in `takeover/evidence/` and CI):** build, migrations from zero on PG 16.14/16.15/17.11, project-create authorization, SQLSTATE error mapping without SQL leakage, API authentication, DOA-driven approvals with SoD and wrong-role rejection, the commercial-procurement-finance chain to a balanced GL, AP/AR creation, idempotency of GRN confirm and GL posting, cross-tenant read/write/approval isolation at API and DB level, bootstrap refusal on orgs with active users.
 
 **UNVERIFIED:** docker-compose runtime; frontend behaviour in a browser; every module outside the chain (HR/payroll, assets/plant, QA/QC, HSE, EDMS/CDE, planning, site, subcontracts, claims, variations, inventory transfers, portals, dashboards/reports, AI platform, automation, knowledge); performance/load; backup/restore/DR; penetration testing; production readiness of any kind. All DOA thresholds, CoA codes, GL rules and amounts used in tests are **TEST FIXTURES**, not owner-approved values.
 
