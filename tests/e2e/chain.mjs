@@ -53,13 +53,18 @@ try {
   const U = { tender: await mkUser('tender', R.tender), pm: await mkUser('pm', R.pm), proc: await mkUser('proc', R.proc), fin: await mkUser('fin', R.fin) };
 
   // Confirm TEST FIXTURE DOA rows (one per module used) via the only DOA write API (PATCH).
+  // DOA rules are confirmed by a different user than the editor (CC-017): a fixture confirmer holds admin.approve.
+  const confirmerRole = must(await api('POST', '/roles', admin, { role_name: `DOA Confirmer ${TAG}`, permissions: [{ module: 'admin', action: 'view', scope: 'all' }, { module: 'admin', action: 'approve', scope: 'all' }] }), 'confirmer role').id;
+  const confirmer = await mkUser('doaconf', confirmerRole);
   const doa = must(await api('GET', '/approvals/configuration/doa', admin), 'doa');
   const fixtureDoa = { tender_submission: R.tender, material_requisition: R.pm, purchase_order: R.proc, vendor_invoice: R.fin, ipc_submission: R.pm, payment: R.fin };
   for (const [module, role] of Object.entries(fixtureDoa)) {
     const row = doa.find(d => d.module === module && d.approval_level === 1 && Number(d.min_amount) === 0);
-    await run(`confirm fixture DOA ${module}`, async () => must(await api('PATCH', `/approvals/configuration/doa/${row.id}`, admin, {
+    await run(`edit fixture DOA draft ${module}`, async () => must(await api('PATCH', `/approvals/configuration/doa/${row.id}`, admin, {
       min_amount: 0, max_amount: null, currency_id: null, approval_level: 1, approver_role_id: role, is_active: true,
-      notes: `TEST FIXTURE ${TAG} - not owner-approved`, confirm: true }), 'doa'));
+      notes: `TEST FIXTURE ${TAG} - not owner-approved` }), 'doa'));
+    if (module === 'tender_submission') await expectFail('SoD: DOA editor cannot confirm own edit', () => api('POST', `/approvals/configuration/doa/${row.id}/confirm`, admin), 403);
+    await run(`confirm fixture DOA ${module} (second user)`, async () => must(await api('POST', `/approvals/configuration/doa/${row.id}/confirm`, confirmer), 'doa confirm'));
   }
   const approve = async (token, approvalId, label) => run(`approve ${label}`, async () => must(await api('POST', `/approvals/${approvalId}/actions`, token, { action: 'approved', comment: 'e2e' }), label));
   const cur = 1;

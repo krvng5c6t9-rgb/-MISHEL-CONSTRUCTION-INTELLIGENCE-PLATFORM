@@ -22,12 +22,15 @@ try {
   };
   const T = { s1: await mkUser('w1s1', signer1), s2: await mkUser('w1s2', signer2), appr: await mkUser('w1appr', boqApprover), view: await mkUser('w1view', boqViewer) };
 
+  const confirmer = await mkUser('w1doac', await mkRole('W1 DOA Confirmer', [['admin', 'view'], ['admin', 'approve']]));
   const doa = must(await api('GET', '/approvals/configuration/doa', admin), 'doa');
   for (const [level, role] of [[1, signer1], [2, signer2]]) {
     const row = doa.find(d => d.module === 'contract_signing' && Number(d.approval_level) === level && Number(d.min_amount) === 0);
     if (!row) throw new Error(`contract_signing DOA level ${level} missing`);
-    await run(`confirm fixture DOA contract_signing L${level}`, async () => must(await api('PATCH', `/approvals/configuration/doa/${row.id}`, admin, {
-      min_amount: 0, max_amount: null, currency_id: null, approval_level: level, approver_role_id: role, is_active: true, notes: `TEST FIXTURE ${TAG}`, confirm: true }), 'doa'));
+    await run(`edit + confirm fixture DOA contract_signing L${level}`, async () => {
+      must(await api('PATCH', `/approvals/configuration/doa/${row.id}`, admin, { min_amount: 0, max_amount: null, currency_id: null, approval_level: level, approver_role_id: role, is_active: true, notes: `TEST FIXTURE ${TAG}` }), 'doa');
+      return must(await api('POST', `/approvals/configuration/doa/${row.id}/confirm`, confirmer), 'doa confirm');
+    });
   }
 
   const client = must(await api('POST', '/clients', admin, { client_name: `W1 Client ${TAG}`, client_type: 'private' }), 'client').id;

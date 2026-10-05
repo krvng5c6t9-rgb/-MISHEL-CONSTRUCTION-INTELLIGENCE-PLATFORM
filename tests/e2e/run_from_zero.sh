@@ -30,3 +30,4 @@ PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node chain.mjs
 APP_PSQL_URL="$APP_URL_BASE/$DB$Q" node isolation.mjs "out/chain_$RUN.json"
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_boq_handover.mjs
 APP_PSQL_URL="$APP_URL_BASE/$DB$Q" OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_vendor_master.mjs
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_doa_governance.mjs

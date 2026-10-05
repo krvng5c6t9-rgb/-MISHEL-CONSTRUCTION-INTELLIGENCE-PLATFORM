@@ -2,7 +2,7 @@ G_ID,Description,Priority,Tier,Linked_REQ,Status,CreatedIn,LastUpdated,Notes
 G-001,No execution BOQ (project_boq) creation path; estimating->execution handover missing,P1,T1,D03/D07/GC-02,CLOSED,2026-10-05,2026-10-05,"F-01; closed by CC-015 (wave1 suite 41/41, E1)"
 G-002,No vendor/subcontractor create API,P1,T1,D06,CLOSED,2026-10-05,2026-10-05,"F-02; closed by CC-016 (wave1 vendor suite 41/41, E1)"
 G-003,No tenant provisioning (roles/DOA/CoA/GL rules/cost codes/fiscal),P1,T0,D20/GC-31,OPEN,2026-10-05,2026-10-05,F-03; STEP16 contracts available
-G-004,No DOA create/version API; approver roles lack approvals.approve,P1,T0,D01,OPEN,2026-10-05,2026-10-05,F-04
+G-004,No DOA create/version API; approver roles lack approvals.approve,P1,T0,D01,PARTIALLY_CLOSED,2026-10-05,2026-10-05,CC-017: DOA management API with versioning + SoD (26/26 E1). Remaining: owner-approved DOA matrix (owner decision; values never invented)
 G-005,IPC revenue/retention posting model,P1,T1,D13/BF09-023..037,OPEN_OWNER_DECISION,2026-10-05,2026-10-05,F-05
 G-006,Bootstrap token unlimited tenant creation,P1,T0,D20,OPEN_OWNER_DECISION,2026-10-05,2026-10-05,F-08
 G-007,Golden Cases GC-01..38 never decomposed into requirements/tests,P1,T0,STEP01,OPEN,2026-10-05,2026-10-05,R04

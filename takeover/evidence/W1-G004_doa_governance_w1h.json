@@ -1,0 +1,398 @@
+{
+  "suite": "wave1_doa_governance",
+  "run": "w1h",
+  "tag": "w1h",
+  "steps": [
+    {
+      "name": "confirm-in-PATCH is refused (separate step)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Confirmation is a separate step by a different user: POST /approvals/configuration/doa/:id/confirm\""
+    },
+    {
+      "name": "max <= min refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"max_amount must be greater than min_amount\""
+    },
+    {
+      "name": "confirmer without admin.manage cannot draft",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: admin.manage\""
+    },
+    {
+      "name": "editor creates draft band 0-1000 (fixture)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "draft is unconfirmed",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "editor revises draft upper bound to 2000",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "editor cannot confirm own draft (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: a DOA rule must be confirmed by someone other than its creator or last editor\""
+    },
+    {
+      "name": "user without admin.approve cannot confirm",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: admin.approve\""
+    },
+    {
+      "name": "independent confirmer confirms",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirmed rule cannot be edited",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Confirmed DOA rules are immutable; create a superseding draft or retire the rule\""
+    },
+    {
+      "name": "confirmed rule cannot be confirmed twice",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"DOA rule is already confirmed\""
+    },
+    {
+      "name": "overlapping band cannot be confirmed",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Confirmed DOA amount range overlaps another active rule\""
+    },
+    {
+      "name": "superseding draft must be same module",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A superseding rule must be for the same module\""
+    },
+    {
+      "name": "editor drafts version 2 (0-3000) superseding v1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirmer confirms version 2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "v1 retired with reason and retired_by, v2 active+confirmed",
+      "outcome": "PASS",
+      "detail": "{\"v1a\":false,\"r\":\"superseded by DOA rule 29\",\"v2a\":true}"
+    },
+    {
+      "name": "retire needs a reason",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "retire version 2 with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "retired rule cannot be retired again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"DOA rule is already inactive\""
+    },
+    {
+      "name": "A cannot use a tenant-B role as approver",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"DOA approver role must belong to the same organization\""
+    },
+    {
+      "name": "tenant B cannot confirm tenant A draft",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"DOA row not found\""
+    },
+    {
+      "name": "tenant B cannot retire tenant A rule",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"DOA row not found\""
+    },
+    {
+      "name": "DB: confirmed rule amounts immutable even as owner",
+      "outcome": "PASS",
+      "detail": "ERROR:  Confirmed DOA rule 29 is immutable; retire it with a reason and create a superseding draft"
+    },
+    {
+      "name": "DB: DOA rules cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  DOA rules cannot be deleted; retire them instead"
+    },
+    {
+      "name": "DB: rule cannot be inserted pre-confirmed",
+      "outcome": "PASS",
+      "detail": "ERROR:  DOA rules are created as drafts and confirmed separately"
+    },
+    {
+      "name": "DB: retired rule cannot be reactivated",
+      "outcome": "PASS",
+      "detail": "ERROR:  Confirmed DOA rule 27 is immutable; retire it with a reason and create a superseding draft"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/1",
+      "status": 422,
+      "ok": false,
+      "error": "Confirmation is a separate step by a different user: POST /approvals/configuration/doa/:id/confirm"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 400,
+      "ok": false,
+      "error": "max_amount must be greater than min_amount"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: admin.manage"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/27",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/27/confirm",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: a DOA rule must be confirmed by someone other than its creator or last editor"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/27/confirm",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: admin.approve"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/27/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/27",
+      "status": 409,
+      "ok": false,
+      "error": "Confirmed DOA rules are immutable; create a superseding draft or retire the rule"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/27/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "DOA rule is already confirmed"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/28/confirm",
+      "status": 422,
+      "ok": false,
+      "error": "Confirmed DOA amount range overlaps another active rule"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 422,
+      "ok": false,
+      "error": "A superseding rule must be for the same module"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/29/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/29/retire",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/29/retire",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/29/retire",
+      "status": 409,
+      "ok": false,
+      "error": "DOA rule is already inactive"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 422,
+      "ok": false,
+      "error": "DOA approver role must belong to the same organization"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/28/confirm",
+      "status": 404,
+      "ok": false,
+      "error": "DOA row not found"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/27/retire",
+      "status": 404,
+      "ok": false,
+      "error": "DOA row not found"
+    }
+  ]
+}
