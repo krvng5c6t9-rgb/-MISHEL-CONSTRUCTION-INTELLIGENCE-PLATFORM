@@ -47,9 +47,21 @@ try {
     must(await api('POST', `/approvals/configuration/doa/${row.id}/confirm`, checker), `confirm ${module}`);
   }
   const r2 = must(await api('GET', '/onboarding/readiness', tc), 'readiness');
-  const notReady = r2.items.filter(i => !i.ready).map(i => i.key);
-  // No cost-code management API exists yet (gap G-014), so cost_codes is expected to remain missing for a new tenant.
-  check('after configuration only cost_codes remains (G-014: no cost-code API)', notReady.join(',') === 'cost_codes', notReady.join(','));
+  check('before cost codes, only cost_codes remains', r2.items.filter(i => !i.ready).map(i => i.key).join(',') === 'cost_codes');
+
+  // --- G-014 cost-code management (tenant data, nothing defaulted).
+  const cc1 = must(await api('POST', '/cost-codes', tc, { code: '01', description: 'Preliminaries (fixture)', cost_type: 'preliminaries' }), 'cc1');
+  const cc2 = must(await api('POST', '/cost-codes', tc, { code: '01.01', description: 'Site setup (fixture)', cost_type: 'preliminaries', parent_code_id: cc1.id }), 'cc2');
+  await expectStatus('duplicate global cost code refused', () => api('POST', '/cost-codes', tc, { code: '01', description: 'dup code', cost_type: 'overhead' }), 409);
+  await expectStatus('cost-code hierarchy cycle refused', () => api('PATCH', `/cost-codes/${cc1.id}`, tc, { parent_code_id: cc2.id }), 422);
+  await expectStatus('parent from another tenant refused', () => api('POST', '/cost-codes', tc, { code: '99', description: 'cross tenant parent', cost_type: 'overhead', parent_code_id: 2 }), 422);
+  await run('unused code may be renamed', async () => must(await api('PATCH', `/cost-codes/${cc2.id}`, tc, { code: '01.02' }), 'rename'));
+  const ta = await login({ email: 'admin.a@test.local', password: 'Passw0rd!A', org_id: 1 });
+  await expectStatus('code carrying cost cannot be renamed (tenant A code 2 has chain cost)', () => api('PATCH', '/cost-codes/2', ta, { code: 'CHANGED' }), 422);
+  await run('description of a used code stays editable', async () => must(await api('PATCH', '/cost-codes/2', ta, { description: 'Material (fixture description)' }), 'desc'));
+  await expectStatus('tenant C cannot edit tenant A code', () => api('PATCH', '/cost-codes/2', tc, { description: 'cross tenant' }), 404);
+  const r3 = must(await api('GET', '/onboarding/readiness', tc), 'readiness');
+  check('tenant C fully ready after configuration', r3.ready === true, r3.items.filter(i => !i.ready).map(i => i.key).join(','));
 
   const viewerRole = await mkRole('No Admin', [['projects', 'view']]);
   must(await api('POST', '/users', tc, { role_id: viewerRole, full_name: 'Viewer C', email: `viewer.c.${TAG}@test.local`, password: 'Passw0rd!W' }), 'viewer');

@@ -12,4 +12,4 @@ G-010,W00-09 hostile runtime tests (replay/concurrency/period-lock/approval-race
 G-011,"STEP02 4,965-row capability atlas not available",P2,T0,STEP02,OPEN,2026-10-05,2026-10-05,reconstruct via discovery
 G-012,Three Drive archives > 10 MB unread,P1,-,source coverage,OPEN_OWNER_ACTION,2026-10-05,2026-10-05,must be read before claiming complete coverage
 G-013,No per-session token revocation (logout/compromised session) or JWT signing-key rotation; deactivating a user does revoke on next request,P2,T1,GC-32/GC-37,OPEN,2026-10-05,2026-10-05,found in R13 decomposition (authenticate.ts E3)
-G-014,No cost-code management API; a new tenant cannot create cost codes (readiness shows cost_codes missing); POs require cost_code_id,P1,T1,GC-02/GC-06/GC-31,OPEN,2026-10-05,2026-10-05,found by wave1_tenant_onboarding (E1)
+G-014,No cost-code management API; a new tenant cannot create cost codes (readiness shows cost_codes missing); POs require cost_code_id,P1,T1,GC-02/GC-06/GC-31,CLOSED,2026-10-05,2026-10-05,"closed by CC-019 (onboarding suite 20/20, E1)"

@@ -1,7 +1,7 @@
 {
   "suite": "wave1_tenant_onboarding",
-  "run": "w1i",
-  "tag": "w1i",
+  "run": "w1k",
+  "tag": "w1k",
   "steps": [
     {
       "name": "bootstrap tenant C (multi-tenant bootstrap enabled in this test server)",
@@ -24,9 +24,49 @@
       "detail": "purchase_order,vendor_invoice,material_requisition,comparative_statement,tender_submission,contract_signing,variation,ipc_submission,manual_journal_entry,payment,subcontract_signing,subcontract_certificate,payroll_run,equipment_usage"
     },
     {
-      "name": "after configuration only cost_codes remains (G-014: no cost-code API)",
+      "name": "before cost codes, only cost_codes remains",
       "outcome": "PASS",
-      "detail": "cost_codes"
+      "detail": ""
+    },
+    {
+      "name": "duplicate global cost code refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint uq_cost_codes_global\""
+    },
+    {
+      "name": "cost-code hierarchy cycle refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Cost code hierarchy cannot contain a cycle\""
+    },
+    {
+      "name": "parent from another tenant refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Parent cost code must belong to the same organization\""
+    },
+    {
+      "name": "unused code may be renamed",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "code carrying cost cannot be renamed (tenant A code 2 has chain cost)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Cost code MAT-000 already carries cost; code, type and scope are frozen\""
+    },
+    {
+      "name": "description of a used code stays editable",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant C cannot edit tenant A code",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Cost code not found\""
+    },
+    {
+      "name": "tenant C fully ready after configuration",
+      "outcome": "PASS",
+      "detail": ""
     },
     {
       "name": "readiness requires admin.view",
@@ -379,6 +419,83 @@
       "status": 200,
       "ok": true,
       "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/onboarding/readiness",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/cost-codes",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/cost-codes",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/cost-codes",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint uq_cost_codes_global"
+    },
+    {
+      "method": "PATCH",
+      "path": "/cost-codes/7",
+      "status": 422,
+      "ok": false,
+      "error": "Cost code hierarchy cannot contain a cycle"
+    },
+    {
+      "method": "POST",
+      "path": "/cost-codes",
+      "status": 422,
+      "ok": false,
+      "error": "Parent cost code must belong to the same organization"
+    },
+    {
+      "method": "PATCH",
+      "path": "/cost-codes/8",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/cost-codes/2",
+      "status": 422,
+      "ok": false,
+      "error": "Cost code MAT-000 already carries cost; code, type and scope are frozen"
+    },
+    {
+      "method": "PATCH",
+      "path": "/cost-codes/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/cost-codes/2",
+      "status": 404,
+      "ok": false,
+      "error": "Cost code not found"
     },
     {
       "method": "GET",
