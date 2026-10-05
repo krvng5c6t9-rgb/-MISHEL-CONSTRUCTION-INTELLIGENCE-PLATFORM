@@ -1,0 +1,167 @@
+sop_id,sop_title,step_no,step_title
+SOP-01_BID_NO_BID,قرار الدخول في المناقصة,1,تسجيل الفرصة.
+SOP-01_BID_NO_BID,قرار الدخول في المناقصة,2,فحص الملاءمة والقدرة والتعارض.
+SOP-01_BID_NO_BID,قرار الدخول في المناقصة,3,تقدير أولي للمخاطر والموارد.
+SOP-01_BID_NO_BID,قرار الدخول في المناقصة,4,مذكرة Go/No-Go.
+SOP-01_BID_NO_BID,قرار الدخول في المناقصة,5,اعتماد اللجنة وحفظ القرار.
+SOP-02_ESTIMATING_AND_TENDERING,التسعير وإعداد العرض,1,تجميد نطاق العرض.
+SOP-02_ESTIMATING_AND_TENDERING,التسعير وإعداد العرض,2,إنشاء WBS/BOQ وقاعدة القياس.
+SOP-02_ESTIMATING_AND_TENDERING,التسعير وإعداد العرض,3,طلب عروض الموردين والمقاولين.
+SOP-02_ESTIMATING_AND_TENDERING,التسعير وإعداد العرض,4,التسعير والتحليل والمخاطر.
+SOP-02_ESTIMATING_AND_TENDERING,التسعير وإعداد العرض,5,مراجعة فنية وتجارية وقانونية.
+SOP-02_ESTIMATING_AND_TENDERING,التسعير وإعداد العرض,6,اعتماد وتقديم العرض.
+SOP-03_PREQUALIFICATION,التأهيل المسبق,1,جمع متطلبات العميل.
+SOP-03_PREQUALIFICATION,التأهيل المسبق,2,تجميع الخبرة والموارد والتراخيص.
+SOP-03_PREQUALIFICATION,التأهيل المسبق,3,مراجعة صحة الأدلة.
+SOP-03_PREQUALIFICATION,التأهيل المسبق,4,تقييم المخاطر والقدرة.
+SOP-03_PREQUALIFICATION,التأهيل المسبق,5,اعتماد ملف التقديم وحفظه.
+SOP-04_CONTRACT_REVIEW,مراجعة العقد قبل التوقيع,1,استلام النسخة الرسمية.
+SOP-04_CONTRACT_REVIEW,مراجعة العقد قبل التوقيع,2,استخراج الالتزامات والإخطارات.
+SOP-04_CONTRACT_REVIEW,مراجعة العقد قبل التوقيع,3,مراجعة فنية وتجارية وقانونية.
+SOP-04_CONTRACT_REVIEW,مراجعة العقد قبل التوقيع,4,تسجيل المخاطر والاستثناءات.
+SOP-04_CONTRACT_REVIEW,مراجعة العقد قبل التوقيع,5,اعتماد Contract Summary قبل التوقيع.
+SOP-05_PROJECT_MOBILIZATION,تعبئة المشروع,1,تسليم العقد للفريق.
+SOP-05_PROJECT_MOBILIZATION,تعبئة المشروع,2,تأكيد الموقع والتصاريح.
+SOP-05_PROJECT_MOBILIZATION,تعبئة المشروع,3,تعيين الفريق والصلاحيات.
+SOP-05_PROJECT_MOBILIZATION,تعبئة المشروع,4,اعتماد الخطط والسجلات.
+SOP-05_PROJECT_MOBILIZATION,تعبئة المشروع,5,مراجعة جاهزية Gate 4.
+SOP-06_PROJECT_BASELINE,اعتماد خط أساس النطاق والبرنامج والتكلفة,1,إنشاء WBS/OBS/CBS.
+SOP-06_PROJECT_BASELINE,اعتماد خط أساس النطاق والبرنامج والتكلفة,2,تحديد القياس والتقويم.
+SOP-06_PROJECT_BASELINE,اعتماد خط أساس النطاق والبرنامج والتكلفة,3,إعداد البرنامج والتكلفة.
+SOP-06_PROJECT_BASELINE,اعتماد خط أساس النطاق والبرنامج والتكلفة,4,مراجعة المخاطر والافتراضات.
+SOP-06_PROJECT_BASELINE,اعتماد خط أساس النطاق والبرنامج والتكلفة,5,اعتماد baseline وإدارة نسخته.
+SOP-07_DESIGN_REVIEW,مراجعة التصميم,1,فحص المدخلات.
+SOP-07_DESIGN_REVIEW,مراجعة التصميم,2,مراجعة التخصص.
+SOP-07_DESIGN_REVIEW,مراجعة التصميم,3,تنسيق الواجهات.
+SOP-07_DESIGN_REVIEW,مراجعة التصميم,4,تسجيل التعليقات والقرارات.
+SOP-07_DESIGN_REVIEW,مراجعة التصميم,5,إصدار وحفظ سجل الاعتماد.
+SOP-08_SHOP_DRAWING,إنتاج واعتماد Shop Drawings,1,استلام IFC/spec.
+SOP-08_SHOP_DRAWING,إنتاج واعتماد Shop Drawings,2,إعداد الرسم وقائمة المراجع.
+SOP-08_SHOP_DRAWING,إنتاج واعتماد Shop Drawings,3,مراجعة التخصص والتنسيق.
+SOP-08_SHOP_DRAWING,إنتاج واعتماد Shop Drawings,4,إرسال رسمي ومعالجة التعليقات.
+SOP-08_SHOP_DRAWING,إنتاج واعتماد Shop Drawings,5,إصدار AFC وتحديث السجل.
+SOP-09_RFI_MANAGEMENT,إدارة طلبات المعلومات,1,تسجيل السؤال والمرجع.
+SOP-09_RFI_MANAGEMENT,إدارة طلبات المعلومات,2,تقييم أثر الوقت والتكلفة.
+SOP-09_RFI_MANAGEMENT,إدارة طلبات المعلومات,3,توجيهه للجهة المختصة.
+SOP-09_RFI_MANAGEMENT,إدارة طلبات المعلومات,4,متابعة الرد والتحقق.
+SOP-09_RFI_MANAGEMENT,إدارة طلبات المعلومات,5,إغلاق RFI وربطه بالتغيير إن لزم.
+SOP-10_MATERIAL_SUBMITTAL,اعتماد المواد,1,تحديد متطلب المواصفة.
+SOP-10_MATERIAL_SUBMITTAL,اعتماد المواد,2,تجميع datasheets/certificates.
+SOP-10_MATERIAL_SUBMITTAL,اعتماد المواد,3,تقييم فني وجودة وتجاري.
+SOP-10_MATERIAL_SUBMITTAL,اعتماد المواد,4,اعتماد/رفض/تعليق.
+SOP-10_MATERIAL_SUBMITTAL,اعتماد المواد,5,تتبع الشراء والاستلام والـlot.
+SOP-11_METHOD_STATEMENT,إعداد واعتماد Method Statement,1,وصف النشاط وتسلسله.
+SOP-11_METHOD_STATEMENT,إعداد واعتماد Method Statement,2,تحديد الموارد والمخاطر.
+SOP-11_METHOD_STATEMENT,إعداد واعتماد Method Statement,3,ربط ITP وJSA.
+SOP-11_METHOD_STATEMENT,إعداد واعتماد Method Statement,4,مراجعة فنية وHSE وQA.
+SOP-11_METHOD_STATEMENT,إعداد واعتماد Method Statement,5,اعتماد وتوعية المنفذين.
+SOP-12_BIM_COORDINATION,تنسيق BIM وكشف التعارضات,1,تحديد نطاق النمذجة.
+SOP-12_BIM_COORDINATION,تنسيق BIM وكشف التعارضات,2,توحيد الإصدارات والنماذج.
+SOP-12_BIM_COORDINATION,تنسيق BIM وكشف التعارضات,3,تشغيل clash detection.
+SOP-12_BIM_COORDINATION,تنسيق BIM وكشف التعارضات,4,تصنيف التعارضات وتعيين ملاك.
+SOP-12_BIM_COORDINATION,تنسيق BIM وكشف التعارضات,5,إغلاق وإصدار coordination record.
+SOP-13_WORK_PACKAGE_RELEASE,إطلاق حزمة العمل,1,تحديد الحزمة والحدود.
+SOP-13_WORK_PACKAGE_RELEASE,إطلاق حزمة العمل,2,فحص الرسومات والمواد والموارد.
+SOP-13_WORK_PACKAGE_RELEASE,إطلاق حزمة العمل,3,فحص المخاطر والتصاريح.
+SOP-13_WORK_PACKAGE_RELEASE,إطلاق حزمة العمل,4,اعتماد hold/witness points.
+SOP-13_WORK_PACKAGE_RELEASE,إطلاق حزمة العمل,5,إصدار release للموقع.
+SOP-14_DAILY_SITE_CONTROL,التحكم اليومي بالموقع,1,اجتماع بداية اليوم.
+SOP-14_DAILY_SITE_CONTROL,التحكم اليومي بالموقع,2,فحص الجبهات والموارد.
+SOP-14_DAILY_SITE_CONTROL,التحكم اليومي بالموقع,3,تسجيل الإنتاج والسلامة.
+SOP-14_DAILY_SITE_CONTROL,التحكم اليومي بالموقع,4,معالجة القيود والتغييرات.
+SOP-14_DAILY_SITE_CONTROL,التحكم اليومي بالموقع,5,إصدار daily report ومراجعة المدير.
+SOP-15_PROGRESS_MEASUREMENT,قياس التقدم,1,تجميد basis of measurement.
+SOP-15_PROGRESS_MEASUREMENT,قياس التقدم,2,جمع أدلة الكميات.
+SOP-15_PROGRESS_MEASUREMENT,قياس التقدم,3,تحقق مهندس وControls.
+SOP-15_PROGRESS_MEASUREMENT,قياس التقدم,4,إدخال التقدم وربطه بالتكلفة.
+SOP-15_PROGRESS_MEASUREMENT,قياس التقدم,5,اعتماد التقرير وحفظ الدليل.
+SOP-16_COST_CONTROL_CVR,ضبط التكلفة وCVR,1,تحديث budget/commitments/actuals.
+SOP-16_COST_CONTROL_CVR,ضبط التكلفة وCVR,2,تسجيل accruals.
+SOP-16_COST_CONTROL_CVR,ضبط التكلفة وCVR,3,تحليل الانحراف.
+SOP-16_COST_CONTROL_CVR,ضبط التكلفة وCVR,4,تنبؤ EAC/cash.
+SOP-16_COST_CONTROL_CVR,ضبط التكلفة وCVR,5,مراجعة Commercial/Finance/PM.
+SOP-16_COST_CONTROL_CVR,ضبط التكلفة وCVR,6,إصدار CVR وإجراءات التصحيح.
+SOP-17_PROCUREMENT,الشراء والتوريد,1,إنشاء MTO وprocurement plan.
+SOP-17_PROCUREMENT,الشراء والتوريد,2,تأهيل الموردين.
+SOP-17_PROCUREMENT,الشراء والتوريد,3,RFQ وتقييم فني وتجاري.
+SOP-17_PROCUREMENT,الشراء والتوريد,4,اعتماد الترسية وPO.
+SOP-17_PROCUREMENT,الشراء والتوريد,5,expediting/inspection/delivery.
+SOP-17_PROCUREMENT,الشراء والتوريد,6,استلام ومطابقة وإغلاق.
+SOP-18_SUBCONTRACT_AWARD,ترسية وإدارة مقاول الباطن,1,تقسيم النطاق.
+SOP-18_SUBCONTRACT_AWARD,ترسية وإدارة مقاول الباطن,2,تأهيل المقاولين.
+SOP-18_SUBCONTRACT_AWARD,ترسية وإدارة مقاول الباطن,3,مناقصة وتقييم.
+SOP-18_SUBCONTRACT_AWARD,ترسية وإدارة مقاول الباطن,4,تفاوض ومراجعة قانونية.
+SOP-18_SUBCONTRACT_AWARD,ترسية وإدارة مقاول الباطن,5,اعتماد وترسية.
+SOP-18_SUBCONTRACT_AWARD,ترسية وإدارة مقاول الباطن,6,mobilization/performance/closeout.
+SOP-19_CHANGE_VARIATION,إدارة التغيير والتنوعات,1,تسجيل مصدر التغيير.
+SOP-19_CHANGE_VARIATION,إدارة التغيير والتنوعات,2,تحليل فني وبرنامج وتكلفة.
+SOP-19_CHANGE_VARIATION,إدارة التغيير والتنوعات,3,فحص الحق والإخطار.
+SOP-19_CHANGE_VARIATION,إدارة التغيير والتنوعات,4,اعتماد الجهة المخولة.
+SOP-19_CHANGE_VARIATION,إدارة التغيير والتنوعات,5,تنفيذ وتحديث baseline/forecast.
+SOP-19_CHANGE_VARIATION,إدارة التغيير والتنوعات,6,إغلاق المستندات.
+SOP-20_CLAIM_EOT,المطالبات والتمديد,1,تسجيل الحدث وحفظ السجل.
+SOP-20_CLAIM_EOT,المطالبات والتمديد,2,إخطار حسب العقد.
+SOP-20_CLAIM_EOT,المطالبات والتمديد,3,تحليل السبب والأثر والمسار الحرج.
+SOP-20_CLAIM_EOT,المطالبات والتمديد,4,تسعير وتجميع الأدلة.
+SOP-20_CLAIM_EOT,المطالبات والتمديد,5,مراجعة Legal/Commercial.
+SOP-20_CLAIM_EOT,المطالبات والتمديد,6,تقديم ومتابعة وتسوية.
+SOP-21_PAYMENT_APPLICATION,المستخلصات والتحصيل,1,تجميع القياس والاختبارات.
+SOP-21_PAYMENT_APPLICATION,المستخلصات والتحصيل,2,إعداد المستخلص.
+SOP-21_PAYMENT_APPLICATION,المستخلصات والتحصيل,3,مراجعة QS/PM/QA/Commercial.
+SOP-21_PAYMENT_APPLICATION,المستخلصات والتحصيل,4,تقديم رسمي.
+SOP-21_PAYMENT_APPLICATION,المستخلصات والتحصيل,5,متابعة الاعتماد والتحصيل.
+SOP-21_PAYMENT_APPLICATION,المستخلصات والتحصيل,6,تسجيل النزاع أو الاستحقاق.
+SOP-22_QAQC_INSPECTION,التفتيش والاختبار والجودة,1,تحديد المتطلب ونقطة الفحص.
+SOP-22_QAQC_INSPECTION,التفتيش والاختبار والجودة,2,إشعار الفحص.
+SOP-22_QAQC_INSPECTION,التفتيش والاختبار والجودة,3,تنفيذ الفحص/الاختبار.
+SOP-22_QAQC_INSPECTION,التفتيش والاختبار والجودة,4,تسجيل النتيجة.
+SOP-22_QAQC_INSPECTION,التفتيش والاختبار والجودة,5,قبول أو NCR.
+SOP-22_QAQC_INSPECTION,التفتيش والاختبار والجودة,6,حفظ dossier.
+SOP-23_NCR_CORRECTIVE_ACTION,NCR والإجراء التصحيحي,1,وصف عدم المطابقة.
+SOP-23_NCR_CORRECTIVE_ACTION,NCR والإجراء التصحيحي,2,إجراء احتواء.
+SOP-23_NCR_CORRECTIVE_ACTION,NCR والإجراء التصحيحي,3,تحليل السبب الجذري.
+SOP-23_NCR_CORRECTIVE_ACTION,NCR والإجراء التصحيحي,4,إجراء تصحيحي ووقائي.
+SOP-23_NCR_CORRECTIVE_ACTION,NCR والإجراء التصحيحي,5,تحقق مستقل.
+SOP-23_NCR_CORRECTIVE_ACTION,NCR والإجراء التصحيحي,6,إغلاق ومشاركة الدرس.
+SOP-24_HSE_RISK_PERMIT,تقييم المخاطر وتصاريح العمل,1,تحديد النشاط والخطر.
+SOP-24_HSE_RISK_PERMIT,تقييم المخاطر وتصاريح العمل,2,JSA/Risk Assessment.
+SOP-24_HSE_RISK_PERMIT,تقييم المخاطر وتصاريح العمل,3,تحديد الضوابط والكفاءة.
+SOP-24_HSE_RISK_PERMIT,تقييم المخاطر وتصاريح العمل,4,إصدار permit.
+SOP-24_HSE_RISK_PERMIT,تقييم المخاطر وتصاريح العمل,5,مراقبة وتعليق/إغلاق.
+SOP-24_HSE_RISK_PERMIT,تقييم المخاطر وتصاريح العمل,6,مراجعة بعد النشاط.
+SOP-25_INCIDENT_INVESTIGATION,التحقيق في الحوادث,1,تأمين الموقع والإبلاغ.
+SOP-25_INCIDENT_INVESTIGATION,التحقيق في الحوادث,2,حفظ الأدلة.
+SOP-25_INCIDENT_INVESTIGATION,التحقيق في الحوادث,3,تشكيل فريق مستقل.
+SOP-25_INCIDENT_INVESTIGATION,التحقيق في الحوادث,4,تحليل السبب الجذري.
+SOP-25_INCIDENT_INVESTIGATION,التحقيق في الحوادث,5,إخطار الجهات عند اللزوم.
+SOP-25_INCIDENT_INVESTIGATION,التحقيق في الحوادث,6,إجراءات وتصعيد وإغلاق.
+SOP-26_ENVIRONMENTAL_CONTROL,التحكم البيئي والمجتمعي,1,تحديد الجوانب والتصاريح.
+SOP-26_ENVIRONMENTAL_CONTROL,التحكم البيئي والمجتمعي,2,خطة المراقبة.
+SOP-26_ENVIRONMENTAL_CONTROL,التحكم البيئي والمجتمعي,3,تنفيذ الضوابط.
+SOP-26_ENVIRONMENTAL_CONTROL,التحكم البيئي والمجتمعي,4,قياس وتسجيل.
+SOP-26_ENVIRONMENTAL_CONTROL,التحكم البيئي والمجتمعي,5,معالجة الشكاوى/التجاوز.
+SOP-26_ENVIRONMENTAL_CONTROL,التحكم البيئي والمجتمعي,6,تقرير ومراجعة.
+SOP-27_COMMISSIONING,الاختبارات والتشغيل,1,تحديد النظام وحدوده.
+SOP-27_COMMISSIONING,الاختبارات والتشغيل,2,test packs وprocedures.
+SOP-27_COMMISSIONING,الاختبارات والتشغيل,3,pre-commissioning.
+SOP-27_COMMISSIONING,الاختبارات والتشغيل,4,functional/integrated testing.
+SOP-27_COMMISSIONING,الاختبارات والتشغيل,5,تدريب وO&M.
+SOP-27_COMMISSIONING,الاختبارات والتشغيل,6,authority witness/handover.
+SOP-28_HANDOVER_CLOSEOUT,التسليم والإغلاق,1,قائمة النواقص.
+SOP-28_HANDOVER_CLOSEOUT,التسليم والإغلاق,2,تجميع as-built/O&M/certificates.
+SOP-28_HANDOVER_CLOSEOUT,التسليم والإغلاق,3,إغلاق الاختبارات والضمانات.
+SOP-28_HANDOVER_CLOSEOUT,التسليم والإغلاق,4,taking over.
+SOP-28_HANDOVER_CLOSEOUT,التسليم والإغلاق,5,final account and release.
+SOP-28_HANDOVER_CLOSEOUT,التسليم والإغلاق,6,lessons learned/archive.
+SOP-29_DOCUMENT_CONTROL,ضبط الوثائق وCDE,1,إنشاء metadata.
+SOP-29_DOCUMENT_CONTROL,ضبط الوثائق وCDE,2,مراجعة وإصدار.
+SOP-29_DOCUMENT_CONTROL,ضبط الوثائق وCDE,3,توزيع وتأكيد الاستلام.
+SOP-29_DOCUMENT_CONTROL,ضبط الوثائق وCDE,4,سحب النسخ القديمة.
+SOP-29_DOCUMENT_CONTROL,ضبط الوثائق وCDE,5,أرشفة وlegal hold.
+SOP-29_DOCUMENT_CONTROL,ضبط الوثائق وCDE,6,اختبار الاسترجاع.
+SOP-30_AUDIT_FINDINGS,التدقيق وإغلاق الملاحظات,1,تحديد النطاق والمعيار.
+SOP-30_AUDIT_FINDINGS,التدقيق وإغلاق الملاحظات,2,جمع الأدلة والعينة.
+SOP-30_AUDIT_FINDINGS,التدقيق وإغلاق الملاحظات,3,إصدار finding.
+SOP-30_AUDIT_FINDINGS,التدقيق وإغلاق الملاحظات,4,خطة السبب والإجراء.
+SOP-30_AUDIT_FINDINGS,التدقيق وإغلاق الملاحظات,5,تحقق من الإغلاق.
+SOP-30_AUDIT_FINDINGS,التدقيق وإغلاق الملاحظات,6,تقرير الاتجاهات والتصعيد.
