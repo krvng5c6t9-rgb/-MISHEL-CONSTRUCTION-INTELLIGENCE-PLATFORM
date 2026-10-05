@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 const must=[
- ['migration 020','database/migrations/020_redteam_closure.sql','DELETE FROM delegation_of_authority'],
+ // CC-003: placeholder DOA rows are deactivated (DELETE violated FKs from approval history and was a no-op under RLS).
+ ['migration 020','database/migrations/020_redteam_closure.sql','UPDATE delegation_of_authority SET is_active=false'],
  ['claim transition','backend/src/modules/claims/claims.routes.ts','Invalid claim transition'],
  ['atomic transfer','backend/src/modules/inventory/inventory.routes.ts',"post('/transfer'"],
  ['negative stock guard','backend/src/modules/inventory/inventory.routes.ts','Insufficient stock'],
