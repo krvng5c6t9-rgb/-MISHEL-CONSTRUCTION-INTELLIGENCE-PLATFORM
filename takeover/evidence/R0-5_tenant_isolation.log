@@ -1,0 +1,34 @@
+PASS  login with org A credentials into org B rejected :: HTTP 401
+PASS  B cannot read A lead by id :: HTTP 404
+PASS  B cannot read A tender by id :: HTTP 404
+PASS  B cannot read A contract by id :: HTTP 404
+PASS  B cannot read A PO details by id :: HTTP 404
+PASS  B cannot read A client by id :: HTTP 404
+PASS  B cannot read A BOQ rate build-up by id :: HTTP 200
+PASS  B list projects has no A rows :: HTTP 200 rows=0 foreign=0
+PASS  B list leads has no A rows :: HTTP 200 rows=0 foreign=0
+PASS  B list POs has no A rows :: HTTP 200 rows=0 foreign=0
+PASS  B list approvals has no A rows :: HTTP 200 rows=0 foreign=0
+PASS  B list GL has no A rows :: HTTP 200 rows=0 foreign=0
+PASS  B list AP has no A rows :: HTTP 200 rows=0 foreign=0
+PASS  B list DOA has no A rows :: HTTP 200 rows=0 foreign=0
+PASS  B list cost transactions has no A rows :: HTTP 200 rows=0 foreign=0
+PASS  B list roles has no A rows :: HTTP 200 rows=1 foreign=0
+PASS  B list users has no A rows :: HTTP 200 rows=1 foreign=0
+PASS  B cannot create MR on A project :: HTTP 500 "Tenant parent not found for material_requisitions"
+PASS  B cannot add quotation to A RFQ :: HTTP 500 "Tenant parent not found for vendor_quotations"
+PASS  B cannot add rate build-up to A BOQ :: HTTP 500 "Tenant parent not found for boq_rate_buildup"
+PASS  B cannot create PO with A vendor/project :: HTTP 500 "Tenant parent not found for purchase_orders"
+PASS  B cannot issue A PO :: HTTP 409 "Only approved purchase orders can be issued"
+PASS  B cannot post A cost transaction to GL :: HTTP 404 "Cost transaction not found"
+PASS  B cannot client-approve A IPC :: HTTP 409 "IPC must be submitted_to_client before client approval"
+PASS  B cannot create contract on A project :: HTTP 404 "Project not found"
+PASS  B cannot edit A DOA row :: HTTP 404 "DOA row not found"
+PASS  B cannot change A role permissions :: HTTP 404 "Role not found in current organization"
+PASS  B cannot create BOQ on A project :: HTTP 500 "Parent record not found for boq_master"
+PASS  B cannot act on A approval instance :: HTTP 404 "Approval instance not found"
+PASS  DB: app role under org 2 sees other organizations rows = 0 :: other orgs visible=0
+PASS  DB: app role under org 2 sees other-tenant projects = 0 :: foreign projects=0
+PASS  DB: app role under org 2 sees boq_rate_buildup rows = 0 (A has rows) :: rate-buildup rows visible=0
+
+SUMMARY isolation PASS=32 FAIL=0

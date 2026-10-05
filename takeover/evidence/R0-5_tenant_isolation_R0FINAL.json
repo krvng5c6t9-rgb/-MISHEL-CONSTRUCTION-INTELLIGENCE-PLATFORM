@@ -1,0 +1,391 @@
+{
+  "run": "R0FINAL",
+  "results": [
+    {
+      "name": "login with org A credentials into org B rejected",
+      "outcome": "PASS",
+      "detail": "HTTP 401"
+    },
+    {
+      "name": "B cannot read A lead by id",
+      "outcome": "PASS",
+      "detail": "HTTP 404"
+    },
+    {
+      "name": "B cannot read A tender by id",
+      "outcome": "PASS",
+      "detail": "HTTP 404"
+    },
+    {
+      "name": "B cannot read A contract by id",
+      "outcome": "PASS",
+      "detail": "HTTP 404"
+    },
+    {
+      "name": "B cannot read A PO details by id",
+      "outcome": "PASS",
+      "detail": "HTTP 404"
+    },
+    {
+      "name": "B cannot read A client by id",
+      "outcome": "PASS",
+      "detail": "HTTP 404"
+    },
+    {
+      "name": "B cannot read A BOQ rate build-up by id",
+      "outcome": "PASS",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "B list projects has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=0 foreign=0"
+    },
+    {
+      "name": "B list leads has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=0 foreign=0"
+    },
+    {
+      "name": "B list POs has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=0 foreign=0"
+    },
+    {
+      "name": "B list approvals has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=0 foreign=0"
+    },
+    {
+      "name": "B list GL has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=0 foreign=0"
+    },
+    {
+      "name": "B list AP has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=0 foreign=0"
+    },
+    {
+      "name": "B list DOA has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=0 foreign=0"
+    },
+    {
+      "name": "B list cost transactions has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=0 foreign=0"
+    },
+    {
+      "name": "B list roles has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=1 foreign=0"
+    },
+    {
+      "name": "B list users has no A rows",
+      "outcome": "PASS",
+      "detail": "HTTP 200 rows=1 foreign=0"
+    },
+    {
+      "name": "B cannot create MR on A project",
+      "outcome": "PASS",
+      "detail": "HTTP 500 \"Tenant parent not found for material_requisitions\""
+    },
+    {
+      "name": "B cannot add quotation to A RFQ",
+      "outcome": "PASS",
+      "detail": "HTTP 500 \"Tenant parent not found for vendor_quotations\""
+    },
+    {
+      "name": "B cannot add rate build-up to A BOQ",
+      "outcome": "PASS",
+      "detail": "HTTP 500 \"Tenant parent not found for boq_rate_buildup\""
+    },
+    {
+      "name": "B cannot create PO with A vendor/project",
+      "outcome": "PASS",
+      "detail": "HTTP 500 \"Tenant parent not found for purchase_orders\""
+    },
+    {
+      "name": "B cannot issue A PO",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only approved purchase orders can be issued\""
+    },
+    {
+      "name": "B cannot post A cost transaction to GL",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Cost transaction not found\""
+    },
+    {
+      "name": "B cannot client-approve A IPC",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"IPC must be submitted_to_client before client approval\""
+    },
+    {
+      "name": "B cannot create contract on A project",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Project not found\""
+    },
+    {
+      "name": "B cannot edit A DOA row",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"DOA row not found\""
+    },
+    {
+      "name": "B cannot change A role permissions",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Role not found in current organization\""
+    },
+    {
+      "name": "B cannot create BOQ on A project",
+      "outcome": "PASS",
+      "detail": "HTTP 500 \"Parent record not found for boq_master\""
+    },
+    {
+      "name": "B cannot act on A approval instance",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Approval instance not found\""
+    },
+    {
+      "name": "DB: app role under org 2 sees other organizations rows = 0",
+      "outcome": "PASS",
+      "detail": "other orgs visible=0"
+    },
+    {
+      "name": "DB: app role under org 2 sees other-tenant projects = 0",
+      "outcome": "PASS",
+      "detail": "foreign projects=0"
+    },
+    {
+      "name": "DB: app role under org 2 sees boq_rate_buildup rows = 0 (A has rows)",
+      "outcome": "PASS",
+      "detail": "rate-buildup rows visible=0"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "GET",
+      "path": "/crm/leads/1",
+      "status": 404,
+      "ok": false,
+      "error": "Lead not found"
+    },
+    {
+      "method": "GET",
+      "path": "/tendering/tenders/1",
+      "status": 404,
+      "ok": false,
+      "error": "Tender not found"
+    },
+    {
+      "method": "GET",
+      "path": "/contracts/1",
+      "status": 404,
+      "ok": false,
+      "error": "Contract not found"
+    },
+    {
+      "method": "GET",
+      "path": "/procurement/purchase-orders/1/details",
+      "status": 404,
+      "ok": false,
+      "error": "Purchase order not found"
+    },
+    {
+      "method": "GET",
+      "path": "/clients/1",
+      "status": 404,
+      "ok": false,
+      "error": "Client not found"
+    },
+    {
+      "method": "GET",
+      "path": "/boq/master/1/rate-buildup",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/projects",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/crm/leads",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/procurement/purchase-orders",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/finance/gl",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/finance/ap",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/cost-transactions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/roles",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/users",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/material-requisitions",
+      "status": 500,
+      "ok": false,
+      "error": "Tenant parent not found for material_requisitions"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/rfqs/1/vendor-quotations",
+      "status": 500,
+      "ok": false,
+      "error": "Tenant parent not found for vendor_quotations"
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master/1/rate-buildup",
+      "status": 500,
+      "ok": false,
+      "error": "Tenant parent not found for boq_rate_buildup"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders",
+      "status": 500,
+      "ok": false,
+      "error": "Tenant parent not found for purchase_orders"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/1/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved purchase orders can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/1/post-gl",
+      "status": 404,
+      "ok": false,
+      "error": "Cost transaction not found"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/ipcs/1/client-approve",
+      "status": 409,
+      "ok": false,
+      "error": "IPC must be submitted_to_client before client approval"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 404,
+      "ok": false,
+      "error": "Project not found"
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/1",
+      "status": 404,
+      "ok": false,
+      "error": "DOA row not found"
+    },
+    {
+      "method": "PUT",
+      "path": "/roles/8/permissions",
+      "status": 404,
+      "ok": false,
+      "error": "Role not found in current organization"
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 500,
+      "ok": false,
+      "error": "Parent record not found for boq_master"
+    },
+    {
+      "method": "GET",
+      "path": "/approvals",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/6/actions",
+      "status": 404,
+      "ok": false,
+      "error": "Approval instance not found"
+    }
+  ]
+}

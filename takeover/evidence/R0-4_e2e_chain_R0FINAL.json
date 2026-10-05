@@ -1,0 +1,932 @@
+{
+  "run": "R0FINAL",
+  "finished": true,
+  "ids": {
+    "client": 1,
+    "lead": 1,
+    "opp": 1,
+    "tender": 1,
+    "project": 1,
+    "boq": 1,
+    "vendor": 1,
+    "wh": 1,
+    "item": 1,
+    "mr": 1,
+    "rfq": 1,
+    "po": 1,
+    "ctCommitted": 1,
+    "grn": 1,
+    "inv": 1,
+    "ctActual": 2,
+    "contract": 1,
+    "ipc": 1,
+    "bank": 1,
+    "pay": 1
+  },
+  "steps": [
+    {
+      "name": "login admin",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "grant fixture permissions to role 8",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "grant fixture permissions to role 10",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create user tender",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create user pm",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create user proc",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create user fin",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirm fixture DOA tender_submission",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirm fixture DOA material_requisition",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirm fixture DOA purchase_order",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirm fixture DOA vendor_invoice",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirm fixture DOA ipc_submission",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirm fixture DOA payment",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create client",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create lead",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create opportunity",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "convert opportunity to tender",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submit tender for approval",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "SoD: initiator cannot approve own tender",
+      "outcome": "PASS",
+      "detail": "rejected 403 \"Logged-in user role is not the configured approver for the current DOA step\""
+    },
+    {
+      "name": "approve tender (Tendering Manager)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create project",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create BOQ item",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "add rate build-up",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "seed vendor via SQL (no API exists)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create warehouse",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create inventory item",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create MR",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submit MR",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approve MR (Project Manager)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create RFQ",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "record vendor quotation",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create comparative statement",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create PO",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PO total computed in DB",
+      "outcome": "PASS",
+      "detail": "total_amount=20000.00"
+    },
+    {
+      "name": "issue PO before approval rejected",
+      "outcome": "PASS",
+      "detail": "rejected 409 \"Only approved purchase orders can be issued\""
+    },
+    {
+      "name": "submit PO",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "wrong role cannot approve PO",
+      "outcome": "PASS",
+      "detail": "rejected 403 \"Logged-in user role is not the configured approver for the current DOA step\""
+    },
+    {
+      "name": "approve PO (Procurement Manager)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PO approval created committed cost",
+      "outcome": "PASS",
+      "detail": "{\"id\":1,\"project_id\":1,\"cost_code_id\":2,\"boq_item_id\":null,\"source_module\":\"procurement\",\"source_table\":\"purchase_orders\",\"source_record_id\":1,\"transaction_type"
+    },
+    {
+      "name": "issue PO",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create GRN",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirm GRN",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirm GRN twice rejected",
+      "outcome": "PASS",
+      "detail": "rejected 409 \"Only draft GRN can be confirmed\""
+    },
+    {
+      "name": "create vendor invoice",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "3-way match invoice",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "3-way match result",
+      "outcome": "PASS",
+      "detail": "{\"result\":\"matched\",\"po_amount\":\"20000.00\",\"accepted_grn_amount\":\"20000.00000\",\"invoice_amount\":\"20000.00\",\"variance_amount\":\"0.00000\",\"tolerance_amount\":\"0\"}"
+    },
+    {
+      "name": "submit invoice",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approve invoice (Finance Manager)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "invoice approval created actual cost",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create CoA 5100",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create CoA 2100",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create CoA 1200",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create CoA 4100",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create CoA 1010",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create GL rule cost_transaction/procurement",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create GL rule ipc/null",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create GL rule payment/outgoing",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create fiscal period",
+      "outcome": "PASS",
+      "detail": "201 \"\""
+    },
+    {
+      "name": "post actual cost to GL",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "post same cost twice rejected",
+      "outcome": "PASS",
+      "detail": "rejected 409 \"Cost transaction already posted to GL\""
+    },
+    {
+      "name": "committed (non-accounting) cost must NOT post to GL",
+      "outcome": "PASS",
+      "detail": "422 \"Only actual cost transactions post to GL (got committed)\""
+    },
+    {
+      "name": "create contract",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create IPC",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submit IPC",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approve IPC (Project Manager)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "client approves IPC",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "post IPC to AR/GL",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "create bank account",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "AP created from approved invoice",
+      "outcome": "PASS",
+      "detail": "amount=20000.00"
+    },
+    {
+      "name": "create payment",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submit payment",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approve payment (Finance Manager)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "post payment to GL",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GL balanced for this run",
+      "outcome": "PASS",
+      "detail": "lines=6 debit=135000 credit=135000"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/roles",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/roles/8/permissions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PUT",
+      "path": "/roles/10/permissions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/10",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/9",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/1",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/11",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/18",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/approvals/configuration/doa/22",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/crm/leads",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/crm/leads/1/opportunities",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/crm/opportunities/1/convert-to-tender",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/tendering/tenders/1/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/1/actions",
+      "status": 403,
+      "ok": false,
+      "error": "Logged-in user role is not the configured approver for the current DOA step"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/1/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master/1/rate-buildup",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/warehouses",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/material-requisitions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/material-requisitions/1/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/2/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/rfqs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/rfqs/1/vendor-quotations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/comparative-statements",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/1/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved purchase orders can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/1/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/3/actions",
+      "status": 403,
+      "ok": false,
+      "error": "Logged-in user role is not the configured approver for the current DOA step"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/3/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/1/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/procurement/purchase-orders/1/details",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/1/grns",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/1/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/grns/1/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft GRN can be confirmed"
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/vendor-invoices",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/vendor-invoices/1/match",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/vendor-invoices/1/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/4/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/chart-of-accounts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/chart-of-accounts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/chart-of-accounts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/chart-of-accounts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/chart-of-accounts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/gl-posting-rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/gl-posting-rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/gl-posting-rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/fiscal-periods",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/2/post-gl",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/2/post-gl",
+      "status": 409,
+      "ok": false,
+      "error": "Cost transaction already posted to GL"
+    },
+    {
+      "method": "POST",
+      "path": "/finance/cost-transactions/1/post-gl",
+      "status": 422,
+      "ok": false,
+      "error": "Only actual cost transactions post to GL (got committed)"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/ipcs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/ipcs/1/submit-to-client",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/5/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/ipcs/1/client-approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/ipcs/1/post-ar-gl",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/bank-accounts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/finance/ap",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/1/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/6/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/finance/payments/1/post-gl",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/finance/gl",
+      "status": 200,
+      "ok": true,
+      "error": null
+    }
+  ]
+}

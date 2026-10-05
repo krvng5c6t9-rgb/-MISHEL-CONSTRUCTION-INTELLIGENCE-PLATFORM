@@ -1,0 +1,140 @@
+== security:tenant exit=0
+TENANT ISOLATION CHECK: PASS
+Checked TypeScript source files: 52
+Checked SQL files: 37
+== security:phase2 exit=0
+PASS: src/modules/tendering/tendering.routes.ts does not trust request org_id
+PASS: src/modules/contracts/contracts.routes.ts uses authorization
+PASS: src/modules/contracts/contracts.routes.ts does not trust request org_id
+PASS: Phase 2 routes do not use raw pool.connect
+PHASE 2 COMMERCIAL CHECK: PASS
+== security:phase3 exit=0
+PHASE 3 FINANCIAL INTEGRITY CHECK: PASS
+Checked files: 3
+Checked financial tenant/RLS, GL batch integrity, IPC/MJE tenant propagation, cash-flow aggregation, and approval finalization.
+== security:phase4 exit=0
+PASS | Approval engine supports Phase 4 subcontract workflows | approval finalization + cost posting path
+PASS | No client-supplied initial approved states for technical records | static scan
+PASS | No direct pool.connect outside DB layer | DB context boundary
+PASS | Schedule relationship same-project guard exists | cross-project schedule links blocked
+PASS | Financial posting uses existing subcontract validation trigger | cost transaction integrity preserved
+== security:phase5 exit=0
+PHASE5 INTEGRITY CHECK: PASS
+Checked modules: 5
+Tenant, status-transition, posting-lock and EDMS controls present.
+== security:phase6 exit=0
+PASS notifications route mounted
+PASS notification org+user filter
+PASS portal org trigger
+PASS portal RLS
+PASS dashboard/reporting KPI views
+== security:phase7 exit=0
+PASS audit trigger function
+PASS audit immutable trigger
+PASS audit RLS
+PASS db context
+PASS pooled context boundary
+== scripts/final-hostile-prerun-check.mjs exit=0
+PASS Authenticated internal reference-data route is mounted
+PASS Docker builds use npm ci
+PASS Docker builds require lockfiles
+PASS Local runner freezes, verifies and regresses before startup
+FINAL_HOSTILE_PRERUN_PASS
+== scripts/immutable-release-check.mjs exit=0
+IMMUTABLE_RELEASE_CHECK: PASS
+== scripts/permission-consistency-check.mjs exit=0
+    "tendering.create",
+    "tendering.edit",
+    "tendering.view"
+  ]
+}
+== scripts/pre-run-final-check.mjs exit=0
+PASS legacy seed contains no default/demo identity data
+PASS env example has no usable default secrets
+PASS REV20 gate exposed in root scripts
+PASS release regression script exists
+PRE_RUN_GATE_PASS
+== scripts/redteam-rev10-check.mjs exit=0
+PASS approval monetary conversion removed: Number(v.cost_impact)
+PASS approval monetary conversion removed: Number(tender.estimated_value)
+PASS approval monetary conversion removed: Number(ipc.net_amount_due)
+PASS approval monetary conversion removed: Number(payment.amount)
+REV10 REDTEAM PASS — Phase5 approval bypass and remaining approval-money Float64 paths closed statically
+== scripts/redteam-rev12-check.mjs exit=0
+PASS bootstrap-admin covers every authorize() module
+PASS subcontract certificate maker/site/QS segregation is wired in routes
+PASS REV12 database SoD trigger present
+== scripts/redteam-rev13-check.mjs exit=0
+PASS - UI drawing actions
+PASS - UI submittal actions
+PASS - UI RFI actions
+PASS - UI method statement actions
+REV13 technical-office hostile checks PASS (13/13)
+== scripts/redteam-rev14-check.mjs exit=0
+PASS QAQC independent NCR closure
+PASS Executive dashboard avoids multiplicative financial joins
+PASS HSE UI operational workflow
+PASS QAQC UI operational workflow
+6/6 REV14 checks passed
+== scripts/redteam-rev15-check.mjs exit=0
+PASS - Claims UI explicit determination
+PASS - Tender UI no arbitrary status select
+PASS - CRM UI no arbitrary stage select
+PASS - Migration 027 present
+13/13 checks passed
+== scripts/redteam-rev16-check.mjs exit=0
+PASS - Minimal seed has no user insert
+PASS - Minimal seed has no demo project/client
+PASS - Release migration neutralizes historical placeholder org
+PASS - Release migration removes exact historical placeholder login
+REV16 gate passed: 12/12
+== scripts/redteam-rev17-check.mjs exit=0
+PASS - CPM rejects cycles
+PASS - Activity external IDs unique per project
+PASS - Baseline/project consistency guarded in DB
+PASS - Legacy single predecessor explicitly deprecated
+REV17 gate passed: 12/12
+== scripts/redteam-rev18-check.mjs exit=0
+PASS - transmittal maker checker
+PASS - empty transmittal blocked
+PASS - EDMS UI document workflow
+PASS - EDMS UI transmittal workflow
+REV18 RED-TEAM GATE PASS (12/12)
+== scripts/redteam-rev19-check.mjs exit=0
+PASS - Portal UI supports subcontractor grant
+PASS - Portal UI supports activate/deactivate
+PASS - Subcontractor dashboard avoids join-multiplication financial sum
+
+REV19 hostile portal gate: 15/15 PASS
+== scripts/redteam-rev20-check.mjs exit=0
+PASS First-run setup posts bootstrap token
+PASS Admin UI can create roles
+PASS Admin UI can manage role permissions
+PASS Admin UI can edit and confirm DOA
+REV20 REDTEAM PASS — 14/14
+== scripts/redteam-rev5-check.mjs exit=1
+PASS no temp/bak artifacts
+PASS contract approval edit lock
+PASS tender approval edit lock
+PASS inventory append-only transfer compatibility
+PASS unique migration sequence
+== scripts/redteam-rev8-check.mjs exit=0
+REV8 REDTEAM PASS
+== scripts/redteam-rev9-check.mjs exit=0
+REV9 REDTEAM PASS — monetary precision hardening verified statically
+== scripts/schema-code-column-check.mjs exit=0
+{
+  "status": "passed",
+  "tables_checked": 134,
+  "backend_sql_files_checked": 52
+}
+== scripts/static-import-check.mjs exit=0
+  "checked_roots": [
+    "backend/src",
+    "frontend/src"
+  ]
+}
+== scripts/redteam-rev5-check.mjs (after CC-003 check update) exit=0
+PASS inventory append-only transfer compatibility
+PASS unique migration sequence
+REDTEAM REV5 CHECK: PASS

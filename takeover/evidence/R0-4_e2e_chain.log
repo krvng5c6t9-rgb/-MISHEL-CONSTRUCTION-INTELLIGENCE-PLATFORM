@@ -1,0 +1,76 @@
+PASS  login admin
+PASS  grant fixture permissions to role 8
+PASS  grant fixture permissions to role 10
+PASS  create user tender
+PASS  create user pm
+PASS  create user proc
+PASS  create user fin
+PASS  confirm fixture DOA tender_submission
+PASS  confirm fixture DOA material_requisition
+PASS  confirm fixture DOA purchase_order
+PASS  confirm fixture DOA vendor_invoice
+PASS  confirm fixture DOA ipc_submission
+PASS  confirm fixture DOA payment
+PASS  create client
+PASS  create lead
+PASS  create opportunity
+PASS  convert opportunity to tender
+PASS  submit tender for approval
+PASS  SoD: initiator cannot approve own tender :: rejected 403 "Logged-in user role is not the configured approver for the current DOA step"
+PASS  approve tender (Tendering Manager)
+PASS  create project
+PASS  create BOQ item
+PASS  add rate build-up
+PASS  seed vendor via SQL (no API exists)
+PASS  create warehouse
+PASS  create inventory item
+PASS  create MR
+PASS  submit MR
+PASS  approve MR (Project Manager)
+PASS  create RFQ
+PASS  record vendor quotation
+PASS  create comparative statement
+PASS  create PO
+PASS  PO total computed in DB :: total_amount=20000.00
+PASS  issue PO before approval rejected :: rejected 409 "Only approved purchase orders can be issued"
+PASS  submit PO
+PASS  wrong role cannot approve PO :: rejected 403 "Logged-in user role is not the configured approver for the current DOA step"
+PASS  approve PO (Procurement Manager)
+PASS  PO approval created committed cost :: {"id":1,"project_id":1,"cost_code_id":2,"boq_item_id":null,"source_module":"procurement","source_table":"purchase_orders","source_record_id":1,"transaction_type
+PASS  issue PO
+PASS  create GRN
+PASS  confirm GRN
+PASS  confirm GRN twice rejected :: rejected 409 "Only draft GRN can be confirmed"
+PASS  create vendor invoice
+PASS  3-way match invoice
+PASS  3-way match result :: {"result":"matched","po_amount":"20000.00","accepted_grn_amount":"20000.00000","invoice_amount":"20000.00","variance_amount":"0.00000","tolerance_amount":"0"}
+PASS  submit invoice
+PASS  approve invoice (Finance Manager)
+PASS  invoice approval created actual cost
+PASS  create CoA 5100
+PASS  create CoA 2100
+PASS  create CoA 1200
+PASS  create CoA 4100
+PASS  create CoA 1010
+PASS  create GL rule cost_transaction/procurement
+PASS  create GL rule ipc/null
+PASS  create GL rule payment/outgoing
+PASS  create fiscal period :: 201 ""
+PASS  post actual cost to GL
+PASS  post same cost twice rejected :: rejected 409 "Cost transaction already posted to GL"
+PASS  committed (non-accounting) cost must NOT post to GL :: 422 "Only actual cost transactions post to GL (got committed)"
+PASS  create contract
+PASS  create IPC
+PASS  submit IPC
+PASS  approve IPC (Project Manager)
+PASS  client approves IPC
+PASS  post IPC to AR/GL
+PASS  create bank account
+PASS  AP created from approved invoice :: amount=20000.00
+PASS  create payment
+PASS  submit payment
+PASS  approve payment (Finance Manager)
+PASS  post payment to GL
+PASS  GL balanced for this run :: lines=6 debit=135000 credit=135000
+
+SUMMARY run=R0FINAL finished=true PASS=74 FAIL=0 WARN=0
