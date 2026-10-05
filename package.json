@@ -1,0 +1,36 @@
+{
+  "name": "construction-erp-starter",
+  "version": "0.10.0-commercial-merge-v0.2",
+  "private": true,
+  "description": "Construction ERP hostile pre-run remediated handover for local runtime acceptance",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "lint": "npm --prefix backend run lint && npm --prefix frontend run lint",
+    "check:imports": "node scripts/static-import-check.mjs",
+    "check:permissions": "node scripts/permission-consistency-check.mjs",
+    "check:schema-columns": "node scripts/schema-code-column-check.mjs",
+    "check:all": "npm run check:imports && npm run check:permissions && npm run check:schema-columns",
+    "audit:runtime": "bash scripts/runtime-build-check.sh",
+    "check:redteam-rev12": "node scripts/redteam-rev12-check.mjs",
+    "check:redteam-rev13": "node scripts/redteam-rev13-check.mjs",
+    "check:redteam-rev14": "node scripts/redteam-rev14-check.mjs",
+    "check:redteam-rev15": "node scripts/redteam-rev15-check.mjs",
+    "check:redteam-rev16": "node scripts/redteam-rev16-check.mjs",
+    "check:redteam-rev17": "node scripts/redteam-rev17-check.mjs",
+    "check:redteam-rev18": "node scripts/redteam-rev18-check.mjs",
+    "check:redteam-rev19": "node scripts/redteam-rev19-check.mjs",
+    "check:redteam-rev20": "node scripts/redteam-rev20-check.mjs",
+    "check:prerun": "node scripts/pre-run-final-check.mjs",
+    "check:release": "npm run check:all && npm --prefix backend run security:tenant && npm --prefix backend run security:phase2 && npm --prefix backend run security:phase3 && npm --prefix backend run security:phase4 && npm --prefix backend run security:phase5 && npm --prefix backend run security:phase6 && npm --prefix backend run security:phase7 && npm run check:redteam-rev20 && npm run check:prerun && npm run check:hostile-prerun",
+    "freeze:dependencies": "bash scripts/freeze-dependencies.sh",
+    "check:immutable": "node scripts/immutable-release-check.mjs",
+    "check:hostile-prerun": "node scripts/final-hostile-prerun-check.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "9.0.1"
+  }
+}

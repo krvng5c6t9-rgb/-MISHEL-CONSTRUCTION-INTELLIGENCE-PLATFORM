@@ -1,0 +1,23 @@
+CONSTRUCTION ERP — FINAL REVIEW MANIFEST
+
+Package: Phase 1A → Phase 7 cumulative handover
+Review date: 2026-09-24
+Authority: Senior Expert Review Board
+
+STATIC RESULT: PASS
+
+Commands executed:
+- npm run check:all
+- node backend/scripts/tenant-isolation-check.mjs
+- node backend/scripts/phase2-commercial-check.mjs
+- node backend/scripts/phase3-financial-integrity-check.mjs
+- node backend/scripts/phase4-execution-integrity-check.mjs
+- node backend/scripts/phase5-integrity-check.mjs
+- node backend/scripts/phase6-portal-reporting-check.mjs
+- node backend/scripts/phase7-final-hardening-check.mjs
+
+RUNTIME RESULT: PENDING
+
+Reason: no PostgreSQL/Docker runtime and no installed npm dependency tree were available in the audit environment.
+
+DO NOT CALL THIS PRODUCTION CERTIFIED until runtime migration, backend/frontend builds, tenant isolation, E2E accounting, approvals, backup/recovery, performance, and business configuration gates pass.

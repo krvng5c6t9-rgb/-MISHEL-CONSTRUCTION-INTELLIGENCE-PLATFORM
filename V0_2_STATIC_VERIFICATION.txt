@@ -1,0 +1,15 @@
+MISHEL Commercial Product v0.2 — Static Verification
+Date: 2026-10-02
+
+PASS — static import check (backend/src + frontend/src)
+PASS — permission consistency, including commercial_platform / automation / knowledge
+PASS — schema/code column consistency
+Tables checked: 134
+Backend SQL files checked: 52
+
+Not executed in this environment:
+- npm dependency install/build
+- PostgreSQL runtime migrations
+- browser E2E
+- external n8n/model/vector provider integrations
+- production security/performance/restore certification

@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+const read=p=>fs.readFileSync(p,'utf8'); const checks=[]; const ok=(n,c)=>checks.push([n,!!c]);
+const routes=read('backend/src/modules/planning/planning.routes.ts'); const page=read('frontend/src/pages/Planning.tsx'); const mig=read('database/migrations/029_planning_cpm_operational_hardening.sql');
+ok('Planning UI is operational, not read-only', page.includes('Add Activity') && page.includes('Add Relationship') && page.includes('Add Milestone') && page.includes('Progress'));
+ok('Baseline current selection is transactional', routes.includes("patch('/baselines/:id/current'") && routes.includes("select id, project_id from schedule_baselines where id=$1 for update"));
+ok('Activity CRUD includes update/delete', routes.includes("patch('/activities/:id'") && routes.includes("delete('/activities/:id'"));
+ok('Activity delete blocks referenced schedules', routes.includes('Activity has progress or schedule relationships'));
+ok('Progress update locks activity row', routes.includes("select id from schedule_activities where id=$1 for update"));
+ok('Milestone create/update APIs exist', routes.includes("post('/milestones'") && routes.includes("patch('/milestones/:id'"));
+ok('Relationship delete API exists', routes.includes("delete('/relationships/:id'"));
+ok('CPM returns total and free float', routes.includes('total_float_days') && routes.includes('free_float_days'));
+ok('CPM rejects cycles', routes.includes('Schedule contains a relationship cycle'));
+ok('Activity external IDs unique per project', mig.includes('uq_schedule_activity_ext_per_project'));
+ok('Baseline/project consistency guarded in DB', mig.includes('guard_schedule_activity_baseline_project'));
+ok('Legacy single predecessor explicitly deprecated', mig.includes('LEGACY ONLY') && mig.includes('schedule_relationships'));
+let f=0;for(const [n,p] of checks){console.log(`${p?'PASS':'FAIL'} - ${n}`);if(!p)f++;}if(f){console.error(`REV17 gate failed: ${f}/${checks.length}`);process.exit(1)}console.log(`REV17 gate passed: ${checks.length}/${checks.length}`);

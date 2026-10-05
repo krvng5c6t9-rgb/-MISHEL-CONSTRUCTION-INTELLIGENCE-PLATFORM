@@ -1,0 +1,7 @@
+
+> construction-erp-starter@0.8.0-final-candidate check:immutable
+> node scripts/immutable-release-check.mjs
+
+IMMUTABLE_RELEASE_CHECK: FAIL
+- missing backend/package-lock.json
+- missing frontend/package-lock.json

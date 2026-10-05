@@ -1,0 +1,9 @@
+import { useEffect,useMemo,useState } from 'react';
+import { apiGet } from '../lib/api';
+
+type Kind='projects'|'clients'|'vendors'|'currencies'|'users'|'costCodes'|'contracts'|'subcontracts'|'documents'|'activities'|'warehouses'|'inventoryItems';
+type Props={kind:Kind;value:any;onChange:(value:string)=>void;placeholder?:string;projectId?:any;allowEmpty?:boolean};
+let cache:any=null;let pending:Promise<any>|null=null;
+async function loadRefs(){if(cache)return cache;if(!pending)pending=apiGet<any>('/reference-data').then(r=>(cache=r.data));return pending;}
+function label(kind:Kind,x:any){switch(kind){case'projects':return`${x.project_code} — ${x.project_name}`;case'clients':return x.client_name;case'vendors':return x.vendor_name;case'currencies':return x.code;case'users':return`${x.full_name} — ${x.email}`;case'costCodes':return`${x.code} — ${x.description}`;case'contracts':return`Contract #${x.id}`;case'subcontracts':return`${x.package_name} (#${x.id})`;case'documents':return`${x.doc_number||x.file_name} ${x.revision?`Rev ${x.revision}`:''}`;case'activities':return`${x.activity_id_ext||x.id} — ${x.activity_name}`;case'warehouses':return`${x.code} — ${x.name}`;case'inventoryItems':return`${x.item_code} — ${x.description}`;}}
+export function ReferenceSelect({kind,value,onChange,placeholder,projectId,allowEmpty=true}:Props){const[data,setData]=useState<any>({});const[error,setError]=useState('');useEffect(()=>{loadRefs().then(setData).catch(e=>setError(e.message))},[]);const rows=useMemo(()=>{const a=data[kind]||[];return projectId?a.filter((x:any)=>x.project_id==null||String(x.project_id)===String(projectId)):a},[data,kind,projectId]);return <select value={value??''} onChange={e=>onChange(e.target.value)} title={error||placeholder}>{allowEmpty&&<option value="">{error||placeholder||`Select ${kind}`}</option>}{rows.map((x:any)=><option key={x.id} value={x.id}>{label(kind,x)}</option>)}</select>}

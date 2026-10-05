@@ -1,0 +1,45 @@
+import { useEffect, useState } from 'react';
+import { api } from '../lib/api';
+import { ReferenceSelect } from '../components/ReferenceSelect';
+
+type Form = Record<string, any>;
+const n=(v:any)=>Number(v);
+
+export function TechnicalOffice() {
+  const [drawings,setDrawings]=useState<any[]>([]),[submittals,setSubmittals]=useState<any[]>([]),[rfis,setRfis]=useState<any[]>([]),[methods,setMethods]=useState<any[]>([]);
+  const [error,setError]=useState('');
+  const [drawing,setDrawing]=useState<Form>({project_id:'',drawing_no:'',title:'',discipline:'',revision:'A'});
+  const [submittal,setSubmittal]=useState<Form>({project_id:'',submittal_no:'',type:'material',description:'',reviewer_id:''});
+  const [rfi,setRfi]=useState<Form>({project_id:'',rfi_no:'',subject:'',question:'',assigned_to:'',cost_impact_flag:false,time_impact_flag:false});
+  const [method,setMethod]=useState<Form>({project_id:'',activity_name:''});
+
+  async function load(){const [a,b,c,d]=await Promise.all([api.get('/technical-office/drawings'),api.get('/technical-office/submittals'),api.get('/technical-office/rfis'),api.get('/technical-office/method-statements')]);setDrawings(a.data);setSubmittals(b.data);setRfis(c.data);setMethods(d.data);}
+  useEffect(()=>{load().catch(e=>setError(e.message));},[]);
+  async function run(fn:()=>Promise<any>){try{setError('');await fn();await load();}catch(e:any){setError(e.message);}}
+
+  const createDrawing=()=>run(()=>api.post('/technical-office/drawings',{...drawing,project_id:n(drawing.project_id),discipline:drawing.discipline||undefined}));
+  const createSubmittal=()=>run(()=>api.post('/technical-office/submittals',{...submittal,project_id:n(submittal.project_id),reviewer_id:submittal.reviewer_id?n(submittal.reviewer_id):undefined}));
+  const createRfi=()=>run(()=>api.post('/technical-office/rfis',{...rfi,project_id:n(rfi.project_id),assigned_to:rfi.assigned_to?n(rfi.assigned_to):undefined}));
+  const createMethod=()=>run(()=>api.post('/technical-office/method-statements',{...method,project_id:n(method.project_id)}));
+
+  return <section className="page-stack">
+    <header className="page-header"><div><p className="eyebrow">Technical Office</p><h1>Technical Office Control</h1><p>Controlled drawing, submittal, RFI and method-statement workflows with maker/checker separation.</p></div></header>
+    {error&&<div className="notice">{error}</div>}
+
+    <div className="panel"><h2>Drawings</h2><div className="form-row">
+      <ReferenceSelect kind="projects" value={drawing.project_id} onChange={v=>setDrawing({...drawing,project_id:v})} placeholder="Project"/><input placeholder="Drawing no" value={drawing.drawing_no} onChange={e=>setDrawing({...drawing,drawing_no:e.target.value})}/><input placeholder="Title" value={drawing.title} onChange={e=>setDrawing({...drawing,title:e.target.value})}/><input placeholder="Discipline" value={drawing.discipline} onChange={e=>setDrawing({...drawing,discipline:e.target.value})}/><input placeholder="Revision" value={drawing.revision} onChange={e=>setDrawing({...drawing,revision:e.target.value})}/><button onClick={createDrawing}>Create</button>
+    </div><div className="table-wrap"><table><thead><tr><th>No.</th><th>Title</th><th>Rev.</th><th>Status</th><th>Workflow</th></tr></thead><tbody>{drawings.map(x=><tr key={x.id}><td>{x.drawing_no}</td><td>{x.title}</td><td>{x.revision}</td><td>{x.status}</td><td>{x.status==='for_review'&&<><button onClick={()=>run(()=>api.patch(`/technical-office/drawings/${x.id}/status`,{status:'approved'}))}>Approve</button><button onClick={()=>run(()=>api.patch(`/technical-office/drawings/${x.id}/status`,{status:'approved_with_comments'}))}>Approve w/comments</button><button onClick={()=>run(()=>api.patch(`/technical-office/drawings/${x.id}/status`,{status:'rejected'}))}>Reject</button></>}{x.status==='rejected'&&<button onClick={()=>run(()=>api.patch(`/technical-office/drawings/${x.id}/status`,{status:'for_review'}))}>Resubmit</button>}{['approved','approved_with_comments'].includes(x.status)&&<button onClick={()=>run(()=>api.patch(`/technical-office/drawings/${x.id}/status`,{status:'superseded'}))}>Supersede</button>}</td></tr>)}</tbody></table></div></div>
+
+    <div className="panel"><h2>Submittals</h2><div className="form-row">
+      <ReferenceSelect kind="projects" value={submittal.project_id} onChange={v=>setSubmittal({...submittal,project_id:v})} placeholder="Project"/><input placeholder="Submittal no" value={submittal.submittal_no} onChange={e=>setSubmittal({...submittal,submittal_no:e.target.value})}/><select value={submittal.type} onChange={e=>setSubmittal({...submittal,type:e.target.value})}><option value="material">Material</option><option value="shop_drawing">Shop Drawing</option><option value="method_statement">Method Statement</option><option value="sample">Sample</option><option value="other">Other</option></select><input placeholder="Description" value={submittal.description} onChange={e=>setSubmittal({...submittal,description:e.target.value})}/><ReferenceSelect kind="users" value={submittal.reviewer_id} onChange={v=>setSubmittal({...submittal,reviewer_id:v})} placeholder="Reviewer"/><button onClick={createSubmittal}>Create</button>
+    </div><div className="table-wrap"><table><thead><tr><th>No.</th><th>Type</th><th>Description</th><th>Status</th><th>Workflow</th></tr></thead><tbody>{submittals.map(x=><tr key={x.id}><td>{x.submittal_no}</td><td>{x.type}</td><td>{x.description}</td><td>{x.status}</td><td>{x.status==='submitted'&&<button onClick={()=>run(()=>api.patch(`/technical-office/submittals/${x.id}/review`,{status:'under_review'}))}>Start Review</button>}{x.status==='under_review'&&<><button onClick={()=>run(()=>api.patch(`/technical-office/submittals/${x.id}/review`,{status:'approved'}))}>Approve</button><button onClick={()=>run(()=>api.patch(`/technical-office/submittals/${x.id}/review`,{status:'approved_as_noted'}))}>Approve as noted</button><button onClick={()=>run(()=>api.patch(`/technical-office/submittals/${x.id}/review`,{status:'resubmit_required'}))}>Resubmit required</button><button onClick={()=>run(()=>api.patch(`/technical-office/submittals/${x.id}/review`,{status:'rejected'}))}>Reject</button></>}{['rejected','resubmit_required'].includes(x.status)&&<button onClick={()=>run(()=>api.patch(`/technical-office/submittals/${x.id}/review`,{status:'submitted'}))}>Resubmit</button>}</td></tr>)}</tbody></table></div></div>
+
+    <div className="panel"><h2>RFIs</h2><div className="form-row">
+      <ReferenceSelect kind="projects" value={rfi.project_id} onChange={v=>setRfi({...rfi,project_id:v})} placeholder="Project"/><input placeholder="RFI no" value={rfi.rfi_no} onChange={e=>setRfi({...rfi,rfi_no:e.target.value})}/><input placeholder="Subject" value={rfi.subject} onChange={e=>setRfi({...rfi,subject:e.target.value})}/><input placeholder="Question" value={rfi.question} onChange={e=>setRfi({...rfi,question:e.target.value})}/><ReferenceSelect kind="users" value={rfi.assigned_to} onChange={v=>setRfi({...rfi,assigned_to:v})} placeholder="Assigned user"/><button onClick={createRfi}>Create</button>
+    </div><div className="table-wrap"><table><thead><tr><th>No.</th><th>Subject</th><th>Status</th><th>Response</th><th>Workflow</th></tr></thead><tbody>{rfis.map(x=><tr key={x.id}><td>{x.rfi_no}</td><td>{x.subject}</td><td>{x.status}</td><td>{x.response||'—'}</td><td>{x.status==='open'&&<button onClick={()=>{const response=window.prompt('RFI response');if(response)run(()=>api.patch(`/technical-office/rfis/${x.id}/respond`,{response,close:false}));}}>Respond</button>}{x.status==='answered'&&<button onClick={()=>run(()=>api.post(`/technical-office/rfis/${x.id}/close`,{}))}>Close</button>}</td></tr>)}</tbody></table></div></div>
+
+    <div className="panel"><h2>Method Statements</h2><div className="form-row">
+      <ReferenceSelect kind="projects" value={method.project_id} onChange={v=>setMethod({...method,project_id:v})} placeholder="Project"/><input placeholder="Activity name" value={method.activity_name} onChange={e=>setMethod({...method,activity_name:e.target.value})}/><button onClick={createMethod}>Create Draft</button>
+    </div><div className="table-wrap"><table><thead><tr><th>Activity</th><th>Status</th><th>Workflow</th></tr></thead><tbody>{methods.map(x=><tr key={x.id}><td>{x.activity_name}</td><td>{x.status}</td><td>{['draft','rejected'].includes(x.status)&&<button onClick={()=>run(()=>api.post(`/technical-office/method-statements/${x.id}/submit`,{}))}>Submit</button>}{x.status==='submitted'&&<><button onClick={()=>run(()=>api.post(`/technical-office/method-statements/${x.id}/review`,{action:'approved'}))}>Approve</button><button onClick={()=>run(()=>api.post(`/technical-office/method-statements/${x.id}/review`,{action:'rejected'}))}>Reject</button></>}</td></tr>)}</tbody></table></div></div>
+  </section>;
+}

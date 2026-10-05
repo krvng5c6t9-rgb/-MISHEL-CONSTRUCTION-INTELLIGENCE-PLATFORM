@@ -1,0 +1,55 @@
+MISHEL CONSTRUCTION INTELLIGENCE / ERP — CHAT REFERENCE & PROJECT SCOPE
+=====================================================================
+
+Shared Chat Reference:
+https://chatgpt.com/share/6ab523c3-ead8-83ea-8793-71bddf894afb
+
+IMPORTANT:
+This file is the authoritative working-context summary for the project pack.
+It is NOT represented as a verbatim export of the entire ChatGPT transcript.
+The shared-chat URL above is preserved as the conversation reference.
+
+PROJECT END GOAL
+----------------
+Build one integrated enterprise construction operating platform benchmarked in organizational scale/complexity against Orascom Construction (benchmark only; not a claim to copy its real internal structure).
+
+The required end state is NOT just an ERP and NOT just a knowledge base. It is intended to become one integrated:
+
+- Construction ERP
+- Company Operating System
+- Enterprise Organization & Governance System
+- Engineering Expert System
+- AI Command / Automation Engine
+- Knowledge Base and Reference Library
+- Expert / Consultant Review Engine
+- Project Controls / Commercial / Contracts / Procurement / Finance platform
+- QA/QC / HSE / Technical Office / Site Execution platform
+- EDMS / Audit / Approval / DOA / RBAC / Multi-tenant platform
+- Runtime-tested deployable application
+
+ORIGINAL SCOPE TO BE PRESERVED
+------------------------------
+1. Full organization from Worker / Skilled Worker / Technician / Foreman / Supervisor through Engineer / Senior / Lead / Manager / Director / C-Suite / CEO / Chairman / Board.
+2. Engineering and non-engineering disciplines, including Civil, Structural, Architecture, Interior/Fit-Out, MEP, HVAC, Plumbing, Fire, Electrical, ELV, Infrastructure, Roads, Water/Wastewater, Geotechnical, Surveying, BIM, QA/QC, HSE, Planning, Project Controls, Cost, QS, Commercial, Contracts, Claims, Procurement, Business Development, Finance, HR, Legal, IT, Digital, Audit, Risk, Insurance and supporting corporate functions.
+3. For every role: responsibilities, duties, authority, deliverables, reporting line, interfaces, qualification, experience, competencies, KPIs, grade and career path.
+4. Cross-department integration, RACI and Delegation of Authority.
+5. Experts and consultants for each department/discipline with independent review levels, qualification rules, escalation and closure evidence.
+6. Egyptian-first engineering reference framework, then applicable Saudi / US / international codes and standards. Books and handbooks must be clearly separated from mandatory codes/contract requirements.
+7. Execution libraries: BOQ, Technical Specifications, Method Statements, ITP, Material Submittals, Shop Drawings, RFI, QA/QC, HSE, Planning, Commercial, Contracts, Claims, Procurement, Testing & Commissioning and Handover.
+8. Command architecture such as ARCH BOQ / ARCH SPEC / ARCH MS / ARCH ITP / ARCH REVIEW, where each command activates the correct role, input gate, workflow, reference set, review protocol and output template.
+9. Zero-assumption discipline: classify information as FACT / USER DATA / REFERENCE / ASSUMPTION / PROPOSAL / CALCULATION / PENDING.
+10. Runtime evidence before any claim of FINAL / COMPLETE / PRODUCTION READY.
+
+WORKING BASELINE IN THIS PACK
+-----------------------------
+- Governing approved/frozen baseline: STEP18 v0.29 inside the Owner Approved Frozen package.
+- Unified wrapper preserves Frozen Master plus deployment candidate.
+- GitHub/Render package is deployment-oriented and does not supersede the Frozen Master.
+- Claude Prompt Pack and Claude-ready Hostile Review package are preserved for AI-assisted review and execution.
+- Hostile Competitor Review Prompt is preserved as the aggressive review / remediation / runtime acceptance protocol.
+
+CURRENT STRATEGIC GAP TO CHECK DURING NEXT PHASE
+------------------------------------------------
+The current materials contain a strong ERP core and a strong governance/AI architecture, but the final integrated product must still prove that the operational ERP and the engineering knowledge/expert-command layer are unified as ONE application rather than parallel product tracks.
+
+Do not label the product Production Ready without evidence for runtime, migrations, tenant isolation, approval engine, financial integrity, E2E, backup/restore, security and key operational workflows.

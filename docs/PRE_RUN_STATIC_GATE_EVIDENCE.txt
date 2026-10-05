@@ -1,0 +1,316 @@
+
+> construction-erp-starter@0.8.0-final-candidate check:release
+> npm run check:all && npm --prefix backend run security:tenant && npm --prefix backend run security:phase2 && npm --prefix backend run security:phase3 && npm --prefix backend run security:phase4 && npm --prefix backend run security:phase5 && npm --prefix backend run security:phase6 && npm --prefix backend run security:phase7 && npm run check:redteam-rev20 && npm run check:prerun && npm run check:hostile-prerun
+
+
+> construction-erp-starter@0.8.0-final-candidate check:all
+> npm run check:imports && npm run check:permissions && npm run check:schema-columns
+
+
+> construction-erp-starter@0.8.0-final-candidate check:imports
+> node scripts/static-import-check.mjs
+
+{
+  "status": "passed",
+  "checked_roots": [
+    "backend/src",
+    "frontend/src"
+  ]
+}
+
+> construction-erp-starter@0.8.0-final-candidate check:permissions
+> node scripts/permission-consistency-check.mjs
+
+{
+  "status": "passed",
+  "required_permissions": [
+    "admin.manage",
+    "admin.view",
+    "approvals.approve",
+    "approvals.view",
+    "assets.approve",
+    "assets.create",
+    "assets.edit",
+    "assets.view",
+    "boq.create",
+    "boq.delete",
+    "boq.edit",
+    "boq.view",
+    "contracts.approve",
+    "contracts.create",
+    "contracts.edit",
+    "contracts.view",
+    "cost_control.manage",
+    "cost_control.view",
+    "crm.create",
+    "crm.delete",
+    "crm.edit",
+    "crm.view",
+    "dashboards.view",
+    "edms.approve",
+    "edms.create",
+    "edms.edit",
+    "edms.view",
+    "finance.approve",
+    "finance.create",
+    "finance.manage",
+    "finance.post",
+    "finance.view",
+    "hr.approve",
+    "hr.create",
+    "hr.edit",
+    "hr.view",
+    "hse.approve",
+    "hse.create",
+    "hse.view",
+    "notifications.manage",
+    "notifications.view",
+    "planning.manage",
+    "planning.view",
+    "portals.manage",
+    "portals.view",
+    "procurement.create",
+    "procurement.edit",
+    "procurement.manage",
+    "procurement.view",
+    "projects.view",
+    "qaqc.approve",
+    "qaqc.create",
+    "qaqc.edit",
+    "qaqc.view",
+    "reports.view",
+    "site.approve",
+    "site.manage",
+    "site.view",
+    "system.view",
+    "technical_office.manage",
+    "technical_office.view",
+    "tendering.approve",
+    "tendering.create",
+    "tendering.edit",
+    "tendering.view"
+  ]
+}
+
+> construction-erp-starter@0.8.0-final-candidate check:schema-columns
+> node scripts/schema-code-column-check.mjs
+
+{
+  "status": "passed",
+  "tables_checked": 112,
+  "backend_sql_files_checked": 48
+}
+
+> construction-erp-backend@0.2.0 security:tenant
+> node scripts/tenant-isolation-check.mjs
+
+TENANT ISOLATION CHECK: PASS
+Checked TypeScript source files: 48
+Checked SQL files: 32
+
+> construction-erp-backend@0.2.0 security:phase2
+> node scripts/phase2-commercial-check.mjs
+
+PASS: Phase 2 migration exists
+PASS: src/modules/clients/clients.routes.ts exists
+PASS: src/modules/crm/crm.routes.ts exists
+PASS: src/modules/tendering/tendering.routes.ts exists
+PASS: src/modules/contracts/contracts.routes.ts exists
+PASS: '/clients' mounted
+PASS: '/crm' mounted
+PASS: '/tendering' mounted
+PASS: '/contracts' mounted
+PASS: approval module 'tender_submission' supported
+PASS: approval module 'contract_signing' supported
+PASS: approval module 'variation' supported
+PASS: lead_activities gets tenant key
+PASS: opportunities gets tenant key
+PASS: tender_documents gets tenant key
+PASS: tender_clarifications gets tenant key
+PASS: contracts gets tenant key
+PASS: contract_clauses gets tenant key
+PASS: variations gets tenant key
+PASS: variation_boq_lines gets tenant key
+PASS: boq_master gets tenant key
+PASS: leads included in Phase 2 RLS set
+PASS: lead_activities included in Phase 2 RLS set
+PASS: opportunities included in Phase 2 RLS set
+PASS: tenders included in Phase 2 RLS set
+PASS: tender_documents included in Phase 2 RLS set
+PASS: tender_clarifications included in Phase 2 RLS set
+PASS: boq_master included in Phase 2 RLS set
+PASS: contracts included in Phase 2 RLS set
+PASS: contract_clauses included in Phase 2 RLS set
+PASS: variations included in Phase 2 RLS set
+PASS: variation_boq_lines included in Phase 2 RLS set
+PASS: Phase 2 dynamic FORCE RLS statement exists
+PASS: src/modules/clients/clients.routes.ts uses authorization
+PASS: src/modules/clients/clients.routes.ts does not trust request org_id
+PASS: src/modules/crm/crm.routes.ts uses authorization
+PASS: src/modules/crm/crm.routes.ts does not trust request org_id
+PASS: src/modules/tendering/tendering.routes.ts uses authorization
+PASS: src/modules/tendering/tendering.routes.ts does not trust request org_id
+PASS: src/modules/contracts/contracts.routes.ts uses authorization
+PASS: src/modules/contracts/contracts.routes.ts does not trust request org_id
+PASS: Phase 2 routes do not use raw pool.connect
+PHASE 2 COMMERCIAL CHECK: PASS
+
+> construction-erp-backend@0.2.0 security:phase3
+> node scripts/phase3-financial-integrity-check.mjs
+
+PHASE 3 FINANCIAL INTEGRITY CHECK: PASS
+Checked files: 3
+Checked financial tenant/RLS, GL batch integrity, IPC/MJE tenant propagation, cash-flow aggregation, and approval finalization.
+
+> construction-erp-backend@0.2.0 security:phase4
+> node scripts/phase4-execution-integrity-check.mjs
+
+PHASE 4 EXECUTION INTEGRITY CHECK: PASS
+PASS | Phase 4 migration exists | 014_phase4_technical_planning_site_subcontracts_hardening.sql
+PASS | Tenant hardening: drawings | org_id NOT NULL + RLS
+PASS | Tenant hardening: submittals | org_id NOT NULL + RLS
+PASS | Tenant hardening: rfis | org_id NOT NULL + RLS
+PASS | Tenant hardening: method_statements | org_id NOT NULL + RLS
+PASS | Tenant hardening: schedule_baselines | org_id NOT NULL + RLS
+PASS | Tenant hardening: schedule_activities | org_id NOT NULL + RLS
+PASS | Tenant hardening: progress_updates | org_id NOT NULL + RLS
+PASS | Tenant hardening: milestones | org_id NOT NULL + RLS
+PASS | Tenant hardening: site_diary | org_id NOT NULL + RLS
+PASS | Tenant hardening: diary_manpower | org_id NOT NULL + RLS
+PASS | Tenant hardening: diary_equipment | org_id NOT NULL + RLS
+PASS | Tenant hardening: site_instructions | org_id NOT NULL + RLS
+PASS | Tenant hardening: quantity_sheets | org_id NOT NULL + RLS
+PASS | Tenant hardening: punch_lists | org_id NOT NULL + RLS
+PASS | Tenant hardening: cost_forecasts | org_id NOT NULL + RLS
+PASS | Tenant hardening: evm_snapshots | org_id NOT NULL + RLS
+PASS | Tenant hardening: subcontracts | org_id NOT NULL + RLS
+PASS | Tenant hardening: subcontract_certificates | org_id NOT NULL + RLS
+PASS | Tenant hardening: subcontract_certificate_lines | org_id NOT NULL + RLS
+PASS | Tenant hardening: schedule_relationships | org_id NOT NULL + RLS
+PASS | Subcontract module is routed | CRUD/approval routes wired
+PASS | Approval engine supports Phase 4 subcontract workflows | approval finalization + cost posting path
+PASS | No client-supplied initial approved states for technical records | static scan
+PASS | No direct pool.connect outside DB layer | DB context boundary
+PASS | Schedule relationship same-project guard exists | cross-project schedule links blocked
+PASS | Financial posting uses existing subcontract validation trigger | cost transaction integrity preserved
+
+> construction-erp-backend@0.2.0 security:phase5
+> node scripts/phase5-integrity-check.mjs
+
+PHASE5 INTEGRITY CHECK: PASS
+Checked modules: 5
+Tenant, status-transition, posting-lock and EDMS controls present.
+
+> construction-erp-backend@0.2.0 security:phase6
+> node scripts/phase6-portal-reporting-check.mjs
+
+PASS notifications route mounted
+PASS notification org+user filter
+PASS portal org trigger
+PASS portal RLS
+PASS dashboard/reporting KPI views
+
+> construction-erp-backend@0.2.0 security:phase7
+> node scripts/phase7-final-hardening-check.mjs
+
+PASS audit trigger function
+PASS audit immutable trigger
+PASS audit RLS
+PASS db context
+PASS pooled context boundary
+
+> construction-erp-starter@0.8.0-final-candidate check:redteam-rev20
+> node scripts/redteam-rev20-check.mjs
+
+PASS JWT org_id is validated
+PASS Authenticated user is loaded under signed tenant RLS context
+PASS User lookup re-validates org_id
+PASS User creation validates role belongs to tenant
+PASS User creation validates employee belongs to tenant
+PASS Role permission read is tenant constrained
+PASS Role permission management endpoint exists
+PASS Bootstrap can create/reuse an organization without SQL
+PASS Bootstrap switches RLS tenant after organization resolution
+PASS First-run setup page is routed
+PASS First-run setup posts bootstrap token
+PASS Admin UI can create roles
+PASS Admin UI can manage role permissions
+PASS Admin UI can edit and confirm DOA
+REV20 REDTEAM PASS — 14/14
+
+> construction-erp-starter@0.8.0-final-candidate check:prerun
+> node scripts/pre-run-final-check.mjs
+
+PASS backend/Dockerfile
+PASS frontend/Dockerfile
+PASS docker-compose.yml
+PASS scripts/run-local.sh
+PASS backend/src/db/migrate.ts
+PASS migration sequence 001→032
+PASS direct dependency versions are exact
+PASS compose postgres:
+PASS compose migrator:
+PASS compose backend:
+PASS compose frontend:
+PASS compose service_completed_successfully
+PASS migrator schema_migrations
+PASS migrator checksum mismatch
+PASS migrator Refusing unsafe automatic baseline
+PASS migrator begin
+PASS migrator rollback
+PASS legacy seed contains no default/demo identity data
+PASS env example has no usable default secrets
+PASS REV20 gate exposed in root scripts
+PASS release regression script exists
+PRE_RUN_GATE_PASS
+
+> construction-erp-starter@0.8.0-final-candidate check:hostile-prerun
+> node scripts/final-hostile-prerun-check.mjs
+
+PASS PO monetary total is not calculated with JS reduce/Float64
+PASS PO total is calculated in PostgreSQL NUMERIC
+PASS Inventory sufficiency avoids JS Number conversion
+PASS Inventory sufficiency comparison executes in PostgreSQL NUMERIC
+PASS Payment persists approval instance
+PASS Manual journal submit rejects mixed currencies
+PASS Manual journal creation rejects mixed currencies
+PASS material_requisitions owns org_id
+PASS mr_lines owns org_id
+PASS rfqs owns org_id
+PASS rfq_vendors owns org_id
+PASS vendor_quotations owns org_id
+PASS comparative_statements owns org_id
+PASS purchase_orders owns org_id
+PASS po_lines owns org_id
+PASS goods_receipt_notes owns org_id
+PASS grn_lines owns org_id
+PASS vendor_invoices owns org_id
+PASS cost_transactions owns org_id
+PASS budgets owns org_id
+PASS permissions owns org_id
+PASS approval_actions_log owns org_id
+PASS boq_rate_buildup owns org_id
+PASS Core parent tenant trigger exists
+PASS Tenant checker explicitly covers relationship-owned core tables
+PASS Projects UI can create projects
+PASS CRM UI can create clients
+PASS CRM UI can convert opportunity to tender
+PASS Procurement UI covers /material-requisitions
+PASS Procurement UI covers /rfqs
+PASS Procurement UI covers /vendor-quotations
+PASS Procurement UI covers /purchase-orders
+PASS Procurement UI covers /grns
+PASS Procurement UI covers /vendor-invoices
+PASS Procurement UI covers /match
+PASS Finance UI covers /chart-of-accounts
+PASS Finance UI covers /bank-accounts
+PASS Finance UI covers /fiscal-periods
+PASS Finance UI covers /exchange-rates
+PASS Finance UI covers /payments
+PASS Finance UI covers /manual-journals
+PASS Finance UI covers /ipcs
+PASS Authenticated internal reference-data route is mounted
+PASS Docker builds use npm ci
+PASS Docker builds require lockfiles
+PASS Local runner freezes, verifies and regresses before startup
+FINAL_HOSTILE_PRERUN_PASS
