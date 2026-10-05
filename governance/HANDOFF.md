@@ -3,12 +3,12 @@
 ## Where we are (3 lines)
 - R0 is passed and the foundation is runtime-proven on PG 16/17 with a CI gate.
 - The post-R0 snapshot was delivered and verified from zero.
-- Source investigation is under way: R01–R05 done; task 4 (first-principles discovery) is next.
+- Source investigation is under way: R01–R09 done; the NDC register has started; task 4 (Golden Case decomposition) is next.
 
 ## Done (numbers)
-- Source coverage of 1,268 unique files: READ_FULL/PARSED 57 · INVENTORIED 513 · READ_RUNTIME 180 · UNREAD 517 (+3 archives unavailable).
+- Source coverage of 1,268 unique files: see SOURCE_REGISTER (READ_FULL / PARSED / SAMPLED / INVENTORIED / CONTAINER / READ_RUNTIME / UNREAD), plus 3 archives that are unavailable.
 - Change controls: CC-001…CC-014 (`registers/10`). Issues: I-001…I-012 closed (`registers/08`). Gaps: G-001…G-012 (`registers/07`).
-- Reconciliations: R01 (4,602 = platform contract) · R02 (operating model: skeleton is valuable, content is templated) · R03 (v1–v5 plans; 787/833 and 531/1,660 resolved) · R04 (STEP01 DNA + 38 Golden Cases; STEP17 carried at most about 12% of tables) · R05 (D-pack: 52% absent, 26% thin).
+- Reconciliations: R01 (4,602 = platform contract) · R02 (operating model: skeleton is valuable, content is templated) · R03 (v1–v5 plans; 787/833 and 531/1,660 resolved) · R04 (STEP01 DNA + 38 Golden Cases; STEP17 carried at most about 12% of tables) · R05 (D-pack: 52% absent, 26% thin) · R06 (STEP18 = prototype; 170 agent archetypes) · R07 (STEP03/04/05 adopted: 12-dimension DOA, 32 handoffs, architecture) · R08 (original scope: one application) · R09 (research board → NDC-001…009).
 
 ## Proven (E1) / COVERED only / UNVERIFIED
 - **E1:**
