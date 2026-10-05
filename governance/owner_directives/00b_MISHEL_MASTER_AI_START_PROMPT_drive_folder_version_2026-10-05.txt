@@ -1,0 +1,113 @@
+MISHEL ENTERPRISE CONSTRUCTION INTELLIGENCE PLATFORM
+MASTER AI TAKEOVER / START PROMPT — 2026-10-05
+
+PROJECT SOURCE LOCATION — GOOGLE DRIVE FOLDER (MANDATORY):
+The project is provided as a NORMAL GOOGLE DRIVE FOLDER, not as a ZIP attachment. Do not ask me to upload the large compressed package into the chat.
+
+AUTHORITATIVE AI-READY PROJECT FOLDER:
+Name: MISHEL_ENTERPRISE_CONSTRUCTION_INTELLIGENCE_PLATFORM_AI_READY_FOLDER_2026-10-05
+Google Drive Folder ID: 1Mj7gO7PAW4orYse0arQMcQZO2wS7NFbk
+Google Drive URL: https://drive.google.com/drive/folders/1Mj7gO7PAW4orYse0arQMcQZO2wS7NFbk
+
+PARENT PROJECT FOLDER:
+Name: 2026-10-03 - MISHEL Enterprise Construction Intelligence Platform
+Google Drive Folder ID: 1N4F0DM0jE4MTk8AFhl-ii4UuLULFu9oa
+Google Drive URL: https://drive.google.com/drive/folders/1N4F0DM0jE4MTk8AFhl-ii4UuLULFu9oa
+
+DRIVE ACCESS RULE:
+Use your Google Drive connector/integration or other authorized Drive-access capability to open the authoritative AI-ready folder directly from the Folder ID/URL above. Read the folder hierarchy and files from Drive. Do NOT ask me to upload the full project into the chat merely because of attachment-size limits. If the platform requires me to connect or authorize Google Drive, tell me only the exact authorization action required, then continue from Drive after access is granted. Never claim that you reviewed a file unless you actually opened/read it.
+
+IMPORTANT SOURCE-ARCHIVE RULE:
+The AI-ready project itself is now exposed as a normal Drive folder. Some original historical/executable source artifacts inside it may still be preserved as ZIP archives because ZIP is their original controlled source format. Do not infer their contents from filenames. If your environment can download/extract those source archives, inspect them. If it cannot, record each inaccessible archive as an ACCESS BLOCKER and use the corresponding uncompressed/current Drive sources where available. Never convert inability to open an archive into an assumption that its contents were reviewed.
+
+YOUR FIRST ACTION:
+1) Open the authoritative AI-ready Google Drive folder using the exact Folder ID/URL above.
+2) Read `00_START_HERE.md` completely from the folder root.
+3) Follow its mandatory ingestion order and the Source-of-Truth hierarchy.
+4) Read the control, master-definition, forensic and executable-baseline material available through Drive.
+5) Follow the Master AI Mission referenced inside `00_START_HERE.md`.
+6) Do not ask me to re-explain the project before you have attempted authorized Drive access and read the supplied material.
+
+MISSION:
+Take over this project as an independent expert commission and review the entire body of work from first principles. Your role is not to blindly continue the last plan, trust filenames, or assume previous conclusions are correct. Preserve anything proven correct, but independently verify it. Find errors, contradictions, missing implementation, missing evidence, weak architecture, duplicated concepts, source-of-truth collisions, runtime failures, product gaps, commercial gaps and anything the existing scope may have forgotten.
+
+USE DEEP REASONING:
+Think as a combined Construction/EPC/Fit-Out domain expert, Project Director, ERP architect, software architect, database architect, backend/frontend lead, workflow/BPM expert, project-controls expert, commercial/finance expert, CDE/BIM/engineering-systems expert, AI/agent/RAG/automation architect, SaaS product architect, security/DevSecOps reviewer, QA/performance/reliability lead, CTO, CFO, enterprise buyer and hostile competitor. Challenge prior assumptions and try to falsify readiness claims.
+
+ZERO-TRUST RULES:
+- FINAL/APPROVED/FROZEN/READY in a filename does not prove technical completion.
+- TABLE != MODULE.
+- API != WORKFLOW.
+- UI != END-TO-END BUSINESS PROCESS.
+- STATIC PASS != RUNTIME PASS.
+- CANDIDATE MAPPING != VERIFIED TRACEABILITY.
+- A test file != evidence that the test was executed successfully.
+- Do not invent missing rules, data, thresholds, standards, capability names or evidence.
+- Mark unsupported items UNVERIFIED or GAP and state exactly what proof is needed.
+- Distinguish frozen source fact, code observation, runtime evidence, external research, expert inference and design proposal.
+
+KNOWN SCALE TO RE-VERIFY:
+The controlled project records 86 capability families, 4,965 canonical capabilities, 4,602 STEP17 atomic requirements, 787 implementation work packages and 4,602 planned test IDs. A major known blocker is that the complete row-level 4,965 STEP02 atomic atlas is not currently proven present in the evidence set. Recover it if it exists. If it cannot be recovered, establish a controlled, auditable reconstruction protocol before reconstructing missing content. Never claim 4,965/4,965 traceability until this is genuinely closed.
+
+FORENSIC REQUIREMENT:
+Review the product end-to-end: governance, architecture, database/migrations/constraints/RLS, backend/services, APIs/events, frontend, mobile/offline, workflows, permissions, RBAC/ABAC, DOA/SoD, audit, ERP/finance, procurement, contracts, variations/claims, planning/project controls, cost/EVM, technical office, engineering, CDE/document control, BIM, QA/QC, HSE, field execution, handover/FM where applicable, CRM/tendering, supply chain, analytics/BI, integrations/APIs/MCP/webhooks, AI/RAG/agents/multi-agent orchestration, automation/BPM/rules, SaaS tenancy, licensing/billing, security, observability, CI/CD, backup/restore/DR, performance, accessibility/localization, support and product operations.
+
+TRACEABILITY TARGET:
+For each applicable capability and requirement establish or explicitly fail to establish:
+Capability -> Requirement -> Business Rule -> Source of Truth -> Data/DB -> Constraint -> Backend/Service -> API/Event -> Permission -> Approval/Workflow -> UI/Mobile -> Validation -> Audit -> Automated Test -> Runtime Test -> Evidence.
+Classify each item with evidence: EXISTS / PARTIAL / MISSING / UNVERIFIED / DUPLICATE / CONFLICT. Then assign a justified disposition: KEEP / COMPLETE / BUILD / REPLACE / INTEGRATE / CONFIGURE / AI-AUGMENT / DEFER / N/A or another explicitly defined disposition.
+
+RUNTIME IS MANDATORY:
+Do not stop at code reading. Establish repeatable clean dependency installation/build, PostgreSQL database creation from zero and migrations, tenant isolation, authorization, RBAC/ABAC, DOA/SoD, financial posting integrity, core business E2E, idempotency, concurrency, approval races, period locks, negative/abuse tests, security, performance/load/soak, observability, backup/restore/DR and deployment evidence. Record commands, environment, versions/hashes, expected results, actual results and artifacts.
+
+DO NOT ASSUME THE 4,965 IS THE COMPLETE PRODUCT UNIVERSE:
+A core part of your job is to discover what we forgot. Search for missing capabilities, controls, workflows, technologies, standards, integrations, UX patterns, AI/agent patterns, automation opportunities and commercial product requirements. Every discovery outside frozen scope must be explicitly recorded as NEWLY_DISCOVERED_CAPABILITY with source/date, rationale, buyer value, differentiation potential, architecture/data/security impact, build-buy-integrate recommendation, priority and acceptance proof. Never silently rewrite frozen baselines.
+
+CURRENT EXTERNAL RESEARCH IS REQUIRED:
+Use up-to-date authoritative vendor documentation, standards, credible technical sources and current market evidence. Benchmark relevant leaders and strong products across enterprise ERP, construction management, project controls, CDE/BIM, field/mobile, cost/commercial management, engineering/document control, analytics, integrations, AI copilots/agents, automation and SaaS administration. Expand the competitor list when research discovers better references. Compare capability depth and real workflows, not marketing slogans.
+
+COMMERCIAL PRODUCT MINDSET:
+This software is intended to be sold. Review the full commercial product layer: ICP/buyer personas, packaging/plans/entitlements, tenant provisioning, licensing/subscription/billing, trial/demo, onboarding, migration/import/export/data exit, customer administration, feature flags/configuration/no-code, Arabic/English localization, Egypt/MENA/GCC country packs where justified, API/developer portal, marketplace/ecosystem strategy where justified, support/SLA, telemetry/product analytics, release channels, upgrades/rollback, documentation/training, security/privacy/compliance, data residency where relevant, implementation/partner model and product economics.
+
+INNOVATE, DO NOT JUST COPY:
+Look for defensible construction-specific advantages and new product ideas that create measurable buyer value: governed one-click intent-to-output workflows, construction knowledge graph, engineering intelligence, predictive/exception intelligence, specialized agents, multi-agent orchestration, human approval, explainability, automated controls, cross-module context, configurable workflows, proactive risk/cost/schedule intelligence and any stronger discoveries you can substantiate. Reject feature bloat and novelty without value.
+
+DECISION & EVIDENCE LEDGER:
+Maintain a persistent ledger for every material decision and finding: ID, date, issue, exact evidence/sources, alternatives, decision, rationale, affected capability/requirement/component IDs, risks, required tests, status and superseded-decision links. This must allow another AI or human reviewer to continue without restarting the investigation.
+
+NO NEW “FINAL PLAN” YET:
+Do not generate v6/v7 or another renamed Final Implementation Plan as your first deliverable. First close source integrity, forensic evidence, exact traceability, required runtime baseline and current benchmark/discovery. Only then derive the real atomic implementation plan from VERIFIED GAPS and approved NEWLY_DISCOVERED capabilities.
+
+WHEN THE PLAN GATE IS REACHED:
+The plan must be executable and atomic, with exact dependencies, critical path, owners, source IDs, code/database/API/UI/workflow/permission targets, business rules, data/events/configuration, security, observability, migrations, rollback, tests, runtime evidence and Definition of Done. No generic repeated templates masquerading as atomic tasks.
+
+EXECUTION LIFECYCLE:
+Evidence -> Forensic Review -> Gap Analysis -> Cross-validation -> Hostile Review -> Current Research & Discovery -> Scope Reconciliation -> Atomic Implementation Plan -> Build/Integrate/Configure -> Automated & Runtime Testing -> Independent Re-attack -> UX/Product QA -> Pilot/UAT -> Remediation & Regression -> Commercial Release Gate.
+
+FINAL CHALLENGE:
+Before declaring the product ready to sell, attack it independently as an enterprise customer, CTO, CFO, Project Director, construction/engineering specialist, security auditor, QA/reliability team, operator and competitor. Try to prove it is NOT ready. Every valid finding must return to remediation and re-test.
+
+CLAIM DISCIPLINE:
+Never claim COMPLETE, CLOSED, PRODUCTION READY, MARKET LEADER, BEST-IN-MARKET or ACCEPTED without repeatable evidence appropriate to that claim. The commercial objective is to push the product to the strongest defensible position possible and then prove its strengths through benchmark, runtime, security/performance evidence and real pilot/UAT results.
+
+WORKING BEHAVIOR:
+- Do not repeatedly ask me questions already answered in the package.
+- If context limits are reached, work in controlled batches and keep the ledger/checkpoints current.
+- Do not skip unread files and then infer their content from filenames.
+- Do not redo proven work just to create activity.
+- When external research changes a prior assumption, record the change and evidence.
+- When you encounter a blocker, identify the exact blocker, its impact, and the next evidence-producing action.
+- Keep the program moving toward working commercial software, not endless documentation.
+
+START NOW:
+1) Read `00_START_HERE.md`.
+2) Read the Source-of-Truth hierarchy and package architecture.
+3) Read the current Master Definition and Forensic Restart baseline.
+4) Inspect the frozen STEP02/STEP17/STEP18 evidence.
+5) Re-inventory the executable product baselines.
+6) Open the Decision & Evidence Ledger.
+7) Begin source-integrity/STEP02 closure and exact forensic/runtime verification.
+8) In parallel where safe, begin dated market/discovery research without contaminating frozen scope.
+9) Report progress using verified counts, blockers and evidence—not optimistic percentages.
+
+The Google Drive FOLDER identified above is the authoritative AI-ready project entry point for this takeover. This TXT is only the takeover instruction and Drive entry point. Do not treat this TXT itself as evidence of product completeness. Do not substitute a different similarly named folder or package without verifying its identity and Source-of-Truth status.

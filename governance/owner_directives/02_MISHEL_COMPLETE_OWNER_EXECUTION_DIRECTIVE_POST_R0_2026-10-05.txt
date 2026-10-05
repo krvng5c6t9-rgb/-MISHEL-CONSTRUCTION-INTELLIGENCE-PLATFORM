@@ -1,0 +1,410 @@
+MISHEL — COMPLETE OWNER EXECUTION DIRECTIVE POST-R0 SNAPSHOT + FULL
+PRODUCT EXECUTION + CONTINUOUS DISCOVERY Date: 2026-10-05
+
+STOP BEFORE THE NEXT MAJOR STEP AND DO THIS FIRST.
+
+1.  GIVE ME A COMPLETE COPY OF THE PROJECT NOW
+
+Before continuing with Product Discovery, BOQ design, tenant
+provisioning, M01–M11 / D01–D20 mapping, or any other major work, create
+and give me a complete downloadable snapshot of the project in its
+current state after R0 and CC-001 → CC-011.
+
+I want the actual current working project — not a report, not a patch,
+not only the changed files, and not only evidence.
+
+The snapshot must include all current project source code and everything
+required to continue development from this exact point, including: -
+backend source - frontend source - database schema and all migrations -
+migrations 001–037 - package files and generated lockfiles -
+configuration templates - tests and E2E scripts - R0 scripts -
+tenant-isolation tests - bootstrap/setup code - AI/platform code
+currently present - all modules currently in the repository - Controlled
+Changes CC-001 → CC-011 - takeover/R0_REPORT.md -
+governance/DECISION_LEDGER.md - takeover/evidence/ - relevant
+governance/handoff/readme files - current Product
+Constitution/directives that govern the work - any new files created
+during R0
+
+Do not include node_modules, temporary build/cache files, passwords,
+tokens, API keys, credentials or other secrets.
+
+Create one downloadable archive named clearly, for example:
+MISHEL_CONSTRUCTION_INTELLIGENCE_PLATFORM_POST_R0_CURRENT_WORKING_SOURCE_2026-10-05.zip
+
+Also include inside it CURRENT_STATE.md containing: - exact Git branch -
+exact Git commit SHA - date/time - Node/npm/PostgreSQL versions actually
+tested - current migration count - CC-001 → CC-011 summary - R0 test
+results - known open issues - instructions to
+install/build/migrate/run/test from zero - statement of what is VERIFIED
+versus still UNVERIFIED.
+
+Include a SHA-256 manifest for the delivered package/files.
+
+Give me the downloadable project snapshot first.
+
+============================================================
+
+2.  AFTER THE SNAPSHOT, CONTINUE AUTONOMOUSLY AND DO THE COMPLETE
+    PROFESSIONAL JOB
+
+After delivering that snapshot, continue.
+
+I do not want a narrow repair exercise and I do not want you to stop
+after every discovered gap asking me what to do.
+
+Follow the Owner Product Constitution as the governing product mission.
+
+Make routine reversible technical decisions yourself under §28, record
+them in the Decision & Evidence Ledger, and escalate only genuine Owner
+Decisions.
+
+The objective is not to repair v0.2 and stop.
+
+The objective is to transform all accumulated work into the complete,
+extremely broad, professional, dynamic, AI-native Enterprise
+Construction Company Operating System defined by the Product
+Constitution.
+
+============================================================
+
+3.  COMPLETE THE INVESTIGATION BEFORE LARGE NEW ARCHITECTURE
+
+Preserve the now-working R0 baseline.
+
+Finish any small deterministic runtime/security defects already
+identified, including the /projects authorization issue and
+deterministic DB 500 errors.
+
+Then perform the complete investigation/reconciliation before committing
+to large new module architectures.
+
+You must fully review and reconcile: - M01–M11 - D01–D20 - all previous
+Claude work - Claude v5 outputs - Frozen/Governing Baselines -
+STEP01–STEP18 - the 4,965 capability baseline - the 4,602 requirements -
+the 787 work packages - planned tests - Forensic Restart findings - AI
+Agents & Automation encyclopedia - Operating Model / SOP / RACI / DOA
+materials - Enterprise blueprints - Engineering workflow/template
+libraries - executable ERP/code/database - current R0 evidence -
+deployment/SaaS/runtime material - every other authoritative project
+source available to you.
+
+Do not merely read filenames. Read and analyze the contents.
+
+Anything you cannot access remains explicitly UNREAD / UNVERIFIED.
+
+============================================================
+
+4.  DO NOT ACCEPT THE EXISTING SCOPE AS THE CEILING
+
+The existing 4,965 capabilities, M01–M11, D01–D20 and current code are
+inputs, not the product ceiling.
+
+Perform fresh discovery from first principles.
+
+Decompose the entire contractor/engineering enterprise through:
+
+Company → Business Units → Departments → Subdepartments → Projects →
+Roles → Job Levels → Responsibilities → Processes → Subprocesses →
+Activities → Tasks → Decisions → Inputs → Outputs → Documents → Drawings
+→ Models → Calculations → Data → Tools → Events → Dependencies →
+Controls → Approvals → Risks → KPIs → Knowledge → Agents → Automations.
+
+Discover everything missing.
+
+Anything genuinely required beyond the frozen scope must be registered
+as NEWLY_DISCOVERED_CAPABILITY, with
+evidence/reason/value/dependencies/implementation/test requirements.
+
+============================================================
+
+5.  RESEARCH THE CURRENT MARKET AND THINK AS AN EXPERT COMMISSION
+
+Perform current authoritative market research and benchmark relevant
+capabilities across leading ERP, construction, project-controls,
+CDE/BIM, engineering, commercial, finance, HCM, procurement, analytics,
+AI/agent, automation and SaaS platforms.
+
+Do not copy competitors and do not invent competitor capabilities.
+
+Use them to identify missing capabilities, weak areas and opportunities
+for genuine differentiation.
+
+Review the product as a multidisciplinary commission covering
+construction, engineering, project management, technical office,
+planning, cost control, estimation, QS, commercial/contracts/claims,
+finance/accounting/treasury, procurement/supply chain/warehouses, HR,
+QA/QC, HSE, BIM/CDE, document control, executive management, ERP
+architecture, data, AI/agents, cybersecurity, SaaS, DevSecOps, UX,
+testing and commercialization.
+
+Add any additional expert disciplines required.
+
+============================================================
+
+6.  THEN DESIGN THE COMPLETE TARGET PRODUCT
+
+After investigation, reconciliation, discovery and benchmark, design the
+actual complete target architecture and scope.
+
+It must cover the entire integrated company, not isolated modules.
+
+It must include:
+
+Enterprise ERP + Construction OS + Project/Portfolio OS +
+Engineering/Technical Office OS + Commercial/Contracts/Claims +
+Finance + HR + Procurement + Supply Chain + Warehouses + Plant/Assets +
+QA/QC + HSE + BIM/CDE + Document Control + Tendering/Estimation +
+CRM/Business Development + Executive Management + Knowledge/Decision
+Intelligence + AI Digital Workforce + Agents + n8n/Automation +
+Tools/Integrations + Company Digital Twin + Enterprise Knowledge Graph +
+Event/Impact Fabric + Simulation/Forecasting + Commercial Multi-Tenant
+SaaS.
+
+This list is not a ceiling.
+
+============================================================
+
+7.  THE PRODUCT MUST DO THE WORK — NOT JUST TRACK IT
+
+The system must ultimately be capable, where technically and
+professionally valid, of:
+
+Create + Generate + Calculate + Review + Check + Analyze + Compare +
+Coordinate + Modify + Update + Optimize + Forecast + Simulate +
+Execute + Route + Monitor + Report + Export + Audit.
+
+Examples include actual BOQs, quantity takeoffs, specifications, rate
+analyses, estimates, tenders, bid comparisons, schedules, cash flows,
+budgets, forecasts, procurement packages, technical-office deliverables,
+drawing/document reviews, reports, registers, RFIs, submittals, IPC
+support, variations, claims, dashboards and management packs.
+
+Outputs must become governed real artifacts — not merely chat answers.
+
+============================================================
+
+8.  EVERYTHING MUST BE CONNECTED
+
+Design the system so an important event in one area propagates its
+verified impact to all related areas.
+
+Drawing revision, quantity change, schedule movement, procurement event,
+invoice, variation, site progress or commercial decision must be able to
+affect the relevant:
+
+Engineering → BOQ → Cost → Schedule → Resources → Procurement →
+Inventory → Commercial → Contract → Finance → Cash Flow → Risk →
+Approvals → Reports → Executive Intelligence.
+
+Use the appropriate Event / Workflow / Rules / Knowledge Graph / Agent /
+Automation architecture.
+
+============================================================
+
+9.  DIGITAL WORKFORCE, NOT A CHATBOT
+
+Build toward Agent Factory + Skill Factory + Tool Registry + Multi-Agent
+Orchestration + RAG + MCP + APIs + n8n + HITL + Evals + Guardrails +
+Model Routing + Permissions + DOA + Audit + Cost/Latency Controls + Kill
+Switch.
+
+Agents should represent real work and professional responsibilities
+across company levels, from junior operational work through specialist,
+senior, manager, director and executive functions.
+
+AI must never silently replace legally, financially or professionally
+required human approval.
+
+============================================================
+
+10. CURRENT OPEN DECISIONS
+
+DOA: Do not invent permanent monetary limits. Build toward a
+configurable, versioned, auditable DOA architecture. Current numeric
+values remain clearly marked test fixtures.
+
+IPC / Retention: Keep this as an OPEN Finance/Accounting Design Decision
+until expert review establishes the correct configurable
+accounting/posting models. Do not hard-code an invented universal
+policy.
+
+SaaS Tenant Creation: The unlimited bootstrap key is not the target.
+Design secure commercial tenant provisioning tied to
+licensing/subscriptions/entitlements/onboarding/configuration/roles/permissions/DOA/finance/cost
+structures/workflows/templates/agents/integrations/audit.
+
+Large inaccessible archives: Keep them UNREAD / UNVERIFIED. They must be
+read before claiming complete source coverage.
+
+============================================================
+
+11. BUILD AFTER THE INVESTIGATION — AND KEEP GOING
+
+Do not stop after producing another giant plan.
+
+Once the forensic/discovery/benchmark/reconciliation work is
+sufficiently closed, derive the real atomic implementation program and
+then execute it.
+
+BUILD → INTEGRATE → TEST → E2E → NEGATIVE TEST → SECURITY → PERFORMANCE
+→ DR → HOSTILE REVIEW → REMEDIATE → RETEST → UX QA → PILOT/UAT →
+COMMERCIAL RELEASE.
+
+Maintain exact traceability and evidence.
+
+Do not call something complete because a table, endpoint, screen or
+document exists.
+
+============================================================
+
+12. QUALITY STANDARD
+
+I want the correct, complete and professionally engineered solution, not
+the quickest shortcut.
+
+Do not intentionally reduce scope to save effort.
+
+Do not inflate scope with useless features either.
+
+Preserve everything valuable from previous work, correct what is wrong,
+complete what is partial, discover what is missing, remove or redesign
+what is unsound, and integrate everything into one coherent commercial
+product.
+
+Think independently. Research. Challenge assumptions. Use evidence. Use
+expert review. Use hostile review. Keep improving until the defined
+gates are genuinely satisfied.
+
+Do not repeatedly return to me for routine technical decisions. Continue
+autonomously and professionally.
+
+The current v0.2/R0 codebase is only the verified executable starting
+foundation.
+
+It is not the scope of the final product.
+
+The final mission remains the complete Product Constitution.
+
+============================================================
+
+13. CONTINUOUS DISCOVERY — THIS DUTY NEVER STOPS
+
+Discovery, expansion and expert challenge are not one-time phases.
+
+Throughout architecture, implementation, testing, integration, pilot and
+commercialization, continuously inspect the product for missing
+departments, roles, processes, capabilities, workflows, business rules,
+engineering functions, data relationships, controls, agents, tools,
+integrations, automations, outputs and commercial requirements.
+
+If new evidence, market research, expert review, runtime testing, user
+workflow analysis or implementation work reveals that the current
+architecture or scope is incomplete or wrong, do not preserve it merely
+because it was previously approved or already implemented.
+
+Reassess it, record the evidence and impact, and where justified expand,
+correct, redesign, refactor or replace it through Controlled Change,
+while preserving traceability and regression protection.
+
+The Product Constitution defines the mission and minimum ambition — not
+a maximum feature list.
+
+M01–M11, D01–D20, the 4,965 capabilities, 4,602 requirements, 787 work
+packages, current code, current architecture, competitor benchmarks, and
+even the implementation plan produced later are not ceilings.
+
+Continue discovering valuable missing capabilities throughout the entire
+product lifecycle.
+
+Do not add features merely to increase scope or counts. Every expansion
+must have a defensible business, engineering, operational, commercial,
+security or product value.
+
+The final objective is not to faithfully implement the documents I gave
+you. The objective is to use them as evidence and accumulated knowledge,
+then produce the strongest coherent professional product that satisfies
+and exceeds the Product Constitution wherever justified by evidence and
+expert analysis.
+
+You are explicitly authorized and required to identify what I, previous
+Claude work, previous plans, existing code and existing requirements may
+have missed.
+
+Do not wait for me to discover those omissions for you.
+
+============================================================
+
+14. OWNER INTENT — DO NOT NARROW THIS MISSION
+
+The target is not merely a large ERP.
+
+The target is a dynamic, deeply integrated digital operating company for
+an enterprise contractor/engineering organization.
+
+Every department must ultimately be represented at the level of its real
+work, disciplines, job functions, seniority levels, inputs, outputs,
+calculations, decisions, controls, documents, tools, dependencies and
+cross-department effects.
+
+The system must be designed to support the work performed by junior
+staff, senior staff, engineers, specialists, managers, department heads,
+directors, executives, consultants, reviewers and expert functions,
+using software, AI agents, tools and automation, with human professional
+accountability where required.
+
+Tendering must not mean a tender register. Planning must not mean a
+schedule viewer. Technical Office must not mean document tracking.
+Finance must not mean dashboards. Commercial must not mean contract
+storage. HR must not mean employee records. Procurement must not mean
+purchase orders. Warehouses must not mean stock balances. AI must not
+mean a chatbot.
+
+The intended system should progressively be capable of doing the real
+professional work itself where valid: preparing, calculating, analyzing,
+reviewing, coordinating, modifying, updating, forecasting, producing,
+routing, tracking, auditing and generating governed outputs.
+
+The architecture must allow company-wide impact propagation so that an
+approved change can affect all relevant connected domains instead of
+requiring disconnected manual re-entry.
+
+The long-term target is a unified digital enterprise in which company
+management, project management, engineering, site execution, technical
+office, tendering, estimation, commercial, contracts, claims, planning,
+project controls, cost, finance, HR, procurement, supply chain,
+warehouses, assets, equipment, quality, safety, BIM/CDE, document
+control, business development, executive management, consultants,
+experts, AI agents, tools and automation operate as one coherent system.
+
+This description itself is not a ceiling.
+
+You must continue to discover any missing department, discipline, role,
+capability, process, artifact, tool, integration, expert function or
+commercial-product requirement necessary to make the product complete
+and professionally defensible.
+
+============================================================
+
+15. FINAL EXECUTION PRINCIPLE
+
+FIRST: Deliver the complete current POST-R0 working-source snapshot
+requested in Section 1.
+
+THEN: Continue autonomously.
+
+Do not restart from zero. Do not discard valid previous work. Do not
+blindly trust previous work. Do not narrow the product to the current
+code. Do not freeze discovery prematurely. Do not stop at documentation.
+Do not stop at a plan. Do not stop at static checks. Do not stop at a
+partial module implementation.
+
+REVIEW → VERIFY → DISCOVER → RESEARCH → CHALLENGE → RECONCILE → EXPAND →
+DESIGN → PLAN → BUILD → INTEGRATE → TEST → ATTACK → REMEDIATE → RETEST →
+PILOT → RELEASE → CONTINUE IMPROVING.
+
+The final product must be driven by evidence, professional completeness,
+integration, dynamic configuration, real executable workflows, real
+governed outputs, and continuous discovery.
+
+END OF COMPLETE OWNER EXECUTION DIRECTIVE

@@ -1,0 +1,657 @@
+MISHEL — OWNER SUPREME PRODUCT DIRECTIVE AI-NATIVE AUTONOMOUS
+CONSTRUCTION ENTERPRISE OPERATING SYSTEM التوجيه الأعلى الملزم لنطاق
+المنتج والتنفيذ
+
+التاريخ: 05-10-2026
+
+============================================================ 1) قرار
+المالك — افهم المهمة قبل أي شيء
+============================================================
+
+هذا المشروع ليس ERP تقليديًا، وليس Construction ERP فقط، وليس مجموعة
+Modules بجوار بعضها، وليس Chatbot مضافًا إلى برنامج، وليس مجرد إصلاح
+للنسخة الحالية، وليس الهدف إعادة إنتاج SAP أو Odoo أو Procore أو
+Primavera.
+
+الهدف هو بناء منتج تجاري Enterprise شديد الاتساع والاحتراف يمثل “شركة
+مقاولات وهندسة رقمية متكاملة” ويعمل كـ:
+
+AI-Native Autonomous Construction Enterprise Operating System +
+Enterprise Company Operating System + Project & Portfolio Management
+Operating System + Engineering & Technical Office Operating System +
+Commercial / Contracts / Finance Operating System + Digital Workforce +
+Expert & Consultant Intelligence System + Company Digital Twin +
+Enterprise Knowledge Graph / Company Brain + Workflow / Rules / Event /
+Automation Fabric + Agent / Skill / Tool Factory + Decision / Simulation
+/ Predictive Intelligence + Commercial Multi-Tenant SaaS Platform.
+
+المطلوب أن يغطي النظام الشركة والمشروعات والهندسة والإدارة والعمليات
+والقرارات والمستندات والبيانات والأدوات من البداية إلى النهاية، وأن
+يستطيع تنفيذ أو إعداد أو تعديل أو مراجعة أو تحليل أو تنسيق أو متابعة أو
+توقع أو إخراج أكبر قدر ممكن من الأعمال التي يقوم بها الأشخاص والإدارات
+داخل شركة مقاولات Enterprise، مع Human Governance واعتمادات وصلاحيات
+واضحة عندما يكون القرار حساسًا أو يحتاج مسؤولية بشرية متخصصة.
+
+لا تختزل هذا التعريف في قائمة Modules.
+
+============================================================ 2) القاعدة
+الأساسية للـScope
+============================================================
+
+وحدة قياس الـScope ليست “عدد الشاشات” ولا “عدد الـModules”.
+
+حلل الشركة بالكامل بهذا التسلسل على الأقل:
+
+Company → Subsidiaries / Branches / Business Units → Departments /
+Subdepartments → Projects / Portfolios / Sites / Offices → Organization
+Structure → Roles / Job Titles / Job Levels → Responsibilities / RACI /
+DOA / SoD → Processes → Subprocesses → Activities → Tasks → Decisions →
+Inputs → Outputs / Deliverables / Artifacts → Documents / Drawings /
+Models / Data → Calculations / Engineering & Business Logic → Tools /
+Applications / Integrations → Workflows / Approvals / Exceptions →
+Events / Dependencies / Relationships → KPIs / SLAs / Controls / Risks →
+Knowledge / Lessons Learned → Agents / Skills / Automations → Audit /
+Evidence / Tests.
+
+لكل عنصر اسأل بصورة منهجية:
+
+هل يستطيع النظام أن: Create / Generate / Read / Understand / Extract /
+Calculate / Review / Check / Validate / Compare / Coordinate / Modify /
+Optimize / Simulate / Forecast / Schedule / Price / Estimate / Route /
+Approve-route / Execute / Monitor / Track / Alert / Escalate / Report /
+Issue / Export / Archive / Audit / Learn from approved knowledge؟
+
+إذا كانت Capability لازمة ولم تكن موجودة، لا تحذفها بسبب عدم وجودها في
+الكود الحالي؛ سجّلها Gap أو NEWLY_DISCOVERED_CAPABILITY وصمم طريق
+تنفيذها.
+
+============================================================ 3) الشركة
+بالكامل — وليس الإدارات المذكورة فقط
+============================================================
+
+يجب اكتشاف وتحليل وتمثيل جميع إدارات وتخصصات ووظائف ومستويات شركة
+مقاولات/هندسة Enterprise، بما في ذلك على سبيل المثال لا الحصر:
+
+Executive / Board / Corporate Management Business Development / CRM /
+Prequalification / Pipeline Tendering / Bidding / Estimation Quantity
+Takeoff / BOQ / Specifications / Rate Analysis Project Management / PMO
+/ Portfolio Management Site / Construction Management Planning /
+Scheduling / Project Controls Cost Control / Budgeting / Forecasting /
+EVM Cash Flow / Treasury / Financial Planning Technical Office Design
+Management / Engineering Architecture / Structural / Civil /
+Infrastructure / MEP وجميع التخصصات اللازمة BIM / CDE / Digital
+Engineering QS / Measurement / Valuation Contracts / Commercial / Claims
+/ Variations / EOT Procurement / RFQ / Bid Comparison / PO / Expediting
+Supply Chain / Logistics Warehouses / Inventory / Materials Plant /
+Equipment / Fleet / Maintenance Finance / Accounting / GL / AP / AR /
+Treasury / Tax وفق المتطلبات القانونية التي يتم التحقق منها HR /
+Recruitment / Workforce / Payroll / Performance / Training Document
+Control / Correspondence / Transmittals QA/QC / Inspections / NCR /
+Material Approvals HSE Risk / Compliance / Governance / Internal Audit
+Subcontractor / Supplier / Vendor Management Client / Consultant /
+Stakeholder Management Testing / Commissioning / Handover / Closeout
+Facilities / Post-Handover حيث ينطبق Legal / Insurance / Bonds /
+Guarantees حيث ينطبق IT / Security / Data / Systems Administration
+Knowledge Management / Lessons Learned Product / Support / Customer
+Success اللازمة للنسخة التجارية SaaS.
+
+هذه القائمة ليست سقفًا. أنت مسؤول عن اكتشاف أي إدارة أو وظيفة أو تخصص أو
+عملية أو Artifact أو Control أو Tool أو Integration نسيناه.
+
+============================================================ 4) لا تمثل
+الإدارة كـModule — مثّل عمل الأشخاص الحقيقي
+============================================================
+
+كل إدارة يجب تفكيكها إلى العمل الفعلي لكل وظيفة ومستوى: Junior / Senior
+/ Lead / Manager / Head / Director / Executive، بالإضافة إلى اللجان
+والمراجعين والاستشاريين والخبراء.
+
+المطلوب ليس مجرد User Roles. المطلوب Digital Workforce قادر — في حدود
+الأدوات والصلاحيات والحوكمة — على القيام بأعمال هذه الوظائف.
+
+أمثلة توضيحية فقط وليست Scope مغلقًا:
+
+-   مهندس التنفيذ: متابعة الأعمال، quantities/progress، site records،
+    requests، inspections، constraints، coordination، reporting، وربط
+    النتائج بباقي النظام.
+-   مهندس/إدارة المكتب الفني: drawings، revisions، RFIs، submittals،
+    BOQ، quantity takeoff، method statements، technical comparisons،
+    coordination، change/impact identification، as-built/handover
+    outputs.
+-   Planning Engineer/Manager: إنشاء وتعديل وتحديث وتحليل البرنامج، WBS،
+    logic، resources، baselines، lookaheads، progress، critical path،
+    recovery، delay analysis، curves، forecasts، EVM والتقارير.
+-   Estimator/Tender Engineer: قراءة Tender Package، completeness،
+    drawings/specs/BOQ review، quantities، rate build-ups،
+    supplier/subcontractor quotations، indirect costs، preliminaries،
+    risks، bid strategy، tender outputs.
+-   Commercial/Contracts: contracts، variations، claims، notices، EOT،
+    entitlements، commercial exposure، subcontract administration،
+    valuation، change control.
+-   Finance: budgets، cash positions، payables/receivables، treasury،
+    forecasting، controls، postings والتقارير حسب النظام المحاسبي
+    المعتمد.
+-   Procurement/Warehouse: planning، RFQ، technical/commercial
+    comparisons، approvals، PO، expediting، receipt، inspection،
+    inventory، issue/return/transfer/reorder، supplier performance.
+-   Management: portfolio/company intelligence، scenarios، decisions،
+    approvals، alerts، exceptions، forecasts.
+
+لا تعتبر هذه الأمثلة كاملة. اكتشف باقي الوظائف بنفس العمق.
+
+============================================================ 5) التندرات
+والتسعير والمقايسات — Capability تنفيذية كاملة
+============================================================
+
+النظام يجب ألا يكتفي بعمل Tender Register.
+
+عند إدخال Tender Package، يجب تصميم Capability متكاملة تستطيع، حسب
+البيانات والأدوات المتاحة:
+
+-   ingest وتصنيف وفهرسة الملفات.
+-   قراءة وتحليل drawings/specifications/BOQ/contracts/addenda.
+-   completeness / inconsistency / revision checks.
+-   quantity takeoff والتدقيق عندما تسمح الأدوات/النماذج/المصادر بذلك.
+-   BOQ preparation/review.
+-   توصيف البنود والمواصفات.
+-   تحليل الأسعار وRate Build-Up.
+-   labor/material/equipment/productivity assumptions.
+-   supplier/subcontractor RFQs.
+-   technical/commercial bid comparisons.
+-   preliminaries / indirect costs / markups.
+-   risk/opportunity review.
+-   contractual/commercial review.
+-   clarifications/RFIs.
+-   preliminary execution strategy.
+-   preliminary schedule/resources.
+-   project cash flow.
+-   bid/no-bid and management decision support.
+-   tender submission outputs.
+-   versioning/approvals/audit/evidence.
+
+ويجب أن تكون المخرجات Artifacts فعلية، لا مجرد إجابة Chat.
+
+============================================================ 6)
+Planning + Cash Flow + Project Controls — النظام يُعد ويعدل ويخرج
+============================================================
+
+لا تكتفِ بمتابعة Time Schedule أو Cash Flow.
+
+المطلوب Capability تساعد على إنشاء وإعداد وتعديل وتحديث وتحليل وإخراج
+وربط:
+
+WBS / CBS / OBS Activities / Logic / Calendars Resources / Productivity
+Baseline / Revised / Recovery Programs Lookaheads Progress Measurement
+Critical Path Delay / Variance Analysis Resource/Cost Loading EVM
+S-Curves Forecasts Scenarios Cash In / Cash Out Project Cash Flow
+Company/Portfolio Cash Flow Budget / Commitments / Actuals / Forecast
+Procurement and payment timing IPC / Collections / Payments Management
+reports.
+
+يجب ربط الزمن بالتكلفة والموارد والمشتريات والعقود والمستخلصات والسيولة
+والمخاطر، لا أن تكون جداول منفصلة.
+
+============================================================ 7)
+Engineering Intelligence — مثال الرسومات ليس Feature صغيرة
+============================================================
+
+أريد أن أستطيع رفع Drawings / Models / Specifications / BOQ / Technical
+Documents ويقوم النظام، باستخدام الأدوات الهندسية المناسبة والمتاحة،
+بعمل Engineering Intelligence حقيقي.
+
+صمم Capability تشمل، حسب discipline والبيانات والأدوات:
+
+-   document/drawing/model ingestion.
+-   classification / metadata / revision control.
+-   architectural/structural/MEP/civil/infrastructure وغيرها من
+    discipline review.
+-   multidisciplinary coordination.
+-   consistency checks بين الرسومات والمواصفات والـBOQ والمستندات.
+-   revision comparison.
+-   issue/comment detection.
+-   quantity/BOQ impact.
+-   schedule impact.
+-   cost impact.
+-   procurement impact.
+-   contract/variation impact.
+-   site/work-package impact.
+-   RFI / issue / task generation.
+-   review reports and registers.
+-   CDE/document-control workflow.
+-   approval / audit / evidence.
+
+لا تدّعِ Engineering Verification غير مدعوم. يجب تحديد
+tool/model/data/standard المستخدم، مستوى الثقة، وما يحتاج
+Engineer/Consultant approval.
+
+============================================================ 8) الشركة
+“تسمع في بعضها” — Event-Driven Enterprise
+============================================================
+
+هذه نقطة جوهرية وغير قابلة للاختزال.
+
+أي تغيير أو Event يجب أن يستطيع إطلاق Impact Propagation لكل ما يرتبط به
+وفق Knowledge Graph + Business Rules + Event Bus + Workflow Engine +
+Automation + Agents.
+
+مثال: Drawing Revision → Engineering Review → Quantity/BOQ Impact →
+Schedule Impact → Cost/Budget/Forecast Impact →
+Procurement/PO/Subcontract Impact → Site Impact →
+Commercial/Variation/Claim Impact → Cash Flow → Risk → Relevant
+approvals/notifications → Dashboards/Management.
+
+ومثال: Actual Site Progress / Quantity Change → Progress → Schedule →
+Resources → Cost → Forecast → Cash Flow → IPC → Procurement → Inventory
+→ Subcontractor → Commercial → Finance → Risk → Executive Intelligence.
+
+لا hard-code هذين المثالين فقط. صمم General Event/Dependency/Impact
+Architecture.
+
+============================================================ 9) Digital
+Workforce + AI Agents + n8n + Tools
+============================================================
+
+الـAI ليس Chatbot.
+
+المطلوب AI Agent Fabric / Digital Workforce متكامل، ويشمل على الأقل:
+
+Agent Factory Role Agent Templates Specialized Agents Multi-Agent Teams
+Orchestrator / Supervisor Task decomposition Skill Registry Tool
+Registry MCP APIs Webhooks n8n / workflow automation RAG Enterprise
+Knowledge Memory وفق governance Model Routing Evals Guardrails HITL
+DOA/RACI/SoD Agent permissions Cost/token/latency controls Fallback Kill
+Switch Audit / traceability Agent performance monitoring.
+
+أنشئ Agents بحسب العمل الحقيقي، وليس لمجرد زيادة العدد.
+
+كل Agent يجب أن يعرف: Role / Mission / Inputs / Outputs / Skills / Tools
+/ Data Access / Permissions / Approval Limits / Business Rules / Events
+/ Dependencies / Tests / Evals / Audit / Escalation.
+
+============================================================ 10) “بضغطة
+زر” = Intent-to-Execution
+============================================================
+
+المطلوب أن يستطيع المستخدم إعطاء Intent عالي المستوى مثل:
+
+“ادرس التندر وجهز العرض.” “أنشئ المشروع من العقد.” “جهز Baseline +
+Budget + Cash Flow.” “راجع الرسومات وطلع تقرير.” “اعمل تحديث الشهر وحلل
+الانحرافات.” “حلل تأثير التغيير ده على المشروع.” “جهز موقف الإدارة
+العليا.” “راجع المطالبة.” “اعمل Procurement Package للبند.” “جهز مستخلص
+المشروع.”
+
+ثم يقوم Orchestrator بتقسيم الطلب إلى workflows/tasks متعددة الإدارات،
+وتشغيل الـAgents/Tools المناسبة، وجمع المدخلات، وإنتاج المخرجات، وعمل
+cross-checks، وطلب approvals اللازمة، وتحديث الأنظمة ذات العلاقة.
+
+الهدف ليس زرًا سحريًا بلا Controls. الهدف Controlled End-to-End
+Orchestration.
+
+============================================================ 11)
+المخرجات يجب أن تكون Deliverables حقيقية
+============================================================
+
+لا أريد أن ينتهي العمل بنص داخل Chat فقط.
+
+النظام يجب أن يكون قادرًا على إنشاء/تعديل/إصدار/حفظ/تتبع المخرجات
+المناسبة مثل:
+
+BOQs Cost Estimates Rate Analyses Tender Documents Bid Comparisons Time
+Schedules / schedule exchange outputs Cash Flows Budgets / Forecasts
+Procurement Plans Registers RFIs Submittals Method Statements Review
+Reports Technical Reports Daily/Weekly/Monthly Reports Cost/Commercial
+Reports Claims/Variation analyses IPC/payment support documents
+Dashboards Management Packs Presentations Excel/Word/PDF وغيرها من
+formats/templates المعتمدة والملفات الهندسية أو بيانات التبادل عندما
+تدعم الأدوات المتصلة ذلك.
+
+كل Artifact يحتاج Version / Status / Owner / Approval / Audit / Source /
+Evidence.
+
+============================================================ 12) Company
+Digital Twin + Knowledge Graph + Company Brain
+============================================================
+
+ابنِ Architecture تربط:
+
+Organizations People/Roles Projects Sites Clients/Consultants Contracts
+BOQ/Cost Codes Activities Resources Materials Assets/Equipment
+Suppliers/Subcontractors Drawings/Models/Documents
+RFIs/Submittals/Inspections Procurement Inventory Invoices/Payments
+Variations/Claims Risks Decisions Approvals Correspondence Lessons
+Learned Knowledge Agents Tools Events KPIs.
+
+المطلوب أن يعرف النظام العلاقات والاعتماديات بينها، لا مجرد تخزينها في
+Tables منفصلة.
+
+حوّل خبرة الشركة التاريخية المعتمدة — المشاريع والأسعار والإنتاجيات
+والموردين والمشكلات والقرارات والدروس والمراسلات والعقود والمطالبات —
+إلى Corporate Knowledge قابلة للبحث والتحليل والاستخدام المحكوم.
+
+============================================================ 13)
+Decision / Simulation / Predictive Intelligence
+============================================================
+
+النظام يجب أن يتجاوز Reporting.
+
+صمم: What-if Analysis Scenario Planning Impact Analysis Forecasting
+Risk/Opportunity Intelligence Resource/Capacity Scenarios Cash/Liquidity
+Scenarios Schedule/Recovery Scenarios Procurement Scenarios Margin/Cost
+Scenarios Portfolio Prioritization Tender Strategy Management Decision
+Packs.
+
+أي Recommendation يجب أن توضح data sources / assumptions / confidence /
+alternatives / risks، ولا تتحول إلى قرار حساس دون approval المناسب.
+
+============================================================ 14) Dynamic
+Configuration — لا تبنِ برنامجًا جامدًا
+============================================================
+
+المنتج يجب أن يكون configurable/dynamic قدر الإمكان.
+
+صمم Factories/Builders/Designers مناسبة لـ: Organizations Departments
+Roles Permissions DOA RACI Workflows Forms Fields Statuses Numbering
+Rules Approvals Templates Reports Dashboards KPIs Alerts Agents Skills
+Tools Integrations Project Types Cost Structures WBS/CBS
+Country/Localization Packs.
+
+إضافة شركة/إدارة/عملية/وظيفة جديدة لا يجب أن تتطلب إعادة بناء المنتج من
+الصفر.
+
+============================================================ 15)
+Commercial Enterprise Product — وليس Internal Prototype
+============================================================
+
+صمم المنتج من البداية ليكون قابلًا للبيع لشركات متعددة.
+
+يشمل حسب ما يثبت أنه مطلوب: Multi-tenancy Tenant isolation Identity /
+SSO / MFA RBAC/ABAC Licensing Subscriptions Plans/Entitlements Billing
+Tenant provisioning Onboarding Data migration/import/export
+Configuration Localization Country packs API platform Integration
+marketplace Webhooks/MCP Support/SLA Customer success/admin Product
+analytics Observability Security Audit Backup/Restore DR HA
+Upgrade/Rollback Release management Feature flags Mobile/Offline
+Accessibility Performance/Scalability Data retention Privacy/compliance.
+
+============================================================ 16) SAP /
+Odoo / Procore / Primavera وغيرهم — Benchmark وليس حدودًا
+============================================================
+
+لا تقل “سنكون أقوى” كادعاء غير مثبت.
+
+لكن استخدم الأنظمة والمنصات الرائدة الحالية كـBenchmark واسع ومتعدد
+المجالات، وابحث في السوق الحالي والمصادر الرسمية الموثوقة.
+
+قارن حسب المجال بما يلزم من: ERP / Finance / HCM / Procurement
+Construction Management Project Controls / Scheduling CDE / BIM /
+Engineering Document Management CRM / Tendering Commercial / Contracts
+Analytics / BI AI / Agents / Automation Integration Platforms Enterprise
+SaaS / Security.
+
+الهدف: 1. عدم فقد أي Capability مهمة في السوق. 2. اكتشاف gaps وفرص
+differentiation. 3. تصميم Advantage أقوى في Construction/Engineering
+Intelligence والتكامل والديناميكية. 4. إثبات التفوق لاحقًا بFeature
+Benchmark + Runtime + Pilot + measurable evidence، وليس بالشعارات.
+
+============================================================ 17) ملفات
+Claude السابقة M01–M11 وD01–D20 إلزامية
+============================================================
+
+لا تبدأ من الصفر ولا تتجاهل العمل السابق.
+
+اقرأ M01 إلى M11 وD01 إلى D20 بالكامل، وليس أسماء الملفات فقط.
+
+استخرج منها كل: Module Capability Feature Workflow Business Rule Agent
+Automation Engine Tool Integration Dashboard Data concept Control Test
+Gap Idea Expansion Commercial requirement.
+
+أنشئ Coverage واضحًا لها.
+
+لا تحذف Capability جيدة لأنها غير موجودة في الكود الحالي. ولا تقبلها
+تلقائيًا لأنها مكتوبة. صنّفها بالدليل: VALID & REUSED PARTIAL / NEEDS
+HARDENING CONFLICT / RECONCILE REJECTED WITH REASON MISSING
+IMPLEMENTATION UNVERIFIED.
+
+ملفات M/D وشغل Claude السابق هي Input Baseline مهم، لكنها ليست سقف
+المنتج.
+
+============================================================ 18) راجع كل
+المشروع السابق ولا تهدر العمل
+============================================================
+
+راجع وادمج بصورة محكومة: - Frozen/Governing Baselines. - 4,965
+Capability universe. - 4,602 frozen requirements. - 787 Work Packages. -
+planned tests. - Claude v5 outputs. - Forensic Restart findings. - AI
+Agents & Automation encyclopedia. - ERP / Construction / Engineering
+source packages. - Operating Model / SOPs / RACI / DOA / governance
+materials. - Enterprise blueprints. - Engineering workflow/template
+libraries. - deployment/runtime/SaaS artifacts. - current executable
+code and database migrations. - evidence/logs/tests. - current handoffs
+and owner directives.
+
+لا تعتبر اسم الملف أو كلمة FINAL دليل اعتماد.
+
+============================================================ 19)
+الـ4,965 ليست سقفًا — Continuous Discovery إلزامي
+============================================================
+
+حتى لو تم استرداد الـ4,965 كاملة، لا تتوقف عندها.
+
+بعد فهم Baseline: - ابحث. - فكر من First Principles. - اعمل Role/Task
+Decomposition. - Process Decomposition. - Artifact Decomposition. -
+Data/Decision/Event Decomposition. - Market/Competitor Discovery. -
+Standards/Regulatory discovery حيث ينطبق وبمصادر موثوقة. - Failure-mode
+discovery. - Expert-domain discovery. - Cross-industry technology
+discovery عندما تضيف قيمة حقيقية.
+
+أي Capability مهمة غير موجودة تسجل: NEWLY_DISCOVERED_CAPABILITY
+
+مع: source/reason business value department/roles inputs/outputs
+dependencies risk priority implementation implications test/evidence
+requirements.
+
+لا تختلق Capabilities لمجرد تكبير الرقم. وسع المنتج بالقيمة والاكتمال
+الحقيقي.
+
+============================================================ 20) أنت
+مسؤول عن المراجعة والتفكير والاستكشاف والإكمال
+============================================================
+
+هذه نقطة إلزامية:
+
+لا تنتظر أن أقول لك كل شيء ناقص.
+
+أنت مطالب أن: REVIEW THINK DEEPLY CHALLENGE RESEARCH DISCOVER COMPARE
+RECONCILE DESIGN EXPAND COMPLETE IMPLEMENT TEST RE-TEST HOSTILE-REVIEW
+IMPROVE.
+
+إذا وجدت شيئًا ناقصًا: لا تكتفِ بكتابة “ناقص”. حدد الصحيح، وابحث عنه،
+وصممه، واربطه، ونفذه عندما يحين Gate التنفيذ، واختبره، وأثبت النتيجة.
+
+إذا وجدت أن فكرتي أو ملفًا سابقًا ناقص أو ضعيف: لا تتبعه بصورة عمياء.
+احتفظ بقصد المالك، واعمل Expert Challenge، واقترح/نفذ التصميم الأقوى مع
+توثيق السبب.
+
+إذا اكتشفت مجالًا لم نذكره: لا تتجاهله. حققه وأضفه إذا ثبتت أهميته.
+
+إذا اكتشفت Tool/Technology/Agent/Integration مفيدة: قيّمها من حيث القيمة،
+الأمان، التكلفة، الاعتمادية، lock-in، licensing، قابلية التكامل، ثم قرر
+موضعها المناسب.
+
+============================================================ 21) Expert
+Commission — فكر بأكثر من تخصص
+============================================================
+
+راجع المنتج كما لو أن لجنة مستقلة تضم على الأقل:
+
+CEO / COO / CFO / CTO Construction Company Director Project Director /
+PMO Director Project Manager Site/Construction Management Experts
+Technical Office / Engineering Managers Architecture / Structural / MEP
+/ Infrastructure Experts BIM/CDE Experts Planning / Project Controls /
+Delay Experts Cost Control / QS / Estimation Experts Commercial /
+Contracts / Claims Experts Procurement / Supply Chain / Warehouse
+Experts Finance / Accounting / Treasury Experts HR/HCM Experts QA/QC /
+HSE Experts Document Control Experts Business Development / Tendering
+Experts ERP / Enterprise Architects Data / Knowledge Graph Architects AI
+/ Agent / RAG / Automation Architects Cybersecurity / IAM Experts
+DevSecOps / SRE / Observability Experts SaaS / Product / UX /
+Commercialization Experts QA / Test / Performance / DR Experts.
+
+ولا تفترض أن هذه القائمة كاملة؛ أضف الخبرة المطلوبة حسب المجال.
+
+============================================================ 22)
+Evidence / Zero-Assumption
+============================================================
+
+افصل دائمًا بين: SOURCE FACT CODE PRESENCE STATIC CHECK RUNTIME VERIFIED
+EXTERNAL RESEARCH INFERENCE DESIGN PROPOSAL NEWLY DISCOVERED OWNER
+DECISION.
+
+لا تخترع: أرقامًا قوانين Standards Competitor capabilities Pricing
+Thresholds DOA values Performance claims Production readiness
+Engineering verification.
+
+TABLE ≠ MODULE API ≠ WORKFLOW SCREEN ≠ COMPLETE FUNCTION CODE PRESENCE ≠
+VERIFIED STATIC PASS ≠ RUNTIME PASS FILE NAMED FINAL ≠ APPROVED AI
+OUTPUT ≠ ENGINEERING APPROVAL.
+
+============================================================ 23) Runtime
+Truth — أصلح الأساس لكن لا تحوّل المشروع إلى Bug Fixing
+============================================================
+
+استمر في Runtime Truth / R0 للكود الحالي: clean install lockfiles build
+database migrations from zero tests E2E tenant isolation permissions
+DOA/SoD negative tests concurrency/idempotency security performance
+backup/restore runtime evidence.
+
+أصلح الأساس بطريقة Controlled Change وبأدلة.
+
+لكن: R0 بوابة تقنية، وليس Scope المنتج. لا تسمح بأن يتحول المشروع كله
+إلى إصلاح migrations وينتهي الأمر.
+
+لا Feature Claims بلا Runtime Evidence، لكن لا تحذف Future Product Scope
+لأنه غير منفذ حاليًا.
+
+============================================================ 24)
+Traceability المطلوبة
+============================================================
+
+الهدف النهائي لكل Capability/Requirement مناسب:
+
+Capability / Requirement → Department / Role → Business Rule → Input →
+Output / Artifact → Data / DB → Constraints → Backend / Engine → API →
+Event → Workflow → Permission → Approval / DOA → UI / Mobile → Tool /
+Integration → Agent / Automation → Audit → Automated Test → E2E /
+Negative / Concurrency Test → Runtime Evidence → Documentation / Support
+→ Release status.
+
+أي Gap يجب أن يتحول إلى Implementation Work، لا إلى ملاحظة منسية.
+
+============================================================ 25) لا
+Final Plan قبل التحقيق الحقيقي
+============================================================
+
+لا تصدر Final Master Implementation Plan لمجرد أن الملفات كثيرة.
+
+أولًا: - استوعب كل المصادر. - اقرأ M01–M11 وD01–D20. - راجع Claude
+outputs. - أغلق/عالج STEP02 source-integrity issue. - اعمل exact
+traceability. - اعمل Runtime Truth. - نفذ Discovery. - نفذ current
+market benchmark. - اعمل gap analysis. - اعمل cross-validation. - اعمل
+hostile/red-team review. - أصلح التناقضات. - أعد المراجعة.
+
+بعدها فقط ابنِ Atomic Implementation Program الحقيقي.
+
+============================================================ 26) بعد
+التحقيق: نفّذ، لا تكتفِ بالتخطيط
+============================================================
+
+الهدف ليس إنتاج خطة عملاقة ثم التوقف.
+
+بعد اعتماد الـScope وخطة التنفيذ: BUILD INTEGRATE MIGRATE TEST HARDEN
+VERIFY REMEDIATE RETEST BENCHMARK PILOT UAT RELEASE.
+
+حوّل المواصفات إلى Software فعلي.
+
+كل Release يجب أن يثبت ما يعمل فعليًا وما لا يعمل.
+
+============================================================ 27) Dynamic
+End-to-End Product Philosophy
+============================================================
+
+المبدأ الحاكم:
+
+Department ≠ isolated module. Role ≠ login permission. Document ≠
+uploaded file. Dashboard ≠ management. Agent ≠ chatbot. Automation ≠
+notification. AI ≠ text generation. Integration ≠ one-way import. ERP ≠
+whole product.
+
+المطلوب شبكة تشغيل واحدة تربط: People + Roles + Projects + Engineering +
+Commercial + Finance + Time + Cost + Resources + Documents + Drawings +
+Models + Contracts + Procurement + Inventory + Assets + Risks +
+Decisions + Knowledge + Agents + Tools + Events.
+
+كل تغيير مهم يجب أن يصل أثره إلى كل عنصر مرتبط به بصورة محكومة وقابلة
+للتدقيق.
+
+============================================================ 28) حدود
+الاستقلالية والرجوع للمالك
+============================================================
+
+لا توقف التنفيذ لتسألني عن كل قرار تقني اعتيادي.
+
+اتخذ أفضل قرار هندسي يمكن الرجوع عنه، وسجّل: Decision Evidence
+Alternatives Reason Impact Rollback.
+
+ارجع للمالك عند Owner Decision حقيقي، مثل: - تغيير جوهري في Product
+Vision/Scope. - حذف Capability رئيسية. - التزام مالي/تعاقد خارجي. -
+Pricing/Licensing strategy. - Production deployment. -
+irreversible/destructive decision. - قرار قانوني/مالي/هندسي حساس يتطلب
+اعتمادًا بشريًا. - تعارض لا يمكن حله دون تغيير intent المالك.
+
+============================================================ 29) المطلوب
+منك الآن ============================================================
+
+لا تعطني إعادة صياغة لهذا التوجيه ولا تقريرًا إنشائيًا طويلًا.
+
+1.  اعتبر هذا التوجيه Owner Product Constitution.
+2.  أكمل Runtime Truth الحالي بالأدلة.
+3.  اقرأ وراجع M01–M11 وD01–D20 بالكامل.
+4.  راجع Claude v5 وكل العمل السابق ولا تهدر الصحيح منه.
+5.  استوعب الـ4,965 / 4,602 / 787 ومصادرها الفعلية.
+6.  اكتشف ما هو ناقص داخل وخارج الـScope السابق.
+7.  نفذ بحثًا سوقيًا حديثًا ومتعدد المصادر عندما يكون مطلوبًا.
+8.  وسّع Master Product Scope بالقيمة الحقيقية دون سقف رقمي مصطنع.
+9.  اربط الشركة والمشروعات والهندسة والمالية والتجاري والموارد
+    والمشتريات والمخازن والمواقع والإدارة العليا وكل الوظائف كمنظومة
+    Event-Driven واحدة.
+10. صمم Digital Workforce قادرًا على القيام بأعمال الوظائف الفعلية، لا
+    مجرد الرد عليها.
+11. حوّل المدخلات إلى Deliverables فعلية.
+12. اعمل Independent Expert Review + Hostile Review.
+13. لا تجمد Final Implementation Plan قبل إغلاق التحقيق والاكتشاف
+    والتعارضات الرئيسية.
+14. بعد ذلك نفذ المنتج حتى Runtime/Pilot/Commercial Release.
+
+============================================================ 30) تعريف
+النجاح ============================================================
+
+النجاح ليس: “عندنا آلاف المتطلبات.” “عندنا 134 table.” “عندنا 299
+endpoint.” “عندنا 50 Agent.” “عندنا ملفات كثيرة.”
+
+النجاح هو أن تصبح المنصة قادرة بصورة مثبتة على تشغيل شركة ومشروعاتها
+كمنظومة مترابطة:
+
+Intent → Understanding → Planning → Multi-Agent / Workflow Orchestration
+→ Tool Execution → Engineering / Business Processing → Cross-Department
+Impact → Human Approval where required → Real Deliverables → Transaction
+Update → Audit/Evidence → Monitoring/Forecast → Continuous Improvement.
+
+الهدف هو أقصى منصة Enterprise Construction Intelligence ممكنة بصورة
+عملية وتجارية وقابلة للاختبار والتوسع، والاستفادة من كل العمل السابق ثم
+تجاوزه ببحث واكتشاف وتصميم وتنفيذ أقوى.
+
+لا تعتبر ما كتبناه نحن أو Claude أو أي AI سقفًا. راجع. فكر. استكشف.
+اكتشف. أكمل. نفّذ. اختبر. هاجم المنتج كمراجع مستقل. أصلح. ثم أثبت النتيجة
+بالأدلة.
+
+END OF OWNER SUPREME PRODUCT DIRECTIVE
