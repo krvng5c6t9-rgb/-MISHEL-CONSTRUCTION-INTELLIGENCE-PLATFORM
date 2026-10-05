@@ -11,3 +11,4 @@ G-009,"52% of D01-D20 entities absent, 26% thin",P1,T1-T3,D01-D20,OPEN,2026-10-0
 G-010,W00-09 hostile runtime tests (replay/concurrency/period-lock/approval-race) not run,P1,T0,v5 W00-09,OPEN,2026-10-05,2026-10-05,
 G-011,"STEP02 4,965-row capability atlas not available",P2,T0,STEP02,OPEN,2026-10-05,2026-10-05,reconstruct via discovery
 G-012,Three Drive archives > 10 MB unread,P1,-,source coverage,OPEN_OWNER_ACTION,2026-10-05,2026-10-05,must be read before claiming complete coverage
+G-013,No per-session token revocation (logout/compromised session) or JWT signing-key rotation; deactivating a user does revoke on next request,P2,T1,GC-32/GC-37,OPEN,2026-10-05,2026-10-05,found in R13 decomposition (authenticate.ts E3)
