@@ -1,4 +1,4 @@
-# HANDOFF — v0.5.0-sweep — DATE: 2026-10-05
+# HANDOFF — v0.5.1-stage1 — DATE: 2026-10-05
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
@@ -6,8 +6,8 @@
 - Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-028; CC-029 queued at handoff.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-029 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–052.
-- **Runtime suites, all from zero (E1):** 16 suites, 538 checks, all PASS.
+- **Change controls:** CC-001…CC-030 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–053.
+- **Runtime suites, all from zero (E1):** 17 suites, 563 checks, all PASS (claims 25 added in Stage 1).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -25,8 +25,9 @@
   - **Payroll (CC-028):** every payroll submission crashed (HTTP 500) — payroll could never be approved; lines editable after approval; double pay, negative net, paying terminated staff and another tenant's employee all accepted.
   - **EDMS (CC-029):** every refusal returned HTTP 500; unapproved or superseded drawings could be issued for construction; approved files could be swapped in the DB; no record of who approved which revision.
   - Earlier waves: vendor eligibility, DOA self-confirmation, bootstrap takeover, subcontract certificates, F-13 dates, F-14 period lock, F-15 CPM loops, variations VA1–VA5, QA/HSE QH1–QH4.
-- **Golden Case coverage** (`governance/decomposition/GOLDEN_CASE_DECOMPOSITION.csv`, 167 steps): RUNTIME 45 · PARTIAL 49 · API 10 · SCHEMA 2 · ABSENT 61.
-- **Discovery:** NDC-001…028 and DFS-001…006.
+- **Golden Case coverage** (`governance/decomposition/GOLDEN_CASE_DECOMPOSITION.csv`, 167 steps): RUNTIME 46 · PARTIAL 49 · API 9 · SCHEMA 2 · ABSENT 61.
+- **Discovery:** NDC-001…029 (NDC-029 approved-EOT propagation, found in Stage 1) and DFS-001…006.
+- **Snapshot delivered:** `MISHEL_SNAPSHOT_v0.5.0-sweep_8feec80.zip` (commit 8feec80, zip SHA-256 5549622f…1439).
 
 ## Proven (E1) / UNVERIFIED
 - **E1:** everything listed in the suites above, on PG 16.14 locally and in CI on 16/17. Evidence is in `takeover/evidence/W1-*`, `W2-*` and the CI artefacts.
@@ -64,10 +65,12 @@
 - Frozen STEP06/18 generic aggregate schemas as a build spec: rejected. CCR18 shows that domain fields and transitions were never authored (R12). We build from Golden Case decomposition plus the proven R0 schema.
 - Generic JSON aggregate store from the Render/Supabase bundle as the data model: rejected (R12). It cannot carry the relational invariants proven in R0.
 
-## Next authorized step
-1. Finish RK-003: runtime suites + fixes for claims (GC-16), technical office RFIs/submittals (GC-04/05), assets/plant (GC-30s), inventory transfers.
-2. NDC-002 remainder (NEC CE register, FIDIC determination, claim gating) and NDC-011 (accruals, reproducible EAC).
-3. G-013 token revocation; then waves 4–5 per the atomic programme.
+## Next authorized step (owner-controlled staged execution; STOP after each stage and wait for "كمل")
+- Stage 1 — GC-16 Claims: **DONE** (CC-030).
+- **Stage 2 — Technical Office (NEXT):** RFIs + submittals (+ method statements/drawings register where connected): runtime suite, defects via CC, regression, evidence; then stop.
+- Stage 3 — Assets & Equipment. Stage 4 — Inventory transfers. Stage 5 — NDC-002 remainder (NEC CE register, FIDIC determination/DAAB, claim gating). Stage 6 — NDC-011 remainder (accruals, reproducible EAC).
+- Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
+- DEC-009 / DEC-012 / DEC-013 stay OPEN for the Finance/Accounting expert review — do not hard-code a policy.
 
 ## Warnings for next session
 - Postgres in this container stops between sessions. Restart with `pg_ctl` (see CURRENT_STATE).

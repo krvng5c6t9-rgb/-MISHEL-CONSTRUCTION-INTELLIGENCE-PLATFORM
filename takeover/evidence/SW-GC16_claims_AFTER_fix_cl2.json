@@ -1,0 +1,484 @@
+{
+  "suite": "sweep_claims",
+  "run": "cl2",
+  "tag": "cl2",
+  "steps": [
+    {
+      "name": "claim without a contract refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "claim on an unsigned contract refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Claims can only be raised under a signed or active contract (status draft)\""
+    },
+    {
+      "name": "notice dated before the event refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Notice date 2026-08-16 is before the event date 2026-08-21\""
+    },
+    {
+      "name": "notice of another event refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Claim notice must be a notice of the claim event\""
+    },
+    {
+      "name": "claims manager registers claim from the event and its notice",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "claim view exposes the time-bar risk of its late condition-precedent notice",
+      "outcome": "PASS",
+      "detail": "{\"notice_status\":\"issued\",\"deadline\":\"2026-09-23\",\"notice_issued_late\":true,\"condition_precedent\":true,\"clause_ref\":\"PC-20.1\"}"
+    },
+    {
+      "name": "duplicate claim number in the project refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint contract_claims_project_id_claim_no_key\""
+    },
+    {
+      "name": "submission without claimed days and basis refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Submission requires the contractual basis\""
+    },
+    {
+      "name": "claimed entitlement frozen after submission",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Claim is immutable in its current status\""
+    },
+    {
+      "name": "claim creator cannot determine own claim (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the claim author cannot determine the claim\""
+    },
+    {
+      "name": "determination above the claimed amount refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A determination needs its reasoning\""
+    },
+    {
+      "name": "independent determination: 20 days / 150,000",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "full approval refused when determination is below the claim",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Determination is below the claim: use partially_approved\""
+    },
+    {
+      "name": "final decision without a reason refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "third person decides: partially approved",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "original claimed entitlement preserved beside the determination",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "contract shows approved EOT total (20 days)",
+      "outcome": "PASS",
+      "detail": "20"
+    },
+    {
+      "name": "decided claim cannot be re-determined",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Claim is immutable in its current status\""
+    },
+    {
+      "name": "DB: decided claim immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Claim 4 is decided (partially_approved) and immutable"
+    },
+    {
+      "name": "DB: claims cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Only draft claims can be deleted; withdraw it instead"
+    },
+    {
+      "name": "withdrawal needs a reason",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "withdrawal with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B does not see tenant A claims",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot read tenant A claim",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Claim not found\""
+    },
+    {
+      "name": "tenant B cannot move tenant A claim",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Claim not found\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/12/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/38/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/38/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/12/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/9/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/12/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/7/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/12/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 422,
+      "ok": false,
+      "error": "Claims can only be raised under a signed or active contract (status draft)"
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 422,
+      "ok": false,
+      "error": "Notice date 2026-08-16 is before the event date 2026-08-21"
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 422,
+      "ok": false,
+      "error": "Claim notice must be a notice of the claim event"
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/claims/4",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint contract_claims_project_id_claim_no_key"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/4/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/6/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/6/status",
+      "status": 422,
+      "ok": false,
+      "error": "Submission requires the contractual basis"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/4/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/claims/4",
+      "status": 409,
+      "ok": false,
+      "error": "Claim is immutable in its current status"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/4/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/claims/4",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the claim author cannot determine the claim"
+    },
+    {
+      "method": "PATCH",
+      "path": "/claims/4",
+      "status": 422,
+      "ok": false,
+      "error": "A determination needs its reasoning"
+    },
+    {
+      "method": "PATCH",
+      "path": "/claims/4",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/4/status",
+      "status": 422,
+      "ok": false,
+      "error": "Determination is below the claim: use partially_approved"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/4/status",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/4/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/claims/4",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/claims/4",
+      "status": 409,
+      "ok": false,
+      "error": "Claim is immutable in its current status"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/6/status",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/6/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/claims",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/claims/4",
+      "status": 404,
+      "ok": false,
+      "error": "Claim not found"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/6/status",
+      "status": 404,
+      "ok": false,
+      "error": "Claim not found"
+    }
+  ]
+}

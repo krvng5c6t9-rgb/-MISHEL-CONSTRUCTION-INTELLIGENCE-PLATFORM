@@ -1,0 +1,235 @@
+{
+  "suite": "sweep_claims",
+  "run": "cl0",
+  "tag": "cl0",
+  "steps": [
+    {
+      "name": "claim without a contract refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "claim on an unsigned contract refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "notice dated before the event refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "notice of another event refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "claims manager registers claim from the event and its notice",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "suite completed",
+      "outcome": "FAIL",
+      "detail": "detail failed: HTTP 404 {\"success\":false,\"error\":\"Route not found: GET /api/claims/5\"}"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/12/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/38/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/38/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/12/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/9/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/12/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/7/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/12/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/claims/5",
+      "status": 404,
+      "ok": false,
+      "error": "Route not found: GET /api/claims/5"
+    }
+  ]
+}

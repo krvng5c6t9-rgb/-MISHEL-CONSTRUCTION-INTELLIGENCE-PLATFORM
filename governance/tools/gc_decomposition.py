@@ -105,11 +105,11 @@ gc('GC-15', 'Variation / Change', [
 ])
 gc('GC-16', 'Claim / EOT Case', [
     ('Notice of claim within time bar', 'Contracts manager', 'event', 'notice + proof', 'time bar from Contract Data Pack', 'rule author != confirmer', 'L2', 'RUNTIME', 'CC-021 wave2_notice_engine 36/36', 'NDC-001'),
-    ('Build chronology from contemporaneous records', 'Claims analyst', 'diaries, correspondence, RFIs', 'chronology', 'every entry links to source record', 'none', 'L2 chronology draft with citations', 'PARTIAL', 'contract_claims table + claims API', 'NDC-014'),
+    ('Build chronology from contemporaneous records', 'Claims analyst', 'diaries, correspondence, RFIs', 'chronology', 'every entry links to source record', 'none', 'L2 chronology draft with citations', 'PARTIAL', 'CC-030: claim linked to contract event + notice (E1); chronology entity absent', 'NDC-014'),
     ('Contractual entitlement analysis', 'Contracts manager / legal', 'contract, chronology', 'entitlement position', 'clause references; human legal authority', 'L5 legal opinion external', 'L1', 'ABSENT', '', 'NDC-006'),
     ('Delay analysis against accepted programme', 'Planning expert', 'accepted programme, updates', 'delay analysis', 'method chosen and justified; uses accepted programme', 'none', 'L2', 'ABSENT', 'STEP18 non-claim', 'NDC-006,NDC-010'),
     ('Quantum', 'QS', 'records, rates', 'quantum', 'heads of claim, no double recovery', 'SOD15-027', 'L2', 'ABSENT', '', 'NDC-006'),
-    ('Submit, negotiate, determine', 'Commercial director', 'claim', 'determination / settlement', 'settlement never erases original entitlement (STEP09)', 'SOD15-027; DOA Contract', 'L0', 'API', 'claims status route', ''),
+    ('Submit, negotiate, determine', 'Commercial director', 'claim', 'determination / settlement', 'settlement never erases original entitlement (STEP09); determination <= claim with reasoning; decision with reason', 'SOD15-027 author != determiner != deciding party', 'L0', 'RUNTIME', 'CC-030 sweep_claims 25/25; EOT propagation absent (NDC-029)', 'NDC-029'),
 ])
 gc('GC-25', 'Corporate Month-End', [
     ('Cut-off and accrual of received-not-invoiced', 'Accountant', 'GRNs, timesheets', 'accrual journals', 'GRNI accrual reverses on invoice', 'SOD15-015', 'L4 proposal', 'ABSENT', 'no accrual logic', 'NDC-011'),
