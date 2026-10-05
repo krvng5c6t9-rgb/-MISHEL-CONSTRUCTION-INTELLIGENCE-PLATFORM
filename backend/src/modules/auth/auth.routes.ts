@@ -121,6 +121,11 @@ authRouter.post('/bootstrap-admin', asyncHandler(async (req, res) => {
   try {
     await client.query('begin');
 
+    // First-run only unless multi-tenant bootstrap is explicitly enabled (F-08).
+    if (!env.ALLOW_MULTI_TENANT_BOOTSTRAP && (await client.query('select platform_has_any_user() as v')).rows[0]?.v) {
+      throw new AppError(403, 'Bootstrap is limited to first run; additional tenants require the tenant provisioning process');
+    }
+
     let org: { id: number; name: string } | undefined;
     if (body.org_id != null) {
       org = (await client.query(
@@ -169,12 +174,10 @@ authRouter.post('/bootstrap-admin', asyncHandler(async (req, res) => {
     const orgId = Number(org!.id);
     await client.query("select set_config('app.org_id',$1,false)", [String(orgId)]);
 
-    const existing = await client.query(
-      'select count(*)::int as count from users where org_id=$1 and is_active=true',
-      [orgId]
-    );
-    if (existing.rows[0]?.count > 0) {
-      throw new AppError(409, 'Bootstrap is disabled because active users already exist');
+    // An organization that has ever had a user (active or not) can never be claimed through bootstrap.
+    const claimed = (await client.query('select platform_org_has_any_user($1) as v', [orgId])).rows[0]?.v;
+    if (claimed) {
+      throw new AppError(409, 'Bootstrap is disabled because this organization already has users');
     }
 
     const roleResult = await client.query(`

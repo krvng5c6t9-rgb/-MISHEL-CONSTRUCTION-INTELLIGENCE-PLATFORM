@@ -1,10 +1,10 @@
 G_ID,Description,Priority,Tier,Linked_REQ,Status,CreatedIn,LastUpdated,Notes
 G-001,No execution BOQ (project_boq) creation path; estimating->execution handover missing,P1,T1,D03/D07/GC-02,CLOSED,2026-10-05,2026-10-05,"F-01; closed by CC-015 (wave1 suite 41/41, E1)"
 G-002,No vendor/subcontractor create API,P1,T1,D06,CLOSED,2026-10-05,2026-10-05,"F-02; closed by CC-016 (wave1 vendor suite 41/41, E1)"
-G-003,No tenant provisioning (roles/DOA/CoA/GL rules/cost codes/fiscal),P1,T0,D20/GC-31,OPEN,2026-10-05,2026-10-05,F-03; STEP16 contracts available
+G-003,No tenant provisioning (roles/DOA/CoA/GL rules/cost codes/fiscal),P1,T0,D20/GC-31,PARTIALLY_CLOSED,2026-10-05,2026-10-05,"CC-018: readiness checklist; tenant config via APIs (CoA, rules, DOA, periods, banks, vendors); cost codes need G-014; templates only after owner decision"
 G-004,No DOA create/version API; approver roles lack approvals.approve,P1,T0,D01,PARTIALLY_CLOSED,2026-10-05,2026-10-05,CC-017: DOA management API with versioning + SoD (26/26 E1). Remaining: owner-approved DOA matrix (owner decision; values never invented)
 G-005,IPC revenue/retention posting model,P1,T1,D13/BF09-023..037,OPEN_OWNER_DECISION,2026-10-05,2026-10-05,F-05
-G-006,Bootstrap token unlimited tenant creation,P1,T0,D20,OPEN_OWNER_DECISION,2026-10-05,2026-10-05,F-08
+G-006,Bootstrap token unlimited tenant creation,P1,T0,D20,PARTIALLY_CLOSED,2026-10-05,2026-10-05,"CC-018: takeover closed, first-run-only default; commercial provisioning per DEC-010 (owner-decided) still to build"
 G-007,Golden Cases GC-01..38 never decomposed into requirements/tests,P1,T0,STEP01,OPEN,2026-10-05,2026-10-05,R04
 G-008,STEP03-16 tables not carried into STEP17 (upper bound 355 tables),P1,T0,STEP03-16,OPEN,2026-10-05,2026-10-05,R04 caveat: companion tables
 G-009,"52% of D01-D20 entities absent, 26% thin",P1,T1-T3,D01-D20,OPEN,2026-10-05,2026-10-05,R05
@@ -12,3 +12,4 @@ G-010,W00-09 hostile runtime tests (replay/concurrency/period-lock/approval-race
 G-011,"STEP02 4,965-row capability atlas not available",P2,T0,STEP02,OPEN,2026-10-05,2026-10-05,reconstruct via discovery
 G-012,Three Drive archives > 10 MB unread,P1,-,source coverage,OPEN_OWNER_ACTION,2026-10-05,2026-10-05,must be read before claiming complete coverage
 G-013,No per-session token revocation (logout/compromised session) or JWT signing-key rotation; deactivating a user does revoke on next request,P2,T1,GC-32/GC-37,OPEN,2026-10-05,2026-10-05,found in R13 decomposition (authenticate.ts E3)
+G-014,No cost-code management API; a new tenant cannot create cost codes (readiness shows cost_codes missing); POs require cost_code_id,P1,T1,GC-02/GC-06/GC-31,OPEN,2026-10-05,2026-10-05,found by wave1_tenant_onboarding (E1)

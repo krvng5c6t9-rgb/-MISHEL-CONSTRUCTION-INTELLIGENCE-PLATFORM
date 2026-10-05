@@ -22,6 +22,7 @@ ok('First-run setup page is routed',app.includes('path="setup"') && app.includes
 ok('First-run setup posts bootstrap token',setup.includes('apiBootstrapAdmin') && setup.includes('bootstrap_token'));
 ok('Admin UI can create roles',admin.includes('Create Role') && admin.includes("apiPost('/roles'"));
 ok('Admin UI can manage role permissions',admin.includes('Save Role Permissions') && admin.includes('apiPut(`/roles/${selectedRole}/permissions`'));
-ok('Admin UI can edit and confirm DOA',admin.includes('Save & Confirm') && admin.includes('/approvals/configuration/doa/'));
+// CC-017: confirmation is a separate step by a different user (draft -> confirm), no combined save-and-confirm.
+ok('Admin UI can edit and confirm DOA',admin.includes('Save draft') && admin.includes('/confirm`') && admin.includes('/approvals/configuration/doa/') && !admin.includes('confirm:true'));
 if(failures.length){console.error(`REV20 REDTEAM FAIL — ${failures.length} failure(s)`);process.exit(1)}
 console.log(`REV20 REDTEAM PASS — ${passed}/${passed}`);
