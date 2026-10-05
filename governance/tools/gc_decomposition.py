@@ -122,10 +122,10 @@ gc('GC-25', 'Corporate Month-End', [
 
 # ---------------------------------------------------------------- engineering / site / quality
 gc('GC-03', 'Drawing/Model Technical Review', [
-    ('Register drawing/model and revision context', 'Document controller', 'transmittal', 'controlled revision', 'revision sequence enforced', 'none', 'L0', 'API', 'edms/drawings', ''),
+    ('Register drawing/model and revision context', 'Document controller', 'transmittal', 'controlled revision', 'revision sequence enforced', 'unique doc number per project; versions immutable (CC-029)', 'L0', 'RUNTIME', 'CC-029 sweep_edms 24/24 (edms documents/versions)', ''),
     ('Discipline and interdisciplinary checks', 'Discipline engineer', 'drawing, standards, spec', 'issues with evidence', 'applicable standard from register (not latest by default)', 'SOD15-051', 'L2 check assist (no approval)', 'ABSENT', 'no review-issue entity', 'NDC-027'),
-    ('Engineer disposition and markup', 'Responsible engineer', 'issues', 'review status code', 'disposition codes tenant configured', 'SOD15-051', 'L5 professional judgement', 'PARTIAL', 'drawings status / submittals review', ''),
-    ('Issue controlled review report', 'Document controller', 'disposition', 'report/transmittal', 'issued output immutable', 'none', 'L2', 'API', 'transmittals issue', ''),
+    ('Engineer disposition and markup', 'Responsible engineer', 'issues', 'review status code', 'disposition codes tenant configured', 'SOD15-051 uploader != reviewer (CC-029)', 'L5 professional judgement', 'PARTIAL', 'CC-029: EDMS approve/reject recorded on revision with reviewer and reason (E1); disposition codes and markup absent', ''),
+    ('Issue controlled review report', 'Document controller', 'disposition', 'report/transmittal', 'issued output immutable; for-construction only approved current revisions (CC-029)', 'maker != issuer', 'L2', 'RUNTIME', 'CC-029 sweep_edms transmittals', ''),
 ])
 gc('GC-04', 'Design Revision Impact', [
     ('Detect new revision', 'Document controller', 'revision', 'change event', 'superseded revision flagged everywhere used', 'none', 'L4 notify', 'PARTIAL', 'document_versions', ''),
@@ -261,9 +261,9 @@ gc('GC-36', 'Connector Lifecycle', [
 ])
 gc('GC-37', 'Recruit-to-Develop-to-Exit', [
     ('Approved demand and recruitment', 'HR', 'requisition', 'candidate pipeline', 'fair recruitment checks', 'none', 'L2 screening (human decides)', 'PARTIAL', 'recruitment table', 'NDC-021'),
-    ('Hire without duplicate identity, onboard', 'HR', 'offer', 'employee', 'one person = one identity', 'SOD15-035', 'L0', 'API', 'employees routes', ''),
+    ('Hire without duplicate identity, onboard', 'HR', 'offer', 'employee', 'one person = one identity', 'SOD15-035', 'L0', 'PARTIAL', 'CC-028: employee create/terminate runtime-tested (E1); duplicate-identity (national id) check absent', ''),
     ('Competency, learning, performance', 'HR + manager', 'records', 'competency/performance records', 'calibration and appeal', 'none', 'L1', 'ABSENT', '', 'NDC-005,NDC-022'),
-    ('Time, payroll, cost', 'Payroll', 'timesheets', 'payroll run, cost', 'payroll posts to project cost', 'SOD15-033', 'L4', 'API', 'payroll runs + post-cost', ''),
+    ('Time, payroll, cost', 'Payroll', 'timesheets', 'payroll run, cost', 'payroll posts to project cost (basis DEC-013 open); lines frozen after submission; employed same-org staff only', 'SOD15-033 submitter != approver', 'L4', 'RUNTIME', 'CC-028 sweep_hr_payroll 43/43 (timesheets, payroll, approval, post-cost)', ''),
     ('Exit with access revocation and final settlement', 'HR + IT', 'resignation', 'exit record', 'access removed same day', 'SOD15-037', 'L4', 'PARTIAL', 'user status route', ''),
 ])
 gc('GC-38', 'Enterprise Architecture Transformation', [

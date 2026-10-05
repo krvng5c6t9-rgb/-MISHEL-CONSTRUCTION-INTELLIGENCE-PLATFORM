@@ -1,4 +1,4 @@
-# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2: CC-015…CC-021)
+# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2 + RK-003 sweep: CC-015…CC-029)
 
 | Item | Value |
 |---|---|
@@ -7,8 +7,8 @@
 | Git commit | Exact snapshot commit SHA is in `SNAPSHOT_COMMIT.txt` inside the archive (this file cannot contain the SHA of the commit that adds it). R0 suites were last executed on that exact code (see archive verification below) |
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
-| PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through CC-020 (run 37279212448); CC-018 run 37278655900 fixed the red CC-017 run 37278199131 |
-| Migrations | 44 (`database/migrations/001…044`), all applied from an empty DB |
+| PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through CC-028 (run 37284503170; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
+| Migrations | 52 (`database/migrations/001…052`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-021
+## Controlled Changes CC-001 → CC-029
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -53,6 +53,14 @@
 | CC-019 | G-014 cost-code management API (042) |
 | CC-020 | GC-12 subcontract certificate integrity (043): 5 runtime defects fixed |
 | CC-021 | NDC-001 notice/time-bar engine (044); F-13 DATE timezone fix; gate runs API in Africa/Cairo |
+| CC-022 | G-010 hostile concurrency suite; F-14 fiscal-period API fixed; posting needs a defined open period; reopen SoD (045) |
+| CC-023 | NDC-014 signed immutable daily records + amendments; NDC-002 event-link hub and early-warning register (046) |
+| CC-024 | NDC-010 programme submissions with sealed snapshots; CPM verified by hand; F-15 logic loops refused (047) |
+| CC-025 | GC-15 variation lifecycle and client agreement path applied to execution BOQ (048) |
+| CC-026 | GC-08/09 QA/HSE integrity (049) |
+| CC-027 | Approval rejection/return releases business records; reason mandatory; PO/MR resubmission guarded (050) |
+| CC-028 | GC-37 HR/payroll: payroll submission crash fixed; payroll/timesheet/leave integrity (051) |
+| CC-029 | GC-03 EDMS: revision-level review, immutable versions, for-construction issue gated on approval (052) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -78,6 +86,15 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | wave1_tenant_onboarding.mjs | 20 | F-08/G-003/G-006/G-014 |
 | wave1_subcontract_ipc.mjs | 22 | GC-12 |
 | wave2_notice_engine.mjs | 36 | NDC-001, F-13 |
+| hostile_concurrency.mjs | 17 | G-010 races, period lock/reopen, token after deactivation |
+| wave2_daily_record_changes.mjs | 29 | NDC-014, NDC-002 |
+| wave2_programme.mjs | 25 | NDC-010, CPM |
+| sweep_variations.mjs | 20 | GC-15 |
+| sweep_quality_hse.mjs | 20 | GC-08/09 |
+| sweep_approval_rejection.mjs | 29 | approval reject/return across modules |
+| sweep_hr_payroll.mjs | 43 | GC-37 |
+| sweep_edms.mjs | 24 | GC-03 |
+| **Total** | **538** | 16 suites, all PASS locally (RUN ed1) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).
@@ -96,8 +113,8 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 
 ## Open gaps / risks / owner decisions (see `governance/registers/07,09,12`)
 - Open gaps: G-003 commercial provisioning (DEC-010 decided; owner plan/pricing inputs) · G-004 owner DOA matrix (API done) · G-005 IPC/retention posting (DEC-009 OPEN) · G-006 (partially closed) · G-008 dropped frozen scope · G-009 D-pack coverage · G-010 hostile concurrency tests · G-011 STEP02 atlas · G-012 unread archives (owner action) · G-013 token revocation.
-- Closed: G-001 (CC-015), G-002 (CC-016), G-007 Golden Cases decomposed (R13), G-014 (CC-019); F-06/F-07 (CC-013), F-08 takeover (CC-018), F-13 (CC-021).
-- Owner decisions open: DEC-009 (IPC revenue/retention), DEC-012 (subcontract certificate posting basis, F-12), DEC-010 follow-up (plan catalogue/pricing), real DOA bands / CoA / posting rules / clause periods (never invented by the platform).
+- Closed: G-001 (CC-015), G-002 (CC-016), G-007 Golden Cases decomposed (R13), G-014 (CC-019); F-06/F-07 (CC-013), F-08 takeover (CC-018), F-13 (CC-021), F-14 (CC-022), F-15 (CC-024); G-010 hostile concurrency executed (CC-022).
+- Owner decisions open: DEC-009 (IPC revenue/retention), DEC-012 (subcontract certificate posting basis, F-12), DEC-013 (payroll cost basis: net vs gross, F-16), DEC-010 follow-up (plan catalogue/pricing), real DOA bands / CoA / posting rules / clause periods (never invented by the platform).
 - Risks: RK-001 unread archives may change scope · RK-002 templated sources mistaken for specification · RK-003 similar defect density in untested modules — **confirmed** by GC-12 (5 defects at first execution).
 
 ## Install / build / migrate / run / test from zero
@@ -138,6 +155,6 @@ Docker alternative: set `POSTGRES_PASSWORD`, `APP_DB_PASSWORD`, `JWT_SECRET`, `B
 ## VERIFIED vs UNVERIFIED
 **VERIFIED (executed, logs in `takeover/evidence/` and CI):** build, migrations from zero on PG 16.14/16.15/17.11, project-create authorization, SQLSTATE error mapping without SQL leakage, API authentication, DOA-driven approvals with SoD and wrong-role rejection, the commercial-procurement-finance chain to a balanced GL, AP/AR creation, idempotency of GRN confirm and GL posting, cross-tenant read/write/approval isolation at API and DB level, bootstrap refusal on orgs with active users.
 
-**UNVERIFIED:** docker-compose runtime; frontend behaviour in a browser; every module outside the 8 runtime suites (HR/payroll, assets/plant, QA/QC, HSE, EDMS/CDE, planning/CPM, site, claims, variations, inventory transfers, portals, dashboards/reports, AI platform, automation, knowledge); performance/load; backup/restore/DR; penetration testing; production readiness of any kind. All DOA thresholds, CoA codes, GL rules and amounts used in tests are **TEST FIXTURES**, not owner-approved values.
+**UNVERIFIED:** docker-compose runtime; frontend behaviour in a browser; every module outside the 16 runtime suites (assets/plant, claims, inventory transfers, technical office (RFIs/submittals/method statements), portals, dashboards/reports, AI platform, automation, knowledge, CRM beyond the chain); HR/payroll, QA/QC, HSE, EDMS, planning/CPM, site diary and variations are now runtime-tested for their core paths only; performance/load; backup/restore/DR; penetration testing; production readiness of any kind. All DOA thresholds, CoA codes, GL rules and amounts used in tests are **TEST FIXTURES**, not owner-approved values.
 
 No secrets are included: credentials appear only as `<placeholders>` and as test-only fixture passwords inside `tests/e2e`.
