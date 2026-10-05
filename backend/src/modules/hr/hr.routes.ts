@@ -55,9 +55,12 @@ hrRouter.post('/employees', authorize('hr', 'create'), asyncHandler(async (req, 
 }));
 
 hrRouter.patch('/employees/:id/status', authorize('hr', 'edit'), asyncHandler(async (req, res) => {
-  const b = z.object({ employment_status: z.enum(['active','on_leave','terminated']), termination_date: z.string().optional() }).parse(req.body);
-  const [updated] = await query(`update employees set employment_status=$2, termination_date=$3, updated_at=now() where id=$1 returning *`, [Number(req.params.id), b.employment_status, b.termination_date ?? null]);
-  res.json({ success: true, data: updated ?? null });
+  const b = z.object({ employment_status: z.enum(['active','on_leave','terminated']), termination_date: z.string().optional() })
+    .refine(v => v.employment_status !== 'terminated' || !!v.termination_date, { message: 'Termination requires termination_date', path: ['termination_date'] })
+    .parse(req.body);
+  const [updated] = await query(`update employees set employment_status=$2, termination_date=$3, updated_at=now() where id=$1 and org_id=$4 returning *`, [Number(req.params.id), b.employment_status, b.termination_date ?? null, req.user!.org_id]);
+  if (!updated) throw new AppError(404, 'Employee not found');
+  res.json({ success: true, data: updated });
 }));
 
 hrRouter.get('/attendance', asyncHandler(async (req, res) => {

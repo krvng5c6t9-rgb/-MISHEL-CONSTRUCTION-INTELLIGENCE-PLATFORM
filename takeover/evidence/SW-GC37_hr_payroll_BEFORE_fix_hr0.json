@@ -1,0 +1,308 @@
+{
+  "suite": "sweep_hr_payroll",
+  "run": "hr0",
+  "tag": "hr0",
+  "steps": [
+    {
+      "name": "termination without a termination date refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "termination dated before hire refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "E2 terminated end of January 2031",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot change a tenant A employee",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "payroll run created",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "second run for the same period refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint payroll_runs_org_id_period_month_key\""
+    },
+    {
+      "name": "period must be the first day of a month",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "line for E1 (10,000 + 500 OT + 1,000 allowances - 1,500 deductions)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "net pay computed in DB = 10,000",
+      "outcome": "PASS",
+      "detail": "10000.00"
+    },
+    {
+      "name": "same employee twice in one run refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "negative net pay refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "employee terminated before the period cannot be paid",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "employee of another tenant cannot be put on this payroll",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "payroll run submitted for approval",
+      "outcome": "FAIL",
+      "detail": "submit failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"cc248d17-96bb-4c2f-b842-12b62546cf4e\"}"
+    },
+    {
+      "name": "suite completed",
+      "outcome": "FAIL",
+      "detail": "submit failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"cc248d17-96bb-4c2f-b842-12b62546cf4e\"}"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/50/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/2/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/2/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/2/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/1/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint payroll_runs_org_id_period_month_key"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/payroll-runs/1/approve",
+      "status": 500,
+      "ok": false,
+      "error": "Internal server error"
+    }
+  ]
+}

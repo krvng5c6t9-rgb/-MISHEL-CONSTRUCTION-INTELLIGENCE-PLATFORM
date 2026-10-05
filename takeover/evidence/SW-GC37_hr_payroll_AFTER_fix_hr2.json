@@ -1,0 +1,616 @@
+{
+  "suite": "sweep_hr_payroll",
+  "run": "hr2",
+  "tag": "hr2",
+  "steps": [
+    {
+      "name": "termination without a termination date refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "termination dated before hire refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Termination date 2024-12-31 is before hire date 2025-01-01\""
+    },
+    {
+      "name": "E2 terminated end of January 2031",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot change a tenant A employee",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Employee not found\""
+    },
+    {
+      "name": "payroll run created",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "second run for the same period refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint payroll_runs_org_id_period_month_key\""
+    },
+    {
+      "name": "period must be the first day of a month",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint chk_payroll_period_is_month\""
+    },
+    {
+      "name": "line for E1 (10,000 + 500 OT + 1,000 allowances - 1,500 deductions)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "net pay computed in DB = 10,000",
+      "outcome": "PASS",
+      "detail": "10000.00"
+    },
+    {
+      "name": "same employee twice in one run refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint uq_payroll_line_run_employee\""
+    },
+    {
+      "name": "negative net pay refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint chk_payroll_line_net_nonnegative\""
+    },
+    {
+      "name": "employee terminated before the period cannot be paid",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Employee 2 is not employed during payroll period 2031-03-01\""
+    },
+    {
+      "name": "employee of another tenant cannot be put on this payroll",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Employee 4 is not an employee of this organization\""
+    },
+    {
+      "name": "payroll run submitted for approval",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approval amount = sum of net pay (18,000)",
+      "outcome": "PASS",
+      "detail": "18000.00"
+    },
+    {
+      "name": "lines cannot be added once submitted",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Payroll lines can only change while the run is draft (status pending_approval)\""
+    },
+    {
+      "name": "DB: submitted payroll line amounts frozen",
+      "outcome": "PASS",
+      "detail": "ERROR:  Payroll lines can only change while the run is draft (status pending_approval)"
+    },
+    {
+      "name": "DB: submitted payroll lines cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Payroll lines can only be removed while the run is draft (status pending_approval)"
+    },
+    {
+      "name": "submitter cannot approve own payroll (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: initiator cannot approve the same transaction\""
+    },
+    {
+      "name": "second HR user approves",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "payroll run approved",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "lines cannot be added after approval",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Payroll lines can only change while the run is draft (status approved)\""
+    },
+    {
+      "name": "project payroll line posted to cost",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "posted payroll cost recorded (basis: net pay; F-16 open for owner decision)",
+      "outcome": "PASS",
+      "detail": "10000.00"
+    },
+    {
+      "name": "payroll line cannot be posted twice",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Payroll line already posted to cost transactions\""
+    },
+    {
+      "name": "approver returns April payroll with a reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "returned payroll run is draft again",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "missing line added after return",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "corrected run resubmitted",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "resubmitted amount includes the correction (18,000)",
+      "outcome": "PASS",
+      "detail": "18000.00"
+    },
+    {
+      "name": "timesheet 10h for E1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "more than 24 hours for one employee on one day refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Employee 1 would have 25.00 hours on 2031-03-10\""
+    },
+    {
+      "name": "timesheet after termination refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Employee 2 is not employed on 2031-03-10\""
+    },
+    {
+      "name": "timesheet before hire refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Employee 1 is not employed on 2024-06-01\""
+    },
+    {
+      "name": "maker cannot approve own timesheet (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Timesheet cannot be approved: it may be missing, already approved, unattributed, cross-tenant, or created by the same user\""
+    },
+    {
+      "name": "second user approves timesheet",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DB: approved timesheet immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Approved timesheet 1 is immutable"
+    },
+    {
+      "name": "E1 annual leave 2031-03-20..22",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "overlapping leave for the same employee refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Leave 2031-03-22 .. 2031-03-25 overlaps an existing leave request of employee 1\""
+    },
+    {
+      "name": "leave ending before it starts refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint leave_requests_check\""
+    },
+    {
+      "name": "requester cannot decide own leave (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Leave request cannot be decided: it may be missing, already decided, unattributed, cross-tenant, or created by the same user\""
+    },
+    {
+      "name": "second user approves leave",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B does not see tenant A leave requests",
+      "outcome": "PASS",
+      "detail": ""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/50/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/2/status",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/2/status",
+      "status": 422,
+      "ok": false,
+      "error": "Termination date 2024-12-31 is before hire date 2025-01-01"
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/2/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/1/status",
+      "status": 404,
+      "ok": false,
+      "error": "Employee not found"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint payroll_runs_org_id_period_month_key"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint chk_payroll_period_is_month"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint uq_payroll_line_run_employee"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint chk_payroll_line_net_nonnegative"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 422,
+      "ok": false,
+      "error": "Employee 2 is not employed during payroll period 2031-03-01"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 422,
+      "ok": false,
+      "error": "Employee 4 is not an employee of this organization"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/payroll-runs/1/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 422,
+      "ok": false,
+      "error": "Payroll lines can only change while the run is draft (status pending_approval)"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/35/actions",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: initiator cannot approve the same transaction"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/35/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/1/lines",
+      "status": 422,
+      "ok": false,
+      "error": "Payroll lines can only change while the run is draft (status approved)"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-lines/1/post-cost",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-lines/1/post-cost",
+      "status": 409,
+      "ok": false,
+      "error": "Payroll line already posted to cost transactions"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/4/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/payroll-runs/4/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/36/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/payroll-runs/4/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/payroll-runs/4/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/timesheets",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/timesheets",
+      "status": 422,
+      "ok": false,
+      "error": "Employee 1 would have 25.00 hours on 2031-03-10"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/timesheets",
+      "status": 422,
+      "ok": false,
+      "error": "Employee 2 is not employed on 2031-03-10"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/timesheets",
+      "status": 422,
+      "ok": false,
+      "error": "Employee 1 is not employed on 2024-06-01"
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/timesheets/1/approve",
+      "status": 409,
+      "ok": false,
+      "error": "Timesheet cannot be approved: it may be missing, already approved, unattributed, cross-tenant, or created by the same user"
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/timesheets/1/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/leave-requests",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/leave-requests",
+      "status": 422,
+      "ok": false,
+      "error": "Leave 2031-03-22 .. 2031-03-25 overlaps an existing leave request of employee 1"
+    },
+    {
+      "method": "POST",
+      "path": "/hr/leave-requests",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint leave_requests_check"
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/leave-requests/1/approve",
+      "status": 409,
+      "ok": false,
+      "error": "Leave request cannot be decided: it may be missing, already decided, unattributed, cross-tenant, or created by the same user"
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/leave-requests/1/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/hr/leave-requests",
+      "status": 200,
+      "ok": true,
+      "error": null
+    }
+  ]
+}
