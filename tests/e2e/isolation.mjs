@@ -6,6 +6,7 @@ import { api, must, log } from './lib.mjs';
 
 const chain = JSON.parse(readFileSync(process.argv[2], 'utf8'));
 const A = chain.ids;
+const TAG = chain.tag ?? chain.run;
 const results = [];
 const rec = (name, pass, detail = '') => { results.push({ name, outcome: pass ? 'PASS' : 'FAIL', detail }); console.log(`${pass ? 'PASS' : 'FAIL'}  ${name}${detail ? ' :: ' + detail : ''}`); };
 const tb = must(await api('POST', '/auth/login', null, { email: 'admin.b@test.local', password: 'Passw0rd!B', org_id: 2 }), 'login B').token;
@@ -30,16 +31,16 @@ for (const [label, path] of reads) {
 for (const [label, path, key] of [['projects', '/projects', 'project_code'], ['leads', '/crm/leads', 'lead_name'], ['POs', '/procurement/purchase-orders', 'po_ref'], ['approvals', '/approvals', 'module'], ['GL', '/finance/gl', 'account_code'], ['AP', '/finance/ap', 'id'], ['DOA', '/approvals/configuration/doa', 'module'], ['cost transactions', '/cost-transactions', 'id'], ['roles', '/roles', 'role_name'], ['users', '/users', 'email']]) {
   const r = await api('GET', path, tb);
   const rows = Array.isArray(r.data) ? r.data : [];
-  const foreign = rows.filter(x => x.org_id != null ? Number(x.org_id) !== 2 : String(x[key] ?? '').includes(chain.run));
+  const foreign = rows.filter(x => x.org_id != null ? Number(x.org_id) !== 2 : String(x[key] ?? '').includes(TAG));
   rec(`B list ${label} has no A rows`, r.status < 500 && foreign.length === 0, `HTTP ${r.status} rows=${rows.length} foreign=${foreign.length}`);
 }
 
 // Writes referencing A's ids from B's session must fail and must not create rows.
 const writes = [
-  ['create MR on A project', 'POST', '/procurement/material-requisitions', { project_id: A.project, mr_no: `XMR-${chain.run}`, lines: [{ item_description: 'x tenant', unit_of_measure: 'm2', quantity: 1 }] }],
+  ['create MR on A project', 'POST', '/procurement/material-requisitions', { project_id: A.project, mr_no: `XMR-${TAG}`, lines: [{ item_description: 'x tenant', unit_of_measure: 'm2', quantity: 1 }] }],
   ['add quotation to A RFQ', 'POST', `/procurement/rfqs/${A.rfq}/vendor-quotations`, { vendor_id: A.vendor, total_amount: 1, currency_id: 1 }],
   ['add rate build-up to A BOQ', 'POST', `/boq/master/${A.boq}/rate-buildup`, { resource_type: 'material', quantity_per_unit: 1, unit_cost: 1 }],
-  ['create PO with A vendor/project', 'POST', '/procurement/purchase-orders', { project_id: A.project, vendor_id: A.vendor, cost_code_id: 2, po_ref: `XPO-${chain.run}`, currency_id: 1, lines: [{ item_description: 'x tenant', unit_of_measure: 'm2', quantity: 1, unit_rate: 1 }] }],
+  ['create PO with A vendor/project', 'POST', '/procurement/purchase-orders', { project_id: A.project, vendor_id: A.vendor, cost_code_id: 2, po_ref: `XPO-${TAG}`, currency_id: 1, lines: [{ item_description: 'x tenant', unit_of_measure: 'm2', quantity: 1, unit_rate: 1 }] }],
   ['issue A PO', 'POST', `/procurement/purchase-orders/${A.po}/issue`, undefined],
   ['post A cost transaction to GL', 'POST', `/finance/cost-transactions/${A.ctCommitted}/post-gl`, undefined],
   ['client-approve A IPC', 'POST', `/finance/ipcs/${A.ipc}/client-approve`, undefined],
@@ -62,13 +63,13 @@ rec('B cannot act on A approval instance', !ra.ok, `HTTP ${ra.status} ${JSON.str
 
 // Authorization inside one tenant: a role holding only projects.view must not create projects (F-06/CC-013).
 {
-  const role = must(await api('POST', '/roles', ta, { role_name: `ViewOnly ${chain.run}`, permissions: [{ module: 'projects', action: 'view', scope: 'all' }] }), 'view-only role');
-  const email = `viewonly.${chain.run}@test.local`;
+  const role = must(await api('POST', '/roles', ta, { role_name: `ViewOnly ${TAG}`, permissions: [{ module: 'projects', action: 'view', scope: 'all' }] }), 'view-only role');
+  const email = `viewonly.${TAG}@test.local`;
   must(await api('POST', '/users', ta, { role_id: role.id, full_name: 'View Only', email, password: 'Passw0rd!V' }), 'view-only user');
   const tv = must(await api('POST', '/auth/login', null, { email, password: 'Passw0rd!V', org_id: 1 }), 'login view-only').token;
   const list = await api('GET', '/projects', tv);
   rec('view-only user can list projects', list.ok, `HTTP ${list.status}`);
-  const create = await api('POST', '/projects', tv, { project_code: `VO-${chain.run}`, project_name: 'should fail', currency_id: 1 });
+  const create = await api('POST', '/projects', tv, { project_code: `VO-${TAG}`, project_name: 'should fail', currency_id: 1 });
   rec('view-only user cannot create project', create.status === 403, `HTTP ${create.status}`);
   const appr = await api('POST', '/approvals/1/actions', tv, { action: 'approved' });
   rec('view-only user cannot act on approvals', appr.status === 403, `HTTP ${appr.status}`);
