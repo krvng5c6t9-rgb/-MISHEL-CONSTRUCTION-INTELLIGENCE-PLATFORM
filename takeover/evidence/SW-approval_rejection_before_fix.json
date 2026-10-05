@@ -1,0 +1,115 @@
+{
+  "suite": "sweep_approval_rejection",
+  "run": "ar0b",
+  "tag": "ar0b",
+  "steps": [
+    {
+      "name": "rejection without a reason refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "signer returns the contract for correction",
+      "outcome": "FAIL",
+      "detail": "return failed: HTTP 409 {\"success\":false,\"error\":\"Approval instance is not pending\"}"
+    },
+    {
+      "name": "suite completed",
+      "outcome": "FAIL",
+      "detail": "return failed: HTTP 409 {\"success\":false,\"error\":\"Approval instance is not pending\"}"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/10/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/25/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/25/actions",
+      "status": 409,
+      "ok": false,
+      "error": "Approval instance is not pending"
+    }
+  ]
+}

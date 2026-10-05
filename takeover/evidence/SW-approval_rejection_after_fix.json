@@ -1,0 +1,469 @@
+{
+  "suite": "sweep_approval_rejection",
+  "run": "ar3",
+  "tag": "ar3",
+  "steps": [
+    {
+      "name": "rejection without a reason refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "signer returns the contract for correction",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "returned contract is back in draft with no live approval",
+      "outcome": "PASS",
+      "detail": "{\"id\":10,\"project_id\":14,\"client_id\":7,\"contract_type\":\"lump_sum\",\"contract_form\":null,\"contract_value\":\"20000.00\",\"currency_id\":1,\"signing_date\":null,\"effectiv"
+    },
+    {
+      "name": "a returned approval cannot be acted on again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Approval instance is not pending\""
+    },
+    {
+      "name": "corrected contract resubmitted",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "resubmission opens a new approval instance",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "contract signed on the second instance",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "contract status signed",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "second signer rejects",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rejected contract released to draft",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approver rejects variation",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rejected variation is in terminal rejected state",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rejected variation cannot be resubmitted",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only proposed variations can be submitted\""
+    },
+    {
+      "name": "approver returns variation",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "returned variation is proposed again",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "lines can be added again after return",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "resubmitted variation approved",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "variation approved after correction",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PM returns MR",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "returned MR stays draft with approval link cleared",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "MR approved on resubmission",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approved MR cannot be submitted again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only draft material requisitions can be submitted for approval\""
+    },
+    {
+      "name": "procurement manager rejects PO",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rejected PO stays draft, no committed cost",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PO approved on resubmission",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "committed cost posted once on approval",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PO issued",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "issued PO cannot be resubmitted (would reset it to approved)",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only draft purchase orders can be submitted for approval\""
+    },
+    {
+      "name": "every rejection/return is kept in the action log with its reason",
+      "outcome": "PASS",
+      "detail": "6"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/10/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/25/actions",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/25/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/25/actions",
+      "status": 409,
+      "ok": false,
+      "error": "Approval instance is not pending"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/10/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/26/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/26/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/11/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/27/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/27/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/7/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/28/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/7/submit-approval",
+      "status": 409,
+      "ok": false,
+      "error": "Only proposed variations can be submitted"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/8/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/29/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/8/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/8/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/30/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/material-requisitions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/material-requisitions/3/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/31/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/material-requisitions/3/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/32/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/material-requisitions/3/submit-approval",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft material requisitions can be submitted for approval"
+    },
+    {
+      "method": "GET",
+      "path": "/vendors",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/6/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/33/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/6/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/34/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/6/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/procurement/purchase-orders/6/submit-approval",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft purchase orders can be submitted for approval"
+    }
+  ]
+}

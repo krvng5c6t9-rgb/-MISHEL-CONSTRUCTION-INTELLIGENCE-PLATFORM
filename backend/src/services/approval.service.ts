@@ -74,9 +74,10 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
     const updated = await client.query(`
       update purchase_orders
       set status = 'approved', updated_at = now()
-      where id = $1
+      where id = $1 and status = 'draft'
       returning *
     `, [recordId]);
+    if (!updated.rows[0]) throw new AppError(409, 'Purchase order is not in draft state');
     const cost_transaction = await postCommittedCostForPurchaseOrder(client, recordId);
     return { record: updated.rows[0], cost_transaction };
   }
@@ -85,9 +86,10 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
     const updated = await client.query(`
       update vendor_invoices
       set status = 'approved', updated_at = now()
-      where id = $1
+      where id = $1 and status = 'matched'
       returning *
     `, [recordId]);
+    if (!updated.rows[0]) throw new AppError(409, 'Vendor invoice is not matched');
     const cost_transaction = await postActualCostForVendorInvoice(client, recordId);
     return { record: updated.rows[0], cost_transaction };
   }
@@ -96,9 +98,10 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
     const updated = await client.query(`
       update material_requisitions
       set status = 'approved', updated_at = now()
-      where id = $1
+      where id = $1 and status = 'draft'
       returning *
     `, [recordId]);
+    if (!updated.rows[0]) throw new AppError(409, 'Material requisition is not in draft state');
     return { record: updated.rows[0] };
   }
 
@@ -106,9 +109,10 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
     const updated = await client.query(`
       update comparative_statements
       set status = 'approved', updated_at = now()
-      where id = $1
+      where id = $1 and status in ('draft','submitted')
       returning *
     `, [recordId]);
+    if (!updated.rows[0]) throw new AppError(409, 'Comparative statement is not awaiting approval');
     return { record: updated.rows[0] };
   }
 
@@ -116,9 +120,10 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
     const updated = await client.query(`
       update tenders
       set status = 'submitted', updated_at = now()
-      where id = $1
+      where id = $1 and status = 'in_progress'
       returning *
     `, [recordId]);
+    if (!updated.rows[0]) throw new AppError(409, 'Tender is not in progress');
     return { record: updated.rows[0] };
   }
 
@@ -126,9 +131,10 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
     const updated = await client.query(`
       update contracts
       set contract_status = 'signed', signing_date = coalesce(signing_date, current_date), updated_at = now()
-      where id = $1
+      where id = $1 and contract_status = 'under_review'
       returning *
     `, [recordId]);
+    if (!updated.rows[0]) throw new AppError(409, 'Contract is not under review');
     return { record: updated.rows[0] };
   }
 
@@ -136,9 +142,10 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
     const updated = await client.query(`
       update variations
       set status = 'approved', updated_at = now()
-      where id = $1
+      where id = $1 and status = 'under_review'
       returning *
     `, [recordId]);
+    if (!updated.rows[0]) throw new AppError(409, 'Variation is not under review');
     return { record: updated.rows[0] };
   }
 
@@ -232,6 +239,57 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
   return null;
 }
 
+// RK-003 / CC-027: a rejected or returned approval must release the business record. Before this, only the
+// approval instance changed; records whose submit route moved them out of draft (contracts, variations, manual
+// journals, payroll runs) were stranded in their under-review state with no way to correct or resubmit them.
+// 'returned' = back to the editable state for correction and resubmission. 'rejected' = terminal where the record
+// has a rejected state, otherwise back to the editable state (the rejection stays in approval_actions_log).
+// approval_instance_id is cleared so that a resubmission starts a fresh instance; history is never deleted.
+const releaseOnRejection: Record<string, { table: string; column: string; from: string[]; returned: string; rejected: string }> = {
+  contract_signing: { table: 'contracts', column: 'contract_status', from: ['under_review'], returned: 'draft', rejected: 'draft' },
+  variation: { table: 'variations', column: 'status', from: ['under_review'], returned: 'proposed', rejected: 'rejected' },
+  manual_journal_entry: { table: 'manual_journal_entries', column: 'status', from: ['pending_approval'], returned: 'draft', rejected: 'rejected' },
+  payroll_run: { table: 'payroll_runs', column: 'status', from: ['pending_approval'], returned: 'draft', rejected: 'draft' },
+  comparative_statement: { table: 'comparative_statements', column: 'status', from: ['draft', 'submitted'], returned: 'draft', rejected: 'rejected' },
+};
+const clearInstanceOnly: Record<string, string> = {
+  purchase_order: 'purchase_orders', vendor_invoice: 'vendor_invoices', material_requisition: 'material_requisitions',
+  tender_submission: 'tenders', subcontract_signing: 'subcontracts', ipc_submission: 'ipcs', payment: 'payments', equipment_usage: 'equipment_usage',
+};
+
+async function releaseRejectedRecord(client: PoolClient, module: string, recordId: number, approvalId: number, action: 'rejected' | 'returned', actorId: number, reason: string) {
+  if (module === 'subcontract_certificate') {
+    // The certificate state machine has no direct qs_certified -> draft; both outcomes record a reasoned rejection,
+    // from which the existing rejected -> draft rework path applies. Valuation stays frozen until then.
+    const updated = await client.query(
+      `update subcontract_certificates set status = 'rejected', rejection_reason = $3, rejected_by = $4, rejected_at = now(), approval_instance_id = null
+       where id = $1 and approval_instance_id = $2 and status = 'qs_certified' returning *`,
+      [recordId, approvalId, `${action}: ${reason}`, actorId]
+    );
+    return { record: updated.rows[0] ?? null };
+  }
+  const rule = releaseOnRejection[module];
+  if (rule) {
+    const target = action === 'returned' ? rule.returned : rule.rejected;
+    const updated = await client.query(
+      `update ${rule.table} set ${rule.column} = $3, approval_instance_id = null, updated_at = now()
+       where id = $1 and approval_instance_id = $2 and ${rule.column} = any($4::text[]) returning *`,
+      [recordId, approvalId, target, rule.from]
+    );
+    return { record: updated.rows[0] ?? null };
+  }
+  const table = clearInstanceOnly[module];
+  if (table) {
+    const hasUpdatedAt = table !== 'equipment_usage';
+    const updated = await client.query(
+      `update ${table} set approval_instance_id = null${hasUpdatedAt ? ', updated_at = now()' : ''} where id = $1 and approval_instance_id = $2 returning *`,
+      [recordId, approvalId]
+    );
+    return { record: updated.rows[0] ?? null };
+  }
+  return null;
+}
+
 export async function actOnApproval(client: PoolClient, approvalId: number, input: {
   actor_user_id: number;
   actor_role_id: number;
@@ -277,7 +335,8 @@ export async function actOnApproval(client: PoolClient, approvalId: number, inpu
       where id = $1
       returning *
     `, [approvalId, input.action]);
-    return { approval: updated.rows[0], finalization: null };
+    const finalization = await releaseRejectedRecord(client, instance.module, instance.record_id, approvalId, input.action, input.actor_user_id, input.comment ?? '');
+    return { approval: updated.rows[0], finalization };
   }
 
   const nextLevel = await nextApprovalLevel(

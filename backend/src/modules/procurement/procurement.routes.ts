@@ -142,6 +142,7 @@ procurementRouter.post('/material-requisitions/:id/submit-approval', authorize('
     await client.query('begin');
     const mr = await client.query(`select * from material_requisitions where id=$1 for update`, [id]);
     if (!mr.rows[0]) throw new AppError(404, 'Material requisition not found');
+    if (mr.rows[0].status !== 'draft') throw new AppError(409, 'Only draft material requisitions can be submitted for approval');
     const approval = await createApprovalInstance(client, {
       org_id: req.user.org_id,
       module: 'material_requisition',
@@ -286,6 +287,7 @@ procurementRouter.post('/purchase-orders/:id/submit-approval', authorize('procur
     await client.query('begin');
     const po = await client.query(`select * from purchase_orders where id=$1 for update`, [id]);
     if (!po.rows[0]) throw new AppError(404, 'Purchase order not found');
+    if (po.rows[0].status !== 'draft') throw new AppError(409, 'Only draft purchase orders can be submitted for approval');
     const approval = await createApprovalInstance(client, {
       org_id: req.user.org_id,
       module: 'purchase_order',

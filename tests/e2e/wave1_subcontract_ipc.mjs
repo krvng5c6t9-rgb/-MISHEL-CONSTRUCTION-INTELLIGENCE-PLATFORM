@@ -83,6 +83,9 @@ try {
   // Records the posted basis; DEC-012 (owner) decides gross vs net. Not asserted as right or wrong.
   check('cost transaction recorded (basis per DEC-012)', !!ct, ct ? `amount=${ct.amount} gross=${after.gross_work_done} net=${after.net_amount_due}` : 'not found');
   await expectStatus('approved certificate cannot be re-submitted', () => api('POST', `/subcontracts/certificates/${cert.id}/submit-approval`, T.qs), 409);
+  // CC-027: a returned certificate is released with a recorded reason and no cost is posted.
+  const c4r = await run('approver returns certificate C4 with a reason', async () => must(await api('POST', `/approvals/${c4a.id}/actions`, T.appr, { action: 'returned', comment: 'Measurement sheet missing (fixture)' }), 'c4 return'));
+  check('returned certificate released as rejected with reason, approver and time; no cost posted', c4r.finalization?.record?.status === 'rejected' && /Measurement sheet/.test(c4r.finalization.record.rejection_reason) && Number(c4r.finalization.record.rejected_by) > 0 && !c4r.finalization.record.posted_cost_transaction_id, JSON.stringify(c4r.finalization?.record ?? null).slice(0, 200));
 } catch (e) {
   console.error('SUITE STOPPED:', e.message);
   check('suite completed', false, e.message.slice(0, 200));

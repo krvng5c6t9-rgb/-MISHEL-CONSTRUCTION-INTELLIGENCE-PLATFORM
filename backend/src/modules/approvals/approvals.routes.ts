@@ -45,6 +45,8 @@ approvalsRouter.get('/:id', authorize('approvals', 'view'), asyncHandler(async (
 const actionSchema = z.object({
   action: z.enum(['approved', 'rejected', 'returned']),
   comment: z.string().max(1000).optional()
+}).refine(b => b.action === 'approved' || (b.comment ?? '').trim().length >= 5, {
+  message: 'A rejection or return must state its reason (comment, at least 5 characters)', path: ['comment']
 });
 
 approvalsRouter.post('/:id/actions', authorize('approvals', 'approve'), asyncHandler(async (req, res) => {
