@@ -42,7 +42,7 @@ gc('GC-02', 'Award-to-Project', [
     ('Hand over estimating BOQ to execution BOQ', 'QS', 'tender BOQ + rate build-up', 'project_boq lines (contract BOQ)', 'execution BOQ total = contract value, or difference accepted with reason by independent approver', 'preparer != acceptor (CC-015)', 'L2 mapping draft', 'RUNTIME', 'CC-015 wave1_boq_handover 41/41', 'G-001'),
     ('Build WBS/CBS and cost-code mapping', 'Project controls', 'BOQ, programme', 'WBS, CBS, cost codes', 'every BOQ line maps to exactly one CBS node', 'none', 'L2 mapping draft', 'PARTIAL', 'cost_codes read-only route; no WBS entity', ''),
     ('Set control budget from estimate', 'Project controls', 'priced BOQ, risk allowance', 'budget baseline', 'budget = cost estimate + contingency; margin = contract - budget', 'SOD15-011 budget prep vs approval; DOA Budget', 'L2', 'SCHEMA', 'budgets table, no route', 'NDC-011'),
-    ('Baseline programme and accepted-programme submission', 'Planner', 'tender programme, contract dates', 'baseline + submission', 'contract key dates enforced', 'none', 'L2', 'PARTIAL', 'planning baselines API; acceptance absent', 'NDC-010'),
+    ('Baseline programme and accepted-programme submission', 'Planner', 'tender programme, contract dates', 'baseline + submission', 'sealed snapshot; response deadline from contract', 'none', 'L2', 'RUNTIME', 'CC-024 wave2_programme 25/25', 'NDC-010'),
     ('Create procurement packages and engineering registers', 'Procurement / technical office', 'BOQ, programme', 'packages, drawing/submittal registers', 'package need-date = activity start - lead time', 'none', 'L2 package plan', 'PARTIAL', 'MR/RFQ exist; package entity absent', ''),
     ('Contract Data Pack and notice matrix activation', 'Contracts manager', 'contract', 'obligations, time-bar calendar', 'deadline per clause from Contract Data Pack', 'author != confirmer (CC-021)', 'L2 extraction', 'PARTIAL', 'CC-021 rules+confirmation; clause library per form + AI extraction pending', 'NDC-001'),
     ('Mobilisation readiness gate', 'Project director', 'permits, insurances, bonds, staff', 'go/no-go', 'all mandatory items closed or risk-accepted', 'gate approver != preparer', 'L0 checklist', 'ABSENT', 'no gate entity', 'NDC-004'),
@@ -160,8 +160,8 @@ gc('GC-10', 'Weekly/Monthly Project Report', [
 ])
 gc('GC-11', 'Delay & Recovery', [
     ('Detect schedule variance', 'Planner', 'updates', 'variance list', 'float erosion thresholds configured', 'none', 'L4 detect', 'PARTIAL', 'planning cpm route (unverified)', ''),
-    ('Validate update data quality', 'Planner', 'update', 'schedule health result', 'health checks (logic, constraints, dates)', 'none', 'L2', 'ABSENT', '', 'NDC-010'),
-    ('Analyse critical path and causes', 'Planner', 'network', 'analysis', 'CPM correctness tested', 'none', 'L2', 'PARTIAL', 'schedule_relationships + cpm', 'NDC-006'),
+    ('Validate update data quality', 'Planner', 'update', 'schedule health result', 'health checks (logic, constraints, dates)', 'none', 'L2', 'PARTIAL', 'logic loops refused (CC-024); other health checks absent', 'NDC-010'),
+    ('Analyse critical path and causes', 'Planner', 'network', 'analysis', 'CPM correctness tested', 'none', 'L2', 'PARTIAL', 'CPM verified vs hand calculation (CC-024); cause analysis absent', 'NDC-006'),
     ('Recovery scenarios with cost/cash impact', 'Planner + cost engineer', 'analysis', 'scenarios', 'scenario never overwrites baseline', 'none', 'L2', 'ABSENT', '', ''),
     ('Management approval and controlled replan', 'Project director', 'scenario', 'approved revision', 'baseline change controlled', 'none', 'L0', 'PARTIAL', 'baseline set-current route', ''),
 ])

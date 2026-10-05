@@ -179,3 +179,57 @@ contractAdminRouter.post('/early-warnings/:id/close', authorize('contracts', 'ap
   }
   res.json({ success: true, data: rows[0] });
 }));
+
+// NDC-010: programme submissions with a sealed activity snapshot, contractual response deadline,
+// and the Engineer's / PM's recorded decision. Exactly one accepted programme per contract.
+contractAdminRouter.get('/contracts/:contractId/programme-submissions', asyncHandler(async (req, res) => {
+  const rows = await query(`select p.*, (p.status='submitted' and p.response_due is not null and p.response_due < current_date) as response_overdue,
+      (select count(*)::int from programme_submission_activities a where a.submission_id=p.id) as activity_count
+    from programme_submissions p where p.contract_id=$1 order by p.submitted_on desc, p.id desc`, [pid(req.params.contractId)]);
+  res.json({ success: true, data: { accepted: rows.find((r: any) => r.status === 'accepted') ?? null, submissions: rows } });
+}));
+contractAdminRouter.get('/programme-submissions/:id', asyncHandler(async (req, res) => {
+  const id = pid(req.params.id);
+  const p = (await query<any>(`select * from programme_submissions where id=$1`, [id]))[0];
+  if (!p) throw new AppError(404, 'Programme submission not found');
+  res.json({ success: true, data: { ...p, activities: await query(`select * from programme_submission_activities where submission_id=$1 order by activity_id`, [id]) } });
+}));
+contractAdminRouter.post('/contracts/:contractId/programme-submissions', authorize('planning', 'manage'), asyncHandler(async (req, res) => {
+  const b = z.object({ revision_no: z.string().trim().min(1).max(20), data_date: isoDate, submitted_on: isoDate, response_rule_id: z.number().int().positive().nullable().optional(), narrative: z.string().max(10000).nullable().optional() }).parse(req.body);
+  const contractId = pid(req.params.contractId);
+  const client = await getClient();
+  try {
+    await client.query('begin');
+    const c = (await client.query(`select id,project_id from contracts where id=$1`, [contractId])).rows[0];
+    if (!c) throw new AppError(404, 'Contract not found');
+    const sub = (await client.query(`insert into programme_submissions(org_id,contract_id,project_id,revision_no,data_date,submitted_on,submitted_by,response_rule_id,narrative) values($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *`,
+      [req.user!.org_id, contractId, c.project_id, b.revision_no, b.data_date, b.submitted_on, req.user!.id, b.response_rule_id ?? null, b.narrative ?? null])).rows[0];
+    const snap = await client.query(`insert into programme_submission_activities(org_id,submission_id,activity_id,activity_id_ext,activity_name,planned_start,planned_finish,planned_duration_days,percent_complete,predecessors)
+      select $1,$2,a.id,a.activity_id_ext,a.activity_name,a.planned_start,a.planned_finish,a.planned_duration_days,a.percent_complete,
+        coalesce((select jsonb_agg(jsonb_build_object('predecessor',r.predecessor_activity_id,'type',r.relationship_type,'lag',r.lag_days) order by r.id) from schedule_relationships r where r.successor_activity_id=a.id),'[]'::jsonb)
+      from schedule_activities a where a.project_id=$3`, [req.user!.org_id, sub.id, c.project_id]);
+    if (!snap.rowCount) throw new AppError(422, 'The project has no schedule activities to submit');
+    const sealed = (await client.query(`update programme_submissions set snapshot_sealed=true where id=$1 returning *`, [sub.id])).rows[0];
+    await client.query('commit');
+    res.status(201).json({ success: true, data: { ...sealed, activity_count: snap.rowCount } });
+  } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
+}));
+contractAdminRouter.post('/programme-submissions/:id/decision', authorize('contracts', 'create'), asyncHandler(async (req, res) => {
+  const b = z.object({ decision: z.enum(['accepted', 'rejected']), decision_on: isoDate, decision_reference: z.string().trim().min(3).max(500), rejection_reasons: z.string().trim().min(5).max(10000).optional() }).parse(req.body);
+  const id = pid(req.params.id);
+  const client = await getClient();
+  try {
+    await client.query('begin');
+    const p = (await client.query(`select * from programme_submissions where id=$1 for update`, [id])).rows[0];
+    if (!p) throw new AppError(404, 'Programme submission not found');
+    if (p.status !== 'submitted') throw new AppError(409, `Programme submission is already ${p.status}`);
+    if (b.decision === 'rejected' && !b.rejection_reasons) throw new AppError(422, 'Rejection reasons are required');
+    if (b.decision === 'accepted') {
+      await client.query(`update programme_submissions set status='superseded' where contract_id=$1 and status='accepted'`, [p.contract_id]);
+    }
+    const r = (await client.query(`update programme_submissions set status=$2,decision_on=$3,decision_reference=$4,rejection_reasons=$5,recorded_by=$6 where id=$1 returning *`,
+      [id, b.decision, b.decision_on, b.decision_reference, b.rejection_reasons ?? null, req.user!.id])).rows[0];
+    await client.query('commit');
+    res.json({ success: true, data: r });
+  } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
+}));

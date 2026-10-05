@@ -1,0 +1,477 @@
+{
+  "suite": "wave2_programme",
+  "run": "pg2",
+  "tag": "pg2",
+  "steps": [
+    {
+      "name": "CPM early dates and total float match hand calculation (FS/SS+lag/FF)",
+      "outcome": "PASS",
+      "detail": "ok"
+    },
+    {
+      "name": "CPM critical path = A,C,D,F",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "relationship closing a logic loop (D -> A) is refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Relationship would create a logic loop in the schedule\""
+    },
+    {
+      "name": "CPM still computes after refused loop",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "response rule must be of type response_due",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Response rule must be a confirmed response_due rule of the same contract\""
+    },
+    {
+      "name": "data date after submission date refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint programme_submissions_check\""
+    },
+    {
+      "name": "planner submits revision R0 (30 days ago) with snapshot",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "snapshot sealed with 6 activities; response due = submitted + 21",
+      "outcome": "PASS",
+      "detail": "6 2026-09-26 vs 2026-09-26"
+    },
+    {
+      "name": "unanswered submission past its response date is flagged overdue; no accepted programme yet",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rejection without reasons refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Rejection reasons are required\""
+    },
+    {
+      "name": "decision dated before submission refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint programme_submissions_check1\""
+    },
+    {
+      "name": "Engineer acceptance of R0 recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "accepted snapshot keeps original duration of C (4) after live change to 10",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Engineer rejects R1 with reasons",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "accepted programme is still R0 after R1 rejection",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Engineer accepts R2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "R2 is the single accepted programme; R0 superseded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "decided submission cannot be re-decided",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Programme submission is already rejected\""
+    },
+    {
+      "name": "duplicate revision number refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint programme_submissions_contract_id_revision_no_key\""
+    },
+    {
+      "name": "DB: snapshot rows immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Programme snapshots are immutable"
+    },
+    {
+      "name": "DB: cannot add rows to a sealed snapshot",
+      "outcome": "PASS",
+      "detail": "ERROR:  Programme snapshot is sealed"
+    },
+    {
+      "name": "DB: submission content immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Programme submission content is immutable"
+    },
+    {
+      "name": "DB: submissions cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Programme submissions cannot be deleted"
+    },
+    {
+      "name": "tenant B cannot read tenant A submission",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Programme submission not found\""
+    },
+    {
+      "name": "tenant B cannot decide tenant A submission",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Programme submission not found\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/activities",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/activities",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/activities",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/activities",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/activities",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/activities",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/relationships",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/relationships",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/relationships",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/relationships",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/relationships",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/relationships",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/planning/cpm?project_id=11",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/relationships",
+      "status": 422,
+      "ok": false,
+      "error": "Relationship would create a logic loop in the schedule"
+    },
+    {
+      "method": "GET",
+      "path": "/planning/cpm?project_id=11",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/8/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/8/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/7/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/8/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/8/programme-submissions",
+      "status": 422,
+      "ok": false,
+      "error": "Response rule must be a confirmed response_due rule of the same contract"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/8/programme-submissions",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint programme_submissions_check"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/8/programme-submissions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/8/programme-submissions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/programme-submissions/3/decision",
+      "status": 422,
+      "ok": false,
+      "error": "Rejection reasons are required"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/programme-submissions/3/decision",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint programme_submissions_check1"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/programme-submissions/3/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/planning/activities/3",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/programme-submissions/3",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/8/programme-submissions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/programme-submissions/4/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/8/programme-submissions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/8/programme-submissions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/programme-submissions/5/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/8/programme-submissions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/programme-submissions/4/decision",
+      "status": 409,
+      "ok": false,
+      "error": "Programme submission is already rejected"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/8/programme-submissions",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint programme_submissions_contract_id_revision_no_key"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/programme-submissions/5",
+      "status": 404,
+      "ok": false,
+      "error": "Programme submission not found"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/programme-submissions/4/decision",
+      "status": 404,
+      "ok": false,
+      "error": "Programme submission not found"
+    }
+  ]
+}
