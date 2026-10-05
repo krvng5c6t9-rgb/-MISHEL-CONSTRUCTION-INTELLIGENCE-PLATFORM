@@ -1,0 +1,257 @@
+id,pack,archetype,primary_family,default_autonomy
+AG10-001,Executive / PMO,Executive Briefing Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-002,Executive / PMO,Portfolio Insight Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-003,Executive / PMO,Programme Controls Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-004,Executive / PMO,Project Manager Copilot,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-005,Executive / PMO,Decision Preparation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-006,Executive / PMO,Risk & Opportunity Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-007,Executive / PMO,Action/Commitment Follow-up Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-008,Executive / PMO,Meeting Intelligence Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-009,Tender / CRM,CRM Opportunity Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-010,Tender / CRM,Prequalification Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-011,Tender / CRM,Tender Intake Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-012,Tender / CRM,Tender Compliance Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-013,Tender / CRM,Bid Strategy Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-014,Tender / CRM,Estimate Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-015,Tender / CRM,Tender Clarification Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-016,Tender / CRM,Bid Submission QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-017,Planning / Controls,WBS/CBS Setup Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-018,Planning / Controls,Baseline Schedule Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-019,Planning / Controls,Lookahead Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-020,Planning / Controls,Critical Path Analysis Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-021,Planning / Controls,Delay Analysis Preparation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-022,Planning / Controls,Progress Validation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-023,Planning / Controls,Earned Value Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-024,Planning / Controls,Forecast Scenario Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-025,Technical Office,Drawing Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-026,Technical Office,Submittal Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-027,Technical Office,RFI Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-028,Technical Office,Technical Query Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-029,Technical Office,Method Statement Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-030,Technical Office,Shop Drawing Coordination Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-031,Technical Office,Material Approval Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-032,Technical Office,Technical Correspondence Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-033,Engineering,Architecture Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-034,Engineering,Structural Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-035,Engineering,Geotechnical Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-036,Engineering,Civil/Infrastructure Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-037,Engineering,HVAC Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-038,Engineering,Plumbing Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-039,Engineering,Electrical Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-040,Engineering,Fire/Life-Safety Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-041,Engineering,Façade Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-042,Engineering,Energy/Building Performance Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-043,Engineering,Temporary Works Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-044,Engineering,Engineering Calculation QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-045,BIM / CDE,BIM Coordination Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-046,BIM / CDE,Clash Triage Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-047,BIM / CDE,IFC/IDS Validation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-048,BIM / CDE,Model Revision Impact Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-049,BIM / CDE,CDE Metadata QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-050,BIM / CDE,Naming/Classification Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-051,BIM / CDE,Digital Thread Linkage Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-052,BIM / CDE,As-Built Information QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-053,QS / Commercial,QTO Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-054,QS / Commercial,BOQ Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-055,QS / Commercial,Rate Analysis Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-056,QS / Commercial,IPC Preparation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-057,QS / Commercial,IPC Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-058,QS / Commercial,Variation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-059,QS / Commercial,Claims Quantum Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-060,QS / Commercial,Final Account Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-061,QS / Commercial,Subcontract Commercial Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-062,QS / Commercial,Commercial Reconciliation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-063,Cost / Finance,Cost Control Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-064,Cost / Finance,Budget Control Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-065,Cost / Finance,Commitment Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-066,Cost / Finance,Accrual Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-067,Cost / Finance,Forecast/EAC Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-068,Cost / Finance,Project Profitability Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-069,Cost / Finance,Revenue Recognition Preparation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-070,Cost / Finance,AP Invoice Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-071,Cost / Finance,AR/Collections Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-072,Cost / Finance,Treasury Preparation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-073,Cost / Finance,Bank Reconciliation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-074,Cost / Finance,Financial Close QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-075,Procurement / Supply,Procurement Plan Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-076,Procurement / Supply,RFQ Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-077,Procurement / Supply,Bid Commercial Comparison Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-078,Procurement / Supply,Vendor Evaluation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-079,Procurement / Supply,PO Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-080,Procurement / Supply,Expediting Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-081,Procurement / Supply,Logistics Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-082,Procurement / Supply,Supplier Performance Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-083,Site / Production,Daily Report Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-084,Site / Production,Workface Planning Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-085,Site / Production,Site Constraint Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-086,Site / Production,Productivity Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-087,Site / Production,Resource Coordination Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-088,Site / Production,Site Logistics Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-089,Site / Production,Temporary Facilities Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-090,Site / Production,Progress Evidence Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-091,QA/QC,Inspection Request Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-092,QA/QC,ITP Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-093,QA/QC,NCR Triage Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-094,QA/QC,Corrective Action Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-095,QA/QC,Test/Lab Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-096,QA/QC,Quality Trend Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-097,QA/QC,Snag/Punch Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-098,QA/QC,Handover Quality Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-099,HSE / Sustainability,HSE Observation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-100,HSE / Sustainability,Permit-to-Work Preparation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-101,HSE / Sustainability,Incident Analysis Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-102,HSE / Sustainability,Safety Trend Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-103,HSE / Sustainability,Environmental Compliance Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-104,HSE / Sustainability,Carbon/Energy Data Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-105,HSE / Sustainability,Waste/Circularity Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-106,HSE / Sustainability,Sustainability Reporting Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-107,Contracts / Legal,Contract Obligation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-108,Contracts / Legal,Notice Deadline Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-109,Contracts / Legal,Contract Correspondence Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-110,Contracts / Legal,Change/Claim Entitlement Preparation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-111,Contracts / Legal,Insurance/Bond Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-112,Contracts / Legal,Dispute Chronology Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-113,Contracts / Legal,Contract Closeout Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-114,Contracts / Legal,Legal Evidence Pack Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-115,Documents / Knowledge,Document Classification Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-116,Documents / Knowledge,Document Summarization Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-117,Documents / Knowledge,Controlled Transmittal Preparation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-118,Documents / Knowledge,Records/Archive Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-119,Documents / Knowledge,Knowledge Curator Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-120,Documents / Knowledge,Standards Applicability Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-121,Documents / Knowledge,Evidence Chronology Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-122,Documents / Knowledge,Enterprise Search Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-123,HR / Resources,Workforce Planning Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-124,HR / Resources,Timesheet QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-125,HR / Resources,Competency Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-126,HR / Resources,Recruitment Screening Support Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-127,HR / Resources,Training Plan Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-128,HR / Resources,Resource Dispatch Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-129,HR / Resources,Payroll Allocation QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-130,HR / Resources,Employee Exit Checklist Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-131,Plant / Materials,Plant Utilization Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-132,Plant / Materials,Equipment Maintenance Insight Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-133,Plant / Materials,Fuel/Consumption Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-134,Plant / Materials,Warehouse Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-135,Plant / Materials,Inventory Reconciliation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-136,Plant / Materials,Material Traceability Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-137,Plant / Materials,Material Demand Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-138,Plant / Materials,Scrap/Waste Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-139,Commissioning / FM,Commissioning Plan Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-140,Commissioning / FM,Systems Completion Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-141,Commissioning / FM,Test Pack Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-142,Commissioning / FM,Handover Dossier Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-143,Commissioning / FM,Asset Information Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-144,Commissioning / FM,O&M Manual QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-145,Commissioning / FM,DLP/Warranty Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-146,Commissioning / FM,FM Readiness Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-147,Real Estate / Development,Development Feasibility Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-148,Real Estate / Development,Unit Inventory Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-149,Real Estate / Development,Sales Contract QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-150,Real Estate / Development,Collections Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-151,Real Estate / Development,Handover Settlement Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-152,Real Estate / Development,Lease Administration Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-153,Real Estate / Development,Community/Defect Service Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-154,Real Estate / Development,Development Cost Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-155,Platform / Data / Security,Data Quality Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-156,Platform / Data / Security,Reconciliation Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-157,Platform / Data / Security,Integration Diagnostics Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-158,Platform / Data / Security,Schema Impact Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-159,Platform / Data / Security,Security Triage Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-160,Platform / Data / Security,AI Incident Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-161,Platform / Data / Security,Observability Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-162,Platform / Data / Security,Release Readiness Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-163,Agent Factory / Governance,Agent Designer Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-164,Agent Factory / Governance,Skill Designer Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-165,Agent Factory / Governance,Prompt QA Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-166,Agent Factory / Governance,Evaluation Designer Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-167,Agent Factory / Governance,Red-Team Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-168,Agent Factory / Governance,Agent Package Reviewer,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-169,Agent Factory / Governance,AI Risk Review Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-170,Agent Factory / Governance,Agent Retirement Agent,SPECIALIST,L1-L2 default; L3/L4 only per action-specific policy
+AG10-171,86-Family Steward,F01 Product Core & Tenant Platform Steward Agent,F01,L1-L2 default; L3 only through explicit action policy
+AG10-172,86-Family Steward,"F02 Organization, Identity, Roles & Authority Steward Agent",F02,L1-L2 default; L3 only through explicit action policy
+AG10-173,86-Family Steward,F03 Dynamic Metadata / Low-Code Application Platform Steward Agent,F03,L1-L2 default; L3 only through explicit action policy
+AG10-174,86-Family Steward,"F04 Workflow, Case, Task & Decision Orchestration Steward Agent",F04,L1-L2 default; L3 only through explicit action policy
+AG10-175,86-Family Steward,F05 Enterprise Data Platform & Master Data Steward Agent,F05,L1-L2 default; L3 only through explicit action policy
+AG10-176,86-Family Steward,"F06 Universal Ingestion, ETL/ELT, Migration & Interchange Steward Agent",F06,L1-L2 default; L3 only through explicit action policy
+AG10-177,86-Family Steward,"F07 Document, Content, Records & CDE Steward Agent",F07,L1-L2 default; L3 only through explicit action policy
+AG10-178,86-Family Steward,"F08 Enterprise Search, Knowledge & Reference Authority Steward Agent",F08,L1-L2 default; L3 only through explicit action policy
+AG10-179,86-Family Steward,"F09 AI Orchestrator, Agents, Skills & AI Governance Steward Agent",F09,L1-L2 default; L3 only through explicit action policy
+AG10-180,86-Family Steward,"F10 Calculation, Formula, Rules, Simulation & Optimization Steward Agent",F10,L1-L2 default; L3 only through explicit action policy
+AG10-181,86-Family Steward,F11 Engineering Data Model / Digital Thread / Digital Twin Foundation Steward Agent,F11,L1-L2 default; L3 only through explicit action policy
+AG10-182,86-Family Steward,"F12 CAD, BIM, openBIM & Digital Engineering Steward Agent",F12,L1-L2 default; L3 only through explicit action policy
+AG10-183,86-Family Steward,"F13 Reality Capture, Survey, GIS & Field Spatial Intelligence Steward Agent",F13,L1-L2 default; L3 only through explicit action policy
+AG10-184,86-Family Steward,F14 Multidisciplinary Design & Engineering Management Steward Agent,F14,L1-L2 default; L3 only through explicit action policy
+AG10-185,86-Family Steward,"F15 QTO, BOQ, Specifications, Estimating & Rate Analysis Steward Agent",F15,L1-L2 default; L3 only through explicit action policy
+AG10-186,86-Family Steward,"F16 Business Development, CRM, Prequalification & Tendering Steward Agent",F16,L1-L2 default; L3 only through explicit action policy
+AG10-187,86-Family Steward,"F17 Contracts, Legal, Obligations, Changes & Claims Steward Agent",F17,L1-L2 default; L3 only through explicit action policy
+AG10-188,86-Family Steward,"F18 Project Setup, PMO, Portfolio, Programme & Governance Steward Agent",F18,L1-L2 default; L3 only through explicit action policy
+AG10-189,86-Family Steward,"F19 Planning, Scheduling & Project Controls Steward Agent",F19,L1-L2 default; L3 only through explicit action policy
+AG10-190,86-Family Steward,"F20 Procurement, Supply Chain, Vendors & Logistics Steward Agent",F20,L1-L2 default; L3 only through explicit action policy
+AG10-191,86-Family Steward,"F21 Materials, Warehouse, Inventory & Material Lifecycle Steward Agent",F21,L1-L2 default; L3 only through explicit action policy
+AG10-192,86-Family Steward,"F22 Site Execution, Workface Planning & Production Steward Agent",F22,L1-L2 default; L3 only through explicit action policy
+AG10-193,86-Family Steward,"F23 QA/QC, Testing, NCR & QMS Steward Agent",F23,L1-L2 default; L3 only through explicit action policy
+AG10-194,86-Family Steward,"F24 HSE, Environment, Sustainability & ESG Steward Agent",F24,L1-L2 default; L3 only through explicit action policy
+AG10-195,86-Family Steward,"F25 Progress Measurement, Reporting & MI Steward Agent",F25,L1-L2 default; L3 only through explicit action policy
+AG10-196,86-Family Steward,"F26 Commercial, QS, Measurement, IPC & Revenue Steward Agent",F26,L1-L2 default; L3 only through explicit action policy
+AG10-197,86-Family Steward,"F27 Cost Control, Budget, Commitments, Forecast & Profitability Steward Agent",F27,L1-L2 default; L3 only through explicit action policy
+AG10-198,86-Family Steward,"F28 Finance, Accounting, Treasury, Tax & Consolidation Steward Agent",F28,L1-L2 default; L3 only through explicit action policy
+AG10-199,86-Family Steward,"F29 HR, Workforce, Time, Payroll & Competency Steward Agent",F29,L1-L2 default; L3 only through explicit action policy
+AG10-200,86-Family Steward,"F30 Plant, Equipment, Fleet, Tools & Assets Steward Agent",F30,L1-L2 default; L3 only through explicit action policy
+AG10-201,86-Family Steward,"F31 Commissioning, Systems Completion, Handover, DLP & O&M Steward Agent",F31,L1-L2 default; L3 only through explicit action policy
+AG10-202,86-Family Steward,"F32 Risk, Opportunity, Issues, Actions, Decisions & Assurance Steward Agent",F32,L1-L2 default; L3 only through explicit action policy
+AG10-203,86-Family Steward,"F33 Strategy, Corporate Governance, Legal Entity & Shared Services Steward Agent",F33,L1-L2 default; L3 only through explicit action policy
+AG10-204,86-Family Steward,F34 External Portals Steward Agent,F34,L1-L2 default; L3 only through explicit action policy
+AG10-205,86-Family Steward,"F35 Analytics, BI, Semantic Layer & Decision Intelligence Steward Agent",F35,L1-L2 default; L3 only through explicit action policy
+AG10-206,86-Family Steward,"F36 Office, Productivity, Notes & Collaborative Work Steward Agent",F36,L1-L2 default; L3 only through explicit action policy
+AG10-207,86-Family Steward,"F37 Communication, Correspondence, Notifications & Omnichannel Steward Agent",F37,L1-L2 default; L3 only through explicit action policy
+AG10-208,86-Family Steward,"F38 API, Integration, Event & Automation Platform Steward Agent",F38,L1-L2 default; L3 only through explicit action policy
+AG10-209,86-Family Steward,"F39 Web, Mobile, Desktop, Offline & Device Experience Steward Agent",F39,L1-L2 default; L3 only through explicit action policy
+AG10-210,86-Family Steward,"F40 Design System, UI Themes, UX & Experience Builders Steward Agent",F40,L1-L2 default; L3 only through explicit action policy
+AG10-211,86-Family Steward,"F41 Security, Privacy, Trust & Compliance Engineering Steward Agent",F41,L1-L2 default; L3 only through explicit action policy
+AG10-212,86-Family Steward,"F42 Platform Engineering, DevSecOps, Environments & Release Steward Agent",F42,L1-L2 default; L3 only through explicit action policy
+AG10-213,86-Family Steward,"F43 Testing, Verification, Validation & Quality Engineering Steward Agent",F43,L1-L2 default; L3 only through explicit action policy
+AG10-214,86-Family Steward,"F44 Observability, SRE, Reliability, Backup & DR Steward Agent",F44,L1-L2 default; L3 only through explicit action policy
+AG10-215,86-Family Steward,F45 Developer / Extension / Marketplace Ecosystem Steward Agent,F45,L1-L2 default; L3 only through explicit action policy
+AG10-216,86-Family Steward,"F46 Localization, Jurisdiction, Standards & Regulatory Packs Steward Agent",F46,L1-L2 default; L3 only through explicit action policy
+AG10-217,86-Family Steward,F47 Commercial Product Operations & Customer Lifecycle Steward Agent,F47,L1-L2 default; L3 only through explicit action policy
+AG10-218,86-Family Steward,F48 Digital Commerce / Catalog / Marketplace / Supplier Intelligence Steward Agent,F48,L1-L2 default; L3 only through explicit action policy
+AG10-219,86-Family Steward,F49 Advanced Engineering / Computational / Generative Capabilities Steward Agent,F49,L1-L2 default; L3 only through explicit action policy
+AG10-220,86-Family Steward,"F50 Product Memory, Requirements, Configuration & Change Governance Steward Agent",F50,L1-L2 default; L3 only through explicit action policy
+AG10-221,86-Family Steward,"F51 Correspondence, Mailroom, Transmittal & Evidence Chronology Steward Agent",F51,L1-L2 default; L3 only through explicit action policy
+AG10-222,86-Family Steward,"F52 Meetings, Minutes, Decisions, Actions & Commitments Steward Agent",F52,L1-L2 default; L3 only through explicit action policy
+AG10-223,86-Family Steward,"F53 Requirements, Compliance, Verification & Acceptance Management Steward Agent",F53,L1-L2 default; L3 only through explicit action policy
+AG10-224,86-Family Steward,F54 Configuration Management / Baseline Management Across Domains Steward Agent,F54,L1-L2 default; L3 only through explicit action policy
+AG10-225,86-Family Steward,F55 Interface Management Steward Agent,F55,L1-L2 default; L3 only through explicit action policy
+AG10-226,86-Family Steward,"F56 Permits, Authorities, Utilities & External Approvals Steward Agent",F56,L1-L2 default; L3 only through explicit action policy
+AG10-227,86-Family Steward,"F57 Site Establishment, Temporary Facilities, Access & Logistics Steward Agent",F57,L1-L2 default; L3 only through explicit action policy
+AG10-228,86-Family Steward,"F58 Construction Methods, Temporary Works & Work Packaging Steward Agent",F58,L1-L2 default; L3 only through explicit action policy
+AG10-229,86-Family Steward,"F59 Product, Material, Equipment Technical Data & Substitution Intelligence Steward Agent",F59,L1-L2 default; L3 only through explicit action policy
+AG10-230,86-Family Steward,"F60 Laboratory, Testing, Calibration & Measurement Management Steward Agent",F60,L1-L2 default; L3 only through explicit action policy
+AG10-231,86-Family Steward,"F61 Productivity, Norms, Benchmarking & Production Intelligence Steward Agent",F61,L1-L2 default; L3 only through explicit action policy
+AG10-232,86-Family Steward,"F62 Resource Capacity, Skills, Rostering & Dispatch Steward Agent",F62,L1-L2 default; L3 only through explicit action policy
+AG10-233,86-Family Steward,"F63 Property, Land, Lease, Right-of-Way & Stakeholder Constraints Steward Agent",F63,L1-L2 default; L3 only through explicit action policy
+AG10-234,86-Family Steward,"F64 Defects, Snags, Punch, Warranty & Service Management Steward Agent",F64,L1-L2 default; L3 only through explicit action policy
+AG10-235,86-Family Steward,"F65 Asset Information Requirements, Classification & FM Interoperability Steward Agent",F65,L1-L2 default; L3 only through explicit action policy
+AG10-236,86-Family Steward,"F66 Sustainability, Carbon, Energy, Water & Circularity Data Steward Agent",F66,L1-L2 default; L3 only through explicit action policy
+AG10-237,86-Family Steward,F67 Geographic / Market / Cost Intelligence Steward Agent,F67,L1-L2 default; L3 only through explicit action policy
+AG10-238,86-Family Steward,"F68 Enterprise Planning, Budgeting & Corporate Performance Management Steward Agent",F68,L1-L2 default; L3 only through explicit action policy
+AG10-239,86-Family Steward,"F69 Insurance, Bonds, Guarantees & Claims Administration Steward Agent",F69,L1-L2 default; L3 only through explicit action policy
+AG10-240,86-Family Steward,"F70 Fraud, Anomaly, Conflict & Transaction Integrity Controls Steward Agent",F70,L1-L2 default; L3 only through explicit action policy
+AG10-241,86-Family Steward,"F71 Data Reconciliation, Control Totals & Enterprise Close Integrity Steward Agent",F71,L1-L2 default; L3 only through explicit action policy
+AG10-242,86-Family Steward,F72 Model / Document / Data Classification & Naming Service Steward Agent,F72,L1-L2 default; L3 only through explicit action policy
+AG10-243,86-Family Steward,F73 Integration Certification & Connector Quality Steward Agent,F73,L1-L2 default; L3 only through explicit action policy
+AG10-244,86-Family Steward,F74 AI Evaluation Operations / Model Risk Management Steward Agent,F74,L1-L2 default; L3 only through explicit action policy
+AG10-245,86-Family Steward,"F75 Product Telemetry, Adoption, UX Analytics & Continuous Improvement Steward Agent",F75,L1-L2 default; L3 only through explicit action policy
+AG10-246,86-Family Steward,F76 Enterprise Notification Policy & Attention Management Steward Agent,F76,L1-L2 default; L3 only through explicit action policy
+AG10-247,86-Family Steward,"F77 Printing, Publishing, Issue, Distribution & Controlled Output Steward Agent",F77,L1-L2 default; L3 only through explicit action policy
+AG10-248,86-Family Steward,"F78 Archive, Project Data Book & Long-Term Retrieval Steward Agent",F78,L1-L2 default; L3 only through explicit action policy
+AG10-249,86-Family Steward,F79 Licensing / IP / Copyright / Usage-Rights Governance Steward Agent,F79,L1-L2 default; L3 only through explicit action policy
+AG10-250,86-Family Steward,F80 Critical Control Classification Steward Agent,F80,L1-L2 default; L3 only through explicit action policy
+AG10-251,86-Family Steward,F81 Asset & Facility Management Operations Steward Agent,F81,L1-L2 default; L3 only through explicit action policy
+AG10-252,86-Family Steward,"F82 Real-Estate Development, Sales, Leasing & Community Management Steward Agent",F82,L1-L2 default; L3 only through explicit action policy
+AG10-253,86-Family Steward,"F83 IoT, Operational Technology & Digital Twin Operations Steward Agent",F83,L1-L2 default; L3 only through explicit action policy
+AG10-254,86-Family Steward,"F84 Construction Fabrication, Prefabrication & Offsite Manufacturing Steward Agent",F84,L1-L2 default; L3 only through explicit action policy
+AG10-255,86-Family Steward,F85 Enterprise IT Service Management & CMDB Steward Agent,F85,L1-L2 default; L3 only through explicit action policy
+AG10-256,86-Family Steward,"F86 Enterprise Architecture, Application & Technology Portfolio Governance Steward Agent",F86,L1-L2 default; L3 only through explicit action policy
