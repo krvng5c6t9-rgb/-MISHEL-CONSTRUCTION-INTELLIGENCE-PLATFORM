@@ -1,0 +1,476 @@
+{
+  "suite": "wave2_daily_record_changes",
+  "run": "dr1",
+  "tag": "dr1",
+  "steps": [
+    {
+      "name": "impact flag without description refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint site_diary_impact_requires_description\""
+    },
+    {
+      "name": "engineer records structured diary with impact flag",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "diary starts as draft",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "signing without manpower refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"At least one manpower entry is required before signing\""
+    },
+    {
+      "name": "preparer holding site.approve cannot sign own diary (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: a site diary must be signed by someone other than its preparer\""
+    },
+    {
+      "name": "site manager signs",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "impact flag created a contract event linked to the diary",
+      "outcome": "PASS",
+      "detail": "{\"event\":{\"id\":6,\"org_id\":1,\"contract_id\":6,\"title\":\"Site diary impact 2026-10-05\",\"description\":\"Zone B access blocked; crew idle 4h (fixture)\",\"occurred_on\":\""
+    },
+    {
+      "name": "signed diary cannot be overwritten by re-posting the day",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Signed site diary 2 is immutable; record an amendment instead\""
+    },
+    {
+      "name": "manpower cannot be added to a signed diary",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Entries of a signed site diary are immutable\""
+    },
+    {
+      "name": "signing twice refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Site diary is already signed\""
+    },
+    {
+      "name": "correction recorded as amendment",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "diary view shows manpower and amendment, original unchanged",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "commercial attaches a notice obligation to the diary event",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "notice deadline = diary date + 14",
+      "outcome": "PASS",
+      "detail": "2026-10-19"
+    },
+    {
+      "name": "early warning raised",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "early warning linked to the event",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "record from another contract cannot be linked",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Linked early_warning 2 not found on the same contract/project in this organization\""
+    },
+    {
+      "name": "early warning dated in the future refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Early warning date cannot be in the future\""
+    },
+    {
+      "name": "risk reduction meeting recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "early warning closed with note",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closed early warning is immutable",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Closed early warning 1 is immutable\""
+    },
+    {
+      "name": "event view shows diary + early-warning links and the notice",
+      "outcome": "PASS",
+      "detail": "links=site_diary,early_warning notices=1"
+    },
+    {
+      "name": "DB: signed diary immutable even as owner",
+      "outcome": "PASS",
+      "detail": "ERROR:  Signed site diary 2 is immutable; record an amendment instead"
+    },
+    {
+      "name": "DB: amendments append-only",
+      "outcome": "PASS",
+      "detail": "ERROR:  site_diary_amendments is append-only"
+    },
+    {
+      "name": "DB: event links append-only",
+      "outcome": "PASS",
+      "detail": "ERROR:  Event links are append-only"
+    },
+    {
+      "name": "DB: early warnings cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Early warnings cannot be deleted"
+    },
+    {
+      "name": "tenant B cannot read tenant A diary",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Site diary not found\""
+    },
+    {
+      "name": "tenant B cannot link to tenant A event",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Event not found\""
+    },
+    {
+      "name": "tenant B cannot close tenant A early warning",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Early warning not found\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/6/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/18/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/18/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/site/diaries",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint site_diary_impact_requires_description"
+    },
+    {
+      "method": "POST",
+      "path": "/site/diaries",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/site/diaries/2/sign",
+      "status": 422,
+      "ok": false,
+      "error": "At least one manpower entry is required before signing"
+    },
+    {
+      "method": "POST",
+      "path": "/site/diary-manpower",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/site/diaries/2/sign",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: a site diary must be signed by someone other than its preparer"
+    },
+    {
+      "method": "POST",
+      "path": "/site/diaries/2/sign",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/site/diaries",
+      "status": 422,
+      "ok": false,
+      "error": "Signed site diary 2 is immutable; record an amendment instead"
+    },
+    {
+      "method": "POST",
+      "path": "/site/diary-manpower",
+      "status": 422,
+      "ok": false,
+      "error": "Entries of a signed site diary are immutable"
+    },
+    {
+      "method": "POST",
+      "path": "/site/diaries/2/sign",
+      "status": 409,
+      "ok": false,
+      "error": "Site diary is already signed"
+    },
+    {
+      "method": "POST",
+      "path": "/site/diaries/2/amendments",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/site/diaries/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/6/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/6/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/events/6/notices",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/6/early-warnings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/events/6/links",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/7/early-warnings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/events/6/links",
+      "status": 422,
+      "ok": false,
+      "error": "Linked early_warning 2 not found on the same contract/project in this organization"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/6/early-warnings",
+      "status": 422,
+      "ok": false,
+      "error": "Early warning date cannot be in the future"
+    },
+    {
+      "method": "PATCH",
+      "path": "/contract-admin/early-warnings/1",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/early-warnings/1/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/contract-admin/early-warnings/1",
+      "status": 422,
+      "ok": false,
+      "error": "Closed early warning 1 is immutable"
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/events/6",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/site/diaries/2",
+      "status": 404,
+      "ok": false,
+      "error": "Site diary not found"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/events/6/links",
+      "status": 404,
+      "ok": false,
+      "error": "Event not found"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/early-warnings/2/close",
+      "status": 404,
+      "ok": false,
+      "error": "Early warning not found"
+    }
+  ]
+}

@@ -133,3 +133,49 @@ contractAdminRouter.post('/notices/:id/not-required', authorize('contracts', 'ap
   if (!rows[0]) await conflictOr404('contract_notices', pid(req.params.id), 'Only open notices can be marked not required');
   res.json({ success: true, data: rows[0] });
 }));
+
+// NDC-002: link records to a change event (no automatic conversion or closure between paths).
+contractAdminRouter.get('/events/:id', asyncHandler(async (req, res) => {
+  const id = pid(req.params.id);
+  const e = (await query<any>(`select * from contract_events where id=$1`, [id]))[0];
+  if (!e) throw new AppError(404, 'Event not found');
+  const [links, notices] = await Promise.all([
+    query(`select * from contract_event_links where event_id=$1 order by id`, [id]),
+    query(`select n.*, r.clause_ref, r.obligation_type from contract_notices n join contract_obligation_rules r on r.id=n.rule_id where n.event_id=$1 order by n.deadline`, [id])]);
+  res.json({ success: true, data: { ...e, links, notices } });
+}));
+contractAdminRouter.post('/events/:id/links', authorize('contracts', 'create'), asyncHandler(async (req, res) => {
+  const b = z.object({ link_type: z.enum(['rfi', 'site_instruction', 'variation', 'claim', 'early_warning', 'site_diary']), linked_id: z.number().int().positive() }).parse(req.body);
+  const e = (await query<any>(`select id,org_id from contract_events where id=$1`, [pid(req.params.id)]))[0];
+  if (!e) throw new AppError(404, 'Event not found');
+  const [r] = await query(`insert into contract_event_links(org_id,event_id,link_type,linked_id,created_by) values($1,$2,$3,$4,$5) returning *`, [e.org_id, e.id, b.link_type, b.linked_id, req.user!.id]);
+  res.status(201).json({ success: true, data: r });
+}));
+
+// Early-warning register (NEC-style; usable as best practice under any form).
+contractAdminRouter.get('/contracts/:contractId/early-warnings', asyncHandler(async (req, res) => {
+  res.json({ success: true, data: await query(`select * from early_warnings where contract_id=$1 order by raised_on desc, id desc`, [pid(req.params.contractId)]) });
+}));
+contractAdminRouter.post('/contracts/:contractId/early-warnings', authorize('contracts', 'create'), asyncHandler(async (req, res) => {
+  const b = z.object({ ew_no: z.string().trim().min(1).max(30), raised_by_party: z.enum(['contractor', 'employer', 'project_manager', 'engineer', 'subcontractor']), raised_on: isoDate,
+    matter: z.string().trim().min(5), may_increase_price: z.boolean(), may_delay_completion: z.boolean(), may_impair_performance: z.boolean() }).parse(req.body);
+  const [r] = await query(`insert into early_warnings(org_id,contract_id,ew_no,raised_by_party,raised_on,matter,may_increase_price,may_delay_completion,may_impair_performance,created_by)
+    values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning *`, [req.user!.org_id, pid(req.params.contractId), b.ew_no, b.raised_by_party, b.raised_on, b.matter, b.may_increase_price, b.may_delay_completion, b.may_impair_performance, req.user!.id]);
+  res.status(201).json({ success: true, data: r });
+}));
+contractAdminRouter.patch('/early-warnings/:id', authorize('contracts', 'create'), asyncHandler(async (req, res) => {
+  const b = z.object({ risk_reduction_meeting_on: isoDate.nullable().optional(), actions_agreed: z.string().max(4000).nullable().optional() }).parse(req.body);
+  const rows = await query(`update early_warnings set risk_reduction_meeting_on=coalesce($2::date,risk_reduction_meeting_on),actions_agreed=coalesce($3,actions_agreed) where id=$1 returning *`, [pid(req.params.id), b.risk_reduction_meeting_on ?? null, b.actions_agreed ?? null]);
+  if (!rows[0]) throw new AppError(404, 'Early warning not found');
+  res.json({ success: true, data: rows[0] });
+}));
+contractAdminRouter.post('/early-warnings/:id/close', authorize('contracts', 'approve'), asyncHandler(async (req, res) => {
+  const b = z.object({ closure_note: z.string().trim().min(5).max(4000) }).parse(req.body);
+  const id = pid(req.params.id);
+  const rows = await query(`update early_warnings set status='closed',closure_note=$2,closed_by=$3,closed_at=now() where id=$1 and status='open' returning *`, [id, b.closure_note, req.user!.id]);
+  if (!rows[0]) {
+    const exists = (await query(`select 1 from early_warnings where id=$1`, [id]))[0];
+    throw exists ? new AppError(409, 'Early warning is already closed') : new AppError(404, 'Early warning not found');
+  }
+  res.json({ success: true, data: rows[0] });
+}));

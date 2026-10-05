@@ -96,7 +96,7 @@ gc('GC-14', 'Cost & Forecast', [
     ('Forecast review and approval', 'Project director', 'forecast pack', 'approved forecast', 'unexplained variance blocks approval (threshold configured)', 'SOD15-011', 'L1 variance narrative', 'ABSENT', 'no forecast approval', ''),
 ])
 gc('GC-15', 'Variation / Change', [
-    ('Capture instruction/RFI/design change/event', 'Site/technical office', 'instruction, RFI, revision', 'change event', 'every instruction logged with date received', 'none', 'L1 classify as potential change', 'API', 'site-instructions, rfis routes', 'NDC-002'),
+    ('Capture instruction/RFI/design change/event', 'Site/technical office', 'instruction, RFI, revision', 'change event', 'every instruction logged with date received; linked, never auto-converted', 'none', 'L1 classify as potential change', 'RUNTIME', 'CC-021 events + CC-023 links', 'NDC-002'),
     ('Notify within contractual period', 'Contracts manager', 'change event, Contract Data Pack', 'notice with proof of delivery', 'deadline from clause; internal approval never delays notice', 'rule author != confirmer (CC-021)', 'L2 notice draft', 'RUNTIME', 'CC-021 wave2_notice_engine 36/36', 'NDC-001'),
     ('Assess scope/qty/cost/time impact', 'QS + planner', 'event, BOQ, programme', 'impact assessment', 'rates from contract, else agreed method', 'none', 'L2', 'PARTIAL', 'variation_boq_lines', 'NDC-006'),
     ('Prepare and submit variation quotation', 'QS', 'assessment', 'variation submission', 'status instructed != submitted != agreed', 'SOD15-025', 'L2', 'API', 'variations + lines + submit-approval', ''),
@@ -133,10 +133,10 @@ gc('GC-04', 'Design Revision Impact', [
     ('Raise change/variation where entitled', 'Contracts manager', 'impact list', 'change event (GC-15)', 'notice obligations apply', 'none', 'L2', 'ABSENT', '', 'NDC-001'),
 ])
 gc('GC-07', 'Site Daily Control', [
-    ('Record manpower, equipment, weather, work fronts', 'Site engineer', 'site observations', 'daily diary', 'mandatory fields enforced', 'none', 'L2 from voice/photos', 'API', 'site diaries + manpower/equipment', 'NDC-014'),
+    ('Record manpower, equipment, weather, work fronts', 'Site engineer', 'site observations', 'daily diary', 'mandatory fields enforced at signing', 'none', 'L2 from voice/photos', 'RUNTIME', 'CC-023 structured diary', 'NDC-014'),
     ('Record quantities and progress', 'Site engineer', 'measurements', 'quantity sheets, progress', 'qty linked to BOQ/activity', 'checker != measurer', 'L2', 'API', 'quantity-sheets; planning progress', 'NDC-012'),
-    ('Record instructions, constraints, issues', 'Site engineer', 'events', 'instructions/constraints', 'impact flag triggers commercial review', 'none', 'L1 impact flag', 'PARTIAL', 'site-instructions; no impact flag', 'NDC-014'),
-    ('Sign off and freeze daily report', 'Site manager', 'diary', 'immutable report', 'corrections as new version', 'none', 'L0', 'ABSENT', 'no sign-off/immutability', 'NDC-014'),
+    ('Record instructions, constraints, issues', 'Site engineer', 'events', 'instructions/constraints', 'impact flag creates a contract event for commercial review', 'none', 'L1 impact flag', 'RUNTIME', 'CC-023 impact -> contract event', 'NDC-014'),
+    ('Sign off and freeze daily report', 'Site manager', 'diary', 'immutable report', 'corrections as amendments', 'signer != preparer (CC-023)', 'L0', 'RUNTIME', 'CC-023 wave2_daily_record_changes 29/29', 'NDC-014'),
 ])
 gc('GC-08', 'QA/QC Inspection', [
     ('Raise inspection request with references', 'Site engineer', 'ITP, drawing rev', 'IR', 'only current revision referenced', 'SOD15-055', 'L0', 'API', 'qaqc inspections', ''),
