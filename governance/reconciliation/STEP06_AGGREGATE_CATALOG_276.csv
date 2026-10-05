@@ -1,0 +1,277 @@
+id,family,domain,aggregate,scope,lifecycle,store,step18_runtime_v021
+AG06-001,F01,Product Core & Tenant Platform,Tenant,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-002,F01,Product Core & Tenant Platform,ProductConfiguration,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-003,F01,Product Core & Tenant Platform,SubscriptionEntitlement,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-004,F02,"Organization, Identity, Roles & Authority",Organization,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-005,F02,"Organization, Identity, Roles & Authority",LegalEntity,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-006,F02,"Organization, Identity, Roles & Authority",UserAccount,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-007,F02,"Organization, Identity, Roles & Authority",Role,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-008,F02,"Organization, Identity, Roles & Authority",DelegationOfAuthority,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-009,F03,Dynamic Metadata / Low-Code Application Platform,EntityDefinition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-010,F03,Dynamic Metadata / Low-Code Application Platform,FieldDefinition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-011,F03,Dynamic Metadata / Low-Code Application Platform,FormDefinition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-012,F03,Dynamic Metadata / Low-Code Application Platform,ViewDefinition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-013,F04,"Workflow, Case, Task & Decision Orchestration",WorkflowDefinition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-014,F04,"Workflow, Case, Task & Decision Orchestration",WorkflowInstance,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-015,F04,"Workflow, Case, Task & Decision Orchestration",Task,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-016,F04,"Workflow, Case, Task & Decision Orchestration",WorkflowDecision,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-017,F05,Enterprise Data Platform & Master Data,MasterDataSet,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-018,F05,Enterprise Data Platform & Master Data,ReferenceValueSet,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-019,F05,Enterprise Data Platform & Master Data,DataStewardshipCase,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-020,F06,"Universal Ingestion, ETL/ELT, Migration & Interchange -",IngestionJob,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-021,F06,"Universal Ingestion, ETL/ELT, Migration & Interchange -",MappingDefinition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-022,F06,"Universal Ingestion, ETL/ELT, Migration & Interchange -",MigrationBatch,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-023,F07,"Document, Content, Records & CDE",Document,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-024,F07,"Document, Content, Records & CDE",DocumentRevision,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-025,F07,"Document, Content, Records & CDE",Transmittal,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-026,F07,"Document, Content, Records & CDE",ControlledIssue,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-027,F08,"Enterprise Search, Knowledge & Reference Authority -",KnowledgeSource,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-028,F08,"Enterprise Search, Knowledge & Reference Authority -",ApplicabilityRecord,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-029,F08,"Enterprise Search, Knowledge & Reference Authority -",ClaimEvidenceLink,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-030,F09,"AI Orchestrator, Agents, Skills & AI Governance",AgentDefinition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-031,F09,"AI Orchestrator, Agents, Skills & AI Governance",AgentRun,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-032,F09,"AI Orchestrator, Agents, Skills & AI Governance",ToolInvocation,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-033,F09,"AI Orchestrator, Agents, Skills & AI Governance",AIEvaluationRun,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-034,F10,"Calculation, Formula, Rules, Simulation & Optimization",FormulaDefinition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-035,F10,"Calculation, Formula, Rules, Simulation & Optimization",RuleSet,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-036,F10,"Calculation, Formula, Rules, Simulation & Optimization",CalculationRun,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-037,F11,Engineering Data Model / Digital Thread / Digital Twin,DigitalThreadObject,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-038,F11,Engineering Data Model / Digital Thread / Digital Twin,DigitalThreadRelationship,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-039,F11,Engineering Data Model / Digital Thread / Digital Twin,TwinSnapshot,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-040,F12,"CAD, BIM, openBIM & Digital Engineering",BIMModel,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-041,F12,"CAD, BIM, openBIM & Digital Engineering",ModelRevision,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-042,F12,"CAD, BIM, openBIM & Digital Engineering",BCFIssue,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-043,F13,"Reality Capture, Survey, GIS & Field Spatial Intelligence",SurveyDataset,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-044,F13,"Reality Capture, Survey, GIS & Field Spatial Intelligence",GISLayer,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-045,F13,"Reality Capture, Survey, GIS & Field Spatial Intelligence",RealityCaptureSet,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-046,F14,Multidisciplinary Design & Engineering Management,DesignPackage,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-047,F14,Multidisciplinary Design & Engineering Management,DesignDeliverable,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-048,F14,Multidisciplinary Design & Engineering Management,DesignReview,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-049,F14,Multidisciplinary Design & Engineering Management,DisciplineInterface,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-050,F15,"QTO, BOQ, Specifications, Estimating & Rate Analysis -",BOQ,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-051,F15,"QTO, BOQ, Specifications, Estimating & Rate Analysis -",BOQItem,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-052,F15,"QTO, BOQ, Specifications, Estimating & Rate Analysis -",QTOMeasurement,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-053,F15,"QTO, BOQ, Specifications, Estimating & Rate Analysis -",Estimate,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-054,F15,"QTO, BOQ, Specifications, Estimating & Rate Analysis -",RateAnalysis,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-055,F15,"QTO, BOQ, Specifications, Estimating & Rate Analysis -",SpecificationSection,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-056,F16,"Business Development, CRM, Prequalification & Tendering -",Lead,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-057,F16,"Business Development, CRM, Prequalification & Tendering -",Opportunity,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-058,F16,"Business Development, CRM, Prequalification & Tendering -",Prequalification,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-059,F16,"Business Development, CRM, Prequalification & Tendering -",Tender,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-060,F16,"Business Development, CRM, Prequalification & Tendering -",TenderSubmission,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-061,F16,"Business Development, CRM, Prequalification & Tendering -",VendorRFQ,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-062,F17,"Contracts, Legal, Obligations, Changes & Claims",Contract,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-063,F17,"Contracts, Legal, Obligations, Changes & Claims",ContractObligation,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-064,F17,"Contracts, Legal, Obligations, Changes & Claims",Variation,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-065,F17,"Contracts, Legal, Obligations, Changes & Claims",Claim,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-066,F17,"Contracts, Legal, Obligations, Changes & Claims",Notice,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-067,F17,"Contracts, Legal, Obligations, Changes & Claims",EOTAssessment,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-068,F18,"Project Setup, PMO, Portfolio, Programme & Governance",Portfolio,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-069,F18,"Project Setup, PMO, Portfolio, Programme & Governance",Program,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-070,F18,"Project Setup, PMO, Portfolio, Programme & Governance",Project,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-071,F18,"Project Setup, PMO, Portfolio, Programme & Governance",GovernanceGate,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-072,F19,"Planning, Scheduling & Project Controls",WBS,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-073,F19,"Planning, Scheduling & Project Controls",ScheduleActivity,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-074,F19,"Planning, Scheduling & Project Controls",ScheduleBaseline,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-075,F19,"Planning, Scheduling & Project Controls",ScheduleUpdate,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-076,F19,"Planning, Scheduling & Project Controls",ProgressPeriod,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-077,F19,"Planning, Scheduling & Project Controls",ForecastScenario,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-078,F20,"Procurement, Supply Chain, Vendors & Logistics -",PurchaseRequisition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-079,F20,"Procurement, Supply Chain, Vendors & Logistics -",ProcurementPackage,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-080,F20,"Procurement, Supply Chain, Vendors & Logistics -",BidComparison,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-081,F20,"Procurement, Supply Chain, Vendors & Logistics -",PurchaseOrder,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-082,F20,"Procurement, Supply Chain, Vendors & Logistics -",Subcontract,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-083,F20,"Procurement, Supply Chain, Vendors & Logistics -",DeliveryOrder,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-084,F21,"Materials, Warehouse, Inventory & Material Lifecycle",Material,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-085,F21,"Materials, Warehouse, Inventory & Material Lifecycle",MaterialSubmittal,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-086,F21,"Materials, Warehouse, Inventory & Material Lifecycle",InventoryLot,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-087,F21,"Materials, Warehouse, Inventory & Material Lifecycle",WarehouseTransaction,TENANT,Created→Posted/Recorded→Reversed/Corrected (append-only semantics),DS-01 Transactional Relational,BLOCKED
+AG06-088,F22,"Site Execution, Workface Planning & Production",WorkPackage,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-089,F22,"Site Execution, Workface Planning & Production",WorkFront,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-090,F22,"Site Execution, Workface Planning & Production",DailySiteReport,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-091,F22,"Site Execution, Workface Planning & Production",ProductionRecord,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-092,F23,"QA/QC, Testing, NCR & Quality Management System",InspectionRequest,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-093,F23,"QA/QC, Testing, NCR & Quality Management System",InspectionTestPlan,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-094,F23,"QA/QC, Testing, NCR & Quality Management System",NCR,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-095,F23,"QA/QC, Testing, NCR & Quality Management System",CorrectiveAction,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-096,F24,"HSE, Environment, Sustainability & ESG",HSEIncident,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-097,F24,"HSE, Environment, Sustainability & ESG",PermitToWork,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-098,F24,"HSE, Environment, Sustainability & ESG",ToolboxTalk,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-099,F24,"HSE, Environment, Sustainability & ESG",EnvironmentalRecord,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-100,F25,"Progress Measurement, Reporting & Management Information -",ProgressSnapshot,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-101,F25,"Progress Measurement, Reporting & Management Information -",ManagementReport,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-102,F25,"Progress Measurement, Reporting & Management Information -",KPIResult,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-103,F26,"Commercial, QS, Measurement, IPC & Revenue",MeasurementSheet,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-104,F26,"Commercial, QS, Measurement, IPC & Revenue",ClientIPC,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-105,F26,"Commercial, QS, Measurement, IPC & Revenue",SubcontractorIPC,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-106,F26,"Commercial, QS, Measurement, IPC & Revenue",RevenueCertificate,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-107,F27,"Cost Control, Budget, Commitments, Forecast & Profitability -",Budget,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-108,F27,"Cost Control, Budget, Commitments, Forecast & Profitability -",CostCode,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-109,F27,"Cost Control, Budget, Commitments, Forecast & Profitability -",Commitment,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-110,F27,"Cost Control, Budget, Commitments, Forecast & Profitability -",CostTransaction,PROJECT,Created→Posted/Recorded→Reversed/Corrected (append-only semantics),DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-111,F27,"Cost Control, Budget, Commitments, Forecast & Profitability -",CostForecast,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-112,F27,"Cost Control, Budget, Commitments, Forecast & Profitability -",BudgetChange,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-113,F28,"Finance, Accounting, Treasury, Tax & Consolidation",ChartOfAccounts,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-114,F28,"Finance, Accounting, Treasury, Tax & Consolidation",JournalEntry,TENANT,Created→Posted/Recorded→Reversed/Corrected (append-only semantics),DS-01 Transactional Relational,BLOCKED
+AG06-115,F28,"Finance, Accounting, Treasury, Tax & Consolidation",APInvoice,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-116,F28,"Finance, Accounting, Treasury, Tax & Consolidation",ARInvoice,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-117,F28,"Finance, Accounting, Treasury, Tax & Consolidation",Payment,TENANT,Created→Posted/Recorded→Reversed/Corrected (append-only semantics),DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-118,F28,"Finance, Accounting, Treasury, Tax & Consolidation",BankAccount,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-119,F28,"Finance, Accounting, Treasury, Tax & Consolidation",TaxRecord,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-120,F29,"HR, Workforce, Time, Payroll & Competency",Employee,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-121,F29,"HR, Workforce, Time, Payroll & Competency",Timesheet,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-122,F29,"HR, Workforce, Time, Payroll & Competency",PayrollRun,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-123,F29,"HR, Workforce, Time, Payroll & Competency",CompetencyRecord,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-124,F30,"Plant, Equipment, Fleet, Tools & Assets",Asset,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-125,F30,"Plant, Equipment, Fleet, Tools & Assets",Equipment,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-126,F30,"Plant, Equipment, Fleet, Tools & Assets",MaintenanceOrder,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-127,F30,"Plant, Equipment, Fleet, Tools & Assets",FuelLog,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-128,F31,"Commissioning, Systems Completion, Handover, DLP & O&M -",SystemCompletionPackage,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-129,F31,"Commissioning, Systems Completion, Handover, DLP & O&M -",CommissioningTest,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-130,F31,"Commissioning, Systems Completion, Handover, DLP & O&M -",HandoverPackage,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-131,F31,"Commissioning, Systems Completion, Handover, DLP & O&M -",OMManual,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-132,F32,"Risk, Opportunity, Issues, Actions, Decisions & Assurance -",Risk,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-133,F32,"Risk, Opportunity, Issues, Actions, Decisions & Assurance -",Issue,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-134,F32,"Risk, Opportunity, Issues, Actions, Decisions & Assurance -",Action,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-135,F32,"Risk, Opportunity, Issues, Actions, Decisions & Assurance -",ManagementDecision,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-136,F32,"Risk, Opportunity, Issues, Actions, Decisions & Assurance -",AssuranceReview,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-137,F33,"Strategy, Corporate Governance, Legal Entity & Shared Services -",CorporatePolicy,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-138,F33,"Strategy, Corporate Governance, Legal Entity & Shared Services -",BoardDecision,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-139,F33,"Strategy, Corporate Governance, Legal Entity & Shared Services -",SharedServiceRequest,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-140,F34,"Client, Consultant, Vendor, Subcontractor & External Portals -",ExternalPartyPortalAccount,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-141,F34,"Client, Consultant, Vendor, Subcontractor & External Portals -",ExternalSubmission,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-142,F34,"Client, Consultant, Vendor, Subcontractor & External Portals -",ExternalResponse,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-143,F35,"Analytics, BI, Semantic Layer & Decision Intelligence",SemanticMetric,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-144,F35,"Analytics, BI, Semantic Layer & Decision Intelligence",DatasetPublication,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-145,F35,"Analytics, BI, Semantic Layer & Decision Intelligence",AnalyticalSnapshot,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-146,F36,"Office, Productivity, Notes & Collaborative Work -",Workspace,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-147,F36,"Office, Productivity, Notes & Collaborative Work -",Note,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-148,F36,"Office, Productivity, Notes & Collaborative Work -",CollaborativeArtifact,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-149,F37,"Communication, Correspondence, Notifications & Omnichannel -",Correspondence,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-150,F37,"Communication, Correspondence, Notifications & Omnichannel -",Notification,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-151,F37,"Communication, Correspondence, Notifications & Omnichannel -",CommunicationThread,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-152,F38,"API, Integration, Event & Automation Platform",APIProduct,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-153,F38,"API, Integration, Event & Automation Platform",ConnectorDefinition,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-154,F38,"API, Integration, Event & Automation Platform",EventSubscription,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-155,F39,"Web, Mobile, Desktop, Offline & Device Experience",DeviceRegistration,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-156,F39,"Web, Mobile, Desktop, Offline & Device Experience",OfflineSyncSession,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-157,F39,"Web, Mobile, Desktop, Offline & Device Experience",ClientSession,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-158,F40,"Design System, UI Themes, UX & Experience Builders",DesignTokenSet,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-159,F40,"Design System, UI Themes, UX & Experience Builders",Theme,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-160,F40,"Design System, UI Themes, UX & Experience Builders",ExperienceConfiguration,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-161,F41,"Security, Privacy, Trust & Compliance Engineering",SecurityPolicy,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-162,F41,"Security, Privacy, Trust & Compliance Engineering",PrivacyRequest,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-163,F41,"Security, Privacy, Trust & Compliance Engineering",ComplianceEvidence,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-164,F42,"Platform Engineering, DevSecOps, Environments & Release",BuildArtifact,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-165,F42,"Platform Engineering, DevSecOps, Environments & Release",Release,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-166,F42,"Platform Engineering, DevSecOps, Environments & Release",EnvironmentPromotion,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-167,F43,"Testing, Verification, Validation & Quality Engineering -",TestCase,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-168,F43,"Testing, Verification, Validation & Quality Engineering -",TestRun,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-169,F43,"Testing, Verification, Validation & Quality Engineering -",SoftwareDefect,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-170,F44,"Observability, SRE, Reliability, Backup & Disaster Recovery -",Incident,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-171,F44,"Observability, SRE, Reliability, Backup & Disaster Recovery -",SLO,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-172,F44,"Observability, SRE, Reliability, Backup & Disaster Recovery -",BackupSet,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-173,F44,"Observability, SRE, Reliability, Backup & Disaster Recovery -",RestoreTest,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-174,F45,Developer / Extension / Marketplace Ecosystem,ExtensionPackage,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-175,F45,Developer / Extension / Marketplace Ecosystem,MarketplaceListing,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-176,F46,"Localization, Jurisdiction, Standards & Regulatory Packs -",JurisdictionPack,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-177,F46,"Localization, Jurisdiction, Standards & Regulatory Packs -",StandardApplicabilityProfile,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-178,F47,Commercial Product Operations & Customer Lifecycle -,CustomerAccount,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-179,F47,Commercial Product Operations & Customer Lifecycle -,CustomerLifecycleCase,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-180,F48,Digital Commerce / Catalog / Marketplace / Supplier Intelligence -,CatalogItem,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-181,F48,Digital Commerce / Catalog / Marketplace / Supplier Intelligence -,MarketplaceTransaction,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-182,F49,Advanced Engineering / Computational / Generative Capabilities -,EngineeringSolverRun,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-183,F49,Advanced Engineering / Computational / Generative Capabilities -,GenerativeDesignStudy,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-184,F50,"Product Memory, Requirements, Configuration & Change Governance -",Requirement,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-185,F50,"Product Memory, Requirements, Configuration & Change Governance -",ProductBaseline,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-186,F50,"Product Memory, Requirements, Configuration & Change Governance -",ChangeRequest,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-187,F51,"Correspondence, Mailroom, Transmittal & Evidence Chronology -",MailroomItem,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-188,F51,"Correspondence, Mailroom, Transmittal & Evidence Chronology -",TransmittalRegisterEntry,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-189,F52,"Meetings, Minutes, Decisions, Actions & Commitments",Meeting,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-190,F52,"Meetings, Minutes, Decisions, Actions & Commitments",Minute,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-191,F52,"Meetings, Minutes, Decisions, Actions & Commitments",CommitmentAction,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-192,F53,"Requirements, Compliance, Verification & Acceptance Management -",ComplianceRequirement,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-193,F53,"Requirements, Compliance, Verification & Acceptance Management -",VerificationRecord,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-194,F53,"Requirements, Compliance, Verification & Acceptance Management -",AcceptanceRecord,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-195,F54,Configuration Management / Baseline Management Across Domains -,ConfigurationItem,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-196,F54,Configuration Management / Baseline Management Across Domains -,Baseline,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-197,F55,Interface Management,InterfaceAgreement,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-198,F55,Interface Management,InterfaceIssue,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-199,F56,"Permits, Authorities, Utilities & External Approvals -",Permit,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-200,F56,"Permits, Authorities, Utilities & External Approvals -",AuthoritySubmission,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-201,F56,"Permits, Authorities, Utilities & External Approvals -",AuthorityApproval,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-202,F57,"Site Establishment, Temporary Facilities, Access & Logistics -",SiteAccessPermit,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-203,F57,"Site Establishment, Temporary Facilities, Access & Logistics -",TemporaryFacility,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-204,F58,"Construction Methods, Temporary Works & Work Packaging -",MethodStatement,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-205,F58,"Construction Methods, Temporary Works & Work Packaging -",TemporaryWorksPackage,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-206,F59,"Product, Material, Equipment Technical Data & Substitution",ProductTechnicalData,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-207,F59,"Product, Material, Equipment Technical Data & Substitution",SubstitutionRequest,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-208,F60,"Laboratory, Testing, Calibration & Measurement Management",LaboratoryTest,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-209,F60,"Laboratory, Testing, Calibration & Measurement Management",CalibrationRecord,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-210,F61,"Productivity, Norms, Benchmarking & Production Intelligence",ProductivityNorm,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-211,F61,"Productivity, Norms, Benchmarking & Production Intelligence",BenchmarkSample,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-212,F62,"Resource Capacity, Skills, Rostering & Dispatch",ResourcePool,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-213,F62,"Resource Capacity, Skills, Rostering & Dispatch",Roster,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-214,F62,"Resource Capacity, Skills, Rostering & Dispatch",DispatchOrder,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-215,F63,"Property, Land, Lease, Right-of-Way & Stakeholder Constraints -",LandParcel,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-216,F63,"Property, Land, Lease, Right-of-Way & Stakeholder Constraints -",Lease,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-217,F63,"Property, Land, Lease, Right-of-Way & Stakeholder Constraints -",RightOfWayConstraint,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-218,F64,"Defects, Snags, Punch, Warranty & Service Management -",ConstructionDefect,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-219,F64,"Defects, Snags, Punch, Warranty & Service Management -",Snag,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-220,F64,"Defects, Snags, Punch, Warranty & Service Management -",WarrantyCase,PROJECT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-221,F65,"Asset Information Requirements, Classification & FM",AssetInformationRequirement,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-222,F65,"Asset Information Requirements, Classification & FM",FMClassification,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-223,F66,"Sustainability, Carbon, Energy, Water & Circularity Data -",CarbonRecord,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-224,F66,"Sustainability, Carbon, Energy, Water & Circularity Data -",EnergyRecord,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-225,F66,"Sustainability, Carbon, Energy, Water & Circularity Data -",WaterRecord,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-226,F67,Geographic / Market / Cost Intelligence,MarketRate,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-227,F67,Geographic / Market / Cost Intelligence,CostIndex,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-228,F67,Geographic / Market / Cost Intelligence,LocationFactor,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-229,F68,"Enterprise Planning, Budgeting & Corporate Performance",CorporateBudget,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-230,F68,"Enterprise Planning, Budgeting & Corporate Performance",BusinessPlan,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-231,F68,"Enterprise Planning, Budgeting & Corporate Performance",ForecastCycle,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-232,F69,"Insurance, Bonds, Guarantees & Claims Administration -",Bond,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-233,F69,"Insurance, Bonds, Guarantees & Claims Administration -",Guarantee,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-234,F69,"Insurance, Bonds, Guarantees & Claims Administration -",InsurancePolicy,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-235,F69,"Insurance, Bonds, Guarantees & Claims Administration -",InsuranceClaim,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-236,F70,"Fraud, Anomaly, Conflict & Transaction Integrity Controls -",IntegrityAlert,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-237,F70,"Fraud, Anomaly, Conflict & Transaction Integrity Controls -",ConflictOfInterestCase,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-238,F71,"Data Reconciliation, Control Totals & Enterprise Close Integrity -",ReconciliationRun,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-239,F71,"Data Reconciliation, Control Totals & Enterprise Close Integrity -",ControlTotal,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-240,F71,"Data Reconciliation, Control Totals & Enterprise Close Integrity -",CloseException,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-241,F72,Model / Document / Data Classification & Naming Service -,ClassificationScheme,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-242,F72,Model / Document / Data Classification & Naming Service -,NamingRule,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-243,F73,Integration Certification & Connector Quality,ConnectorCertification,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-244,F73,Integration Certification & Connector Quality,IntegrationConformanceRun,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-245,F74,AI Evaluation Operations / Model Risk Management,ModelRiskRecord,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-246,F74,AI Evaluation Operations / Model Risk Management,AIEvaluationSuite,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-247,F75,"Product Telemetry, Adoption, UX Analytics & Continuous",ProductTelemetryEvent,TENANT,Created→Posted/Recorded→Reversed/Corrected (append-only semantics),DS-01 Transactional Relational,BLOCKED
+AG06-248,F75,"Product Telemetry, Adoption, UX Analytics & Continuous",AdoptionMetric,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-249,F76,Enterprise Notification Policy & Attention Management -,NotificationPolicy,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-250,F76,Enterprise Notification Policy & Attention Management -,AttentionRule,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-251,F77,"Printing, Publishing, Issue, Distribution & Controlled Output -",PublicationJob,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-252,F77,"Printing, Publishing, Issue, Distribution & Controlled Output -",DistributionPackage,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-253,F78,"Archive, Project Data Book & Long-Term Retrieval",ArchivePackage,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-254,F78,"Archive, Project Data Book & Long-Term Retrieval",ProjectDataBook,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-255,F79,Licensing / IP / Copyright / Usage-Rights Governance -,LicenseGrant,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-256,F79,Licensing / IP / Copyright / Usage-Rights Governance -,UsageRight,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-257,F80,Safety-Critical / Financial-Critical / Engineering-Critical,CriticalityClassification,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-258,F80,Safety-Critical / Financial-Critical / Engineering-Critical,CriticalActionApproval,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-259,F81,Asset & Facility Management Operations (EAM/CAFM/IWMS),Facility,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-260,F81,Asset & Facility Management Operations (EAM/CAFM/IWMS),MaintenancePlan,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-261,F81,Asset & Facility Management Operations (EAM/CAFM/IWMS),WorkOrder,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-262,F82,"Developer/Owner Real-Estate Development, Sales, Leasing & Community Management",DevelopmentProject,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-263,F82,"Developer/Owner Real-Estate Development, Sales, Leasing & Community Management",PropertyUnit,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-264,F82,"Developer/Owner Real-Estate Development, Sales, Leasing & Community Management",SalesContract,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-265,F82,"Developer/Owner Real-Estate Development, Sales, Leasing & Community Management",LeaseContract,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-266,F83,"IoT, Operational Technology & Digital Twin Operations",IoTDevice,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-267,F83,"IoT, Operational Technology & Digital Twin Operations",TelemetryStream,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-268,F83,"IoT, Operational Technology & Digital Twin Operations",TwinOperation,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-269,F84,"Construction Fabrication, Prefabrication & Offsite Manufacturing",FabricationPackage,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-270,F84,"Construction Fabrication, Prefabrication & Offsite Manufacturing",ShopOrder,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-271,F84,"Construction Fabrication, Prefabrication & Offsite Manufacturing",PrefabUnit,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-272,F85,Enterprise IT Service Management & CMDB,ServiceTicket,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-273,F85,Enterprise IT Service Management & CMDB,ConfigurationItemCMDB,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,GENERIC_DRAFT_APPROVE_OR_UNLISTED
+AG06-274,F86,"Enterprise Architecture, Application & Technology Portfolio Governance",ArchitectureDecision,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-275,F86,"Enterprise Architecture, Application & Technology Portfolio Governance",ApplicationPortfolioItem,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
+AG06-276,F86,"Enterprise Architecture, Application & Technology Portfolio Governance",TechnologyStandard,TENANT,Draft→Active→Superseded/Closed,DS-01 Transactional Relational,BLOCKED
