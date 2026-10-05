@@ -41,7 +41,7 @@ const evalSchema = z.object({
   results:z.record(z.any()).default({}), passed:z.boolean().nullable().optional(), failure_classes:z.array(z.any()).default([])
 });
 
-function registryRoutes(path:string, table:string, schema:z.ZodTypeAny, columns:string[]) {
+function registryRoutes(path:string, table:string, schema:z.AnyZodObject, columns:string[]) {
   aiPlatformRouter.get(path, asyncHandler(async(_req,res)=> res.json({success:true,data:await query(`select * from ${table} order by id desc limit 1000`)})));
   aiPlatformRouter.post(path, authorize('ai_platform','manage'), asyncHandler(async(req,res)=>{
     const b=schema.parse(req.body) as Record<string,unknown>;

@@ -8,13 +8,14 @@ import { AppError } from '../../middleware/errors.js';
 export const boqRouter = Router();
 boqRouter.use(authorize('boq', 'view'));
 
-const masterSchema = z.object({
+const masterBase = z.object({
   tender_id:z.number().int().positive().optional().nullable(), project_id:z.number().int().positive().optional().nullable(),
   item_no:z.string().min(1).max(20), section:z.string().max(150).optional().nullable(), description:z.string().min(1), unit_of_measure:z.string().min(1).max(20),
   quantity:z.number().nonnegative().default(0), cost_code_id:z.number().int().positive().optional().nullable(), unit_rate_material:z.number().nonnegative().default(0),
   unit_rate_labor:z.number().nonnegative().default(0), unit_rate_equipment:z.number().nonnegative().default(0), unit_rate_subcontract:z.number().nonnegative().default(0),
   overhead_percent:z.number().min(0).max(100).default(0), profit_percent:z.number().min(0).max(100).default(0)
-}).refine(v=>v.tender_id||v.project_id,{message:'tender_id or project_id is required'});
+});
+const masterSchema = masterBase.refine(v=>v.tender_id||v.project_id,{message:'tender_id or project_id is required'});
 
 boqRouter.get('/master', asyncHandler(async(req,res)=>{
  const tenderId=Number(req.query.tender_id||0), projectId=Number(req.query.project_id||0);
@@ -25,7 +26,7 @@ boqRouter.post('/master', authorize('boq','create'), asyncHandler(async(req,res)
  const b=masterSchema.parse(req.body); const [r]=await query(`insert into boq_master(org_id,tender_id,project_id,item_no,section,description,unit_of_measure,quantity,cost_code_id,unit_rate_material,unit_rate_labor,unit_rate_equipment,unit_rate_subcontract,overhead_percent,profit_percent,created_by) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) returning *`,[req.user!.org_id,b.tender_id??null,b.project_id??null,b.item_no,b.section??null,b.description,b.unit_of_measure,b.quantity,b.cost_code_id??null,b.unit_rate_material,b.unit_rate_labor,b.unit_rate_equipment,b.unit_rate_subcontract,b.overhead_percent,b.profit_percent,req.user!.id]); res.status(201).json({success:true,data:r});
 }));
 boqRouter.patch('/master/:id', authorize('boq','edit'), asyncHandler(async(req,res)=>{
- const id=Number(req.params.id), b=masterSchema.partial().parse(req.body); const fields:any[]=[]; const vals:any[]=[]; for(const [k,v] of Object.entries(b)){fields.push(`${k}=$${fields.length+2}`);vals.push(v);} if(!fields.length)throw new AppError(400,'No fields to update');
+ const id=Number(req.params.id), b=masterBase.partial().parse(req.body); const fields:any[]=[]; const vals:any[]=[]; for(const [k,v] of Object.entries(b)){fields.push(`${k}=$${fields.length+2}`);vals.push(v);} if(!fields.length)throw new AppError(400,'No fields to update');
  const rows=await query(`update boq_master set ${fields.join(',')},updated_at=now() where id=$1 and approval_instance_id is null returning *`,[id,...vals]); if(!rows[0])throw new AppError(409,'BOQ row is approved/submitted or not found');res.json({success:true,data:rows[0]});
 }));
 boqRouter.delete('/master/:id', authorize('boq','delete'), asyncHandler(async(req,res)=>{const rows=await query(`delete from boq_master where id=$1 and approval_instance_id is null returning id`,[Number(req.params.id)]);if(!rows[0])throw new AppError(409,'BOQ row is approved/submitted or not found');res.json({success:true,data:rows[0]});}));
