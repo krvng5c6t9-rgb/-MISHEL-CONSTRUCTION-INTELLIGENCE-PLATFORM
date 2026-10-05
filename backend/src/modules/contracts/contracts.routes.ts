@@ -35,4 +35,47 @@ contractsRouter.get('/variations/list',authorize('contracts','view'),asyncHandle
 contractsRouter.post('/variations',authorize('contracts','create'),asyncHandler(async(req,res)=>{if(!req.user)throw new AppError(401,'Authentication required');const b=variationSchema.parse(req.body);const rows=await query(`insert into variations(org_id,project_id,contract_id,variation_no,description,initiated_by,reason,cost_impact,time_impact_days,status) values($1,$2,$3,$4,$5,$6,$7,$8,$9,'proposed') returning *`,[req.user.org_id,b.project_id,b.contract_id,b.variation_no,b.description,req.user.id,b.reason??null,b.cost_impact,b.time_impact_days]);res.status(201).json({success:true,data:rows[0]});}));
 contractsRouter.get('/variations/:id',authorize('contracts','view'),asyncHandler(async(req,res)=>{const variationId=parseId(req.params.id);const variation=(await query(`select v.*,p.project_code,c.contract_value from variations v join projects p on p.id=v.project_id join contracts c on c.id=v.contract_id where v.id=$1`,[variationId]))[0];if(!variation)throw new AppError(404,'Variation not found');const lines=await query(`select * from variation_boq_lines where variation_id=$1 order by id`,[variationId]);res.json({success:true,data:{variation,lines}});}));
 contractsRouter.post('/variations/:id/lines',authorize('contracts','create'),asyncHandler(async(req,res)=>{if(!req.user)throw new AppError(401,'Authentication required');const variationId=parseId(req.params.id);const b=lineSchema.parse(req.body);const rows=await query(`insert into variation_boq_lines(org_id,variation_id,project_boq_item_id,description,unit_of_measure,quantity,unit_rate,action) values($1,$2,$3,$4,$5,$6,$7,$8) returning *`,[req.user.org_id,variationId,b.project_boq_item_id??null,b.description,b.unit_of_measure,b.quantity,b.unit_rate,b.action]);res.status(201).json({success:true,data:rows[0]});}));
-contractsRouter.post('/variations/:id/submit-approval',authorize('contracts','approve'),asyncHandler(async(req,res)=>{if(!req.user)throw new AppError(401,'Authentication required');const variationId=parseId(req.params.id);const client=await getClient();try{await client.query('begin');const v=(await client.query(`select * from variations where id=$1 for update`,[variationId])).rows[0];if(!v)throw new AppError(404,'Variation not found');if(v.status!=='proposed')throw new AppError(409,'Only proposed variations can be submitted');const approval=await createApprovalInstance(client,{org_id:req.user.org_id,module:'variation',record_id:variationId,amount:String(v.cost_impact),currency_id:(await client.query(`select currency_id from contracts where id=$1`,[v.contract_id])).rows[0]?.currency_id??null,initiated_by:req.user.id});await client.query(`update variations set status='under_review',approval_instance_id=$2,updated_at=now() where id=$1`,[variationId,approval.id]);await client.query('commit');res.json({success:true,data:{approval}});}catch(e){await client.query('rollback');throw e;}finally{await releaseClient(client);}}));
+contractsRouter.post('/variations/:id/submit-approval',authorize('contracts','approve'),asyncHandler(async(req,res)=>{if(!req.user)throw new AppError(401,'Authentication required');const variationId=parseId(req.params.id);const client=await getClient();try{await client.query('begin');const v=(await client.query(`select * from variations where id=$1 for update`,[variationId])).rows[0];if(!v)throw new AppError(404,'Variation not found');if(v.status!=='proposed')throw new AppError(409,'Only proposed variations can be submitted');const approval=await createApprovalInstance(client,{org_id:req.user.org_id,module:'variation',record_id:variationId,amount:String(v.cost_impact).replace(/^-/,'') /* DOA routes on the absolute value (omissions); exact decimal string, no float conversion */,currency_id:(await client.query(`select currency_id from contracts where id=$1`,[v.contract_id])).rows[0]?.currency_id??null,initiated_by:req.user.id});await client.query(`update variations set status='under_review',approval_instance_id=$2,updated_at=now() where id=$1`,[variationId,approval.id]);await client.query('commit');res.json({success:true,data:{approval}});}catch(e){await client.query('rollback');throw e;}finally{await releaseClient(client);}}));
+
+// GC-15 (migration 048): client path after internal approval. Only a client-agreed valuation changes the
+// execution BOQ (revised_* / new variation items) and the project's current contract value (STEP09).
+contractsRouter.post('/variations/:id/client-submission',authorize('contracts','create'),asyncHandler(async(req,res)=>{
+  const variationId=parseId(req.params.id);
+  const b=z.object({submitted_on:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),reference:z.string().trim().min(3).max(500)}).parse(req.body);
+  const v=(await query<any>(`select status,client_status from variations where id=$1`,[variationId]))[0];
+  if(!v)throw new AppError(404,'Variation not found');
+  if(v.status!=='approved'||v.client_status!=='not_submitted')throw new AppError(409,'Only internally approved, not yet submitted variations can be submitted to the client');
+  const [r]=await query(`update variations set client_status='submitted',client_submitted_on=$2,client_submission_reference=$3,updated_at=now() where id=$1 returning *`,[variationId,b.submitted_on,b.reference]);
+  res.json({success:true,data:r});
+}));
+contractsRouter.post('/variations/:id/client-decision',authorize('contracts','create'),asyncHandler(async(req,res)=>{
+  const variationId=parseId(req.params.id);
+  const b=z.object({decision:z.enum(['agreed','rejected']),decided_on:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),reference:z.string().trim().min(3).max(500),agreed_amount:z.number().optional(),agreed_time_days:z.number().int().optional()}).parse(req.body);
+  const client=await getClient();
+  try{
+    await client.query('begin');
+    const v=(await client.query(`select * from variations where id=$1 for update`,[variationId])).rows[0];
+    if(!v)throw new AppError(404,'Variation not found');
+    if(v.client_status!=='submitted')throw new AppError(409,'Only variations submitted to the client can be decided');
+    const r=(await client.query(`update variations set client_status=$2,client_decided_on=$3,client_decision_reference=$4,agreed_amount=$5,agreed_time_days=$6,updated_at=now() where id=$1 returning *`,
+      [variationId,b.decision,b.decided_on,b.reference,b.decision==='agreed'?(b.agreed_amount??null):null,b.decision==='agreed'?(b.agreed_time_days??null):null])).rows[0];
+    if(b.decision==='agreed'){
+      const lines=(await client.query(`select id,project_boq_item_id from variation_boq_lines where variation_id=$1 order by id`,[variationId])).rows;
+      // All quantity/amount arithmetic stays in PostgreSQL NUMERIC (no JS float conversion of money).
+      for(const l of lines){
+        if(l.project_boq_item_id){
+          await client.query(`update project_boq b set revised_quantity=coalesce(b.revised_quantity,b.contract_quantity)+(case when l.action='omit' then -l.quantity else l.quantity end),
+              revised_amount=coalesce(b.revised_amount,b.contract_amount)+(case when l.action='omit' then -l.amount else l.amount end),updated_at=now()
+            from variation_boq_lines l where l.id=$1 and b.id=l.project_boq_item_id`,[l.id]);
+        }else{
+          await client.query(`insert into project_boq(org_id,project_id,item_no,description,unit_of_measure,contract_quantity,contract_unit_rate,revised_quantity,revised_amount,is_locked,source_variation_id)
+            select $1,$2,$3,l.description,l.unit_of_measure,0,l.unit_rate,l.quantity,l.amount,true,$4 from variation_boq_lines l where l.id=$5`,[v.org_id,v.project_id,`V${v.id}-${l.id}`.slice(0,20),v.id,l.id]);
+        }
+      }
+      await client.query(`update projects set current_contract_value=coalesce(current_contract_value,original_contract_value,0)+$2,updated_at=now() where id=$1`,[v.project_id,r.agreed_amount]);
+      await client.query(`update variations set applied_at=now() where id=$1`,[variationId]);
+    }
+    await client.query('commit');
+    res.json({success:true,data:r});
+  }catch(e){await client.query('rollback');throw e;}finally{await releaseClient(client);}
+}));

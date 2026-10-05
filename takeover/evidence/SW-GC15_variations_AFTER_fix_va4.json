@@ -1,0 +1,487 @@
+{
+  "suite": "sweep_variations",
+  "run": "va4",
+  "tag": "va4",
+  "steps": [
+    {
+      "name": "variation on an unsigned contract refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Variations can only be raised on a signed or active contract of the same project\""
+    },
+    {
+      "name": "QS raises variation V1 (cost impact 3,500)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submission refused when cost impact differs from lines",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Variation cost impact 9999.00 does not equal its lines 150.00\""
+    },
+    {
+      "name": "omitting more than the item quantity refused (not a DOA failure)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Variation would make BOQ item 1.1 negative (-100.000)\""
+    },
+    {
+      "name": "omission variation (negative value) routes through DOA",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submit V1 for internal approval",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "lines cannot be added after submission",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Variation lines can only change while the variation is proposed (status under_review)\""
+    },
+    {
+      "name": "approver who submitted a variation cannot approve it (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: initiator cannot approve the same transaction\""
+    },
+    {
+      "name": "approver approves V1 internally",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "internal approval does NOT change the execution BOQ (not yet agreed)",
+      "outcome": "PASS",
+      "detail": "[[\"1.1\",null]]"
+    },
+    {
+      "name": "client agreement before submission to client refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only variations submitted to the client can be decided\""
+    },
+    {
+      "name": "variation submitted to client",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "agreed amount different from lines refused (revise lines first)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Agreed amount 3000.00 differs from the variation lines 3500.00; raise a revised variation\""
+    },
+    {
+      "name": "client agreement recorded (3,500, +5 days)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "agreed variation revises item 1.1 to 120 m2 / 18,000",
+      "outcome": "PASS",
+      "detail": "{\"id\":5,\"item_no\":\"1.1\",\"section\":null,\"description\":\"VA item\",\"unit_of_measure\":\"m2\",\"contract_quantity\":\"100.000\",\"contract_unit_rate\":\"150.00\",\"contract_amount\":\"15000.00\",\"revised_quantity\":\"120.000\",\"revised_amount\":\"18000.00\",\"cost_code_id\":2,\"is_locked\":true}"
+    },
+    {
+      "name": "agreed new item added to execution BOQ (10 m x 50)",
+      "outcome": "PASS",
+      "detail": "{\"id\":6,\"item_no\":\"V2-2\",\"section\":null,\"description\":\"New item: handrail\",\"unit_of_measure\":\"m\",\"contract_quantity\":\"0.000\",\"contract_unit_rate\":\"50.00\",\"contract_amount\":\"0.00\",\"revised_quantity\":\"10.000\",\"revised_amount\":\"500.00\",\"cost_code_id\":null,\"is_locked\":true}"
+    },
+    {
+      "name": "project current contract value = 15,000 + 3,500",
+      "outcome": "PASS",
+      "detail": "18500.00"
+    },
+    {
+      "name": "agreed variation cannot be decided again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only variations submitted to the client can be decided\""
+    },
+    {
+      "name": "tenant B cannot read tenant A variation",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Variation not found\""
+    },
+    {
+      "name": "tenant B cannot decide tenant A variation",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Variation not found\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/49/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 422,
+      "ok": false,
+      "error": "Variations can only be raised on a signed or active contract of the same project"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/9/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/19/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/19/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/12/handover",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/3/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/3/submit-approval",
+      "status": 422,
+      "ok": false,
+      "error": "Variation cost impact 9999.00 does not equal its lines 150.00"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/4/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/4/submit-approval",
+      "status": 422,
+      "ok": false,
+      "error": "Variation would make BOQ item 1.1 negative (-100.000)"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/5/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/5/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/lines",
+      "status": 422,
+      "ok": false,
+      "error": "Variation lines can only change while the variation is proposed (status under_review)"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/6/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/24/actions",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: initiator cannot approve the same transaction"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/23/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/client-decision",
+      "status": 409,
+      "ok": false,
+      "error": "Only variations submitted to the client can be decided"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/client-submission",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/client-decision",
+      "status": 422,
+      "ok": false,
+      "error": "Agreed amount 3000.00 differs from the variation lines 3500.00; raise a revised variation"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/client-decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/projects/12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/client-decision",
+      "status": 409,
+      "ok": false,
+      "error": "Only variations submitted to the client can be decided"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contracts/variations/2",
+      "status": 404,
+      "ok": false,
+      "error": "Variation not found"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/client-decision",
+      "status": 404,
+      "ok": false,
+      "error": "Variation not found"
+    }
+  ]
+}

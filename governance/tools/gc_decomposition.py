@@ -99,9 +99,9 @@ gc('GC-15', 'Variation / Change', [
     ('Capture instruction/RFI/design change/event', 'Site/technical office', 'instruction, RFI, revision', 'change event', 'every instruction logged with date received; linked, never auto-converted', 'none', 'L1 classify as potential change', 'RUNTIME', 'CC-021 events + CC-023 links', 'NDC-002'),
     ('Notify within contractual period', 'Contracts manager', 'change event, Contract Data Pack', 'notice with proof of delivery', 'deadline from clause; internal approval never delays notice', 'rule author != confirmer (CC-021)', 'L2 notice draft', 'RUNTIME', 'CC-021 wave2_notice_engine 36/36', 'NDC-001'),
     ('Assess scope/qty/cost/time impact', 'QS + planner', 'event, BOQ, programme', 'impact assessment', 'rates from contract, else agreed method', 'none', 'L2', 'PARTIAL', 'variation_boq_lines', 'NDC-006'),
-    ('Prepare and submit variation quotation', 'QS', 'assessment', 'variation submission', 'status instructed != submitted != agreed', 'SOD15-025', 'L2', 'API', 'variations + lines + submit-approval', ''),
-    ('Negotiate and agree', 'Commercial manager / client', 'submission', 'agreed valuation', 'agreed value is external decision', 'DOA Variation; external', 'L1', 'API', 'variation approval (internal only)', ''),
-    ('Update budget, programme, procurement, forecast', 'Project controls', 'agreed variation', 'revised baselines', 'budget change via controlled transfer', 'SOD15-013', 'L4 propagate', 'ABSENT', 'no propagation', ''),
+    ('Prepare and submit variation quotation', 'QS', 'assessment', 'variation submission', 'cost impact = lines; lines frozen after submission', 'SOD15-025', 'L2', 'RUNTIME', 'CC-025 sweep_variations 20/20', ''),
+    ('Negotiate and agree', 'Commercial manager / client', 'submission', 'agreed valuation', 'internal approval != client agreement (STEP09)', 'DOA Variation; external', 'L1', 'RUNTIME', 'CC-025 client-submission/decision', ''),
+    ('Update budget, programme, procurement, forecast', 'Project controls', 'agreed variation', 'revised baselines', 'budget change via controlled transfer', 'SOD15-013', 'L4 propagate', 'PARTIAL', 'CC-025 applies to execution BOQ + contract value; budget/programme/forecast propagation absent', ''),
 ])
 gc('GC-16', 'Claim / EOT Case', [
     ('Notice of claim within time bar', 'Contracts manager', 'event', 'notice + proof', 'time bar from Contract Data Pack', 'rule author != confirmer', 'L2', 'RUNTIME', 'CC-021 wave2_notice_engine 36/36', 'NDC-001'),

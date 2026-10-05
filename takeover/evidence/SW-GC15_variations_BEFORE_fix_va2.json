@@ -1,0 +1,356 @@
+{
+  "suite": "sweep_variations",
+  "run": "va2",
+  "tag": "va2",
+  "steps": [
+    {
+      "name": "variation on an unsigned contract refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "QS raises variation V1 (cost impact 3,500)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submission refused when cost impact differs from lines",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "omitting more than the item quantity refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"No active DOA rule configured for variation\""
+    },
+    {
+      "name": "submit V1 for internal approval",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "lines cannot be added after submission",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "submitter holding approvals.approve cannot approve own variation (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Logged-in user role is not the configured approver for the current DOA step\""
+    },
+    {
+      "name": "approver approves V1 internally",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "internal approval does NOT change the execution BOQ (not yet agreed)",
+      "outcome": "PASS",
+      "detail": "[[\"1.1\",null]]"
+    },
+    {
+      "name": "client agreement before submission to client refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 404 \"Route not found: POST /api/contracts/variations/2/client-decision\""
+    },
+    {
+      "name": "variation submitted to client",
+      "outcome": "FAIL",
+      "detail": "csubm failed: HTTP 404 {\"success\":false,\"error\":\"Route not found: POST /api/contracts/variations/2/client-submission\"}"
+    },
+    {
+      "name": "suite completed",
+      "outcome": "FAIL",
+      "detail": "csubm failed: HTTP 404 {\"success\":false,\"error\":\"Route not found: POST /api/contracts/variations/2/client-submission\"}"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/49/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/master",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/9/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/19/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/19/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/boq/project/12/handover",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/3/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/3/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/4/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/4/submit-approval",
+      "status": 422,
+      "ok": false,
+      "error": "No active DOA rule configured for variation"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/21/actions",
+      "status": 403,
+      "ok": false,
+      "error": "Logged-in user role is not the configured approver for the current DOA step"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/21/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/client-decision",
+      "status": 404,
+      "ok": false,
+      "error": "Route not found: POST /api/contracts/variations/2/client-decision"
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/variations/2/client-submission",
+      "status": 404,
+      "ok": false,
+      "error": "Route not found: POST /api/contracts/variations/2/client-submission"
+    }
+  ]
+}
