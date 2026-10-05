@@ -1,0 +1,553 @@
+{
+  "suite": "wave1_subcontract_ipc",
+  "run": "sc3",
+  "tag": "sc3",
+  "steps": [
+    {
+      "name": "create subcontract (100,000, retention 10%)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "certificate refused while subcontract is draft",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Certificates can only be raised against an active (approved) subcontract; subcontract 2 is draft\""
+    },
+    {
+      "name": "approve subcontract",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "subcontract active after approval",
+      "outcome": "PASS",
+      "detail": "active"
+    },
+    {
+      "name": "maker creates certificate (gross 20,000, retention 2,000)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "add line A 100 x 150",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "add line B 10 x 500",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "verification refused when gross differs from sum of lines",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Certificate gross 99999.00 does not equal the sum of its lines 10.00\""
+    },
+    {
+      "name": "verification refused when retention exceeds subcontract retention %",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Retention 500.00 exceeds 10.00 percent of gross 1000.00\""
+    },
+    {
+      "name": "maker without site.approve cannot verify",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: site.approve\""
+    },
+    {
+      "name": "SoD: maker holding site.approve cannot verify own certificate",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Certificate is not in draft state, maker identity is missing, maker attempted self-verification, or certificate is outside your organization\""
+    },
+    {
+      "name": "SoD: maker holding contracts.approve cannot QS-certify own certificate",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Certificate is not site-verified, maker/site verifier segregation failed, or certificate is outside your organization\""
+    },
+    {
+      "name": "SoD: submitter holding approvals.approve cannot approve own submission",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Logged-in user role is not the configured approver for the current DOA step\""
+    },
+    {
+      "name": "site engineer verifies",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "lines cannot be added after verification",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Certificate lines can only change while the certificate is draft (status site_verified)\""
+    },
+    {
+      "name": "QS certify before verification refused (C2 draft)",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Certificate is not site-verified, maker/site verifier segregation failed, or certificate is outside your organization\""
+    },
+    {
+      "name": "QS lead certifies",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submit certificate for approval",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approver approves certificate",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "certificate posted with a cost transaction",
+      "outcome": "PASS",
+      "detail": "{\"s\":\"posted\",\"ct\":3}"
+    },
+    {
+      "name": "cost transaction recorded (basis per DEC-012)",
+      "outcome": "PASS",
+      "detail": "amount=18000.00 gross=20000.00 net=18000.00"
+    },
+    {
+      "name": "approved certificate cannot be re-submitted",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Certificate must be QS-certified before approval\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/roles",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/46/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/47/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/8/prequalification",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates",
+      "status": 422,
+      "ok": false,
+      "error": "Certificates can only be raised against an active (approved) subcontract; subcontract 2 is draft"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/2/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/10/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/subcontracts",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/3/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/3/verify",
+      "status": 422,
+      "ok": false,
+      "error": "Certificate gross 99999.00 does not equal the sum of its lines 10.00"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/4/verify",
+      "status": 422,
+      "ok": false,
+      "error": "Retention 500.00 exceeds 10.00 percent of gross 1000.00"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/verify",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: site.approve"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/5/verify",
+      "status": 409,
+      "ok": false,
+      "error": "Certificate is not in draft state, maker identity is missing, maker attempted self-verification, or certificate is outside your organization"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/5/verify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/5/qs-certify",
+      "status": 409,
+      "ok": false,
+      "error": "Certificate is not site-verified, maker/site verifier segregation failed, or certificate is outside your organization"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/5/qs-certify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/5/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/11/actions",
+      "status": 403,
+      "ok": false,
+      "error": "Logged-in user role is not the configured approver for the current DOA step"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/verify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/lines",
+      "status": 422,
+      "ok": false,
+      "error": "Certificate lines can only change while the certificate is draft (status site_verified)"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/3/qs-certify",
+      "status": 409,
+      "ok": false,
+      "error": "Certificate is not site-verified, maker/site verifier segregation failed, or certificate is outside your organization"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/qs-certify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/12/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/subcontracts/certificates",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/cost-transactions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/submit-approval",
+      "status": 409,
+      "ok": false,
+      "error": "Certificate must be QS-certified before approval"
+    }
+  ]
+}

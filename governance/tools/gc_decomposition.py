@@ -69,14 +69,14 @@ gc('GC-06', 'Procurement Package', [
     ('Vendor performance evaluation', 'Procurement', 'delivery, quality, HSE records', 'vendor score', 'score formula tenant configured', 'none', 'L1', 'ABSENT', '', ''),
 ])
 gc('GC-12', 'Contractor/Subcontractor IPC', [
-    ('Subcontractor submits application with measured work', 'Subcontractor (portal)', 'measurement, evidence', 'application', 'cut-off date per subcontract', 'none', 'L2 pre-check', 'API', 'subcontract certificates + portal access routes', 'NDC-012'),
-    ('Verify quantities against site records', 'Site engineer', 'quantity sheets, inspections', 'verified quantities', 'no quantity without accepted inspection where enforced', 'SOD15-029', 'L1 anomaly flags', 'API', 'certificates verify route', 'NDC-012'),
-    ('Apply rates, variations, materials on site', 'QS', 'subcontract rates, approved variations', 'gross valuation', 'valuation = sum(qty x rate) + approved variations + MOS', 'none', 'L2', 'API', 'certificate lines', 'NDC-012'),
+    ('Subcontractor submits application with measured work', 'Subcontractor (portal)', 'measurement, evidence', 'application', 'cut-off date per subcontract', 'none', 'L2 pre-check', 'RUNTIME', 'CC-020 wave1_subcontract_ipc 22/22 (internal maker; portal path untested)', 'NDC-012'),
+    ('Verify quantities against site records', 'Site engineer', 'quantity sheets, inspections', 'verified quantities', 'no quantity without accepted inspection where enforced', 'SOD15-029', 'L1 anomaly flags', 'RUNTIME', 'verify + gross=sum(lines) (CC-020)', 'NDC-012'),
+    ('Apply rates, variations, materials on site', 'QS', 'subcontract rates, approved variations', 'gross valuation', 'valuation = sum(qty x rate) + approved variations + MOS', 'none', 'L2', 'RUNTIME', 'certificate lines frozen after draft (CC-020)', 'NDC-012'),
     ('Deduct retention, advance recovery, back-charges, tax', 'QS', 'subcontract terms', 'net amount due', 'retention % and caps from subcontract (no default)', 'none', 'L4 arithmetic', 'PARTIAL', 'retention_ledger table; rules unverified', 'DFS-002'),
     ('Less previous certificates', 'QS', 'certificate history', 'this-period amount', 'cumulative - previous; never negative without credit note', 'none', 'L4', 'API', '', ''),
-    ('QS certification', 'QS lead', 'valuation', 'certified certificate', 'certified != paid', 'SOD15-029', 'L0', 'API', 'qs-certify route', ''),
-    ('Approval per DOA', 'Approver', 'certificate', 'approved certificate', 'DOA class Payment', 'DOA Payment', 'L0', 'API', 'submit-approval', ''),
-    ('Post to cost and AP, schedule payment', 'Finance', 'approved certificate', 'actual cost, AP', 'cost posted once; idempotent', 'SOD15-031', 'L4', 'API', 'not in chain', ''),
+    ('QS certification', 'QS lead', 'valuation', 'certified certificate', 'certified != paid', 'SOD15-029', 'L0', 'RUNTIME', 'qs-certify with SoD (CC-020 suite)', ''),
+    ('Approval per DOA', 'Approver', 'certificate', 'approved certificate', 'DOA class Payment', 'DOA Payment', 'L0', 'RUNTIME', 'submit-approval + SoD (CC-020 suite)', ''),
+    ('Post to cost and AP, schedule payment', 'Finance', 'approved certificate', 'actual cost, AP', 'cost posted once; idempotent', 'SOD15-031', 'L4', 'PARTIAL', 'cost posted on approval (basis = net; F-12/DEC-012 OPEN); AP not verified', 'DEC-012'),
 ])
 gc('GC-13', 'Client IPC / Revenue', [
     ('Prepare valuation from approved progress', 'QS', 'measured quantities, BOQ', 'IPC draft', 'qty <= contract qty unless variation', 'SOD15-029', 'L2', 'RUNTIME', 'IPC create (chain)', 'NDC-012'),

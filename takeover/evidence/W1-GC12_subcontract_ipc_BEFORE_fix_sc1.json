@@ -1,0 +1,480 @@
+{
+  "suite": "wave1_subcontract_ipc",
+  "run": "sc1",
+  "tag": "sc1",
+  "steps": [
+    {
+      "name": "create subcontract (100,000, retention 10%)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "certificate refused while subcontract is draft",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "approve subcontract",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "subcontract active after approval",
+      "outcome": "PASS",
+      "detail": "active"
+    },
+    {
+      "name": "maker creates certificate (gross 20,000, retention 2,000)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "add line A 100 x 150",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "add line B 10 x 500",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "verification refused when gross differs from sum of lines",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "verification refused when retention exceeds subcontract retention %",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "maker cannot verify own certificate",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: site.approve\""
+    },
+    {
+      "name": "site engineer verifies",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "lines cannot be added after verification",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "QS certify before verification refused (C2 draft)",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "QS lead certifies",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submit certificate for approval",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "submitter cannot approve own submission",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: approvals.approve\""
+    },
+    {
+      "name": "approver approves certificate",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "certificate posted with a cost transaction",
+      "outcome": "PASS",
+      "detail": "{\"s\":\"posted\",\"ct\":3}"
+    },
+    {
+      "name": "cost transaction recorded (basis per DEC-012)",
+      "outcome": "PASS",
+      "detail": "amount=18000.00 gross=20000.00 net=18000.00"
+    },
+    {
+      "name": "approved certificate cannot be re-submitted",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Certificate must be QS-certified before approval\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/roles",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/46/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/47/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/vendors/8/prequalification",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/2/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/10/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/subcontracts",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/3/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/3/verify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/4/verify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/verify",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: site.approve"
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/verify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/3/qs-certify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/qs-certify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/11/actions",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: approvals.approve"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/11/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/subcontracts/certificates",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/cost-transactions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/subcontracts/certificates/2/submit-approval",
+      "status": 409,
+      "ok": false,
+      "error": "Certificate must be QS-certified before approval"
+    }
+  ]
+}
