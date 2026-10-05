@@ -1,0 +1,64 @@
+name: runtime-gate
+
+# Executed evidence gate (F-09): build, typecheck, migrations from zero, API E2E chain and
+# negative/tenant-isolation suite against a real PostgreSQL. Static grep checks run too,
+# but only this job proves behaviour.
+on:
+  push:
+  pull_request:
+
+jobs:
+  runtime-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        postgres: ['16', '17']
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci_superuser_pw
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      PGPASSWORD: ci_superuser_pw
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install PostgreSQL client
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+      - name: Create roles (CI-only credentials)
+        run: |
+          psql -h localhost -U postgres -v ON_ERROR_STOP=1 \
+            -c "create role erp_owner login bypassrls createdb password 'ci_owner_pw'" \
+            -c "create role erp_app login password 'ci_app_pw'"
+      - name: Backend install, typecheck, build
+        working-directory: backend
+        run: npm ci --no-audit --no-fund && npm run lint && npm run build
+      - name: Frontend install, typecheck, build
+        working-directory: frontend
+        run: npm ci --no-audit --no-fund && npm run lint && npm run build
+      - name: Static checks (inherited; not functional evidence)
+        run: |
+          (cd backend && for s in tenant phase2 phase3 phase4 phase5 phase6 phase7; do npm run -s security:$s; done)
+          for f in scripts/*.mjs; do node "$f" >/dev/null || { echo "FAILED $f"; exit 1; }; done
+      - name: Runtime gate from zero
+        env:
+          PG_ADMIN_URL: postgresql://postgres:ci_superuser_pw@localhost:5432/postgres
+          OWNER_URL_BASE: postgresql://erp_owner:ci_owner_pw@localhost:5432
+          APP_URL_BASE: postgresql://erp_app:ci_app_pw@localhost:5432
+          RUN_ID: ci${{ github.run_id }}pg${{ matrix.postgres }}
+        run: bash tests/e2e/run_from_zero.sh
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-evidence-pg${{ matrix.postgres }}
+          path: tests/e2e/out/

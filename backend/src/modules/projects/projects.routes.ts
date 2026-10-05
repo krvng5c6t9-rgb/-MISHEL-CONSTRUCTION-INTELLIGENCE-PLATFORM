@@ -52,7 +52,7 @@ projectsRouter.get('/:id', asyncHandler(async (req, res) => {
   res.json({ success: true, data: project ?? null });
 }));
 
-projectsRouter.post('/', asyncHandler(async (req, res) => {
+projectsRouter.post('/', authorize('projects', 'create'), asyncHandler(async (req, res) => {
   const body = projectCreateSchema.parse(req.body);
   const orgId = req.user!.org_id;
   const [created] = await query(`

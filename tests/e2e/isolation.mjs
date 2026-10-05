@@ -50,7 +50,8 @@ const writes = [
 ];
 for (const [label, m, path, body] of writes) {
   const r = await api(m, path, tb, body);
-  rec(`B cannot ${label}`, !r.ok, `HTTP ${r.status} ${JSON.stringify(r.body?.error ?? '').slice(0, 120)}`);
+  // Must be refused with a client error (4xx). A 500 means an unmapped server fault (F-07/CC-013).
+  rec(`B cannot ${label}`, !r.ok && r.status < 500, `HTTP ${r.status} ${JSON.stringify(r.body?.error ?? '').slice(0, 120)}`);
 }
 
 // Approval actions on A's approval instance from B.
@@ -58,6 +59,27 @@ const apprs = must(await api('GET', '/approvals', ta), 'A approvals');
 const anyA = apprs[0];
 const ra = await api('POST', `/approvals/${anyA.id}/actions`, tb, { action: 'rejected', comment: 'x-tenant' });
 rec('B cannot act on A approval instance', !ra.ok, `HTTP ${ra.status} ${JSON.stringify(ra.body?.error ?? '')}`);
+
+// Authorization inside one tenant: a role holding only projects.view must not create projects (F-06/CC-013).
+{
+  const role = must(await api('POST', '/roles', ta, { role_name: `ViewOnly ${chain.run}`, permissions: [{ module: 'projects', action: 'view', scope: 'all' }] }), 'view-only role');
+  const email = `viewonly.${chain.run}@test.local`;
+  must(await api('POST', '/users', ta, { role_id: role.id, full_name: 'View Only', email, password: 'Passw0rd!V' }), 'view-only user');
+  const tv = must(await api('POST', '/auth/login', null, { email, password: 'Passw0rd!V', org_id: 1 }), 'login view-only').token;
+  const list = await api('GET', '/projects', tv);
+  rec('view-only user can list projects', list.ok, `HTTP ${list.status}`);
+  const create = await api('POST', '/projects', tv, { project_code: `VO-${chain.run}`, project_name: 'should fail', currency_id: 1 });
+  rec('view-only user cannot create project', create.status === 403, `HTTP ${create.status}`);
+  const appr = await api('POST', '/approvals/1/actions', tv, { action: 'approved' });
+  rec('view-only user cannot act on approvals', appr.status === 403, `HTTP ${appr.status}`);
+}
+
+// Error hygiene: invalid input must be a 4xx without SQL/schema text.
+{
+  const bad = await api('GET', '/crm/leads/abc', ta);
+  const leak = /column|relation|syntax|bigint|select |insert /i.test(JSON.stringify(bad.body ?? ''));
+  rec('invalid id returns 4xx without SQL details', bad.status >= 400 && bad.status < 500 && !leak, `HTTP ${bad.status} ${JSON.stringify(bad.body?.error ?? '')}`);
+}
 
 // DB-level probe: organizations table (no RLS) as the application role under org 2 context.
 if (process.env.APP_PSQL_URL) {
