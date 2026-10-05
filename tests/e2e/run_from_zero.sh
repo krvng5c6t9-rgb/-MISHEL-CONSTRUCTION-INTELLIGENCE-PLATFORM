@@ -18,7 +18,8 @@ MIGRATION_DATABASE_URL="$OWNER_URL_BASE/$DB$Q" APP_DB_ROLE="$(node -e "console.l
 export DATABASE_URL="$APP_URL_BASE/$DB$Q" PORT="$PORT_" NODE_ENV=development ALLOW_MULTI_TENANT_BOOTSTRAP=true
 export JWT_SECRET="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
 export BOOTSTRAP_ADMIN_TOKEN="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
-node dist/server.js > "${TMPDIR:-/tmp}/erp_e2e_server_$RUN.log" 2>&1 &
+# F-13: run the API in a non-UTC zone (Egypt-first target) so date-handling defects surface in every run.
+TZ="${API_TZ:-Africa/Cairo}" node dist/server.js > "${TMPDIR:-/tmp}/erp_e2e_server_$RUN.log" 2>&1 &
 SERVER_PID=$!
 trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
 for _ in $(seq 1 30); do curl -sf "http://localhost:$PORT_/api/health" >/dev/null && break; sleep 0.5; done
@@ -33,3 +34,4 @@ APP_PSQL_URL="$APP_URL_BASE/$DB$Q" OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_doa_governance.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_tenant_onboarding.mjs
 RUN_ID="$RUN" node wave1_subcontract_ipc.mjs
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave2_notice_engine.mjs

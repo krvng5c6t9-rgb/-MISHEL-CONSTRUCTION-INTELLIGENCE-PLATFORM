@@ -1,0 +1,539 @@
+{
+  "suite": "wave2_notice_engine",
+  "run": "ne1",
+  "tag": "ne1",
+  "steps": [
+    {
+      "name": "rule without source reference refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "viewer cannot create rules",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: contracts.create\""
+    },
+    {
+      "name": "author enters 28-day notice-of-claim rule from contract (fixture)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "author cannot confirm own rule (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: a contract obligation rule must be confirmed by someone other than its author\""
+    },
+    {
+      "name": "confirmed rule period cannot be edited",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Confirmed obligation rule 1 is immutable (only retirement is allowed)\""
+    },
+    {
+      "name": "draft rule can still be edited",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "site records event aware 30 days ago with two applicable rules",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "28-day deadline computed by DB = aware + 28",
+      "outcome": "PASS",
+      "detail": "2026-10-03 vs 2026-10-03"
+    },
+    {
+      "name": "2-week deadline = aware + 14",
+      "outcome": "PASS",
+      "detail": "2026-09-19 vs 2026-09-19"
+    },
+    {
+      "name": "1-month deadline from 31 Jan = 28 Feb (calendar month arithmetic)",
+      "outcome": "PASS",
+      "detail": "2026-02-28"
+    },
+    {
+      "name": "unconfirmed rule cannot generate a notice",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Only confirmed obligation rules generate notices\""
+    },
+    {
+      "name": "same rule twice for one event refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint contract_notices_event_id_rule_id_key\""
+    },
+    {
+      "name": "awareness date in the future refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Awareness date cannot be in the future\""
+    },
+    {
+      "name": "awareness before occurrence refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint contract_events_check\""
+    },
+    {
+      "name": "register ordered by deadline with overdue flags",
+      "outcome": "PASS",
+      "detail": "3:2026-02-28:true:-219 2:2026-09-19:true:-16 1:2026-10-03:true:-2"
+    },
+    {
+      "name": "due_within_days=0 returns all deadlines up to today",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "issue without delivery proof refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "issue time in the future refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Issue time cannot be in the future\""
+    },
+    {
+      "name": "notice issued with proof dated 20 days ago (deadline 16 days ago)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "notice issued before its deadline is not late",
+      "outcome": "PASS",
+      "detail": "issued_at=2026-09-15T07:46:02.916Z deadline=2026-09-19"
+    },
+    {
+      "name": "overdue notice issued today",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "overdue notice recorded as issued_late=true (consequence is a human legal judgement)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "issued notice cannot be issued again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only open notices can be issued\""
+    },
+    {
+      "name": "acknowledgement recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "marking not-required needs contracts.approve",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: contracts.approve\""
+    },
+    {
+      "name": "approver marks month-end notice not required with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirmed rule can be retired",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DB: notice deadline immutable (owner role)",
+      "outcome": "PASS",
+      "detail": "ERROR:  Notice deadline and links are immutable"
+    },
+    {
+      "name": "DB: issued notice details immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Invalid notice transition acknowledged -> acknowledged"
+    },
+    {
+      "name": "DB: notices cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Contract notices cannot be deleted"
+    },
+    {
+      "name": "DB: contract events are append-only",
+      "outcome": "PASS",
+      "detail": "ERROR:  Contract events are append-only; record a new event to correct"
+    },
+    {
+      "name": "DB: confirmed rule cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Confirmed obligation rules cannot be deleted; retire them"
+    },
+    {
+      "name": "tenant B sees no tenant A notices",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot issue tenant A notice",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Notice not found\""
+    },
+    {
+      "name": "tenant B cannot add rules to tenant A contract",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Contract not found in this organization\""
+    },
+    {
+      "name": "tenant B cannot record events on tenant A contract",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Contract not found in this organization\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/rules",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/rules",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: contracts.create"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/1/confirm",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: a contract obligation rule must be confirmed by someone other than its author"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/1/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/2/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/3/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/contract-admin/rules/1",
+      "status": 422,
+      "ok": false,
+      "error": "Confirmed obligation rule 1 is immutable (only retirement is allowed)"
+    },
+    {
+      "method": "PATCH",
+      "path": "/contract-admin/rules/4",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/events/1/notices",
+      "status": 422,
+      "ok": false,
+      "error": "Only confirmed obligation rules generate notices"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/events/1/notices",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint contract_notices_event_id_rule_id_key"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/events",
+      "status": 422,
+      "ok": false,
+      "error": "Awareness date cannot be in the future"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/events",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint contract_events_check"
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/notices?status=open",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/notices?status=open&due_within_days=0",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/2/issue",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/2/issue",
+      "status": 422,
+      "ok": false,
+      "error": "Issue time cannot be in the future"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/2/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/1/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/1/issue",
+      "status": 409,
+      "ok": false,
+      "error": "Only open notices can be issued"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/1/acknowledge",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/3/not-required",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: contracts.approve"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/3/not-required",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/3/retire",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/notices",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/2/issue",
+      "status": 404,
+      "ok": false,
+      "error": "Notice not found"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/rules",
+      "status": 422,
+      "ok": false,
+      "error": "Contract not found in this organization"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/5/events",
+      "status": 422,
+      "ok": false,
+      "error": "Contract not found in this organization"
+    }
+  ]
+}

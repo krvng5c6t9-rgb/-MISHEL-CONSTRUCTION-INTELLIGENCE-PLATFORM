@@ -44,7 +44,7 @@ gc('GC-02', 'Award-to-Project', [
     ('Set control budget from estimate', 'Project controls', 'priced BOQ, risk allowance', 'budget baseline', 'budget = cost estimate + contingency; margin = contract - budget', 'SOD15-011 budget prep vs approval; DOA Budget', 'L2', 'SCHEMA', 'budgets table, no route', 'NDC-011'),
     ('Baseline programme and accepted-programme submission', 'Planner', 'tender programme, contract dates', 'baseline + submission', 'contract key dates enforced', 'none', 'L2', 'PARTIAL', 'planning baselines API; acceptance absent', 'NDC-010'),
     ('Create procurement packages and engineering registers', 'Procurement / technical office', 'BOQ, programme', 'packages, drawing/submittal registers', 'package need-date = activity start - lead time', 'none', 'L2 package plan', 'PARTIAL', 'MR/RFQ exist; package entity absent', ''),
-    ('Contract Data Pack and notice matrix activation', 'Contracts manager', 'contract', 'obligations, time-bar calendar', 'deadline per clause from Contract Data Pack', 'Commercial+Legal+PM sign-off', 'L2 extraction', 'ABSENT', 'contract_clauses stores text only', 'NDC-001'),
+    ('Contract Data Pack and notice matrix activation', 'Contracts manager', 'contract', 'obligations, time-bar calendar', 'deadline per clause from Contract Data Pack', 'author != confirmer (CC-021)', 'L2 extraction', 'PARTIAL', 'CC-021 rules+confirmation; clause library per form + AI extraction pending', 'NDC-001'),
     ('Mobilisation readiness gate', 'Project director', 'permits, insurances, bonds, staff', 'go/no-go', 'all mandatory items closed or risk-accepted', 'gate approver != preparer', 'L0 checklist', 'ABSENT', 'no gate entity', 'NDC-004'),
 ])
 gc('GC-05', 'BOQ/QTO/Estimate', [
@@ -97,14 +97,14 @@ gc('GC-14', 'Cost & Forecast', [
 ])
 gc('GC-15', 'Variation / Change', [
     ('Capture instruction/RFI/design change/event', 'Site/technical office', 'instruction, RFI, revision', 'change event', 'every instruction logged with date received', 'none', 'L1 classify as potential change', 'API', 'site-instructions, rfis routes', 'NDC-002'),
-    ('Notify within contractual period', 'Contracts manager', 'change event, Contract Data Pack', 'notice with proof of delivery', 'deadline from clause; internal approval never delays notice', 'none', 'L2 notice draft', 'ABSENT', 'no notice/time-bar engine', 'NDC-001'),
+    ('Notify within contractual period', 'Contracts manager', 'change event, Contract Data Pack', 'notice with proof of delivery', 'deadline from clause; internal approval never delays notice', 'rule author != confirmer (CC-021)', 'L2 notice draft', 'RUNTIME', 'CC-021 wave2_notice_engine 36/36', 'NDC-001'),
     ('Assess scope/qty/cost/time impact', 'QS + planner', 'event, BOQ, programme', 'impact assessment', 'rates from contract, else agreed method', 'none', 'L2', 'PARTIAL', 'variation_boq_lines', 'NDC-006'),
     ('Prepare and submit variation quotation', 'QS', 'assessment', 'variation submission', 'status instructed != submitted != agreed', 'SOD15-025', 'L2', 'API', 'variations + lines + submit-approval', ''),
     ('Negotiate and agree', 'Commercial manager / client', 'submission', 'agreed valuation', 'agreed value is external decision', 'DOA Variation; external', 'L1', 'API', 'variation approval (internal only)', ''),
     ('Update budget, programme, procurement, forecast', 'Project controls', 'agreed variation', 'revised baselines', 'budget change via controlled transfer', 'SOD15-013', 'L4 propagate', 'ABSENT', 'no propagation', ''),
 ])
 gc('GC-16', 'Claim / EOT Case', [
-    ('Notice of claim within time bar', 'Contracts manager', 'event', 'notice + proof', 'time bar from Contract Data Pack', 'none', 'L2', 'ABSENT', '', 'NDC-001'),
+    ('Notice of claim within time bar', 'Contracts manager', 'event', 'notice + proof', 'time bar from Contract Data Pack', 'rule author != confirmer', 'L2', 'RUNTIME', 'CC-021 wave2_notice_engine 36/36', 'NDC-001'),
     ('Build chronology from contemporaneous records', 'Claims analyst', 'diaries, correspondence, RFIs', 'chronology', 'every entry links to source record', 'none', 'L2 chronology draft with citations', 'PARTIAL', 'contract_claims table + claims API', 'NDC-014'),
     ('Contractual entitlement analysis', 'Contracts manager / legal', 'contract, chronology', 'entitlement position', 'clause references; human legal authority', 'L5 legal opinion external', 'L1', 'ABSENT', '', 'NDC-006'),
     ('Delay analysis against accepted programme', 'Planning expert', 'accepted programme, updates', 'delay analysis', 'method chosen and justified; uses accepted programme', 'none', 'L2', 'ABSENT', 'STEP18 non-claim', 'NDC-006,NDC-010'),

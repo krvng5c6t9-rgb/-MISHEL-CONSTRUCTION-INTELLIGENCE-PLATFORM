@@ -12,6 +12,11 @@ pg.types.setTypeParser(20, (value: string) => {
   return n;
 });
 
+// F-13: PostgreSQL DATE (oid 1082) is a calendar date with no time zone. node-pg's default turns it into a
+// JS Date at *server-local* midnight, so on a server running in Africa/Cairo '2026-10-03' was returned as
+// "2026-10-02T21:00:00.000Z" (one day early - fatal for contractual time bars). Keep it as 'YYYY-MM-DD'.
+pg.types.setTypeParser(1082, (value: string) => value);
+
 export const pool = new pg.Pool({
   connectionString: env.DATABASE_URL,
   max: 10,
