@@ -8,8 +8,10 @@ DECLARE
 BEGIN
   FOR r IN
     SELECT table_schema, table_name
-    FROM information_schema.columns
-    WHERE column_name = 'org_id'
+    FROM information_schema.columns c
+    JOIN information_schema.tables t USING (table_schema, table_name)
+    WHERE c.column_name = 'org_id'
+      AND t.table_type = 'BASE TABLE'
       AND table_schema = 'public'
       AND table_name <> 'organizations'
     GROUP BY table_schema, table_name

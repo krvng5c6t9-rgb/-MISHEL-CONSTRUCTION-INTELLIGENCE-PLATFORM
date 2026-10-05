@@ -1,4 +1,4 @@
-BEGIN;
+-- (transaction managed by migrator)
 
 -- AI Platform Core: tenant-scoped registries and runtime evidence.
 CREATE TABLE IF NOT EXISTS ai_models (
@@ -193,4 +193,4 @@ SELECT r.id,r.org_id,'ai_platform','manage','all' FROM roles r
 WHERE r.is_system_role=true
 AND NOT EXISTS (SELECT 1 FROM permissions p WHERE p.role_id=r.id AND p.module='ai_platform' AND p.action='manage');
 
-COMMIT;
+-- (transaction managed by migrator)

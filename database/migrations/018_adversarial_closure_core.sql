@@ -1,4 +1,4 @@
-BEGIN;
+-- (transaction managed by migrator)
 
 -- Inventory / warehouse control
 CREATE TABLE IF NOT EXISTS warehouses (
@@ -67,4 +67,4 @@ DO $$ DECLARE t text; BEGIN
    EXECUTE format('CREATE POLICY tenant_isolation_write ON %I FOR ALL USING (org_id = NULLIF(current_setting(''app.org_id'',true),'''')::bigint) WITH CHECK (org_id = NULLIF(current_setting(''app.org_id'',true),'''')::bigint)',t);
  END LOOP;
 END $$;
-COMMIT;
+-- (transaction managed by migrator)

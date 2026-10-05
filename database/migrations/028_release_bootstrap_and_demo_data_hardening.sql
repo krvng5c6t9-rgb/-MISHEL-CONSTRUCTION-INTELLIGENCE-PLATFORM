@@ -1,4 +1,4 @@
-BEGIN;
+-- (transaction managed by migrator)
 
 -- If the untouched Phase-1 placeholder organization still exists, neutralize its guessed identity.
 -- Do not overwrite organizations that have already been configured by an operator.
@@ -17,6 +17,6 @@ WHERE id = 1
 DELETE FROM users u
 WHERE lower(u.email) = 'mishel@example.com'
   AND u.password_hash = 'CHANGE_ME_HASH'
-  AND NOT EXISTS (SELECT 1 FROM audit_log a WHERE a.actor_user_id = u.id);
+  AND NOT EXISTS (SELECT 1 FROM audit_log a WHERE a.user_id = u.id);
 
-COMMIT;
+-- (transaction managed by migrator)

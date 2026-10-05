@@ -1,4 +1,4 @@
-BEGIN;
+-- (transaction managed by migrator)
 
 -- Commercial SaaS productization core
 CREATE TABLE IF NOT EXISTS feature_catalog (
@@ -296,4 +296,4 @@ SELECT r.id,r.org_id,'knowledge','manage','all' FROM roles r
 WHERE r.is_system_role=true
 AND NOT EXISTS (SELECT 1 FROM permissions p WHERE p.role_id=r.id AND p.module='knowledge' AND p.action='manage');
 
-COMMIT;
+-- (transaction managed by migrator)

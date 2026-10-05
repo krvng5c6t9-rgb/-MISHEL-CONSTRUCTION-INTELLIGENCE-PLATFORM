@@ -1,4 +1,4 @@
-BEGIN;
+-- (transaction managed by migrator)
 
 ALTER TABLE contract_claims
   ADD COLUMN IF NOT EXISTS determined_by BIGINT REFERENCES users(id),
@@ -30,4 +30,4 @@ DROP TRIGGER IF EXISTS trg_contract_claim_sod ON contract_claims;
 CREATE TRIGGER trg_contract_claim_sod BEFORE INSERT OR UPDATE ON contract_claims
 FOR EACH ROW EXECUTE FUNCTION enforce_contract_claim_sod();
 
-COMMIT;
+-- (transaction managed by migrator)

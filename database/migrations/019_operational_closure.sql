@@ -1,8 +1,8 @@
-BEGIN;
+-- (transaction managed by migrator)
 
 -- Direct tenant ownership for commercial master/live BOQ tables that previously relied on parent joins.
 ALTER TABLE resource_library ADD COLUMN IF NOT EXISTS org_id BIGINT REFERENCES organizations(id);
-UPDATE resource_library r SET org_id=COALESCE((SELECT min(org_id) FROM organizations),1) WHERE org_id IS NULL;
+UPDATE resource_library r SET org_id=COALESCE((SELECT min(id) FROM organizations),1) WHERE org_id IS NULL;
 ALTER TABLE resource_library ALTER COLUMN org_id SET DEFAULT NULLIF(current_setting('app.org_id',true),'')::bigint;
 ALTER TABLE resource_library ALTER COLUMN org_id SET NOT NULL;
 ALTER TABLE project_boq ADD COLUMN IF NOT EXISTS org_id BIGINT REFERENCES organizations(id);
@@ -41,4 +41,4 @@ DO $$ DECLARE t text; BEGIN
  END LOOP;
 END $$;
 INSERT INTO permissions(role_id,module,action,scope) SELECT r.id,'cost_control','manage','all' FROM roles r WHERE r.is_system_role=true AND NOT EXISTS (SELECT 1 FROM permissions p WHERE p.role_id=r.id AND p.module='cost_control' AND p.action='manage');
-COMMIT;
+-- (transaction managed by migrator)

@@ -1,4 +1,4 @@
-BEGIN;
+-- (transaction managed by migrator)
 
 -- REV12 — Subcontract certificate maker/site-verifier/QS-certifier segregation.
 ALTER TABLE subcontract_certificates
@@ -54,4 +54,4 @@ CREATE TRIGGER trg_subcontract_certificate_sod
 BEFORE UPDATE OF status, created_by, site_verified_by, qs_certified_by ON subcontract_certificates
 FOR EACH ROW EXECUTE FUNCTION guard_subcontract_certificate_sod();
 
-COMMIT;
+-- (transaction managed by migrator)

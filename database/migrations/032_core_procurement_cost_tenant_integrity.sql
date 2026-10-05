@@ -1,4 +1,4 @@
-BEGIN;
+-- (transaction managed by migrator)
 
 -- Final pre-run tenant hardening for core relationship-owned tables that historically
 -- relied on joins to tenant-owned parents. Every live operational row now owns org_id.
@@ -156,4 +156,4 @@ BEGIN
   END LOOP;
 END $$;
 
-COMMIT;
+-- (transaction managed by migrator)

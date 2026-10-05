@@ -17,6 +17,7 @@ DO $$
 DECLARE r RECORD;
 BEGIN
   FOR r IN SELECT c.table_schema,c.table_name FROM information_schema.columns c
+           JOIN information_schema.tables t ON t.table_schema=c.table_schema AND t.table_name=c.table_name AND t.table_type='BASE TABLE'
            WHERE c.table_schema='public' AND c.column_name='org_id'
              AND c.table_name NOT IN ('audit_log','organizations','notifications','system_settings')
            GROUP BY c.table_schema,c.table_name

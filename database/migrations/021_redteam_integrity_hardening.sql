@@ -1,4 +1,4 @@
-BEGIN;
+-- (transaction managed by migrator)
 
 -- Fiscal periods must not overlap within one organization.
 CREATE OR REPLACE FUNCTION guard_fiscal_period_overlap() RETURNS trigger LANGUAGE plpgsql AS $$
@@ -53,4 +53,4 @@ DROP TRIGGER IF EXISTS trg_guard_confirmed_doa_overlap ON delegation_of_authorit
 CREATE TRIGGER trg_guard_confirmed_doa_overlap BEFORE INSERT OR UPDATE ON delegation_of_authority
 FOR EACH ROW EXECUTE FUNCTION guard_confirmed_doa_overlap();
 
-COMMIT;
+-- (transaction managed by migrator)

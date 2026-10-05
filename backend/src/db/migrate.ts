@@ -5,7 +5,40 @@ import pg from 'pg';
 import { env } from '../config/env.js';
 
 const migrationsDir = path.resolve(process.env.MIGRATIONS_DIR ?? '../database/migrations');
-const client = new pg.Client({ connectionString: env.DATABASE_URL });
+// Migrations run as a dedicated owner role; the application should use a separate
+// least-privilege role (APP_DB_ROLE) so that forced row-level security applies to it.
+const client = new pg.Client({ connectionString: process.env.MIGRATION_DATABASE_URL ?? env.DATABASE_URL });
+const appRole = process.env.APP_DB_ROLE;
+
+async function assertMigratorCanSeeAllRows() {
+  // Tables use FORCE ROW LEVEL SECURITY; a migrator without BYPASSRLS sees zero rows in
+  // tenant tables, so data backfills and cleanups would silently do nothing.
+  const { rows } = await client.query<{ ok: boolean }>(
+    'select (rolsuper or rolbypassrls) as ok from pg_roles where rolname = current_user'
+  );
+  if (!rows[0]?.ok) {
+    throw new Error('Migration role must have BYPASSRLS (or be superuser); otherwise data migrations silently skip tenant rows.');
+  }
+}
+
+async function grantAppRole(role: string) {
+  if (!/^[a-z_][a-z0-9_]*$/.test(role)) throw new Error(`Invalid APP_DB_ROLE: ${role}`);
+  const { rows } = await client.query<{ rolsuper: boolean; rolbypassrls: boolean }>(
+    'select rolsuper, rolbypassrls from pg_roles where rolname = $1', [role]
+  );
+  if (!rows[0]) throw new Error(`APP_DB_ROLE ${role} does not exist`);
+  if (rows[0].rolsuper || rows[0].rolbypassrls) throw new Error(`APP_DB_ROLE ${role} must not be superuser or BYPASSRLS`);
+  for (const stmt of [
+    `grant usage on schema public to ${role}`,
+    `grant select, insert, update, delete on all tables in schema public to ${role}`,
+    `grant usage, select on all sequences in schema public to ${role}`,
+    `grant execute on all functions in schema public to ${role}`,
+    `alter default privileges in schema public grant select, insert, update, delete on tables to ${role}`,
+    `alter default privileges in schema public grant usage, select on sequences to ${role}`,
+    `alter default privileges in schema public grant execute on functions to ${role}`
+  ]) await client.query(stmt);
+  process.stdout.write(`GRANTED ${role}\n`);
+}
 
 function checksum(sql: string) {
   return crypto.createHash('sha256').update(sql).digest('hex');
@@ -14,6 +47,7 @@ function checksum(sql: string) {
 async function main() {
   await client.connect();
   try {
+    await assertMigratorCanSeeAllRows();
     await client.query(`
       create table if not exists schema_migrations (
         filename text primary key,
@@ -67,6 +101,7 @@ async function main() {
       }
     }
 
+    if (appRole) await grantAppRole(appRole);
     process.stdout.write(`MIGRATIONS_OK ${files.length}\n`);
   } finally {
     await client.end();
