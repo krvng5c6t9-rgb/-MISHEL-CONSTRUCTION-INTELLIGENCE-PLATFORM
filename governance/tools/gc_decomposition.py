@@ -139,17 +139,17 @@ gc('GC-07', 'Site Daily Control', [
     ('Sign off and freeze daily report', 'Site manager', 'diary', 'immutable report', 'corrections as amendments', 'signer != preparer (CC-023)', 'L0', 'RUNTIME', 'CC-023 wave2_daily_record_changes 29/29', 'NDC-014'),
 ])
 gc('GC-08', 'QA/QC Inspection', [
-    ('Raise inspection request with references', 'Site engineer', 'ITP, drawing rev', 'IR', 'only current revision referenced', 'SOD15-055', 'L0', 'API', 'qaqc inspections', ''),
+    ('Raise inspection request with references', 'Site engineer', 'ITP, drawing rev', 'IR', 'only current revision referenced', 'SOD15-055 requester != result recorder (CC-026)', 'L0', 'RUNTIME', 'CC-026 sweep_quality_hse 20/20', ''),
     ('Inspect/test with accredited lab where needed', 'QC inspector', 'IR, lab results', 'results', 'lab within accredited scope', 'SOD15-055', 'L0', 'PARTIAL', 'no lab register', 'NDC-015'),
-    ('Accept / reject / raise NCR', 'QC inspector', 'results', 'status, NCR', 'hold point blocks progression', 'SOD15-057', 'L1', 'API', 'ncrs routes', ''),
-    ('Corrective action and verification', 'QC manager', 'NCR', 'closed NCR', 'closure by someone other than raiser', 'SOD15-057', 'L1 root-cause suggestion', 'API', 'ncr close', 'NDC-026'),
+    ('Accept / reject / raise NCR', 'QC inspector', 'results', 'status, NCR', 'result immutable once recorded', 'SOD15-057', 'L1', 'RUNTIME', 'CC-026 suite', ''),
+    ('Corrective action and verification', 'QC manager', 'NCR', 'closed NCR', 'closure by someone other than raiser', 'SOD15-057', 'L1 root-cause suggestion', 'RUNTIME', 'CC-026 suite', 'NDC-026'),
     ('Consequences to progress/payment/handover', 'QS', 'NCR status', 'blocked quantities', 'open NCR blocks payment of affected qty (configurable)', 'none', 'L4', 'ABSENT', '', 'NDC-012'),
 ])
 gc('GC-09', 'HSE Control', [
     ('Hazard identification and risk assessment', 'HSE engineer', 'method statement, activity', 'risk assessment / JSA', 'workers consulted (ISO 45001)', 'none', 'L2 hazard suggestions', 'PARTIAL', 'method statements; no JSA', 'NDC-016'),
-    ('Permit to work', 'Permit issuer', 'JSA, competencies', 'active permit', 'issuer != receiver; competencies valid on date', 'issuer != receiver', 'L0', 'API', 'permits approve/activate/close/expire', 'NDC-005'),
+    ('Permit to work', 'Permit issuer', 'JSA, competencies', 'active permit', 'issuer != receiver; not activatable after expiry; competencies valid on date (pending NDC-005)', 'issuer != receiver', 'L0', 'RUNTIME', 'CC-026 suite (competency link absent)', 'NDC-005'),
     ('Inspections, observations, toolbox talks', 'HSE officer', 'site', 'records', 'none', 'none', 'L1', 'API', 'toolbox-talks', ''),
-    ('Incident report and investigation', 'HSE manager', 'incident', 'investigation, actions', 'sensitive data restricted; regulator notification flag', 'none', 'L1', 'API', 'incidents + close', ''),
+    ('Incident report and investigation', 'HSE manager', 'incident', 'investigation, actions', 'sensitive data restricted; regulator notification flag', 'reporter != closer', 'L1', 'RUNTIME', 'CC-026 suite (restriction/notification flags absent)', ''),
     ('Stop-work and near-miss without retaliation', 'Any worker', 'hazard', 'stop-work record', 'anonymous option', 'none', 'L0', 'ABSENT', '', 'NDC-016'),
 ])
 gc('GC-10', 'Weekly/Monthly Project Report', [

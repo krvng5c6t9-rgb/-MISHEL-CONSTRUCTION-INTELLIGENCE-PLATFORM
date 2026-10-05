@@ -1,0 +1,134 @@
+{
+  "suite": "sweep_quality_hse",
+  "run": "qh2",
+  "tag": "qh2",
+  "steps": [
+    {
+      "name": "QA1 requests an inspection",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "requester cannot record the result of own inspection (SoD)",
+      "outcome": "FAIL",
+      "detail": "HTTP 422 \"Value violates check constraint chk_inspection_date_if_closed\""
+    },
+    {
+      "name": "independent inspector records PASSED",
+      "outcome": "FAIL",
+      "detail": "pass failed: HTTP 422 {\"success\":false,\"error\":\"Value violates check constraint chk_inspection_date_if_closed\",\"code\":\"23514\"}"
+    },
+    {
+      "name": "suite completed",
+      "outcome": "FAIL",
+      "detail": "pass failed: HTTP 422 {\"success\":false,\"error\":\"Value violates check constraint chk_inspection_date_if_closed\",\"code\":\"23514\"}"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/qaqc/inspections",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/inspections/1/status",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint chk_inspection_date_if_closed"
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/inspections/1/status",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint chk_inspection_date_if_closed"
+    }
+  ]
+}

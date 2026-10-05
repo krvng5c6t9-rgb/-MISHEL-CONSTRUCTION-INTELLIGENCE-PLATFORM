@@ -1,0 +1,361 @@
+{
+  "suite": "sweep_quality_hse",
+  "run": "qh5",
+  "tag": "qh5",
+  "steps": [
+    {
+      "name": "QA1 requests an inspection",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "requester cannot record the result of own inspection (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the inspection result must be recorded by someone other than the requester\""
+    },
+    {
+      "name": "independent inspector records PASSED",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a recorded inspection result cannot be changed (passed -> failed)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Inspection 1 result is recorded and cannot be changed; raise an NCR or a new inspection\""
+    },
+    {
+      "name": "result cannot be reset to pending",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Inspection 1 result is recorded and cannot be changed; raise an NCR or a new inspection\""
+    },
+    {
+      "name": "QA1 raises NCR",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NCR raiser cannot close it (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"NCR cannot be closed: it may be missing, already closed, cross-tenant, or raised by the same user\""
+    },
+    {
+      "name": "independent QA closes NCR with root cause and action",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closed NCR cannot be closed again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"NCR cannot be closed: it may be missing, already closed, cross-tenant, or raised by the same user\""
+    },
+    {
+      "name": "permit expiring before it is issued refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint chk_permit_dates\""
+    },
+    {
+      "name": "H1 requests a hot-work permit valid today",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "requester cannot approve own permit (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"PTW cannot be approved: invalid state, missing permit, cross-tenant, or requester is the approver\""
+    },
+    {
+      "name": "H2 approves",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "H2 activates",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a permit past its expiry date cannot be activated",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Permit 3 expired on 2026-10-03 and cannot be activated\""
+    },
+    {
+      "name": "expired permit can be marked expired",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "incident reporter cannot close it (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Incident cannot be closed: it may be missing, already closed, cross-tenant, or reported by the same user\""
+    },
+    {
+      "name": "independent HSE closes incident",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot record result on tenant A inspection",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Inspection not found\""
+    },
+    {
+      "name": "tenant B cannot approve tenant A permit",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"PTW cannot be approved: invalid state, missing permit, cross-tenant, or requester is the approver\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/qaqc/inspections",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/inspections/1/status",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the inspection result must be recorded by someone other than the requester"
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/inspections/1/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/inspections/1/status",
+      "status": 422,
+      "ok": false,
+      "error": "Inspection 1 result is recorded and cannot be changed; raise an NCR or a new inspection"
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/inspections/1/status",
+      "status": 422,
+      "ok": false,
+      "error": "Inspection 1 result is recorded and cannot be changed; raise an NCR or a new inspection"
+    },
+    {
+      "method": "POST",
+      "path": "/qaqc/ncrs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/ncrs/1/close",
+      "status": 409,
+      "ok": false,
+      "error": "NCR cannot be closed: it may be missing, already closed, cross-tenant, or raised by the same user"
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/ncrs/1/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/ncrs/1/close",
+      "status": 409,
+      "ok": false,
+      "error": "NCR cannot be closed: it may be missing, already closed, cross-tenant, or raised by the same user"
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint chk_permit_dates"
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits/2/approve",
+      "status": 409,
+      "ok": false,
+      "error": "PTW cannot be approved: invalid state, missing permit, cross-tenant, or requester is the approver"
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits/2/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits/2/activate",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits/3/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits/3/activate",
+      "status": 422,
+      "ok": false,
+      "error": "Permit 3 expired on 2026-10-03 and cannot be activated"
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits/3/expire",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hse/incidents",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hse/incidents/1/close",
+      "status": 409,
+      "ok": false,
+      "error": "Incident cannot be closed: it may be missing, already closed, cross-tenant, or reported by the same user"
+    },
+    {
+      "method": "PATCH",
+      "path": "/hse/incidents/1/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/qaqc/inspections/1/status",
+      "status": 404,
+      "ok": false,
+      "error": "Inspection not found"
+    },
+    {
+      "method": "POST",
+      "path": "/hse/permits/3/approve",
+      "status": 409,
+      "ok": false,
+      "error": "PTW cannot be approved: invalid state, missing permit, cross-tenant, or requester is the approver"
+    }
+  ]
+}

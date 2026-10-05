@@ -16,13 +16,18 @@ qaqcRouter.get('/inspections', asyncHandler(async (req, res) => {
 
 qaqcRouter.post('/inspections', authorize('qaqc', 'create'), asyncHandler(async (req, res) => {
   const b = z.object({ project_id: z.number().int().positive(), checklist_type: z.string().min(1).max(100), activity_ref: z.number().int().positive().optional(), inspection_date: z.string().optional() }).parse(req.body);
-  const [created] = await query(`insert into inspection_checklists (project_id, checklist_type, activity_ref, inspected_by, inspection_date) values ($1,$2,$3,$4,$5) returning *`, [b.project_id, b.checklist_type, b.activity_ref ?? null, req.user!.id, b.inspection_date ?? null]);
+  const [created] = await query(`insert into inspection_checklists (project_id, checklist_type, activity_ref, requested_by, inspection_date) values ($1,$2,$3,$4,$5) returning *`, [b.project_id, b.checklist_type, b.activity_ref ?? null, req.user!.id, b.inspection_date ?? null]);
   res.status(201).json({ success: true, data: created });
 }));
 
 qaqcRouter.patch('/inspections/:id/status', authorize('qaqc', 'edit'), asyncHandler(async (req, res) => {
   const b = z.object({ status: z.enum(['pending','passed','failed']), inspection_date: z.string().optional() }).parse(req.body);
-  const [updated] = await query(`update inspection_checklists set status=$2, inspection_date=coalesce($3::date, inspection_date) where id=$1 returning *`, [Number(req.params.id), b.status, b.inspection_date ?? null]);
+  const inspId = Number(req.params.id);
+  if (!Number.isSafeInteger(inspId) || inspId <= 0) throw new AppError(400, 'Invalid inspection id');
+  const current = (await query<any>(`select requested_by, status from inspection_checklists where id=$1`, [inspId]))[0];
+  if (!current) throw new AppError(404, 'Inspection not found');
+  if (current.status === 'pending' && b.status !== 'pending' && Number(current.requested_by) === req.user!.id) throw new AppError(403, 'Segregation of duties: the inspection result must be recorded by someone other than the requester');
+  const [updated] = await query(`update inspection_checklists set status=$2::varchar, inspection_date=coalesce($3::date, inspection_date), inspected_by=case when status='pending' and $2::varchar<>'pending' then $4::bigint else inspected_by end where id=$1 returning *`, [inspId, b.status, b.inspection_date ?? null, req.user!.id]);
   res.json({ success: true, data: updated ?? null });
 }));
 

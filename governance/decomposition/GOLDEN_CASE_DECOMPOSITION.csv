@@ -47,15 +47,15 @@ GC-07,Site Daily Control,1,"Record manpower, equipment, weather, work fronts",Si
 GC-07,Site Daily Control,2,Record quantities and progress,Site engineer,measurements,"quantity sheets, progress",qty linked to BOQ/activity,checker != measurer,L2,API,quantity-sheets; planning progress,NDC-012,T-GC-07-02
 GC-07,Site Daily Control,3,"Record instructions, constraints, issues",Site engineer,events,instructions/constraints,impact flag creates a contract event for commercial review,none,L1 impact flag,RUNTIME,CC-023 impact -> contract event,NDC-014,T-GC-07-03
 GC-07,Site Daily Control,4,Sign off and freeze daily report,Site manager,diary,immutable report,corrections as amendments,signer != preparer (CC-023),L0,RUNTIME,CC-023 wave2_daily_record_changes 29/29,NDC-014,T-GC-07-04
-GC-08,QA/QC Inspection,1,Raise inspection request with references,Site engineer,"ITP, drawing rev",IR,only current revision referenced,SOD15-055,L0,API,qaqc inspections,,T-GC-08-01
+GC-08,QA/QC Inspection,1,Raise inspection request with references,Site engineer,"ITP, drawing rev",IR,only current revision referenced,SOD15-055 requester != result recorder (CC-026),L0,RUNTIME,CC-026 sweep_quality_hse 20/20,,T-GC-08-01
 GC-08,QA/QC Inspection,2,Inspect/test with accredited lab where needed,QC inspector,"IR, lab results",results,lab within accredited scope,SOD15-055,L0,PARTIAL,no lab register,NDC-015,T-GC-08-02
-GC-08,QA/QC Inspection,3,Accept / reject / raise NCR,QC inspector,results,"status, NCR",hold point blocks progression,SOD15-057,L1,API,ncrs routes,,T-GC-08-03
-GC-08,QA/QC Inspection,4,Corrective action and verification,QC manager,NCR,closed NCR,closure by someone other than raiser,SOD15-057,L1 root-cause suggestion,API,ncr close,NDC-026,T-GC-08-04
+GC-08,QA/QC Inspection,3,Accept / reject / raise NCR,QC inspector,results,"status, NCR",result immutable once recorded,SOD15-057,L1,RUNTIME,CC-026 suite,,T-GC-08-03
+GC-08,QA/QC Inspection,4,Corrective action and verification,QC manager,NCR,closed NCR,closure by someone other than raiser,SOD15-057,L1 root-cause suggestion,RUNTIME,CC-026 suite,NDC-026,T-GC-08-04
 GC-08,QA/QC Inspection,5,Consequences to progress/payment/handover,QS,NCR status,blocked quantities,open NCR blocks payment of affected qty (configurable),none,L4,ABSENT,,NDC-012,T-GC-08-05
 GC-09,HSE Control,1,Hazard identification and risk assessment,HSE engineer,"method statement, activity",risk assessment / JSA,workers consulted (ISO 45001),none,L2 hazard suggestions,PARTIAL,method statements; no JSA,NDC-016,T-GC-09-01
-GC-09,HSE Control,2,Permit to work,Permit issuer,"JSA, competencies",active permit,issuer != receiver; competencies valid on date,issuer != receiver,L0,API,permits approve/activate/close/expire,NDC-005,T-GC-09-02
+GC-09,HSE Control,2,Permit to work,Permit issuer,"JSA, competencies",active permit,issuer != receiver; not activatable after expiry; competencies valid on date (pending NDC-005),issuer != receiver,L0,RUNTIME,CC-026 suite (competency link absent),NDC-005,T-GC-09-02
 GC-09,HSE Control,3,"Inspections, observations, toolbox talks",HSE officer,site,records,none,none,L1,API,toolbox-talks,,T-GC-09-03
-GC-09,HSE Control,4,Incident report and investigation,HSE manager,incident,"investigation, actions",sensitive data restricted; regulator notification flag,none,L1,API,incidents + close,,T-GC-09-04
+GC-09,HSE Control,4,Incident report and investigation,HSE manager,incident,"investigation, actions",sensitive data restricted; regulator notification flag,reporter != closer,L1,RUNTIME,CC-026 suite (restriction/notification flags absent),,T-GC-09-04
 GC-09,HSE Control,5,Stop-work and near-miss without retaliation,Any worker,hazard,stop-work record,anonymous option,none,L0,ABSENT,,NDC-016,T-GC-09-05
 GC-10,Weekly/Monthly Project Report,1,Freeze data-as-of,Project controls,all modules,snapshot,snapshot immutable,none,L4,ABSENT,reports are live queries,,T-GC-10-01
 GC-10,Weekly/Monthly Project Report,2,Reconcile across modules,Project controls,snapshot,exceptions,cost vs GL vs progress reconciled,none,L2,ABSENT,,NDC-011,T-GC-10-02
