@@ -26,9 +26,6 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: postgresql://erp_user:${POSTGRES_PASSWORD}@postgres:5432/construction_erp
-      JWT_SECRET: ${JWT_SECRET}
-      BOOTSTRAP_ADMIN_TOKEN: ${BOOTSTRAP_ADMIN_TOKEN}
-      CORS_ORIGIN: http://localhost:5173
       MIGRATIONS_DIR: /app/database/migrations
       APP_DB_ROLE: erp_app
     depends_on:

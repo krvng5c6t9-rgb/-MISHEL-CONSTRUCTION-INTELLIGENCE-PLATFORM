@@ -4,7 +4,7 @@
 |---|---|
 | Git repository | `krvng5c6t9-rgb/-MISHEL-CONSTRUCTION-INTELLIGENCE-PLATFORM` |
 | Git branch | `claude/read-file-dsz1qx` |
-| Code/test state commit | `eac1f88` (R0 complete; CC-001 → CC-011). The snapshot commit that adds this file, the owner directives and the baseline pack is recorded in `SNAPSHOT_COMMIT.txt` inside the archive |
+| Git commit | Exact snapshot commit SHA is in `SNAPSHOT_COMMIT.txt` inside the archive (this file cannot contain the SHA of the commit that adds it). R0 suites were last executed on that exact code (see archive verification below) |
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 (docker-compose specifies 17: **PG 17 is UNVERIFIED**) |
@@ -22,7 +22,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-011
+## Controlled Changes CC-001 → CC-012
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -36,6 +36,7 @@
 | CC-009 | Migration 037: RLS on `organizations` |
 | CC-010 | docker-compose: backend runs as non-superuser `erp_app` |
 | CC-011 | Check script / frontend lint alignment |
+| CC-012 | Migrator needs only DB settings (found by verifying this snapshot from zero) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)

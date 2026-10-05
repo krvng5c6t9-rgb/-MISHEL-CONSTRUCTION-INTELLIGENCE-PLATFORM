@@ -2,12 +2,18 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import pg from 'pg';
-import { env } from '../config/env.js';
+import dotenv from 'dotenv';
+
+// CC-012: the migrator needs only database settings; importing the API env schema made it
+// demand JWT_SECRET/BOOTSTRAP_ADMIN_TOKEN, which a migration job should never hold.
+dotenv.config();
 
 const migrationsDir = path.resolve(process.env.MIGRATIONS_DIR ?? '../database/migrations');
 // Migrations run as a dedicated owner role; the application should use a separate
 // least-privilege role (APP_DB_ROLE) so that forced row-level security applies to it.
-const client = new pg.Client({ connectionString: process.env.MIGRATION_DATABASE_URL ?? env.DATABASE_URL });
+const connectionString = process.env.MIGRATION_DATABASE_URL ?? process.env.DATABASE_URL;
+if (!connectionString) throw new Error('MIGRATION_DATABASE_URL or DATABASE_URL is required');
+const client = new pg.Client({ connectionString });
 const appRole = process.env.APP_DB_ROLE;
 
 async function assertMigratorCanSeeAllRows() {

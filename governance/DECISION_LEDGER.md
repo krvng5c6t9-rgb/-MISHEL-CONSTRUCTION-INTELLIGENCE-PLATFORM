@@ -21,6 +21,7 @@ Evidence grades: E1 = executed at runtime with captured log; E2 = executed stati
 | CC-009 | Migration 037: RLS on `organizations` (own row; bootstrap mode keeps access) | App role under org 2 saw other orgs' legal name/tax id → 0 rows (E1) | Column-level grants | Only tenant-bearing table without RLS | Tenant data isolation complete at DB level | Drop policy, disable RLS |
 | CC-010 | Compose: `erp_app` role via `database/docker-init/01_app_role.sh`, backend uses it, migrator grants via `APP_DB_ROLE`; new required `APP_DB_PASSWORD` | Shipped compose ran the API as superuser (RLS bypassed). `docker compose config` OK; init SQL executed on PG 16 (E2). Full compose run **UNVERIFIED** (no Docker daemon) | Separate migrator user | CC-003 guard would otherwise (correctly) stop the production backend | Production deployment enforces RLS | Revert compose + script |
 | CC-011 | Check-script/tooling alignment: `redteam-rev5-check` expects the CC-003 form of 020; frontend `lint` = `tsc -p tsconfig.json` | rev5 FAIL → PASS; `tsc -b --noEmit` was invalid (TS5094) → OK (E1) | — | Checks must reflect corrected code | — | Revert lines |
+| CC-012 | Migrator reads only DB settings (no API env schema); compose migrator no longer receives JWT/bootstrap secrets | Snapshot from-zero verification: migrator aborted `JWT_SECRET Required` without app secrets → runs with DB URLs only (E1) | Document the extra env vars | A migration job must not need or hold API secrets (least privilege) | Simpler, safer deployment | Revert migrate.ts import |
 
 ## 2. Autonomous decisions (§28)
 
