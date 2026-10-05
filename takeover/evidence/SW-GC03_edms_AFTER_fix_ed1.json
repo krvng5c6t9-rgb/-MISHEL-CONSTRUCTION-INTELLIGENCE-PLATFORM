@@ -1,0 +1,381 @@
+{
+  "suite": "sweep_edms",
+  "run": "ed1",
+  "tag": "ed1",
+  "steps": [
+    {
+      "name": "engineer A registers drawing DWG-001 rev A",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "duplicate document number in the same project refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint uq_documents_project_doc_number\""
+    },
+    {
+      "name": "review of a document not submitted refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Document is not awaiting approval\""
+    },
+    {
+      "name": "revision while under review refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Cannot revise a document while it is under approval\""
+    },
+    {
+      "name": "maker cannot approve own document (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Maker cannot approve/reject own document\""
+    },
+    {
+      "name": "rejection without a reason refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "reviewer B approves rev A",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "document approved",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approval recorded on version 1 with reviewer and time",
+      "outcome": "PASS",
+      "detail": "{\"id\":1,\"org_id\":1,\"document_id\":1,\"project_id\":16,\"version_no\":1,\"revision\":\"A\",\"file_name\":\"DWG-001-ed1.pdf\",\"storage_key\":\"s3://fixture/DWG-001-ed1/1\",\"mime_type\":null,\"file_size_bytes\":null,\"sha25"
+    },
+    {
+      "name": "missing document returns 404 (not 500)",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Document not found\""
+    },
+    {
+      "name": "maker cannot issue own transmittal (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Maker cannot issue own transmittal\""
+    },
+    {
+      "name": "superseded revision cannot be issued for construction",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Document DWG-001-ed1 version 1 (rev A) is not an approved current revision and cannot be issued for construction\""
+    },
+    {
+      "name": "unapproved drawing cannot be issued for construction",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Document DWG-002-ed1 version 1 (rev A) is not an approved current revision and cannot be issued for construction\""
+    },
+    {
+      "name": "unapproved drawing may be issued FOR APPROVAL",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "issued transmittal records issuer",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "empty transmittal cannot be issued",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Cannot issue an empty transmittal\""
+    },
+    {
+      "name": "lines cannot be added to an issued transmittal",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Issued/void transmittal lines are immutable\""
+    },
+    {
+      "name": "DB: approved version file cannot be swapped",
+      "outcome": "PASS",
+      "detail": "ERROR:  Document version 1 content is immutable; upload a new revision"
+    },
+    {
+      "name": "DB: document versions cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Document versions are retained and cannot be deleted"
+    },
+    {
+      "name": "DB: review decision on a version cannot be rewritten",
+      "outcome": "PASS",
+      "detail": "ERROR:  Review decision on document version 1 is final"
+    },
+    {
+      "name": "DB: issued transmittal header immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Issued transmittal 3 is immutable; void it and issue a new one"
+    },
+    {
+      "name": "tenant B cannot review tenant A document",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Document not found\""
+    },
+    {
+      "name": "tenant B cannot add a version to tenant A document",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Document not found\""
+    },
+    {
+      "name": "tenant B does not see tenant A documents",
+      "outcome": "PASS",
+      "detail": ""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint uq_documents_project_doc_number"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/review",
+      "status": 409,
+      "ok": false,
+      "error": "Document is not awaiting approval"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/versions",
+      "status": 409,
+      "ok": false,
+      "error": "Cannot revise a document while it is under approval"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/review",
+      "status": 403,
+      "ok": false,
+      "error": "Maker cannot approve/reject own document"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/review",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/edms/documents/1/versions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/999999999/versions",
+      "status": 404,
+      "ok": false,
+      "error": "Document not found"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals/1/issue",
+      "status": 403,
+      "ok": false,
+      "error": "Maker cannot issue own transmittal"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/versions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals/1/issue",
+      "status": 422,
+      "ok": false,
+      "error": "Document DWG-001-ed1 version 1 (rev A) is not an approved current revision and cannot be issued for construction"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals/2/issue",
+      "status": 422,
+      "ok": false,
+      "error": "Document DWG-002-ed1 version 1 (rev A) is not an approved current revision and cannot be issued for construction"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals/3/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals/3/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals/4/issue",
+      "status": 422,
+      "ok": false,
+      "error": "Cannot issue an empty transmittal"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/transmittals/3/lines",
+      "status": 422,
+      "ok": false,
+      "error": "Issued/void transmittal lines are immutable"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/3/review",
+      "status": 404,
+      "ok": false,
+      "error": "Document not found"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/versions",
+      "status": 404,
+      "ok": false,
+      "error": "Document not found"
+    },
+    {
+      "method": "GET",
+      "path": "/edms/documents",
+      "status": 200,
+      "ok": true,
+      "error": null
+    }
+  ]
+}

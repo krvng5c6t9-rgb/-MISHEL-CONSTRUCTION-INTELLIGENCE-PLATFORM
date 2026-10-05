@@ -1,0 +1,154 @@
+{
+  "suite": "sweep_edms",
+  "run": "ed0",
+  "tag": "ed0",
+  "steps": [
+    {
+      "name": "engineer A registers drawing DWG-001 rev A",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "duplicate document number in the same project refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "review of a document not submitted refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 500 \"Internal server error\""
+    },
+    {
+      "name": "revision while under review refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 500 \"Internal server error\""
+    },
+    {
+      "name": "maker cannot approve own document (SoD)",
+      "outcome": "FAIL",
+      "detail": "HTTP 500 \"Internal server error\""
+    },
+    {
+      "name": "rejection without a reason refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "reviewer B approves rev A",
+      "outcome": "FAIL",
+      "detail": "approve failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"1ec1820a-2841-434a-a744-5a932de3c66a\"}"
+    },
+    {
+      "name": "suite completed",
+      "outcome": "FAIL",
+      "detail": "approve failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"1ec1820a-2841-434a-a744-5a932de3c66a\"}"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/review",
+      "status": 500,
+      "ok": false,
+      "error": "Internal server error"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/versions",
+      "status": 500,
+      "ok": false,
+      "error": "Internal server error"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/review",
+      "status": 500,
+      "ok": false,
+      "error": "Internal server error"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/1/review",
+      "status": 500,
+      "ok": false,
+      "error": "Internal server error"
+    }
+  ]
+}

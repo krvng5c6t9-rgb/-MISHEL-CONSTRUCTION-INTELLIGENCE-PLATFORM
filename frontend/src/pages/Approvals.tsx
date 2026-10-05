@@ -28,7 +28,10 @@ export function Approvals() {
   }, []);
 
   async function act(id: number, action: 'approved' | 'rejected' | 'returned') {
-    await apiPost(`/approvals/${id}/actions`, { action });
+    // A rejection or return must state its reason (server rule, CC-027).
+    const comment = action === 'approved' ? undefined : window.prompt(`Reason for ${action === 'rejected' ? 'rejection' : 'return'} (at least 5 characters)`)?.trim();
+    if (action !== 'approved' && !comment) return;
+    await apiPost(`/approvals/${id}/actions`, comment ? { action, comment } : { action });
     setMessage(`Approval #${id}: ${action}`);
     await load();
   }

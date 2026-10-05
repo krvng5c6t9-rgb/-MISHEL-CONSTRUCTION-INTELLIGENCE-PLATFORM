@@ -31,7 +31,7 @@ export function EDMS(){
       <button onClick={createDoc}>Create Document</button>
     </div><div className="table-wrap"><table><thead><tr><th>No.</th><th>File</th><th>Version</th><th>Revision</th><th>Status</th><th>Control</th></tr></thead><tbody>{docs.map(d=><tr key={d.id}><td>{d.doc_number}</td><td>{d.file_name}</td><td>{d.version_no}</td><td>{d.revision||'—'}</td><td>{d.status}</td><td>
       {['draft','rejected'].includes(d.status)&&<><button onClick={()=>run(()=>api.post(`/edms/documents/${d.id}/submit`,{}))}>Submit</button><button onClick={()=>addVersion(d)}>New Version</button></>}
-      {d.status==='for_approval'&&<><button onClick={()=>run(()=>api.post(`/edms/documents/${d.id}/review`,{action:'approved'}))}>Approve</button><button onClick={()=>run(()=>api.post(`/edms/documents/${d.id}/review`,{action:'rejected'}))}>Reject</button></>}
+      {d.status==='for_approval'&&<><button onClick={()=>run(()=>api.post(`/edms/documents/${d.id}/review`,{action:'approved'}))}>Approve</button><button onClick={()=>{const comment=window.prompt('Reason for rejection (at least 5 characters)')?.trim();if(comment)run(()=>api.post(`/edms/documents/${d.id}/review`,{action:'rejected',comment}))}}>Reject</button></>}
       {d.status==='approved'&&<button onClick={()=>addVersion(d)}>Revise</button>}
     </td></tr>)}</tbody></table></div></div>
 

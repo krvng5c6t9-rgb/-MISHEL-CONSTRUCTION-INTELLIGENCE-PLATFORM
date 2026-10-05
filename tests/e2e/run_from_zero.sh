@@ -42,3 +42,4 @@ RUN_ID="$RUN" node sweep_variations.mjs
 RUN_ID="$RUN" node sweep_quality_hse.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_approval_rejection.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_hr_payroll.mjs
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_edms.mjs

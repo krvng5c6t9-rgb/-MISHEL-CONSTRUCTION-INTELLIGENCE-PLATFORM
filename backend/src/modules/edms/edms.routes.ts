@@ -3,13 +3,14 @@ import { z } from 'zod';
 import { getClient, query, releaseClient } from '../../db/pool.js';
 import { asyncHandler } from '../../middleware/asyncHandler.js';
 import { authorize } from '../../middleware/authorize.js';
+import { AppError } from '../../middleware/errors.js';
 
 export const edmsRouter = Router();
 edmsRouter.use(authorize('edms', 'view'));
 
 const id = (v: unknown) => {
   const n = Number(v);
-  if (!Number.isInteger(n) || n <= 0) throw new Error('Invalid id');
+  if (!Number.isInteger(n) || n <= 0) throw new AppError(400, 'Invalid id');
   return n;
 };
 
@@ -57,8 +58,8 @@ edmsRouter.post('/documents/:id/versions', authorize('edms', 'edit'), asyncHandl
   try {
     await c.query('BEGIN');
     const d=(await c.query(`select * from documents where id=$1 for update`,[documentId])).rows[0];
-    if(!d) throw new Error('Document not found');
-    if(d.status==='for_approval') throw new Error('Cannot revise a document while it is under approval');
+    if(!d) throw new AppError(404, 'Document not found');
+    if(d.status==='for_approval') throw new AppError(409, 'Cannot revise a document while it is under approval');
     const next=Number((await c.query(`select coalesce(max(version_no),0)+1 n from document_versions where document_id=$1`,[documentId])).rows[0].n);
     await c.query(`update document_versions set is_current=false where document_id=$1 and is_current=true`,[documentId]);
     const v=(await c.query(`insert into document_versions(org_id,document_id,project_id,version_no,revision,file_name,storage_key,mime_type,file_size_bytes,sha256,uploaded_by,is_current)
@@ -75,10 +76,17 @@ edmsRouter.post('/documents/:id/submit', authorize('edms', 'edit'), asyncHandler
 }));
 
 edmsRouter.post('/documents/:id/review', authorize('edms', 'approve'), asyncHandler(async (req,res)=>{
-  const b=z.object({action:z.enum(['approved','rejected'])}).parse(req.body); const documentId=id(req.params.id); const c=await getClient();
+  // CC-029: the decision is recorded on the reviewed (current) revision with reviewer, time and reason (ED2).
+  const b=z.object({action:z.enum(['approved','rejected']), comment:z.string().trim().max(2000).optional()})
+    .refine(v=>v.action==='approved'||(v.comment??'').length>=5,{message:'A rejection must state its reason (comment, at least 5 characters)',path:['comment']})
+    .parse(req.body);
+  const documentId=id(req.params.id); const c=await getClient();
   try{await c.query('BEGIN'); const d=(await c.query(`select * from documents where id=$1 for update`,[documentId])).rows[0];
-    if(!d||d.status!=='for_approval') throw new Error('Document is not awaiting approval');
-    if(Number(d.uploaded_by)===req.user!.id) throw new Error('Maker cannot approve/reject own document');
+    if(!d) throw new AppError(404,'Document not found');
+    if(d.status!=='for_approval') throw new AppError(409,'Document is not awaiting approval');
+    if(Number(d.uploaded_by)===req.user!.id) throw new AppError(403,'Maker cannot approve/reject own document');
+    const v=(await c.query(`update document_versions set review_status=$2,reviewed_by=$3,reviewed_at=now(),review_comment=$4 where document_id=$1 and is_current=true and review_status is null returning id`,[documentId,b.action,req.user!.id,b.comment??null])).rows[0];
+    if(!v) throw new AppError(409,'Current revision has no pending review');
     const out=(await c.query(`update documents set status=$2,updated_at=now() where id=$1 returning *`,[documentId,b.action])).rows[0];
     await c.query('COMMIT');res.json({success:true,data:out});
   }catch(e){await c.query('ROLLBACK');throw e;}finally{await releaseClient(c);}
@@ -129,9 +137,10 @@ edmsRouter.delete('/transmittals/:id/lines/:lineId', authorize('edms','edit'), a
 edmsRouter.post('/transmittals/:id/issue', authorize('edms','approve'), asyncHandler(async(req,res)=>{
   const transmittalId=id(req.params.id); const c=await getClient();
   try{await c.query('BEGIN'); const t=(await c.query(`select * from document_transmittals where id=$1 for update`,[transmittalId])).rows[0];
-    if(!t||t.status!=='draft') throw new Error('Only a draft transmittal can be issued');
-    if(Number(t.created_by)===req.user!.id) throw new Error('Maker cannot issue own transmittal');
-    const count=Number((await c.query(`select count(*) n from transmittal_lines where transmittal_id=$1`,[transmittalId])).rows[0].n); if(count<1) throw new Error('Cannot issue an empty transmittal');
+    if(!t) throw new AppError(404,'Transmittal not found');
+    if(t.status!=='draft') throw new AppError(409,'Only a draft transmittal can be issued');
+    if(Number(t.created_by)===req.user!.id) throw new AppError(403,'Maker cannot issue own transmittal');
+    const count=Number((await c.query(`select count(*) n from transmittal_lines where transmittal_id=$1`,[transmittalId])).rows[0].n); if(count<1) throw new AppError(422,'Cannot issue an empty transmittal');
     const out=(await c.query(`update document_transmittals set status='issued',issued_by=$2,issued_at=now() where id=$1 returning *`,[transmittalId,req.user!.id])).rows[0];
     await c.query('COMMIT');res.json({success:true,data:out});
   }catch(e){await c.query('ROLLBACK');throw e;}finally{await releaseClient(c);}
