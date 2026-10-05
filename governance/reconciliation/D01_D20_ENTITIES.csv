@@ -1,0 +1,330 @@
+domain,entity,attributes,sot
+D01,Tenant,"id, name, region/residency, plan, status, locale defaults, retention policy",Platform
+D01,LegalEntity,"tenant_id, legal_name (ar/en), registration/tax IDs, country, base_currency, fiscal_calendar, timezone, parent_entity, consolidation_flag",D13 يستهلك
+D01,Branch/BusinessUnit,"entity_id, type (HO/regional/site-office), address, manager",Foundation
+D01,Project,"entity_id, code, name, client_party_id, contract_ref, type, status, dates, location (geo), currency, JV_flag, cost_center_root",Foundation (الهوية) + D04/D05 (التفاصيل)
+D01,ProjectParticipant (JV),"project_id, party_id, share%, role (lead/partner), valid_from/to",Foundation
+D01,User,"tenant_id, identity (SSO/local), status, language, MFA, linked_employee_id",Identity
+D01,Role / Permission,scope-aware، قابل للتخصيص مع قياسيات جاهزة,Identity
+D01,RoleAssignment,"user, role, scope (tenant/entity/project/dept), valid_from/to, delegated_from",Identity
+D01,ApprovalPolicy / DOARule,"document_type, entity, project?, amount_range, currency, criteria (نوع/مخاطر), steps (roles/users), parallel/serial, SLA, escalation",Foundation
+D01,Party (الأساس لكل الأطراف),"type (client/vendor/subcontractor/consultant/bank/authority/employee-ref), legal_name, tax_id, address, contacts, bank_accounts, prequalification_status, blacklisted, merged_into",Master Data
+D01,Item / Service / UoM / Currency / ExchangeRate / Calendar / Country / Tax code,رموز مرجعية بإصدارات وفترات سريان,Master Data
+D01,NumberSequence,"document_type, entity/project scope, pattern, gaps policy",Foundation
+D01,ConfigItem,"key, scope, value, schema, version, effective_from, approved_by",Mishel Brain
+D01,AuditEvent,"actor, action, object, before/after, ts, ip/device, correlation_id, tenant",Audit (Append-only)
+D02,Opportunity,"code, client_party, name, source, type (public/private/negotiated), sector, location, est_value, currency, deadline, bid_bond_req, stage, probability, owner, status",BID
+D02,BidDecision,"opportunity, criteria_scores, weights, recommendation, decision, signers, reasons",BID
+D02,TenderDocument,"opportunity, name, doc_type, revision, received_date, hash, addendum_of",D15 (أصل الملف) + ربط
+D02,TenderRequirement,"opportunity, clause_ref, category (commercial/technical/legal), extracted_text, risk_level, owner, response",BID
+D02,TenderTeamAssignment,"opportunity, user, role, due",BID
+D02,Estimate (نسخ),"opportunity, version, status, assumptions, base_date, currency, totals",BID ↔ D03
+D02,EstimateLine,"estimate, boq_item_ref, qty, unit, direct_cost, markup% → rate",D03
+D02,BidAdjudication/Comparison,موردين وباطن وعروضهم ومقارنتهم,D06/D07 (مرجع)
+D02,TenderRisk,"opportunity, risk, probability, impact, mitigation, contingency_amount",BID ↔ D17
+D02,BidPackage,"opportunity, technical_docs, commercial_docs, forms, bonds, version, submission_proof",BID
+D02,BidOutcome,"opportunity, result, awarded_value, competitors, winner_price, reasons, lessons",BID
+D02,CompetitorProfile,"party, history, typical pricing behavior",BID
+D03,BOQ (رأس),"project/opportunity, type (tender/contract/budget/executed), version, status, currency, basis_date, template_id, contract_form",BOQ
+D03,BOQSection,"boq, parent_section, code, title (ar/en), sort",BOQ
+D03,BOQItem,"boq, section, item_code, description_full, description_short, unit, quantity, rate, amount, item_type (measured/lump/provisional/daywork/alt), spec_ref, drawing_ref, wbs_ref, cost_code, package_ref, source (import/takeoff/bim/manual), status",BOQ
+D03,TakeoffSheet / TakeoffLine,"item, description, count, L, W, H, factor, quantity, source_drawing, revision, reviewer",BOQ
+D03,RateAnalysis,"item, version, output_unit, output_qty, direct_cost_per_unit, overhead%, profit%, risk%, rate, base_date, currency, status",BOQ
+D03,RateComponent,"analysis, type (material/labor/equipment/subcontract/other), resource_id, qty_per_unit, waste%, unit_cost, extension, productivity_ref",BOQ
+D03,Resource (مكتبة),"type, code, name (ar/en), unit, specs, category, status",Library
+D03,ResourcePrice,"resource, price, currency, source (supplier quote/index/contract/market survey), source_ref, valid_from/to, region, verified_by, confidence",Library
+D03,Productivity/Norm,"trade/activity, crew, output per hour/day, conditions, source, version",Library
+D03,Assembly,قالب تحليل قياسي لنوع عمل (خرسانة عادية، حدادة، مباني…) بمعاملاته,Library
+D03,CostCode / CBS,هرم رموز التكلفة (متعدد المستويات) مرتبط بـ WBS وحسابات,Foundation/BOQ
+D03,UoM / Conversion,وحدات ومعاملات تحويل بإصدارات,Library
+D03,BOQTemplate,تعريف أعمدة، ترقيم، تنسيق، قواعد وصف، إجماليات، لغة، إصدار، مثال المصدر,Output Factory
+D03,BOQChange,بين نسختين: بند، قبل/بعد، السبب، المرجع، الأثر,BOQ
+D04,Contract,"type (main/sub/supply/consultant/lease), project, parties (+roles), form (FIDIC/خاص/…)، version، value، currency، start/end، DLP، payment_terms، retention%، advance%، LD formula & cap، governing_law، dispute_clause، status",CON
+D04,ContractDocument,"contract, doc, precedence_order, version",D15 + ربط
+D04,ContractClause,"contract, ref, title, text, category (payment/time/variation/claim/termination/insurance…), obligations_generated",CON
+D04,Obligation,"contract, clause_ref, party, description, trigger (date/event), due_rule (days after trigger), consequence, owner, status, evidence",CON
+D04,Notice,"contract, type, event_ref, deadline, sent_at, proof, response_due",CON
+D04,Variation (VO),"contract, number, origin, description, status, est_value, est_time_impact, instructed_at, approved_value/time, linked_items",CON
+D04,VariationItem,"vo, boq_item_ref (جديد/معدل/ملغى), qty, rate, basis (contract rate/derived/daywork/lump)",CON ↔ D03
+D04,ExtensionOfTime,"contract, event, claimed_days, granted_days, cost_claimed, basis, analysis_ref, status",CON ↔ D05
+D04,Claim,"contract, type (time/cost/both), events, entitlement_basis, quantum, status, dossier_ref",CON
+D04,ClaimEvidence,"claim, evidence_type, source_ref (document/report/photo/email), date, relevance",CON ↔ D15/D08
+D04,Guarantee,"type, issuer(bank), beneficiary, amount, currency, start/end, status, renewal_rule",D17 + CON
+D04,LDRecord,"contract, period, delay_days, rate, amount, cap_remaining, status",CON
+D04,ContractValueLedger,"contract, original, VOs, adjustments, revised",CON → D13
+D04,Dispute,"contract, matter, forum (DAB/arbitration/court)، stage، amounts، deadlines",CON
+D05,Schedule,"project, name, type (baseline/working/what-if/updated), version, status_date, calendar_default, source (native/imported), parent_baseline",PLN
+D05,WBS,"project, parent, code, name, level, owner, weight",D01/PLN
+D05,Activity,"schedule, wbs, code, name, type (task/milestone/LOE/WBS summary), duration_orig/remaining, start/finish (planned/early/late/actual), float (total/free), constraint, calendar, % complete (type), status",PLN
+D05,Relationship,"pred, succ, type (FS/SS/FF/SF), lag, calendar",PLN
+D05,Calendar,"work-week, exceptions, holidays, shifts, weather rules",PLN/D01
+D05,ActivityResourceAssignment,"activity, resource, units/day, qty, cost",PLN ↔ D03/D11/D12
+D05,ActivityBOQLink,"activity, boq_item, weight, quantity_share",PLN ↔ D03
+D05,ProgressRecord,"activity/boq_item, date, quantity_done, source (site report/inspection/measurement), approved_by, evidence",PLN ↔ D08
+D05,Baseline,"schedule snapshot (full), reason, approved_by",PLN
+D05,Constraint/Readiness (Make-Ready),"activity, constraint type (materials/design/equipment/labor/permit), owner, due, status",PLN
+D05,EVMSnapshot,"project/WBS, date, PV, EV, AC, CPI, SPI, EAC, ETC, method",PLN ↔ D13
+D05,CashflowForecast,"project, scenario, period, inflow, outflow, cumulative, assumptions",PLN ↔ D13
+D05,DelayEvent,"schedule, event_ref (D04), window, critical_impact_days, responsibility, method",PLN ↔ D04
+D05,Risk-on-schedule,"activity, risk, duration_range, probability",PLN ↔ D17
+D06,PurchaseRequisition / Line,"project, requester, boq_item/package_ref, cost_code, item/spec, qty, uom, need_date, est_value, budget_check, status",Procurement
+D06,RFQ / RFQLine / RFQInvite,"pr_ref, vendors, issue/close date, terms, status",Procurement
+D06,Quotation,"rfq, vendor, lines, validity, delivery, payment_terms, currency, attachments",Procurement
+D06,QuoteComparison,"rfq, criteria/weights, scores, selected, justification, approver",Procurement
+D06,Vendor (مرجع D01) + VendorProfile,"prequal_status, categories, rating, blacklist flag, documents/expiry",D01 (SoT الطرف) / Procurement (التقييم)
+D06,VendorEvaluation,"vendor, period, quality, delivery, price, service, HSE, score",Procurement
+D06,PurchaseOrder / POLine,"vendor, project, currency, terms, total, version, framework_ref, approval_state, status",Procurement
+D06,POAmendment,"po, before/after, reason, approvals",Procurement
+D06,FrameworkAgreement,"vendor, items, rates, validity, ceiling, consumed, status",Procurement
+D06,GoodsReceipt (GRN) / Line,"po_line, received, accepted, rejected, reason, location, inspection_ref",D14 (حركة المخزون) / Procurement (ربط PO)
+D06,SupplierInvoice / Line,"vendor, po, grn, amounts, tax, due_date, match_status, hold_reason",Finance (D13) بنسخة مطابقة هنا
+D06,MatchResult,"invoice, po, grn, variance qty/price/tax, tolerance, outcome",Procurement
+D06,Commitment,"po/line, cost_code, committed, invoiced, remaining",Procurement → D13
+D06,Shipment / CustomsFile,"po, incoterm, stages, ETA, docs, duties (مرجعية), landed_cost",Procurement
+D06,ExpediteLog,"po, action, promised_date, outcome",Procurement
+D07,SubcontractorPrequal,"vendor, criteria, scores, documents/expiry, outcome",Subcontracts
+D07,SubPackage / Line,"project, boq_items, quantities, budget, target_margin, status",Subcontracts (البنود من D03)
+D07,SubTender / SubBid / Comparison,"package, invitees, bids, scores, justification",Subcontracts
+D07,SubContract,"package, subcontractor, value, currency, terms, retention%, advance%, LD terms, guarantees, status, version",Subcontracts
+D07,SubContractItem,"contract, boq_ref, qty, rate, amount, stable_item_id",Subcontracts
+D07,WorkOrder,"contract, scope, qty/value, dates, status",Subcontracts
+D07,MeasurementSheet / Line,"contract_item, period, qty, source (D08), approvals, photos",Subcontracts / D08
+D07,PaymentCertificate (Sub IPC),"contract, period_no, gross_to_date, previous, current, deductions, net, status",Subcontracts
+D07,IPCDeduction,"ipc, type (advance/retention/backcharge/penalty/tax/other), basis, amount, ref",Subcontracts
+D07,BackCharge,"contract, cause, evidence, amount, status",Subcontracts
+D07,SubVO,"contract, description, value/time, link_to_owner_vo, status",Subcontracts / D04
+D07,OwnerIPC,"main_contract, period, cumulative, previous, advance recovery, retention, VO, net",Commercial (D04/D07)
+D07,Guarantee (ref),"type (performance/advance/retention), amount, expiry, status",D17 (SoT)
+D07,FinalAccount,"contract, summary, adjustments, settlement, release",Subcontracts
+D07,MarginView,"package/contract, sold, committed, paid, certified, forecast",Derived
+D08,DailyReport,"project, date, weather, shift, status, author, approver",Site
+D08,DR_Labor / DR_Equipment,"report, trade/contractor, count, hours; equipment, status, hours, idle_reason",Site (حضور رسمي من D12، ساعات من D11)
+D08,DR_Work / ExecutedQuantity,"report, boq_item/activity, location, qty, uom, photos, qa_status",Site
+D08,DR_Material / DR_Delay / DR_Incident,استلام مواد، عوائق وسببها وأثرها، حوادث (مرجع D10),Site
+D08,Location/Zone,"project, hierarchy (مبنى/دور/منطقة/غرفة), geometry ref",D01/Site
+D08,RFI,"no, subject, drawing_refs, question, raised_by, assigned_to, due, response, status, impact",Site
+D08,Submittal,"no, type, spec_ref, revisions, status, due, reviewer",Site
+D08,SubmittalRevision,"submittal, rev, file, decision, comments",Site
+D08,DrawingRegister / DrawingRevision,"no, title, discipline, rev, status, issued_date, supersedes, file",D15 (ملف) / Site (السجل التنفيذي)
+D08,ShopDrawing,"drawing, contractor, review cycle, status",Site
+D08,InspectionRequest,"boq_item, location, drawing_rev, inspection type, status, ref D09",Site → D09
+D08,SiteInstruction,"no, from, text, date, impact_time/cost, claim_ref",Site
+D08,Meeting / Minute / ActionItem,"attendees, items, decisions, owner, due, status",Site
+D08,Photo,"file, taken_at (device + server), geo, location_ref, linked_entity, hash",Site
+D08,SnagItem / HandoverPack,"location, defect, responsible, due, status, photos",Site
+D08,SyncBatch / Conflict,"device, batch, items, outcome, resolution",Platform (D20)
+D09,QualityPlan,"project, version, scope, standards_refs, status, approver",QC
+D09,ITPTemplate / ITP,"work_type, version, status",QC
+D09,ITPStep,"itp, seq, activity, criteria_ref, point_type (review/witness/hold), responsible_role, record_form",QC
+D09,InspectionRequest (IR),"project, itp_step, location, element_ref, wbs_ref, boq_item, requested_by, requested_at, due_at, status, result",QC
+D09,InspectionChecklist / Result,"ir, items (pass/fail/NA + قياس), photos, signatories, geo/time",QC
+D09,HoldPointRelease,"ir, released_by, at, conditions",QC
+D09,MaterialSample,"pour/batch, element, material, sampled_at, lab, test_schedule",QC
+D09,TestResult,"sample, test_type, standard_ref, value, unit, acceptance_min/max, verdict, lab_cert_ref",QC
+D09,Lab / LabAccreditation,"name, scope, certificate, valid_to, status",QC/Master
+D09,NCR,"ref, project, classification, severity, description, location, source_ref (IR/test/audit), root_cause, disposition, cost_impact, status",QC
+D09,CAR / CorrectiveAction,"ncr/audit, action, owner, due, verification, status",QC
+D09,SnagItem,"location, description, trade, responsible_party, photos, priority, status, closed_evidence",QC
+D09,CalibrationRecord,"instrument, last_cal, next_due, certificate, status",QC/Assets link (D11)
+D09,SupplierQualityRecord,"supplier, deliveries_inspected, rejected, score_inputs",QC (يغذي D06)
+D09,AuditPlan / Audit,"scope, date, findings, status",QC
+D09,HandoverDossier,"system/zone, included_records, status",QC/D15
+D10,HSEPlan,"project, version, scope, status, approver",HSE
+D10,RiskAssessment / RiskItem,"activity_ref, hazard, likelihood, severity, score (حسب المصفوفة)، controls, residual, owner",HSE
+D10,JSA / MethodStatement,"activity, steps, hazards, controls, approvals, validity",HSE
+D10,PermitToWork,"type, location, work_desc, period, requester, issuer, workers, equipment_refs, jsa_ref, precautions, status",HSE
+D10,PermitCheck / Closure,"permit, checks, signatures, closure",HSE
+D10,IncidentReport,"type (injury/near-miss/property/environmental/…), severity, datetime, location, persons, description, immediate_actions, status",HSE
+D10,Injury / MedicalCase,"person, body part, treatment, lost_days, restricted_days, return_date",HSE (حساس)
+D10,Investigation,"incident, team, timeline, evidence, causes, findings, status",HSE
+D10,CorrectiveAction,"source, action, owner, due, verification, status",HSE
+D10,Inspection / Audit,"type, checklist, findings, score, status",HSE
+D10,CompetencyRequirement,"role/task, training_type, validity_rule",HSE/HR
+D10,TrainingRecord,"person, course, date, provider, certificate, valid_to",HR/HSE (SoT مشترك: السجل في D12، المتطلبات هنا)
+D10,ToolboxTalk,"topic, date, conductor, attendees",HSE
+D10,PPEIssue,"person, item, qty, issued_at, replace_due",HSE/Inventory
+D10,EmergencyPlan / Drill,"scope, roles, assembly points, drill_results",HSE
+D10,EnvMonitoring,"parameter, location, value, unit, limit_ref, verdict",HSE
+D10,WasteRecord,"type, qty, handler, manifest_ref",HSE
+D10,ContractorHSEProfile,"subcontractor, scores, documents, status",HSE/D07
+D10,StopWorkEvent,"scope, raised_by, reason, lifted_by, conditions",HSE
+D10,ExposureHours,"project, company, period, hours",HSE/HR (يغذي المؤشرات)
+D11,Equipment (Asset),"code, category, make, model, serial, year, ownership (owned/rented/leased/subcontractor), owner_entity, status, current_project, location, meter_type",Assets
+D11,EquipmentCategory,"name, default rates policy, maintenance template, certificate requirements",Assets
+D11,EquipmentDocument,"equipment, type, number, issuer, valid_to, status",Assets/D15
+D11,Allocation,"equipment, project, from, to, purpose, status",Assets
+D11,TransferRecord,"equipment, from_site, to_site, condition_out/in, date, transport_ref",Assets
+D11,UsageLog,"equipment, date, project, activity/cost_code, operator, hours_worked, hours_idle, hours_breakdown, meter_start/end, remarks, status",Assets
+D11,OperatorAssignment,"equipment, operator (D12), from, to, license_check",Assets/HR link
+D11,FuelTransaction,"equipment, date, qty, meter, source, cost, issued_by",Assets/Inventory link
+D11,MaintenancePlan,"equipment/category, trigger (hours/days/km), tasks, parts",Assets
+D11,WorkOrder,"equipment, type (PM/CM/inspection), priority, reported_at, started_at, completed_at, parts, labor, cost, root_cause, status",Assets
+D11,Breakdown / Downtime,"equipment, start, end, cause, impact_activity, cost",Assets
+D11,InternalRate,"category/equipment, basis (hour/idle hour/month), rate, validity, version, approval",Assets/Cost
+D11,ChargeRun / Charge,"period, project, equipment, hours, rate, amount",Assets→Finance
+D11,RentalContract,"supplier, equipment_spec, rates (hour/day/month), min_hours, standby_terms, fuel/operator terms, period, status",Procurement D06 + EQP view
+D11,RentalInvoiceMatch,"invoice, contract, usage logs, variance",Assets/Finance
+D11,TelematicsDevice / Event,"device, equipment, position, engine_hours, alerts",Integration
+D11,AssetFinancials,"cost, acquisition_date, useful_life, residual, depreciation_method_ref, book_value, disposal",Finance (D13) SoT؛ نسخة قراءة هنا
+D12,Employee,"emp_no, legal_name (ar/en), national_id/passport (مشفر), dob, nationality, gender, contact, status, hire_date, legal_entity",HR
+D12,EmployeeContract,"employee, type (permanent/fixed/project/daily), start/end, grade, base_salary, currency, allowances[], version",HR
+D12,OrgPosition,"code, title, department, reports_to, grade, headcount_approved, cost_center, status",HR
+D12,Requisition / Candidate / Offer,"position, source, stage, evaluation, offer terms",HR
+D12,ProjectAssignment,"employee, project, role, from/to, allocation%, cost_code_default, status",HR
+D12,Shift / AttendanceRule,"calendar, start/end, grace, break, overtime rules (مرجع Country Pack)",HR
+D12,AttendanceEvent,"employee/worker, device, site, ts, type (in/out), source (biometric/manual/mobile), geo, offline_sync_id",HR
+D12,DailyAttendance,"employee, date, worked_hours, regular, overtime, status, approved_by",HR
+D12,Timesheet / TimesheetLine,"employee, date, project, cost_code, activity, hours, status",HR
+D12,LeaveType / LeaveBalance / LeaveRequest,"accrual rule, balance, dates, status, approver",HR
+D12,PayElement,"code, type (earning/deduction/employer-cost), formula_ref, taxable/insurable flags",Payroll
+D12,PayrollRun / PayslipLine,"period, entity, status, employee, element, amount, currency",Payroll
+D12,StatutoryProfile,"country, social_insurance_no, tax_id, rates ref (مرجع)",Payroll
+D12,EndOfService,"employee, reason, last_day, entitlements, calc_version",Payroll
+D12,IdentityDocument,"employee, type (residency/visa/work permit/license/medical), no, issue/expiry, sponsor, status",HR
+D12,Camp / Room / Bed / Occupancy,"camp, capacity, occupant, from/to, status, charges",HR
+D12,DailyWorker / SubcontractWorker,"national_id, trade, rate_class, subcontractor_ref, project, status",HR
+D12,Appraisal / TrainingRecord,"cycle, ratings, goals / course, date, expiry, certificate",HR
+D13,LegalEntity / FiscalCalendar / Period,"entity, base_currency, year, period, status (open/soft/closed)",Finance (مرجع D01)
+D13,ChartOfAccount / Account,"code, name (ar/en), type, normal_balance, parent, entity_scope, status, cbs_required",Finance
+D13,CostCode ↔ Account Mapping,"cost_code (D03), account, rule, effective_from",Finance
+D13,JournalEntry / JournalLine,"entity, date, period, source_module, source_ref, status, lines[account, debit, credit, currency, fx_rate, cost_code, project, party, dimension]",Finance
+D13,Dimension,"project, cost_code, department, partner, contract",Finance
+D13,Currency / FXRate,"pair, rate, date, source, type (spot/avg/closing)",Finance
+D13,Vendor/Customer (Party financial),"payment_terms, bank, tax_id, withholding profile",Finance (الهوية في D01)
+D13,APInvoice / ARInvoice,"party, doc_no, date, due, amount, tax, currency, matched_refs, status",Finance
+D13,Payment / Receipt / Allocation,"method, bank_account, amount, allocations[], status",Finance
+D13,BankAccount / BankStatementLine / Reconciliation,"statement line, matched journal, status, diff",Finance
+D13,Commitment,"source (PO/subcontract), cost_code, amount, invoiced, remaining",Finance
+D13,Budget / BudgetRevision,"cost_code, amount, version, status",Finance (من D03)
+D13,RetentionLedger,"contract, party, held, released, due_date, direction",Finance
+D13,GuaranteeRecord,"type, issuer, amount, expiry, status (مرجع D17)",D17 مع قيد في Finance
+D13,WIPSnapshot,"project, period, cost_to_date, billed, recognized, method, policy_version",Finance
+D13,RevenueRecognitionPolicy,"contract_type, method, params, version, approved_by",Finance
+D13,FixedAssetRegister,"asset (D11), cost, depreciation_policy, accumulated, status",Finance
+D13,IntercompanyPair,"entity_a, entity_b, journal_a, journal_b, status",Finance
+D13,TaxCode / TaxLedger,"code, rate_ref (Country Pack), direction, account",Finance
+D13,PeriodCloseChecklist,"period, item, owner, status, evidence",Finance
+D14,Item,"code, name (ar/en), category, base_uom, tracking (none/lot/serial), shelf_life, specs, qc_required, valuation_group, resource_ref (D03), status",Inventory (مرجع مشترك مع Library D03)
+D14,ItemUoM,"item, uom, conversion_factor",Inventory
+D14,Warehouse,"code, type (central/site/yard/transit/quarantine/rejected), entity, project, address, manager, status",Inventory
+D14,Location/Bin,"warehouse, code, zone, capacity",Inventory
+D14,StockBalance,"item, warehouse, bin, lot/serial, qty_on_hand, qty_reserved, qty_available, qty_in_transit, qc_status, value",Inventory (مشتق من الحركات)
+D14,StockMovement,"type (GRN/Issue/Transfer/Return/Adjust/Scrap/Surplus), item, qty, uom, from/to, lot/serial, cost_code, work_package, ref_doc, unit_cost, ts, user, device, offline_id",Inventory (سجل غير قابل للتعديل)
+D14,GoodsReceipt,"PO ref (D06), supplier, delivery_note, lines[], inspection_required, status",Inventory
+D14,IssueNote,"requester, work_package/BOQ item, cost_code, lines, receiver, status",Inventory
+D14,TransferOrder,"from, to, lines, status, shipped/received",Inventory
+D14,ReturnNote,"type (to supplier/to store), reason, ref",Inventory
+D14,Reservation,"item, qty, work_package, needed_date, expiry, status",Inventory
+D14,Stocktake / StocktakeLine,"scope, type (periodic/cycle/spot), counted, system, variance, reason, status",Inventory
+D14,ReorderPolicy,"item, warehouse, min, max, lead_time, method",Inventory
+D14,ValuationPolicy,"group, method (weighted average/FIFO/…), effective_from, version",Inventory + Finance
+D14,ConsumptionNorm,"item/resource, BOQ item, theoretical coefficient, waste%, source/version",D03 (مرجع)
+D14,ScrapSurplus,"item, qty, cause, decision (reuse/sell/dispose), approval",Inventory
+D14,Barcode/QRTag,"item/lot/location/pallet, code, printed_at",Inventory
+D15,Document (هوية),"doc_id ثابت، project, doc_number, title (ar/en), type, discipline, originator, classification (سرية), current_revision_id, status_code, retention_class",Document Control
+D15,DocumentRevision,"doc, rev_code, rev_date, file_ref, sha256, size, mime, status_code, issue_purpose, uploaded_by, supersedes_id, ocr_status",Document Control
+D15,MetadataSchema,نوع المستند ← حقول مطلوبة/اختيارية، قوائم قيم، إصدار,Foundation/Doc
+D15,NumberingRule,نمط (مثل `{PROJ}-{ORIG}-{TYPE}-{DISC}-{SEQ}`)، فحص تكرار، تسلسلات,Doc/Foundation
+D15,StatusCodeSet,رموز الحالة وصلاحية الانتقال (CDE-style: WIP / Shared / Published / Archived) + رموز الاستخدام (للمراجعة/للتنفيذ)، كلها قابلة للإعداد,Doc
+D15,Transmittal / TransmittalLine,"no, from, to[], purpose, due_date, lines(doc_rev), sent_at, opened_at, acked_at, delivery_channel",Doc
+D15,Submittal,"contract, spec_ref, type (material/shop/sample/method), cycle, ball_in_court, due_by_contract, response_code, stamp_id",Doc
+D15,RFI,"project, question, from/to, discipline, due, response, cost/time impact flag, linked_vo",Doc (يستهلكه D08)
+D15,Correspondence,"direction (in/out), ref_no, date_on_letter, date_received/sent, from, to, cc, subject, requires_reply, reply_due, related_contract_clause, related_notice_id, channel",Doc
+D15,MeetingMinutes / ActionItem,"meeting, attendees, items, owner, due, status, linked_correspondence",Doc
+D15,DistributionMatrix,doc_type × discipline × party × action (للمعلومة/للمراجعة/للاعتماد),Doc
+D15,ReviewStamp,نص الختم، مراجع، تاريخ، رد، توقيع (حسب المتاح) بإصدار,Doc
+D15,AccessGrant,"principal (مستخدم/طرف), scope (مشروع/مجلد/نوع), level (view/download/comment/upload), expires_at, watermark_policy",Doc/Foundation
+D15,ExternalShare,رابط، مستلم، انتهاء، كلمة سر، عدد مرات، سجل,Doc
+D15,RetentionPolicy / LegalHold,فئة، مدة، حدث بدء الاحتفاظ، إجراء نهائي؛ نطاق الـ Hold وسببه,Doc
+D15,ObligationLink,وثيقة ←→ التزام تعاقدي (D04)، مهلة، حالة,Contracts (مرجع)
+D15,EvidencePack,عناصر مختارة، ختم زمني، Hash للحزمة، مالك، سبب,Doc
+D16,DrawingSheet,doc_id (D15)، sheet_no، title، scale، discipline، zone/level، current_rev، status، set (حزمة),Design (الوثيقة نفسها في D15)
+D16,DrawingRevision,sheet، rev، date، change_description، clouds_ref، changed_by، reason (design change/coordination/RFI/as-built)، diff_ref,Design/Doc
+D16,ModelFile / ModelVersion,project، discipline، format (IFC/…)، source_tool، version، published_by، georef، units، quality_report_id، status,Design
+D16,ModelElement (Index),model_version، guid، type/class، level، zone، system، properties (JSON)، quantity_properties,Design (فهرس خفيف، لا نسخ هندسة كاملة)
+D16,ElementLink,element_guid ←→ boq_item / cost_code / wbs / activity / asset، basis (حجم/مساحة/عدد/طول)، conversion_rule، confidence، reviewed_by,Design (مرجع إلى D03/D05)
+D16,InformationRequirement,نوع العنصر ← خصائص مطلوبة، قيم مسموحة، مرحلة,Design/Foundation
+D16,ModelQualityReport,قواعد، مخالفات بعدد، مثال عناصر، نسبة نجاح,Design
+D16,ClashTest / ClashResult,test، model_a، model_b، tolerance، results، snapshot,Design
+D16,DesignIssue (BCF-style),title، type (clash/coordination/RFI/quality)، elements[]، viewpoint، assigned_to، priority، due، status، comments، resolution_model_ref,Design
+D16,DesignChange,change_no، from_rev، to_rev، initiator، cause، impact_qty، impact_cost_est، impact_activities، status، linked_vo,Design (يرتبط بـ D04)
+D16,VEProposal,الأصل، البديل، تقدير توفير، أثر مدة/جودة/مخاطر، موافقات,Design
+D16,SpecItem / SpecLibrary,قسم، رقم، نص (ar/en)، إصدار، مرتبط ببنود BOQ ومواد معتمدة,Design/Library
+D16,CalcNote (سجل مذكرات حسابية),رقم، تخصص، موضوع، المُعد، المُراجع، ملف، مراجعة، حالة، ملاحظة اعتماد المصمم المسؤول,Design (سجل فقط)
+D16,AsBuiltRecord,sheet، markup_ref، surveyor، date، approved_by,Design
+D16,HandoverPackage / AssetDataRow,نظام/معدة، موقع، مصنّع، موديل، ضمان، أدلة، صيانة دورية، مرجع D11,Design/Assets
+D17,RiskRegister,level (enterprise/portfolio/project/tender)، owner، scope، methodology_id، status,Risk
+D17,Risk,register، title (ar/en)، category، cause/event/effect، owner، probability، impact[dims]، score، velocity/proximity، status، trigger، response_strategy، residual_score، linked_entity (activity/contract/tender/package),Risk
+D17,RiskScale,مقاييس الاحتمال والأثر ومصفوفة الدرجات وعتبات الألوان، بإصدار,Risk/Foundation
+D17,MitigationAction,risk، description، owner، due، cost، status، effectiveness_check,Risk
+D17,RiskQuant,risk، distribution (min/likely/max)، correlation_group، cost/time impact، version,Risk
+D17,Contingency / Reserve,scope، type (cost/time)، approved_amount/days، drawn، remaining، basis_ref، approval,Risk (يظهر في D02/D05/D13)
+D17,QuantRun,model_ref (hook)، assumptions، iterations، output_ref، run_by، date,Risk (اختياري)
+D17,InsurancePolicy,type (CAR/EAR/PL/WC/Marine/Equipment/Medical/…)، insurer، broker، policy_no، period، sum_insured، limits، deductible، insureds[]، premium، currency، project/contract، status، document_ref,Risk
+D17,PolicyRequirement,contract_clause (D04)، required_type، min_limit، period، named_insured، compliance_status,Risk/Contracts
+D17,InsuranceClaim / Incident,incident_ref (D10/D08)، policy، date_of_loss، notice_deadline، notified_at، adjuster، claimed_amount، assessed، paid، status، evidence_refs,Risk
+D17,Guarantee (Bond/LG),type (bid/performance/advance/retention/other)، issuer_bank/surety، beneficiary، applicant_entity، contract/tender، amount، currency، issue_date، expiry_date، claim_period، auto_renew، status، margin/cash_cover%، commission_rate، text_version، original_location,Risk (يشاركه D04/D13)
+D17,GuaranteeRequest,guarantee (جديد)، purpose، required_by، bank، draft_text_ref، approvals، status,Risk
+D17,GuaranteeEvent,issue/amend/renew/reduce/claim_received/release/return، date، doc_ref، by,Risk
+D17,BankFacility,bank، type، limit، currency، utilized، reserved، expiry، terms، cash_margin,Risk/Finance
+D17,Surety / BondProvider,المنشأة، تقييم، حد، التزامات قائمة,Risk
+D17,CounterpartyRisk,party، type (client/subcontractor/supplier/JV partner)، score، factors، last_review، exposure,Risk
+D17,FXExposure,currency، item_ref (عقد/ضمان/PO)، amount، expected_date، direction,Risk/Finance
+D17,EarlyWarningIndicator,source_module، metric_def، threshold، current، trend، linked_risk,Risk
+D18,MetricDefinition,"code, name (ar/en), formula (expr على مصادر), grain, unit, aggregation, currency_rule, owner, source_entities, version, status, valid_from/to",Semantic Layer
+D18,Dimension,"code, hierarchy (شركة/مشروع/WBS/CBS/مورد/زمن)، SCD type",Semantic Layer
+D18,DataMart / FactTable,"fact_cost, fact_progress, fact_cash, fact_safety, fact_quality, fact_procurement… + snapshot_date",Warehouse (مشتق)
+D18,MetricSnapshot,"metric, version, period, scope, value, computed_at, lineage_ref",Warehouse
+D18,Lineage,"metric → fact → source_table → source_record_ids, transformation_version",Semantic Layer
+D18,Dashboard,"code, title, audience_role, layout, widgets[], version, status",BI
+D18,Widget,"type (kpi/chart/table/map/gantt), metric_refs, filters, thresholds_ref, drill_target",BI
+D18,Report / ReportTemplate,"sections, bindings إلى metrics, template_source_example, language, version",Output Factory
+D18,Schedule (توزيع),"report, cron/timezone, recipients, format, rls_mode, last_run, status",BI
+D18,ThresholdRule / Alert,"metric, scope, condition, severity, owner, escalation, status",BI
+D18,ReconciliationRun,"metric, period, ledger_value, bi_value, diff, explained_by, status",BI/D13
+D18,ExportLog,"user, object, format, watermark_id, ts, ip",Audit
+D19,JVArrangement,"id, type (JV/Consortium/Unincorporated), legal_entity_ref, project/contract, start/end, base_currency, status, agreement_doc",JV (الهوية القانونية في D01)
+D19,JVPartner,"jv, party, role (Lead/Sponsor/Partner/Silent), share_pct, voting_pct, effective_from/to, guarantor_ref",JV
+D19,ShareSchedule,"jv, partner, share_type (profit/cost/capital/voting), pct, version, approved_by",JV
+D19,JVAccountingPolicy,"partner/entity, method (config), params, version, approved_by, evidence_ref",Finance (D13) بنسخة
+D19,PartnerView / PartnerLedger,"jv, partner, period, mapped_accounts, amount, currency, policy_version",JV (مشتق من D13)
+D19,CashCall,"jv, call_no, requested_by, amount, due_date, purpose, allocations[partner, amount], status",JV
+D19,Distribution,"jv, period, amount, allocations[], decision_ref, status",JV
+D19,PartnerCurrentAccount,"jv, partner, contributions, distributions, balance",JV/Finance
+D19,IntercompanyTransaction,"entity_a, entity_b, type, amount, currency, journal_a, journal_b, match_status",Finance (D13)
+D19,EliminationRule / EliminationEntry,"rule, scope, accounts, version; period, amount, status",Consolidation
+D19,ConsolidationGroup / Ownership,"parent, subsidiary, own_pct, control_basis, effective_from, method",Consolidation
+D19,GroupChartMapping,"entity_account → group_account, rule, version, effective",Consolidation
+D19,ConsolidationRun,"period, scope, policy_version, fx_set, status, snapshot_ref",Consolidation
+D19,TranslationSet,"entity, method, rates (closing/average/historical), source, date",Consolidation (أسعار من D13)
+D19,MinorityInterest,"subsidiary, minority_pct, nci_equity, nci_profit, policy_version",Consolidation
+D19,ResourceChargeRule / ResourceCharge,"resource_type, rate_basis, markup, from_project, to_project, period, amount",JV/Group
+D19,SharedServiceAllocation,"pool, basis, driver_values, targets, period, version",Group
+D19,GroupDOAPolicy,"thresholds, approvers, scope (entity/jv/group), version",Foundation (D01)
+D19,PartnerPortalAccount,"party, jv_scope, permissions, mfa, status",Platform (D20)
+D20,Tenant / Plan / Entitlement,"tenant, plan, features[], quotas{}, region, status, created_at",Platform
+D20,Environment / Release,"env (dev/stage/prod), version, build, deploy_log, status",Platform
+D20,ProvisioningJob,"tenant, steps[], status, rollback_ref",Platform
+D20,Secret / KeyRef,"scope, name, kms_key_ref, rotated_at, owner (لا قيمة في الجداول)",Secrets Vault
+D20,ApiClient / ApiKey / RateLimitPolicy,"client, scopes, limits, tenant, status, last_used",Platform
+D20,Connector (Catalog),"type, version, capabilities, auth_mode, status",Integration Hub
+D20,ConnectorInstance,"tenant, connector, credentials_ref, direction, schedule, status",Integration Hub
+D20,FieldMapping / MappingVersion,"instance, source_field, target_field, transform, version",Integration Hub
+D20,IntegrationRun / DeadLetter,"instance, run_id, counts, errors[], payload_ref, retry_count",Integration Hub
+D20,WebhookSubscription,"tenant, event, url, secret_ref, signing_alg, status",Platform
+D20,AutomationFlow (External),"engine (n8n…), flow_id, owner, service_identity, scopes, status",Integration Hub (سجل فقط)
+D20,MCPServer / MCPTool,"tool, schema, required_permission, risk_class, version, status",Tool Registry
+D20,ModelRegistry,"model_id, provider, version, capabilities, data_policy, cost, status",AI Platform
+D20,PromptRegistry,"prompt_id, version, owner, eval_ref, status",AI Platform
+D20,ToolRegistry / SkillRegistry / AgentRegistry,"id, version, scopes, autonomy_level, owner, evals, status",AI Platform
+D20,AIRequestLog,"tenant, user, agent, model, prompt_ver, context_refs, tools_called, tokens, cost, output_ref, human_decision",AI Platform (Immutable)
+D20,EvalSuite / EvalRun / GoldenSet,"feature, dataset_ver, metrics, thresholds, result, model/prompt versions",AI Platform
+D20,AIBudget / Quota,"tenant, agent, feature, period, limit, spent, alert_at",AI Platform
+D20,KillSwitch,"scope (system/tenant/agent/model/feature), state, reason, set_by",AI Platform
+D20,BrainConfig / ConfigVersion,"namespace, key, value, version, status, approved_by, effective_from",Brain Service
+D20,FeatureFlag,"key, scope, rule, rollout_pct, owner, expiry",Platform
+D20,LocalizationPack / BrandPack,"locale, strings, formats, rtl, logo, theme, version",Platform
+D20,Extension / ExtensionInstall,"id, version, permissions, sandbox_policy, status",Extensions
+D20,SupportSession,"tenant, engineer, reason, scope, approved_by, expires, actions[]",Platform (Audit)
+D20,BackupJob / RestoreTest,"tenant, type, snapshot_ref, result, rpo_actual, rto_actual",Platform
+D20,TenantExport / DeletionCertificate,"tenant, scope, hash, signed_by, date",Platform

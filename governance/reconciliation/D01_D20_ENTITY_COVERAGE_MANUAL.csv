@@ -1,0 +1,330 @@
+domain,entity,v0.2_tables,status(R/S/T/A),note
+D01,Tenant,organizations,R,organizations has RLS (CC-009); no tenant lifecycle/plan binding beyond tenant_subscriptions
+D01,LegalEntity,organizations,T,single org row = tenant = legal entity; parent_org_id only; no legal-entity separation within a tenant
+D01,Branch/BusinessUnit,departments,T,departments only; no BU/branch with P&L or cost-centre semantics
+D01,Project,projects,R,runtime chain
+D01,ProjectParticipant (JV),,A,no JV participant model
+D01,User,users,R,runtime chain
+D01,Role / Permission,"roles,permissions",R,"runtime chain; module/action/scope only, scope not enforced beyond role"
+D01,RoleAssignment,users.role_id,T,one role per user; no project-scoped or time-bound assignments
+D01,ApprovalPolicy / DOARule,"delegation_of_authority,approval_workflow_steps",R,runtime chain; no create API; flat amount bands; not versioned/effective-dated as policy
+D01,Party (الأساس لكل الأطراف),"clients,vendors_subcontractors",T,separate client/vendor tables; no unified Party
+D01,Item / Service / UoM / Currency / ExchangeRate / Calendar / Country / Tax code,"currencies,exchange_rates,inventory_items",T,"currency/FX present; no UoM master, calendars, countries, tax codes"
+D01,NumberSequence,,A,numbers are free-text inputs
+D01,ConfigItem,system_settings,T,key/value only; no versioned configuration layers
+D01,AuditEvent,audit_log,S,trigger-based audit on tables (migration 017); not runtime-verified for completeness
+D02,Opportunity,"opportunities,leads",R,runtime chain
+D02,BidDecision,,A,no bid/no-bid record
+D02,TenderDocument,"tender_documents,documents",S,link table only
+D02,TenderRequirement,,A,
+D02,TenderTeamAssignment,tenders.assigned_estimator_id,T,single estimator field
+D02,Estimate (نسخ),boq_master,T,no estimate header/versions; BOQ rows carry rates directly
+D02,EstimateLine,boq_master,T,flat line with 4 rate columns
+D02,BidAdjudication/Comparison,,A,
+D02,TenderRisk,,A,
+D02,BidPackage,,A,
+D02,BidOutcome,tenders.status/awarded_value/loss_reason,S,fields on tender
+D02,CompetitorProfile,,A,
+D03,BOQ (رأس),,A,no BOQ header/version/type; boq_master is a flat item table keyed by tender/project
+D03,BOQSection,boq_master.section,T,free-text section column; no hierarchy
+D03,BOQItem,"boq_master,project_boq",T,boq_master runtime-exercised; project_boq has no creation path (F-01); no stable item id across versions
+D03,TakeoffSheet / TakeoffLine,quantity_sheets,T,"quantity_sheets is site measurement (date/location/qty), not dimensional takeoff"
+D03,RateAnalysis,boq_rate_buildup,T,runtime-exercised; no analysis header/version/output unit/overhead-profit-risk on analysis
+D03,RateComponent,boq_rate_buildup,T,"resource_type/qty_per_unit/unit_cost; no waste%, productivity ref"
+D03,Resource (مكتبة),resource_library,T,single current rate; no specs/category
+D03,ResourcePrice,resource_library.current_market_rate,T,no price history/source/validity/confidence
+D03,Productivity/Norm,,A,
+D03,Assembly,,A,
+D03,CostCode / CBS,cost_codes,S,hierarchical cost codes; runtime-used as FK
+D03,UoM / Conversion,,A,unit_of_measure is free text everywhere
+D03,BOQTemplate,,A,
+D03,BOQChange,,A,
+D04,Contract,contracts,R,runtime chain
+D04,ContractDocument,documents,T,generic documents
+D04,ContractClause,contract_clauses,S,
+D04,Obligation,,A,
+D04,Notice,contract_claims.notice_date,T,date field only; no notice register/time-bar engine
+D04,Variation (VO),variations,S,state machine fixed by CC-006; not runtime-exercised
+D04,VariationItem,variation_boq_lines,S,"references project_boq (unpopulatable, F-01)"
+D04,ExtensionOfTime,contract_claims.claimed_days,T,claim fields only
+D04,Claim,contract_claims,S,
+D04,ClaimEvidence,,A,
+D04,Guarantee,contracts.performance_bond_percent,T,percentage field only; no instrument record
+D04,LDRecord,contracts.liquidated_damages_rate,T,rate field only
+D04,ContractValueLedger,projects.current_contract_value,T,single field; no ledger
+D04,Dispute,,A,
+D05,Schedule,schedule_baselines,T,
+D05,WBS,,A,cost_codes only; no WBS
+D05,Activity,schedule_activities,S,single predecessor column plus relationships table; no calendars/constraints/float
+D05,Relationship,schedule_relationships,S,type + lag
+D05,Calendar,,A,
+D05,ActivityResourceAssignment,,A,
+D05,ActivityBOQLink,progress_updates.boq_item_id,T,
+D05,ProgressRecord,progress_updates,S,
+D05,Baseline,schedule_baselines,T,no activity snapshot per baseline
+D05,Constraint/Readiness (Make-Ready),,A,
+D05,EVMSnapshot,evm_snapshots,S,fields present; no computation engine verified
+D05,CashflowForecast,cash_flow_forecast,S,
+D05,DelayEvent,,A,
+D05,Risk-on-schedule,,A,
+D06,PurchaseRequisition / Line,"material_requisitions,mr_lines",R,runtime chain
+D06,RFQ / RFQLine / RFQInvite,"rfqs,rfq_vendors",R,no RFQ lines
+D06,Quotation,vendor_quotations,R,header total only; no quotation lines
+D06,QuoteComparison,comparative_statements,R,header only; no line comparison
+D06,Vendor (مرجع D01) + VendorProfile,vendors_subcontractors,T,no create API (F-02)
+D06,VendorEvaluation,vendors_subcontractors.rating_score,T,
+D06,PurchaseOrder / POLine,"purchase_orders,po_lines",R,runtime chain
+D06,POAmendment,,A,
+D06,FrameworkAgreement,,A,
+D06,GoodsReceipt (GRN) / Line,"goods_receipt_notes,grn_lines",R,runtime chain
+D06,SupplierInvoice / Line,vendor_invoices,R,no invoice lines
+D06,MatchResult,invoice_match_results,R,runtime chain
+D06,Commitment,cost_transactions(committed),R,created on PO approval
+D06,Shipment / CustomsFile,,A,
+D06,ExpediteLog,,A,
+D07,SubcontractorPrequal,vendors_subcontractors.prequalification_status,T,
+D07,SubPackage / Line,subcontracts.package_name,T,
+D07,SubTender / SubBid / Comparison,,A,
+D07,SubContract,subcontracts,S,
+D07,SubContractItem,,A,no subcontract BOQ
+D07,WorkOrder,,A,
+D07,MeasurementSheet / Line,quantity_sheets,T,
+D07,PaymentCertificate (Sub IPC),"subcontract_certificates,subcontract_certificate_lines",S,posting path exists; not runtime-exercised
+D07,IPCDeduction,subcontract_certificates.penalties_deductions,T,single field
+D07,BackCharge,,A,
+D07,SubVO,,A,
+D07,OwnerIPC,"ipcs,ipc_boq_lines",R,header runtime-exercised; ipc_boq_lines need project_boq (F-01)
+D07,Guarantee (ref),,A,
+D07,FinalAccount,,A,
+D07,MarginView,,A,
+D08,DailyReport,site_diary,S,
+D08,DR_Labor / DR_Equipment,"diary_manpower,diary_equipment",S,
+D08,DR_Work / ExecutedQuantity,"quantity_sheets,progress_updates",T,
+D08,DR_Material / DR_Delay / DR_Incident,"site_diary.delays_notes,incidents",T,free text
+D08,Location/Zone,,A,location is free text
+D08,RFI,rfis,S,
+D08,Submittal,submittals,S,
+D08,SubmittalRevision,,A,
+D08,DrawingRegister / DrawingRevision,drawings,T,revision column only; no revision history table
+D08,ShopDrawing,,A,
+D08,InspectionRequest,inspection_checklists,T,
+D08,SiteInstruction,site_instructions,S,
+D08,Meeting / Minute / ActionItem,,A,
+D08,Photo,documents,T,
+D08,SnagItem / HandoverPack,punch_lists,T,
+D08,SyncBatch / Conflict,,A,no offline sync
+D09,QualityPlan,,A,
+D09,ITPTemplate / ITP,,A,
+D09,ITPStep,,A,
+D09,InspectionRequest (IR),inspection_checklists,T,
+D09,InspectionChecklist / Result,inspection_checklists,T,header only; no checklist items/results
+D09,HoldPointRelease,,A,
+D09,MaterialSample,,A,
+D09,TestResult,,A,
+D09,Lab / LabAccreditation,,A,
+D09,NCR,ncrs,S,
+D09,CAR / CorrectiveAction,ncrs.corrective_action,T,text field
+D09,SnagItem,punch_lists,S,
+D09,CalibrationRecord,,A,
+D09,SupplierQualityRecord,,A,
+D09,AuditPlan / Audit,,A,
+D09,HandoverDossier,,A,
+D10,HSEPlan,,A,
+D10,RiskAssessment / RiskItem,,A,
+D10,JSA / MethodStatement,method_statements,T,header only
+D10,PermitToWork,permits_to_work,S,lifecycle columns present
+D10,PermitCheck / Closure,permits_to_work.closed_by,T,
+D10,IncidentReport,incidents,S,
+D10,Injury / MedicalCase,incidents.injured_party,T,
+D10,Investigation,incidents.investigation_status,T,
+D10,CorrectiveAction,incidents.corrective_actions,T,text
+D10,Inspection / Audit,,A,
+D10,CompetencyRequirement,,A,
+D10,TrainingRecord,,A,
+D10,ToolboxTalk,toolbox_talks,S,
+D10,PPEIssue,,A,
+D10,EmergencyPlan / Drill,,A,
+D10,EnvMonitoring,,A,
+D10,WasteRecord,,A,
+D10,ContractorHSEProfile,,A,
+D10,StopWorkEvent,,A,
+D10,ExposureHours,,A,
+D11,Equipment (Asset),assets_equipment,S,
+D11,EquipmentCategory,assets_equipment.category,T,
+D11,EquipmentDocument,,A,
+D11,Allocation,assets_equipment.current_project_id,T,
+D11,TransferRecord,,A,
+D11,UsageLog,equipment_usage,S,posts cost
+D11,OperatorAssignment,equipment_usage.operator_id,T,
+D11,FuelTransaction,,A,
+D11,MaintenancePlan,maintenance_log.next_due_date,T,
+D11,WorkOrder,maintenance_log,T,
+D11,Breakdown / Downtime,,A,
+D11,InternalRate,equipment_usage.hourly_rate,T,per-usage rate; no rate card
+D11,ChargeRun / Charge,,A,
+D11,RentalContract,,A,
+D11,RentalInvoiceMatch,,A,
+D11,TelematicsDevice / Event,,A,
+D11,AssetFinancials,,A,
+D12,Employee,employees,S,
+D12,EmployeeContract,employees.employment_type/basic_salary,T,
+D12,OrgPosition,employees.job_title,T,no position catalog
+D12,Requisition / Candidate / Offer,recruitment,T,requisition only
+D12,ProjectAssignment,employees.primary_project_id,T,
+D12,Shift / AttendanceRule,,A,
+D12,AttendanceEvent,,A,
+D12,DailyAttendance,attendance,S,
+D12,Timesheet / TimesheetLine,timesheets,S,
+D12,LeaveType / LeaveBalance / LeaveRequest,leave_requests,T,requests only
+D12,PayElement,payroll_lines.basic/overtime/allowances,T,fixed columns
+D12,PayrollRun / PayslipLine,"payroll_runs,payroll_lines",S,posts cost/GL; not runtime-exercised
+D12,StatutoryProfile,,A,no statutory/social-insurance/tax rules
+D12,EndOfService,,A,
+D12,IdentityDocument,employees.national_id,T,
+D12,Camp / Room / Bed / Occupancy,,A,
+D12,DailyWorker / SubcontractWorker,diary_manpower,T,headcount only
+D12,Appraisal / TrainingRecord,,A,
+D13,LegalEntity / FiscalCalendar / Period,fiscal_periods,R,runtime chain
+D13,ChartOfAccount / Account,chart_of_accounts,R,runtime chain
+D13,CostCode ↔ Account Mapping,gl_posting_rules,T,"posting rule by source module, not by cost code"
+D13,JournalEntry / JournalLine,"general_ledger,manual_journal_entries,manual_journal_entry_lines",R,GL runtime-exercised; manual journals not
+D13,Dimension,general_ledger.project_id,T,project only
+D13,Currency / FXRate,"currencies,exchange_rates",S,
+D13,Vendor/Customer (Party financial),"clients,vendors_subcontractors",T,
+D13,APInvoice / ARInvoice,"accounts_payable,accounts_receivable,vendor_invoices",R,runtime chain
+D13,Payment / Receipt / Allocation,payments,R,runtime chain; no allocation table
+D13,BankAccount / BankStatementLine / Reconciliation,"bank_accounts,bank_reconciliation",T,no statement lines
+D13,Commitment,cost_transactions,R,
+D13,Budget / BudgetRevision,budgets,T,no revisions
+D13,RetentionLedger,retention_ledger,S,not populated by IPC path in runtime chain
+D13,GuaranteeRecord,,A,
+D13,WIPSnapshot,,A,
+D13,RevenueRecognitionPolicy,,A,F-05 open decision
+D13,FixedAssetRegister,assets_equipment,T,"operational asset, not financial register"
+D13,IntercompanyPair,,A,
+D13,TaxCode / TaxLedger,vendor_invoices.tax_amount,T,amount only
+D13,PeriodCloseChecklist,fiscal_periods.status,T,
+D14,Item,inventory_items,R,
+D14,ItemUoM,,A,
+D14,Warehouse,warehouses,R,
+D14,Location/Bin,,A,
+D14,StockBalance,,A,derived from transactions only
+D14,StockMovement,inventory_transactions,R,
+D14,GoodsReceipt,goods_receipt_notes,R,
+D14,IssueNote,inventory_transactions(issue),T,
+D14,TransferOrder,inventory_transactions(transfer),T,transfer endpoint exists; not runtime-exercised
+D14,ReturnNote,,A,
+D14,Reservation,,A,
+D14,Stocktake / StocktakeLine,,A,
+D14,ReorderPolicy,,A,
+D14,ValuationPolicy,,A,unit_cost per transaction only
+D14,ConsumptionNorm,,A,
+D14,ScrapSurplus,,A,
+D14,Barcode/QRTag,,A,
+D15,Document (هوية),documents,S,
+D15,DocumentRevision,document_versions,S,sha256/storage key
+D15,MetadataSchema,,A,
+D15,NumberingRule,document_registers.numbering_scheme,T,
+D15,StatusCodeSet,,A,
+D15,Transmittal / TransmittalLine,"document_transmittals,transmittal_lines",S,
+D15,Submittal,submittals,S,
+D15,RFI,rfis,S,
+D15,Correspondence,,A,
+D15,MeetingMinutes / ActionItem,,A,
+D15,DistributionMatrix,,A,
+D15,ReviewStamp,,A,
+D15,AccessGrant,documents.confidentiality,T,
+D15,ExternalShare,"client_portal_access,subcontractor_portal_access",T,
+D15,RetentionPolicy / LegalHold,,A,
+D15,ObligationLink,,A,
+D15,EvidencePack,ipc_supporting_docs,T,IPC only
+D16,DrawingSheet,drawings,S,
+D16,DrawingRevision,drawings.revision,T,
+D16,ModelFile / ModelVersion,,A,
+D16,ModelElement (Index),,A,
+D16,ElementLink,,A,
+D16,InformationRequirement,,A,
+D16,ModelQualityReport,,A,
+D16,ClashTest / ClashResult,,A,
+D16,DesignIssue (BCF-style),,A,
+D16,DesignChange,,A,
+D16,VEProposal,,A,
+D16,SpecItem / SpecLibrary,,A,
+D16,CalcNote (سجل مذكرات حسابية),,A,
+D16,AsBuiltRecord,,A,
+D16,HandoverPackage / AssetDataRow,,A,
+D17,RiskRegister,,A,
+D17,Risk,,A,
+D17,RiskScale,,A,
+D17,MitigationAction,,A,
+D17,RiskQuant,,A,
+D17,Contingency / Reserve,,A,
+D17,QuantRun,,A,
+D17,InsurancePolicy,,A,
+D17,PolicyRequirement,,A,
+D17,InsuranceClaim / Incident,,A,
+D17,Guarantee (Bond/LG),,A,tenders.bond_amount only
+D17,GuaranteeRequest,,A,
+D17,GuaranteeEvent,,A,
+D17,BankFacility,,A,
+D17,Surety / BondProvider,,A,
+D17,CounterpartyRisk,,A,
+D17,FXExposure,,A,
+D17,EarlyWarningIndicator,,A,
+D18,MetricDefinition,,A,
+D18,Dimension,,A,
+D18,DataMart / FactTable,,A,dashboards query OLTP directly
+D18,MetricSnapshot,"evm_snapshots,company_cash_position",T,
+D18,Lineage,,A,
+D18,Dashboard,,A,hard-coded pages
+D18,Widget,,A,
+D18,Report / ReportTemplate,,A,
+D18,Schedule (توزيع),,A,
+D18,ThresholdRule / Alert,notifications,T,
+D18,ReconciliationRun,,A,
+D18,ExportLog,,A,
+D19,JVArrangement,,A,
+D19,JVPartner,,A,
+D19,ShareSchedule,,A,
+D19,JVAccountingPolicy,,A,
+D19,PartnerView / PartnerLedger,,A,
+D19,CashCall,,A,
+D19,Distribution,,A,
+D19,PartnerCurrentAccount,,A,
+D19,IntercompanyTransaction,,A,
+D19,EliminationRule / EliminationEntry,,A,
+D19,GroupChartMapping,,A,
+D19,ConsolidationRun,,A,
+D19,TranslationSet,,A,
+D19,MinorityInterest,,A,
+D19,ResourceChargeRule / ResourceCharge,,A,
+D19,SharedServiceAllocation,,A,
+D19,GroupDOAPolicy,,A,
+D19,PartnerPortalAccount,,A,
+D19,ConsolidationGroup / Ownership,organizations.parent_org_id,T,parent pointer only
+D20,Tenant / Plan / Entitlement,"organizations,subscription_plans,plan_entitlements,tenant_subscriptions,feature_catalog",S,no provisioning flow (F-03/F-08)
+D20,Environment / Release,,A,
+D20,ProvisioningJob,customer_onboarding,T,checklist only
+D20,Secret / KeyRef,integration_connections.secret_ref,T,
+D20,ApiClient / ApiKey / RateLimitPolicy,,A,
+D20,Connector (Catalog),,A,
+D20,ConnectorInstance,integration_connections,S,
+D20,FieldMapping / MappingVersion,,A,
+D20,IntegrationRun / DeadLetter,automation_executions,T,
+D20,WebhookSubscription,webhook_subscriptions,S,no delivery worker verified
+D20,AutomationFlow (External),automation_workflows,S,
+D20,MCPServer / MCPTool,ai_tools,T,
+D20,ModelRegistry,ai_models,S,
+D20,PromptRegistry,ai_prompts,S,
+D20,ToolRegistry / SkillRegistry / AgentRegistry,"ai_tools,ai_agents,ai_agent_tools",S,no runtime agent execution verified
+D20,AIRequestLog,"ai_runs,ai_run_steps",S,
+D20,EvalSuite / EvalRun / GoldenSet,ai_evaluations,T,
+D20,AIBudget / Quota,"ai_agents.cost_limit,usage_events",T,
+D20,KillSwitch,ai_agents.kill_switch,T,per-agent flag
+D20,BrainConfig / ConfigVersion,,A,no versioned company configuration layer
+D20,FeatureFlag,feature_catalog,T,
+D20,LocalizationPack / BrandPack,,A,
+D20,Extension / ExtensionInstall,,A,
+D20,SupportSession,,A,
+D20,BackupJob / RestoreTest,,A,
+D20,TenantExport / DeletionCertificate,,A,
