@@ -1,0 +1,7 @@
+MIGRATION_FAILURE "v_portfolio_kpis" is a view
+APPLY 017_phase7_final_hardening.sql
+APPLY 019_operational_closure.sql
+MIGRATION_FAILURE aggregate functions are not allowed in UPDATE
+[1] last=APPLY 020_redteam_closure.sql :: MIGRATION_FAILURE column "legal_name" does not exist
+MIGRATION_FAILURE column a.actor_user_id does not exist
+MIGRATION_FAILURE column "org_id" of relation "permissions" contains null values

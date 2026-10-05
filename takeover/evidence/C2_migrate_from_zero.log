@@ -1,0 +1,13 @@
+APPLY 001_phase0_phase1.sql
+APPLY 002_cost_adjustment_v1_1.sql
+APPLY 003_cost_adjustment_v1_2.sql
+APPLY 004_phase2.sql
+APPLY 005_phase2_1_hardening_recovered.sql
+APPLY 006_phase3_finance_gl.sql
+APPLY 007_phase4_hr_assets_qaqc_hse.sql
+APPLY 008_phase5_phase6_views_portals.sql
+APPLY 009_priority_execution_patch.sql
+APPLY 010_phase6_permissions_and_validation_patch.sql
+APPLY 011_phase1_security_tenant_isolation.sql
+MIGRATION_FAILURE ALTER action ENABLE ROW SECURITY cannot be performed on relation "v_tender_win_loss"
+migrate exit=1

@@ -1,0 +1,29 @@
+
+added 130 packages in 9s
+--- tsc build
+src/modules/aiPlatform/aiPlatform.routes.ts(54,20): error TS2339: Property 'partial' does not exist on type 'ZodTypeAny'.
+src/modules/boq/boq.routes.ts(28,49): error TS2339: Property 'partial' does not exist on type 'ZodEffects<ZodObject<{ tender_id: ZodNullable<ZodOptional<ZodNumber>>; project_id: ZodNullable<ZodOptional<ZodNumber>>; ... 11 more ...; profit_percent: ZodDefault<...>; }, "strip", ZodTypeAny, { ...; }, { ...; }>, { ...; }, { ...; }>'.
+src/modules/portals/portals.routes.ts(57,15): error TS2339: Property 'client_id' does not exist on type '{}'.
+src/modules/portals/portals.routes.ts(57,52): error TS2339: Property 'client_id' does not exist on type '{}'.
+src/modules/subcontracts/subcontracts.routes.ts(21,366): error TS2339: Property 'org_id' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(19,630): error TS2339: Property 'status' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(19,723): error TS2339: Property 'status' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(19,835): error TS2339: Property 'issued_by' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(23,684): error TS2339: Property 'status' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(23,779): error TS2339: Property 'status' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(23,849): error TS2339: Property 'submitted_by' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(23,1154): error TS2339: Property 'submitted_by' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(23,1281): error TS2339: Property 'reviewer_id' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(23,1309): error TS2339: Property 'reviewer_id' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(27,475): error TS2339: Property 'status' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(27,565): error TS2339: Property 'raised_by' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(27,684): error TS2339: Property 'assigned_to' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(27,712): error TS2339: Property 'assigned_to' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(28,280): error TS2339: Property 'status' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(32,351): error TS2339: Property 'status' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(32,450): error TS2339: Property 'created_by' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(32,477): error TS2339: Property 'created_by' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(33,395): error TS2339: Property 'status' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(33,494): error TS2339: Property 'created_by' does not exist on type '{}'.
+src/modules/technicalOffice/technicalOffice.routes.ts(33,537): error TS2339: Property 'submitted_by' does not exist on type '{}'.
+backend build exit=2

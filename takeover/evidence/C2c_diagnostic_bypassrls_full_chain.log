@@ -1,0 +1,21 @@
+APPLY 001_phase0_phase1.sql
+APPLY 002_cost_adjustment_v1_1.sql
+APPLY 003_cost_adjustment_v1_2.sql
+APPLY 004_phase2.sql
+APPLY 005_phase2_1_hardening_recovered.sql
+APPLY 006_phase3_finance_gl.sql
+APPLY 007_phase4_hr_assets_qaqc_hse.sql
+APPLY 008_phase5_phase6_views_portals.sql
+APPLY 009_priority_execution_patch.sql
+APPLY 010_phase6_permissions_and_validation_patch.sql
+APPLY 011_phase1_security_tenant_isolation.sql
+APPLY 012_phase2_crm_tender_contracts.sql
+APPLY 013_phase3_financial_integrity_hardening.sql
+APPLY 014_phase4_technical_planning_site_subcontracts_hardening.sql
+APPLY 015_phase5_hr_hse_qaqc_edms_hardening.sql
+APPLY 016_phase6_portals_notifications_reporting_hardening.sql
+APPLY 017_phase7_final_hardening.sql
+APPLY 018_adversarial_closure_core.sql
+APPLY 019_operational_closure.sql
+APPLY 020_redteam_closure.sql
+MIGRATION_FAILURE update or delete on table "delegation_of_authority" violates foreign key constraint "approval_workflow_steps_doa_id_fkey" on table "approval_workflow_steps"
