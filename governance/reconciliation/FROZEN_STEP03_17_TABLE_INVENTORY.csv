@@ -1,0 +1,530 @@
+step,file,kind,rows,cols,longest_col,distinct_ratio_longest_col,header
+03,01_BASELINE_GENEALOGY.csv,content,3,4,Binding,1.0,Step;Version;Status;Binding
+03,07_STEP03_v1_2_PRODUCT_BOUNDARY_MATRIX_F01-F86.csv,content,86,8,Authority Rule,0.02,Family;Family Name;Atomic Capabilities;Boundary Code;Product Boundary;Activation Rule;Canonical Owner;Authority Rule
+03,08_STEP03_v1_2_PRODUCT_PACK_CATALOG_15.csv,content,15,5,Definition,1.0,Pack ID;Pack;Status;Applies To;Definition
+03,09_STEP03_v1_2_DEPLOYMENT_PROFILES.csv,content,9,6,Primary Outcome,1.0,Profile ID;Customer / Deployment Profile;Status;Default Layers;Optional Layers;Primary Outcome
+03,90_REDTEAM_REPAIR_GATES.csv,governance/manifest,4,4,Check,1.0,Gate;Check;Result;Evidence
+03,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,6,3,sha256,1.0,file;sha256;size_bytes
+03,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,9,3,sha256,0.89,file;sha256;size_bytes
+03,99_MANIFEST_SHA256.csv,governance/manifest,6,3,sha256,1.0,file;sha256;size_bytes
+04,01_BASELINE_GENEALOGY.csv,content,3,3,Status,0.33,Step;Version;Status
+04,11_STEP04_v1_3_ENTERPRISE_FUNCTION_MAP_39.csv,content,39,4,Function,1.0,ID;Function;Families;Operating Layer
+04,12_STEP04_v1_3_END_TO_END_VALUE_STREAMS_31.csv,content,31,6,Outcome,1.0,ID;Value Stream;Trigger/Input;Outcome;Accountable Owner Archetype;Families
+04,13_STEP04_v1_3_CRITICAL_HANDOFFS_34.csv,content,34,4,Control,1.0,ID;Handoff;Required Package;Control
+04,14_STEP04_v1_3_OPERATING_MODEL_INVARIANTS_26.csv,content,26,2,Invariant,1.0,ID;Invariant
+04,90_PRE_OWNER_REDTEAM_REPAIR_GATES.csv,governance/manifest,5,3,Check,1.0,Gate;Check;Result
+04,92_OWNER_FREEZE_GATES.csv,governance/manifest,5,3,Check,1.0,Gate;Check;Result
+04,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,8,3,sha256,1.0,file;sha256;size_bytes
+04,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,11,3,sha256,1.0,file;sha256;size_bytes
+05,01_BASELINE_GENEALOGY.csv,content,3,3,Status,0.33,Step;Version;Status
+05,16_STEP05_v1_2_LOGICAL_COMPONENT_CATALOG_78.csv,content,78,6,Responsibility,1.0,ID;Layer;Component;Responsibility;Class;Boundary
+05,17_STEP05_v1_2_F01-F86_COMPONENT_TRACEABILITY.csv,content,86,5,Authority Note,0.02,Family;Family Name;Logical Components;Status;Authority Note
+05,18_STEP05_v1_2_BOUNDED_CONTEXT_MAP_26.csv,content,26,6,Owns,1.0,ID;Bounded Context;Canonical Families;Owns;Consumes;Forbidden Ownership
+05,19_STEP05_v1_2_COMPONENT_DEPENDENCY_MATRIX.csv,content,143,5,Purpose,0.69,From;To;Dependency Type;Purpose;Authority Rule
+05,20_STEP05_v1_2_FORBIDDEN_DEPENDENCY_RULES_15.csv,content,15,4,Rule,1.0,ID;Source;Forbidden Target/Effect;Rule
+05,21_STEP05_v1_2_TRANSACTION_CONSISTENCY_MATRIX_18.csv,content,18,7,Failure/Compensation Rule,1.0,ID;Flow;Local Transaction Boundary;Cross-Domain Mechanism;Irreversible/External Effect;Idempotency;Failure/Compensation Rule
+05,22_STEP05_v1_2_STEP04_CC04_TRACEABILITY_12.csv,content,12,5,Realization,1.0,Upstream ID;Obligation;Architecture Mechanism;Realization;Status
+05,23_STEP05_v1_2_STAKEHOLDER_CONCERN_VIEWPOINT_MATRIX_18.csv,content,18,5,Primary Concerns,1.0,ID;Stakeholder;Primary Concerns;Viewpoints;Required Models
+05,24_STEP05_v1_2_ARCHITECTURE_MODEL_KINDS_16.csv,content,16,5,Correspondence Rule,1.0,ID;Model Kind;Purpose;Viewpoint;Correspondence Rule
+05,25_STEP05_v1_2_RETENTION_DELETION_PROPAGATION_12.csv,content,12,5,Disposition Rule,1.0,ID;Store/Projection;Disposition Rule;Critical Control;Owner
+05,26_STEP05_v1_2_CONCURRENCY_CONFLICT_MATRIX_15.csv,content,15,4,Conflict Rule,1.0,ID;Object/Class;Strategy;Conflict Rule
+05,27_STEP05_v1_2_EXTERNAL_SIDE_EFFECT_SEMANTICS_12.csv,content,12,5,Rule,1.0,ID;External Effect;Authority Class;State Model;Rule
+05,28_STEP05_v1_2_ISOLATION_BLAST_RADIUS_MATRIX_15.csv,content,15,4,Control,1.0,ID;Failure/Resource Domain;Isolation Boundary;Control
+05,29_STEP05_v1_2_LOCALIZATION_CONTEXT_MATRIX_12.csv,content,12,4,Architecture Rule,1.0,ID;Context;Scope;Architecture Rule
+05,30_STEP05_v1_2_OPENBIM_STANDARDS_PROFILE_6.csv,content,6,5,Use,1.0,ID;Standard;Version;Status;Use
+05,31_STEP05_v1_2_ARCHITECTURE_RISK_DEBT_WAIVER_REGISTER_18.csv,content,18,6,Treatment,1.0,ID;Severity;Risk;Failure Mode;Treatment;Status
+05,32_STEP05_v1_2_NFR_MEASUREMENT_OBLIGATIONS_18.csv,content,18,5,Obligation,1.0,ID;Quality Area;Measure;Scope;Obligation
+05,33_STEP05_v1_2_ARCHITECTURE_EVALUATION_30.csv,content,30,4,Evidence,1.0,ID;Criterion;Evidence;Result
+05,34_STEP05_v1_2_SECURITY_THREAT_CONTROL_MATRIX_20.csv,content,20,5,Verification,1.0,ID;Threat;Reference;Architecture Controls;Verification
+05,35_FORENSIC_REFERENCE_REGISTER_15.csv,content,15,5,URL,1.0,ID;Reference;Status;Used For;URL
+05,90_PRE_OWNER_REDTEAM_REPAIR_GATES.csv,governance/manifest,6,3,Check,1.0,Gate;Check;Result
+05,92_OWNER_FREEZE_GATES.csv,governance/manifest,5,3,Check,1.0,Gate;Check;Result
+05,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,24,3,sha256,1.0,file;sha256;size_bytes
+05,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,28,3,sha256,0.96,file;sha256;size_bytes
+05,99_MANIFEST_SHA256.csv,governance/manifest,24,3,sha256,1.0,file;sha256;size_bytes
+06,01_BASELINE_GENEALOGY_v1_3.csv,content,3,3,Status,1.0,Step;Version;Status
+06,02_CONTROLLED_CHANGE_SCOPE.csv,content,2,6,Change,1.0,CCR;Topic;Frozen Source;Successor;Change;Candidate Status
+06,03D_BASE_AGGREGATE_FIELD_CONTRACT.csv,content,3310,15,Domain,0.03,Aggregate ID;Owner Family;Domain;Aggregate;Scope;Canonical Key;Field;Type;Requiredness;Mutability;Client Write Policy;Authoritative Store;Frozen Lifecycle;Rule;Evidence Status
+06,03E_AGGREGATE_DOMAIN_EXTENSION_REGISTER_276.csv,content,276,12,Reason,0.0,Aggregate ID;Owner Family;Domain;Aggregate;Scope;Canonical Key;Domain Fields;Sensitive Fields;Field-Level Validation;Writable Allow-List;Status;Reason
+06,03F_PROPOSED_DOMAIN_FIELD_EXTENSION.csv,content,1612,10,Governance Note,0.0,Aggregate ID;Owner Family;Domain;Aggregate;Archetype;Field;Type;Requiredness;Source Class;Governance Note
+06,03G_PROPOSED_WRITABLE_ALLOWLIST.csv,content,1612,4,Write Policy,0.0,Aggregate ID;Field;Write Policy;Source Class
+06,03_CANONICAL_BUSINESS_AGGREGATE_CATALOG_UNCHANGED_276.csv,content,276,11,Core Invariant,1.0,ID;Owner Family;Domain;Business Aggregate;Type;Scope;Canonical Key;Lifecycle;Core Invariant;Event Owner;Authoritative Logical Store
+06,41A_AGGREGATE_LIFECYCLE_TRANSITION_MATRIX.csv,content,843,9,Transition Policy,0.0,Aggregate ID;Owner Family;Aggregate;Frozen Lifecycle;From State;To State;Transition Policy;Unlisted Transition Policy;Evidence Status
+06,41B_AGGREGATE_LIFECYCLE_SUMMARY_276.csv,content,276,8,Additional Guard Status,0.0,Aggregate ID;Aggregate;Frozen Lifecycle;State Tokens;Allowed Edge Count;Default Policy;Additional Guard Status;Candidate Status
+06,41C_LIFECYCLE_ENFORCEMENT_POLICY_8.csv,content,8,2,Rule,1.0,Rule ID;Rule
+06,41D_PROPOSED_BUSINESS_TRANSITION_GUARDS.csv,content,843,7,Guard,0.01,Aggregate ID;Aggregate;Archetype;From State;To State;Guard;Source Class
+06,80_CONTROLLED_CHANGE_TRACEABILITY.csv,content,4,6,Result,1.0,CCR;Frozen Step;Frozen Artifact;Successor Artifact;Coverage;Result
+06,82_DOMAIN_COMMITTEE_PROPOSAL_COVERAGE_276.csv,content,276,6,Status,0.0,Aggregate ID;Aggregate;Archetype;Proposed Domain Fields;Proposed Transition Guards;Status
+06,90_CONTROLLED_CHANGE_VALIDATION_GATES.csv,governance/manifest,13,4,Gate,1.0,Gate ID;Gate;Status;Evidence
+06,92_DOWNSTREAM_REBASE_IMPACT.csv,governance/manifest,5,4,Impact,1.0,Step;Current Frozen;Required Successor;Impact
+06,93_DOMAIN_PROPOSAL_HOSTILE_GATES.csv,governance/manifest,10,4,Gate,1.0,Gate ID;Gate;Status;Evidence
+06,94_OWNER_FREEZE_GATES.csv,governance/manifest,7,4,Evidence,1.0,Gate ID;Gate;Status;Evidence
+06,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,19,3,SHA256,1.0,File;SHA256;Bytes
+06,98_TECHNICAL_EVIDENCE_INDEX.csv,governance/manifest,18,3,SHA256,1.0,File;SHA256;Bytes
+06,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,23,2,SHA256,0.96,File;SHA256
+06,99_MANIFEST_SHA256.csv,governance/manifest,19,3,SHA256,1.0,File;SHA256;Bytes
+07,01_BASELINE_AND_GENEALOGY.csv,content,8,4,Expected/Observed SHA256,1.0,Item;Path/File;Expected/Observed SHA256;Status
+07,02_BLIND_ADVERSARIAL_FINDINGS_7.csv,content,7,7,Failure Basis,1.0,ID;Severity;Finding;Failure Basis;Required Rebuild;Status;Closure Evidence
+07,02_SECOND_PASS_BLIND_FINDINGS_6.csv,content,6,5,Failure Basis,1.0,ID;Severity;Finding;Failure Basis;Required Rebuild
+07,03_ENGINE_PRINCIPLES_45.csv,content,45,3,Rule,1.0,ID;Principle;Rule
+07,04_ENGINE_CATALOG_43.csv,content,43,5,Purpose,1.0,ID;Engine;Owner Families;Purpose;Hard Boundary
+07,05_EXECUTABLE_DEFINITION_TYPES_41.csv,content,41,3,Definition Type,1.0,ID;Definition Type;Primary Engine
+07,06_RUNTIME_INSTANCE_TYPES_39.csv,content,39,3,Runtime Type,1.0,ID;Runtime Type;Engine
+07,07_EXECUTABLE_DEFINITION_CONTRACT_49.csv,content,49,2,Requirement,1.0,Field;Requirement
+07,08_RUNTIME_EXECUTION_ENVELOPE_40.csv,content,40,2,Requirement,1.0,Field;Requirement
+07,09_LIFECYCLE_MATRIX_17.csv,content,17,4,Lifecycle,1.0,ID;Object;Lifecycle;Invariant
+07,10_MASTER_OWNERSHIP_MATRIX_123.csv,content,123,6,Boundary,0.37,ID;Concept;Class;Canonical Owner;Authority;Boundary
+07,11_SOURCE_OF_TRUTH_MATRIX_123.csv,content,123,6,Authoritative Logical Boundary,0.05,ID;Concept;Canonical Owner;Authoritative Logical Boundary;Derived Copies;No-Go Boundary
+07,12_ENGINE_DEPENDENCY_GRAPH_v1_2.csv,content,92,4,Reason,1.0,From Engine;To Engine;Dependency Type;Reason
+07,13_FORBIDDEN_DEPENDENCIES_38.csv,content,38,4,Failure,1.0,ID;Forbidden Edge;Failure;Required Control
+07,14_APPROVAL_DOA_AUTHORITY_RULES_20.csv,content,20,3,Control,1.0,ID;Rule;Control
+07,15_RULE_DECISION_FORMULA_SEMANTICS_24.csv,content,24,3,Requirement,1.0,ID;Semantic Rule;Requirement
+07,16_TIMER_SLA_SCHEDULER_RULES_18.csv,content,18,3,Rule,0.94,ID;Topic;Rule
+07,17_CONCURRENCY_RECOVERY_MATRIX_BASE_20.csv,content,20,3,Control,1.0,ID;Object/Operation;Control
+07,18_PROCESS_EXECUTION_SEMANTICS_30.csv,content,30,3,Execution Semantics,1.0,ID;Construct;Execution Semantics
+07,19_ADAPTIVE_CASE_SEMANTICS_20.csv,content,20,3,Rule,1.0,ID;Construct;Rule
+07,20_LOW_CODE_THREAT_CONTROL_BASE_30.csv,content,30,4,Mandatory Control,1.0,ID;Threat;Failure;Mandatory Control
+07,21_POLICY_DECISION_ENFORCEMENT_CONTRACT_20.csv,content,20,3,Requirement,1.0,ID;Element;Requirement
+07,22_EXECUTION_RESOURCE_BUDGETS_BASE_20.csv,content,20,3,Governance,1.0,ID;Resource;Governance
+07,23_DEFINITION_PACKAGE_COMPATIBILITY_BASE_20.csv,content,20,3,Rule,1.0,ID;Topic;Rule
+07,24_DYNAMIC_METADATA_EVOLUTION_20.csv,content,20,3,Required Treatment,1.0,ID;Change;Required Treatment
+07,25_INTEROPERABILITY_PROFILE_12.csv,content,12,5,Boundary/Conformance,1.0,ID;Standard/Profile;Status;Purpose;Boundary/Conformance
+07,26_NOTIFICATION_ATTENTION_SEMANTICS_24.csv,content,24,3,Rule,1.0,ID;Topic;Rule
+07,27_GENERIC_OUTPUT_ORCHESTRATION_20.csv,content,20,3,Rule,1.0,ID;Topic;Rule
+07,28_AGENT_SKILL_MANIFEST_PRIMITIVES_24.csv,content,24,3,Rule,1.0,ID;Topic;Rule
+07,29_OFFLINE_RUNTIME_RECONNECT_SEMANTICS_28.csv,content,28,3,Rule,1.0,ID;Topic;Rule
+07,30_LOCALIZATION_JURISDICTION_RUNTIME_24.csv,content,24,3,Rule,1.0,ID;Topic;Rule
+07,31_ENVIRONMENT_PROMOTION_BINDING_24.csv,content,24,3,Rule,1.0,ID;Topic;Rule
+07,32_F01_F86_STAGE07_COVERAGE_86.csv,content,86,5,Coverage Boundary,0.29,Family;Domain;STEP07 Relationship;Applicable Engines;Coverage Boundary
+07,33_GOLDEN_CASE_STAGE07_TRACEABILITY_38.csv,content,38,5,Boundary,0.03,Golden Case;Path;Applicable STEP07 Engines;Result;Boundary
+07,34_HIGH_RISK_COLLISION_MATRIX_102.csv,content,102,5,Resolution,0.99,ID;Concept A;Owner A;Concept B/Owner;Resolution
+07,35_CONCURRENCY_RECOVERY_MATRIX_28.csv,content,28,3,Control,1.0,ID;Object/Operation;Control
+07,36_LOW_CODE_SECURITY_THREATS_42.csv,content,42,4,Mandatory Control,1.0,ID;Threat;Failure;Mandatory Control
+07,37_EXECUTION_RESOURCE_BUDGETS_28.csv,content,28,3,Governance,1.0,ID;Resource;Governance
+07,38_HOSTILE_ENGINE_ATTACKS_230.csv,content,230,5,Closure Basis,0.05,ID;Category;Attack;Result;Closure Basis
+07,39_CROSS_STAGE_BOUNDARIES_16.csv,content,16,3,Rule,1.0,ID;Boundary;Rule
+07,40_STATIC_SOUNDNESS_IMPACT_ANALYSIS_28.csv,content,28,3,Rule,1.0,ID;Analysis;Rule
+07,41_REFERENCE_REGISTER_14.csv,content,14,4,Use/Status,0.79,ID;Reference;Use/Status;URL or Source
+07,42_MACHINE_VALIDATION_GATES_139.csv,content,139,4,Gate,1.0,ID;Gate;Result;Evidence
+07,43_FIXED_HASH_BLIND_INDEPENDENT_REVIEW_50.csv,content,50,6,Candidate SHA256,0.02,ID;Perspective;Hostile Question;Result;Evidence;Candidate SHA256
+07,90_PRE_OWNER_REDTEAM_REPAIR_GATES.csv,governance/manifest,5,4,Evidence,1.0,ID;Gate;Result;Evidence
+07,90_REDTEAM_REPAIR_GATES.csv,governance/manifest,5,4,Evidence,1.0,ID;Gate;Result;Evidence
+07,92_OWNER_FREEZE_GATES.csv,governance/manifest,5,4,Evidence,1.0,ID;Gate;Result;Evidence
+07,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,47,3,SHA256,1.0,File;Bytes;SHA256
+07,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,51,3,SHA256,0.98,File;Bytes;SHA256
+07,99_MANIFEST_SHA256.csv,governance/manifest,51,3,SHA256,0.98,File;Bytes;SHA256
+08,01_BASELINE_GENEALOGY_v1_1_HISTORICAL.csv,content,2,4,Reason,1.0,Candidate;SHA256;Status;Reason
+08,01_BASELINE_GENEALOGY_v1_2.csv,content,6,5,Frozen Package SHA256,1.0,Step;Required Version;Frozen Package SHA256;Status;Binding
+08,02_LAST_CHANCE_FORENSIC_FINDINGS_14.csv,content,14,5,Finding,1.0,ID;Severity;Finding;Status;Closure Evidence
+08,03_ENGINEERING_PRINCIPLES_65.csv,content,65,2,Principle,1.0,ID;Principle
+08,04_ENGINE_CATALOG_110.csv,content,110,6,Hard Boundary,1.0,ID;Engine;Group;Families;Disposition;Hard Boundary
+08,05_LAST_CHANCE_REVIEW_UNIVERSE_50.csv,content,50,3,Mandatory Coverage,1.0,ID;Review Domain;Mandatory Coverage
+08,06_COMPUTATIONAL_MODEL_VVUQ_CREDIBILITY_CONTRACT_58.csv,content,58,2,Field,1.0,No;Field
+08,07_DESIGN_BASIS_AND_CRITERIA_CONTRACT_33.csv,content,33,2,Field,1.0,No;Field
+08,08_EXISTING_ASSET_DURABILITY_SERVICE_LIFE_RULES_40.csv,content,40,2,Rule,1.0,ID;Rule
+08,09_RELIABILITY_FUNCTIONAL_PROCESS_SAFETY_RULES_40.csv,content,40,2,Rule,1.0,ID;Rule
+08,10_SPECIALIST_SOLVER_CONTRACT_72.csv,content,72,2,Field,1.0,No;Field
+08,11_ENGINEERING_RUN_ENVELOPE_64.csv,content,64,2,Field,1.0,No;Field
+08,12_MASTER_OWNERSHIP_MATRIX_146.csv,content,146,7,Boundary,0.6,ID;Object;Type;Owner;Families;Ownership;Boundary
+08,13_SOURCE_OF_TRUTH_MATRIX_146.csv,content,146,6,Authoritative Source,0.01,ID;Concept;Owner;Authoritative Source;Derived Copies;Boundary
+08,14_HIGH_RISK_COLLISION_MATRIX_150.csv,content,150,6,Resolution,1.0,ID;Concept A;Owner A;Concept B;Owner B;Resolution
+08,15_FAILURE_RECOVERY_MATRIX_91.csv,content,91,4,Mandatory Control,1.0,ID;Category;Failure;Mandatory Control
+08,16_HOSTILE_ENGINEERING_ATTACKS_392.csv,content,392,5,Closure Basis,0.01,ID;Category;Attack;Result;Closure Basis
+08,17_REFERENCE_REGISTER_34.csv,content,34,4,Official Source,1.0,ID;Reference;Use/Status;Official Source
+08,18_MACHINE_VALIDATION_GATES_173_v1_1_HISTORICAL.csv,content,173,4,Gate,1.0,ID;Gate;Result;Evidence
+08,19_FIXED_HASH_LAST_CHANCE_INDEPENDENT_REVIEW_80.csv,content,80,6,Candidate SHA256,0.01,ID;Domain;Question;Result;Evidence;Candidate SHA256
+08,20_REDTEAM_DOWNSTREAM_REBIND_MATRIX.csv,content,5,6,Required Action,1.0,ID;STEP08 Concept;Upstream Authority;Impact;Required Action;Status
+08,21_REBIND_MACHINE_GATES.csv,content,6,4,Evidence,1.0,Gate;Check;Result;Evidence
+08,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,25,3,SHA256,1.0,File;SHA256;Bytes
+08,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,28,3,SHA256,0.96,File;SHA256;Bytes
+08,99_MANIFEST_SHA256.csv,governance/manifest,25,3,SHA256,1.0,File;SHA256;Bytes
+09,01_BASELINE_GENEALOGY_v1_1.csv,content,7,5,Frozen Package SHA256,1.0,Step;Required Version;Frozen Package SHA256;Status;Binding
+09,02_BUSINESS_FINANCIAL_PRINCIPLES_70.csv,content,70,2,Principle,1.0,ID;Principle
+09,03_ENGINE_CATALOG_202.csv,content,202,7,Ownership,0.0,ID;Engine;Pack;Families;Mode;Ownership;Boundary
+09,04_REVIEW_UNIVERSE_60.csv,content,60,2,Review Domain,1.0,ID;Review Domain
+09,05_COMMERCIAL_ACCOUNTING_CASH_TRUTH_LADDER_20.csv,content,20,4,Meaning,1.0,ID;Concept;Owner;Meaning
+09,06_COMMERCIAL_EVENT_CONTRACT_61.csv,content,61,2,Field,1.0,No;Field
+09,07_ACCOUNTING_POSTING_CONTRACT_62.csv,content,62,2,Field,1.0,No;Field
+09,08_REVENUE_RECOGNITION_CONTRACT_48.csv,content,48,2,Field,1.0,No;Field
+09,09_COST_LEDGER_CONTRACT_52.csv,content,52,2,Field,1.0,No;Field
+09,10_PAYMENT_TREASURY_CONTRACT_39.csv,content,39,2,Field,1.0,No;Field
+09,11_TAX_FISCAL_CONTRACT_36.csv,content,36,2,Field,1.0,No;Field
+09,12_MASTER_OWNERSHIP_MATRIX_202.csv,content,202,6,Boundary,0.0,ID;Concept;Owner Engine;Families;Ownership;Boundary
+09,13_SOURCE_OF_TRUTH_MATRIX_202.csv,content,202,6,Boundary,0.0,ID;Concept;SoT Owner;Authoritative Store;Derived Stores;Boundary
+09,14_HIGH_RISK_COLLISION_MATRIX_104.csv,content,104,4,Resolution,1.0,ID;Concept A;Concept B;Resolution
+09,15_FAILURE_RECOVERY_MATRIX_80.csv,content,80,4,Required Control,0.01,ID;Category;Failure;Required Control
+09,16_HOSTILE_BUSINESS_FINANCIAL_ATTACKS_180.csv,content,180,5,Design Control,0.01,ID;Category;Attack;Result;Design Control
+09,17_REFERENCE_REGISTER_20.csv,content,20,4,Official Source,1.0,ID;Reference;Use / Status;Official Source
+09,18_BLIND_ADVERSARIAL_FINDINGS_12.csv,content,12,5,Finding,1.0,ID;Severity;Finding;Status;Closure Evidence
+09,19_MACHINE_VALIDATION_GATES_131.csv,content,131,4,Gate,1.0,ID;Gate;Result;Evidence
+09,20_FIXED_HASH_BLIND_INDEPENDENT_REVIEW_94.csv,content,94,5,Evidence,0.01,ID;Question;Result;Evidence;Candidate SHA256
+09,90_PRE_OWNER_REDTEAM_REPAIR_GATES.csv,governance/manifest,3,4,Check,1.0,Gate;Check;Result;Evidence
+09,91_REBASE_MACHINE_GATES.csv,governance/manifest,4,3,Check,1.0,Gate;Check;Result
+09,92_OWNER_FREEZE_GATES.csv,governance/manifest,4,4,Evidence,1.0,ID;Gate;Result;Evidence
+09,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,26,3,SHA256,0.96,File;SHA256;Bytes
+09,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,29,3,SHA256,0.97,File;SHA256;Bytes
+10,01A_VERSION_HISTORY_HISTORICAL.csv,content,2,4,Reason,1.0,Version;SHA256;Status;Reason
+10,01_BASELINE_GENEALOGY.csv,content,8,5,Frozen Package SHA256,1.0,Step;Required Version;Frozen Package SHA256;Status;Binding
+10,02_AI_CONSTITUTION_BASE_92.csv,content,92,2,Principle,1.0,ID;Principle
+10,03_AI_ORCHESTRATOR_COMPONENTS_111.csv,content,111,4,Families,0.01,ID;Component;Class;Families
+10,04_AGENT_CATALOG_256_WITH_86_FAMILY_COVERAGE.csv,content,256,8,Family Name,0.34,ID;Agent Archetype;Pack;Default Autonomy;Authority Boundary;Execution Rule;Primary Family;Family Name
+10,05_FAMILY_TO_AGENT_TRACEABILITY_86.csv,content,86,5,Rule,0.01,Family;Family Name;Primary Steward Agent;Status;Rule
+10,06_AGENT_RUN_ENVELOPE_58.csv,content,58,2,Field,1.0,No;Field
+10,07_AGENT_MANIFEST_CONTRACT_78.csv,content,78,2,Field,1.0,No;Field
+10,08_TOOL_CONTRACT_63.csv,content,63,2,Field,1.0,No;Field
+10,09_AGENT_IDENTITY_DELEGATION_CONTRACT_41.csv,content,41,2,Field,1.0,No;Field
+10,10_MEMORY_CONTRACT_48.csv,content,48,2,Field,1.0,No;Field
+10,11_MODEL_ROUTING_PROVIDER_CONTRACT_50.csv,content,50,2,Field,1.0,No;Field
+10,12_AI_AUTHORITY_AUTONOMY_MATRIX_16.csv,content,16,5,Mandatory Authority,0.88,ID;Action Class;Allowed AI Autonomy;Impact;Mandatory Authority
+10,13_PROMPT_SYSTEM_INSTRUCTION_CONTRACT_50.csv,content,50,2,Field,1.0,No;Field
+10,14_AGENTIC_THREAT_CONTROL_MATRIX_133.csv,content,133,3,Control,0.02,ID;Threat;Control
+10,15_EVALUATION_FRAMEWORK_101.csv,content,101,3,Threshold Rule,0.01,ID;Evaluation Dimension;Threshold Rule
+10,16_HIGH_RISK_COLLISION_MATRIX_80.csv,content,80,4,Resolution,0.99,ID;Concept A;Concept B;Resolution
+10,17_FAILURE_RECOVERY_MATRIX_105.csv,content,105,3,Required Recovery,0.02,ID;Failure;Required Recovery
+10,18_HOSTILE_AGENTIC_ATTACKS_350.csv,content,350,5,Design Control,0.01,ID;Category;Attack;Result;Design Control
+10,19_MASTER_OWNERSHIP_MATRIX_123.csv,content,123,4,Boundary,0.01,ID;Concept;Owner;Boundary
+10,20_SOURCE_OF_TRUTH_MATRIX_123.csv,content,123,5,Boundary,0.01,ID;Concept;SoT Owner;Authoritative Store;Boundary
+10,21_REFERENCE_REGISTER_13.csv,content,13,4,Official Source,1.0,ID;Reference;Use / Boundary;Official Source
+10,22_LAST_CHANCE_FINDINGS_v1_2_CORRECTED.csv,content,10,5,Finding,1.0,ID;Severity;Finding;Status;Closure Evidence
+10,23_MACHINE_VALIDATION_GATES_121_v1_1_HISTORICAL.csv,content,121,4,Gate,1.0,ID;Gate;Result;Evidence
+10,24_FIXED_HASH_LAST_CHANCE_REVIEW_91_v1_1_HISTORICAL.csv,content,91,5,Candidate SHA256,0.01,ID;Question;Result;Evidence;Candidate SHA256
+10,90_REDTEAM_REPAIR_GATES.csv,governance/manifest,4,4,Evidence,1.0,ID;Gate;Result;Evidence
+10,91_REBASE_MACHINE_GATES.csv,governance/manifest,10,4,Gate,1.0,ID;Gate;Result;Evidence
+10,92_FIXED_HASH_REVIEW_v1_2.csv,governance/manifest,10,4,Evidence,1.0,ID;Question;Result;Evidence
+10,94_OWNER_FREEZE_GATES.csv,governance/manifest,4,4,Gate,1.0,ID;Gate;Result;Evidence
+10,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,31,3,SHA256,1.0,File;SHA256;Bytes
+10,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,35,3,SHA256,0.97,File;SHA256;Bytes
+10,99_MANIFEST_SHA256.csv,governance/manifest,31,3,SHA256,1.0,File;SHA256;Bytes
+11,00_BASELINE_GENEALOGY_v1_2.csv,content,2,5,Frozen Package SHA256,1.0,Step;Version;Frozen Package SHA256;Status;Binding
+11,01_BASELINE_GENEALOGY_v1_1_HISTORICAL.csv,content,2,4,Reason,1.0,Version;SHA256;Status;Reason
+11,02_KNOWLEDGE_CONSTITUTION_107.csv,content,107,2,Principle,1.0,ID;Principle
+11,03_KNOWLEDGE_COMPONENTS_142.csv,content,142,2,Component,1.0,ID;Component
+11,04_SOURCE_CLASS_CATALOG_105.csv,content,105,2,Source Class,1.0,ID;Source Class
+11,05_SOURCE_AUTHORITY_CONTRACT_68.csv,content,68,2,Field,1.0,No;Field
+11,06_APPLICABILITY_PRECEDENCE_CONTRACT_52.csv,content,52,2,Field,1.0,No;Field
+11,07_INGESTION_PARSING_CONTRACT_58.csv,content,58,2,Field,1.0,No;Field
+11,08_CHUNK_STRUCTURE_CONTRACT_42.csv,content,42,2,Field,1.0,No;Field
+11,09_RETRIEVAL_RERANK_CONTRACT_60.csv,content,60,2,Field,1.0,No;Field
+11,10_CLAIM_CITATION_EVIDENCE_CONTRACT_46.csv,content,46,2,Field,1.0,No;Field
+11,11_RIGHTS_LICENSE_USAGE_CONTRACT_50.csv,content,50,2,Field,1.0,No;Field
+11,12_FAMILY_KNOWLEDGE_TRACEABILITY_86.csv,content,86,4,Rule,0.01,Family;Status;Knowledge Path;Rule
+11,13_AUTHORITY_PRECEDENCE_MODEL_10.csv,content,10,3,Rule,1.0,Rank;Source Layer;Rule
+11,14_COLLISION_MATRIX_94.csv,content,94,4,Resolution,0.99,ID;Concept A;Concept B;Resolution
+11,15_FAILURE_RECOVERY_MATRIX_139.csv,content,139,3,Required Recovery,0.01,ID;Failure;Required Recovery
+11,16_KNOWLEDGE_SECURITY_THREATS_128.csv,content,128,3,Control Pattern,0.01,ID;Threat;Control Pattern
+11,17_RAG_KNOWLEDGE_EVALUATION_113.csv,content,113,3,Threshold Rule,0.01,ID;Evaluation Dimension;Threshold Rule
+11,18_MASTER_OWNERSHIP_MATRIX_142.csv,content,142,4,Boundary,0.01,ID;Concept;Owner;Boundary
+11,19_SOURCE_OF_TRUTH_MATRIX_142.csv,content,142,5,Authority Boundary,0.01,ID;Concept;SoT Owner;Knowledge Store;Authority Boundary
+11,20_REFERENCE_REGISTER_20.csv,content,20,4,Use / Boundary,1.0,ID;Reference;Use / Boundary;Official Source
+11,21_BLIND_ADVERSARIAL_FINDINGS_15.csv,content,15,5,Finding,1.0,ID;Severity;Finding;Status;Closure Evidence
+11,22_HOSTILE_KNOWLEDGE_RAG_ATTACKS_v1_2.csv,content,300,8,Required Evidence,0.3,ID;Attack Theme;Target Source Class;Concrete Attack;Preconditions;Expected Invariant/Failure;Required Evidence;Result
+11,23_LAST_CHANCE_FINDINGS_5.csv,content,5,5,Finding,1.0,ID;Severity;Finding;Status;Closure Evidence
+11,24_MACHINE_VALIDATION_GATES_50_v1_1_HISTORICAL.csv,content,50,4,Gate,1.0,ID;Gate;Result;Evidence
+11,25_FIXED_HASH_LAST_CHANCE_REVIEW_84_v1_1_HISTORICAL.csv,content,84,5,Candidate SHA256,0.01,ID;Question;Result;Evidence;Candidate SHA256
+11,90_REDTEAM_REPAIR_GATES.csv,governance/manifest,3,4,Check,1.0,Gate;Check;Result;Evidence
+11,91_REBASE_MACHINE_GATES.csv,governance/manifest,10,4,Evidence,0.9,ID;Gate;Result;Evidence
+11,92_FIXED_HASH_REVIEW_v1_2.csv,governance/manifest,13,4,Question,1.0,ID;Question;Result;Evidence
+11,94_OWNER_FREEZE_GATES.csv,governance/manifest,4,3,Check,1.0,Gate;Check;Result
+11,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,31,3,SHA256,1.0,File;SHA256;Bytes
+11,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,35,2,SHA256,0.97,Path;SHA256
+11,99_MANIFEST_SHA256.csv,governance/manifest,31,3,SHA256,1.0,File;SHA256;Bytes
+12,01_BASELINE_GENEALOGY_v1_4_HISTORICAL.csv,content,5,4,Reason,1.0,Version;SHA256;Status;Reason
+12,01_BASELINE_GENEALOGY_v1_5.csv,content,7,4,Binding,1.0,Step;Required Version;Status;Binding
+12,02_DOCUMENT_CDE_OUTPUT_PRINCIPLES_110.csv,content,110,2,Principle,1.0,ID;Principle
+12,03_COMPONENT_CATALOG_152.csv,content,152,2,Component,1.0,ID;Component
+12,04_DOCUMENT_OBJECT_CONTRACT_64.csv,content,64,2,Field,1.0,No;Field
+12,05_REVISION_STATUS_STATE_CONTRACT_40.csv,content,40,2,Field,1.0,No;Field
+12,06_TRANSMITTAL_ISSUE_DISTRIBUTION_CONTRACT_48.csv,content,48,2,Field,1.0,No;Field
+12,07_TEMPLATE_MANIFEST_CONTRACT_58.csv,content,58,2,Field,1.0,No;Field
+12,08_RENDER_JOB_CONTRACT_55.csv,content,55,2,Field,1.0,No;Field
+12,09_CONTROLLED_OUTPUT_CONTRACT_50.csv,content,50,2,Field,1.0,No;Field
+12,11_COLLISION_MATRIX_90.csv,content,90,4,Resolution,1.0,ID;A;B;Resolution
+12,12_FAILURE_RECOVERY_MATRIX_142.csv,content,142,3,Required Recovery,0.01,ID;Failure;Required Recovery
+12,13_SECURITY_THREAT_MATRIX_139.csv,content,139,3,Control Pattern,0.01,ID;Threat;Control Pattern
+12,14_OUTPUT_EVALUATION_FRAMEWORK_126.csv,content,126,3,Threshold,0.01,ID;Evaluation Dimension;Threshold
+12,18_BLIND_FINDINGS_15.csv,content,15,5,Finding,1.0,ID;Severity;Finding;Status;Closure Evidence
+12,19_ISSUE_PACKAGE_ATOMICITY_CONTRACT_54.csv,content,54,2,Field,1.0,No;Field
+12,20_RENDER_REPRODUCIBILITY_LOCK_CONTRACT_49.csv,content,49,2,Field,1.0,No;Field
+12,21_COPY_CONTROL_CONTRACT_38.csv,content,38,2,Field,1.0,No;Field
+12,22_SIGNATURE_SEAL_TRUST_CONTRACT_42.csv,content,42,2,Field,1.0,No;Field
+12,23_REDACTION_SANITIZATION_RELEASE_GATE_40.csv,content,40,2,Field,1.0,No;Field
+12,24_ARABIC_RTL_BIDI_FIDELITY_CONTRACT_36.csv,content,36,2,Field,1.0,No;Field
+12,25_PRESERVATION_ACCESSIBILITY_PROFILE_CONTRACT_34.csv,content,34,2,Field,1.0,No;Field
+12,26_EVIDENTIARY_EXPORT_PACKAGE_CONTRACT_44.csv,content,44,2,Field,1.0,No;Field
+12,27_LAST_CHANCE_FINDINGS_11.csv,content,11,5,Closure Evidence,1.0,ID;Severity;Finding;Status;Closure Evidence
+12,31_HOSTILE_PRE_APPROVAL_FINDINGS_12.csv,content,12,5,Finding,1.0,ID;Severity;Finding;Status;Closure Evidence
+12,32_ISSUE_ITEM_BINDING_CONTRACT_36.csv,content,36,2,Field,1.0,No;Field
+12,33_DIGEST_INTEGRITY_PROFILE_CONTRACT_30.csv,content,30,2,Field,1.0,No;Field
+12,34_REVIEW_COMMENT_DISPOSITION_CONTRACT_48.csv,content,48,2,Field,1.0,No;Field
+12,35_SCAN_DIGITIZATION_CHAIN_OF_CUSTODY_CONTRACT_38.csv,content,38,2,Field,1.0,No;Field
+12,36_COMPOUND_DOCUMENT_COMPONENT_CONTRACT_30.csv,content,30,2,Field,1.0,No;Field
+12,37_OUTPUT_DEPENDENCY_STALENESS_CONTRACT_32.csv,content,32,2,Field,1.0,No;Field
+12,38_ORGANIZATIONAL_SCOPE_AUTHORITY_CONTRACT_30.csv,content,30,2,Field,1.0,No;Field
+12,39_HARDCOPY_CUSTODY_EVENT_CONTRACT_29.csv,content,29,2,Field,1.0,No;Field
+12,40_FAMILY_OUTPUT_TRACEABILITY_86_SEMANTIC.csv,content,86,7,Verification Evidence,0.1,Family;Family Name;Scope;Document / Output Classes;Applicable Contracts;Verification Evidence;Status
+12,41_MASTER_OWNERSHIP_MATRIX_152_REALIGNED.csv,content,152,4,Boundary,0.01,ID;Concept;Owner;Boundary
+12,42_SOURCE_OF_TRUTH_MATRIX_152_REALIGNED.csv,content,152,5,Boundary,0.01,ID;Concept;SoT Owner;Authoritative Store;Boundary
+12,43_REFERENCE_REGISTER_22_CURRENT.csv,content,22,3,Use / Boundary,1.0,ID;Reference;Use / Boundary
+12,44_MACHINE_VALIDATION_GATES_v1_4_HISTORICAL.csv,content,52,4,Gate,1.0,ID;Gate;Result;Evidence
+12,45_FIXED_HASH_HOSTILE_REVIEW_v1_4_HISTORICAL.csv,content,24,6,Candidate SHA256,0.04,ID;Question;Result;Evidence;Candidate SHA256;Evidence Set Root SHA256
+12,47_MASTER_FORENSIC_FINDINGS_v1_4.csv,content,8,5,Finding,1.0,ID;Severity;Finding;Status;Closure Evidence
+12,48_REVIEW_UNIVERSE_BLIND_SPOT_TESTS_v1_4_HISTORICAL.csv,content,18,5,Evidence,1.0,ID;Blind Spot;Invariant;Result;Evidence
+12,49_EVIDENCE_SET_INDEX_v1_4.csv,content,38,3,SHA256,1.0,File;Bytes;SHA256
+12,52_REDTEAM_DOWNSTREAM_REBIND_MATRIX.csv,content,6,6,Binding Rule,1.0,ID;STEP12 Concept;Upstream Authority;Risk Attacked;Binding Rule;Status
+12,53_REBIND_MACHINE_GATES.csv,content,8,3,Check,1.0,Gate;Check;Result
+12,54_CURRENT_REVALIDATION_v1_5.csv,content,6,3,Observed,1.0,Check;Observed;Result
+12,56_OWNER_FREEZE_GATES.csv,content,5,4,Check,1.0,Gate;Check;Result;Evidence
+12,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,48,2,SHA256,1.0,Path;SHA256
+12,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,51,2,SHA256,1.0,File;SHA256
+12,99_MANIFEST_SHA256.csv,governance/manifest,51,2,SHA256,1.0,File;SHA256
+13,00_BASELINE_GENEALOGY_v1_2.csv,content,8,4,Binding,1.0,Step;Required Version;Status;Binding
+13,01_BASELINE_GENEALOGY_v1_0_HISTORICAL.csv,content,9,5,SHA256,1.0,Baseline;Status;Package;SHA256;Rule
+13,02_UX_CONSTITUTION_80.csv,content,80,3,Rule,1.0,ID;Principle;Rule
+13,03_ROLE_WORKSPACE_MODEL_18.csv,content,18,5,Primary Outcomes,1.0,Role;Primary Outcomes;Context;Authority UX Rule;Default Workspace
+13,04_INFORMATION_ARCHITECTURE_30.csv,content,30,5,Purpose,1.0,ID;Level;Area;Purpose;Boundary
+13,05_SCREEN_ARCHETYPE_CATALOG_40.csv,content,40,5,Core Pattern,1.0,ID;Archetype;Domain;Core Pattern;Critical Rule
+13,06_DESIGN_TOKEN_CONTRACT.csv,content,48,6,Governance Rule,0.12,ID;Category;Token;Type;Default/Placeholder;Governance Rule
+13,07_COMPONENT_CONTRACT_40.csv,content,40,6,Critical Contract,1.0,ID;Component;Category;Variants;Required States;Critical Contract
+13,08_INTERACTION_STATE_MODEL_20.csv,content,20,5,UX Rule,1.0,ID;State;Meaning;Authoritative Evidence?;UX Rule
+13,09_RESPONSIVE_LAYOUT_CONTRACT_10.csv,content,10,5,Layout Pattern,1.0,ID;Class;Range/Input;Layout Pattern;Rule
+13,10_MOBILE_FIELD_MODE_CONTRACT_16.csv,content,16,5,UX,1.0,ID;Capability;UX;Connectivity;Critical Rule
+13,11_OFFLINE_UX_RECONNECT_CONTRACT_28.csv,content,28,5,STEP13 UX Contract,0.25,Source ID;Topic;Frozen Runtime Rule;STEP13 UX Contract;Authority
+13,12_FORM_DATA_ENTRY_CONTRACT_16.csv,content,16,4,Boundary,1.0,ID;Pattern;Requirement;Boundary
+13,13_TABLE_REGISTER_GRID_CONTRACT_12.csv,content,12,3,Rule,1.0,ID;Concern;Rule
+13,14_DASHBOARD_ANALYTICS_UX_CONTRACT_10.csv,content,10,3,Rule,1.0,ID;Concern;Rule
+13,15_APPROVAL_AUTHORITY_UX_CONTRACT_10.csv,content,10,3,Rule,1.0,ID;Concern;Rule
+13,16_DOCUMENT_CDE_UX_CONTRACT_14.csv,content,14,3,Rule,1.0,ID;Concern;Rule
+13,17_AI_ASSISTANT_UX_BOUNDARY_12.csv,content,12,3,Rule,1.0,ID;Concern;Rule
+13,18_NOTIFICATION_ATTENTION_UX_CONTRACT_24.csv,content,24,4,STEP13 UX Mapping,0.04,Source ID;Topic;Frozen Rule;STEP13 UX Mapping
+13,19_RTL_LOCALIZATION_ACCESSIBILITY_24.csv,content,24,3,Rule,1.0,ID;Concern;Rule
+13,20_ERROR_RECOVERY_DEGRADED_UX_12.csv,content,12,3,UX Recovery Contract,1.0,ID;Failure;UX Recovery Contract
+13,21_SECURITY_PRIVACY_UX_CONTRACT_12.csv,content,12,3,Rule,1.0,ID;Concern;Rule
+13,22_CROSS_STEP_TRACEABILITY_12.csv,content,12,5,STEP13 Artifact,1.0,ID;STEP13 Concern;Frozen Source;STEP13 Artifact;Coverage
+13,23_MASTER_OWNERSHIP_MATRIX_15.csv,content,15,5,Authoritative Runtime SoT,1.0,Concept;Design Owner;Authoritative Runtime SoT;UI Responsibility;Forbidden Collision
+13,24_SOURCE_OF_TRUTH_MATRIX_15.csv,content,15,5,Authoritative Source,1.0,Concept;Authoritative Source;Derived/Presentation Store;Allowed UI Mutation;Prohibited Claim
+13,25_HIGH_RISK_COLLISION_MATRIX_20.csv,content,20,6,Control,1.0,ID;Collision;Severity;Cause;Control;Gate
+13,26_REVIEW_UNIVERSE_20.csv,content,20,4,Attack Question,1.0,ID;Area;Attack Question;Severity if Failed
+13,27_HOSTILE_UX_ATTACKS_120.csv,content,120,5,Attack,1.0,ID;Area;Attack;Expected Design Control;Static Review Result
+13,28_REFERENCE_REGISTER_10.csv,content,10,5,Use,1.0,ID;Reference;Authority;Use;Status
+13,29_MACHINE_VALIDATION_GATES_v1_0_HISTORICAL.csv,content,26,4,Gate,1.0,ID;Gate;Result;Evidence
+13,30_FIXED_HASH_HOSTILE_REVIEW_v1_0_HISTORICAL.csv,content,20,7,Candidate SHA256,0.05,ID;Candidate SHA256;Area;Attack Question;Evidence;Result;Claim Boundary
+13,31_BLIND_REVIEW_OF_REVIEW_UNIVERSE_18_v1_0_HISTORICAL.csv,content,18,4,Blind Spot,1.0,ID;Blind Spot;Control;Result
+13,32_EVIDENCE_SET_INDEX_v1_0_HISTORICAL.csv,content,33,3,SHA256,1.0,File;Bytes;SHA256
+13,33_CRITICAL_END_TO_END_JOURNEYS_31.csv,content,31,11,Offline Rule,0.03,Journey ID;Journey;Primary Role;Families;Channels;Entry State;Core Workspace;Decision/Review State;Outcome State;Offline Rule;Exception Rule
+13,34_JOURNEY_STATE_FLOW_155.csv,content,155,5,Invariant,0.03,Journey ID;Sequence;State;Invariant;Path Coverage
+13,35_F01_F86_UX_JOURNEY_COVERAGE.csv,content,86,4,Rule,0.01,Family;Journey Coverage;Coverage Type;Rule
+13,36_REPRESENTATIVE_LAYOUT_BASELINE_8.csv,content,8,4,Mandatory Visual/Interaction Contract,1.0,Layout ID;Representative Layout;Channels;Mandatory Visual/Interaction Contract
+13,37_REDTEAM_UPSTREAM_REBIND_MATRIX.csv,content,7,5,Invariant,1.0,ID;UX Area;Authority;Invariant;Status
+13,38_REBIND_MACHINE_GATES.csv,content,9,4,Check,1.0,Gate;Check;Result;Evidence
+13,39_CURRENT_REVALIDATION_v1_2.csv,content,6,4,Observed,1.0,Check;Observed;Result;Evidence
+13,41_OWNER_FREEZE_GATES.csv,content,5,4,Check,1.0,Gate;Check;Result;Evidence
+13,90_REDTEAM_REPAIR_GATES.csv,governance/manifest,5,4,Check,1.0,Gate;Check;Result;Evidence
+13,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,43,2,SHA256,1.0,File;SHA256
+13,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,46,2,SHA256,1.0,File;SHA256
+13,99_MANIFEST_SHA256.csv,governance/manifest,46,2,SHA256,1.0,File;SHA256
+14,01_BASELINE_GENEALOGY_v1_0_HISTORICAL.csv,content,10,5,SHA256,1.0,Baseline;Status;Package;SHA256;Rule
+14,01_BASELINE_GENEALOGY_v1_1.csv,content,12,4,Binding,1.0,Step;Required Version;Status;Binding
+14,02_INTEGRATION_CONSTITUTION_60.csv,content,60,3,Rule,1.0,ID;Topic;Rule
+14,03_INTEGRATION_PATTERN_CATALOG_24.csv,content,24,5,Authority Boundary,0.96,ID;Pattern;Use;Authority Boundary;Primary Risks
+14,04_EXTERNAL_SYSTEM_CONNECTOR_REGISTRY_CONTRACT_30.csv,content,30,3,Rule,1.0,Field;Required;Rule
+14,05_API_CONTRACT_MINIMUM_33_FIELDS.csv,content,33,2,Field,1.0,Field;Requirement
+14,06_HTTP_API_SEMANTICS_36.csv,content,36,3,Rule,1.0,ID;Concern;Rule
+14,07_COMMAND_QUERY_EVENT_BOUNDARY_24.csv,content,24,3,Rule,1.0,ID;Type;Rule
+14,08_CANONICAL_EVENT_ENVELOPE_MAPPING_20.csv,content,20,3,STEP14 Transport Rule,0.1,Field;STEP06 Requirement;STEP14 Transport Rule
+14,09_EVENT_TYPE_TAXONOMY_32.csv,content,32,3,Rule,1.0,ID;Category;Rule
+14,10_EVENT_DELIVERY_IDEMPOTENCY_REPLAY_36.csv,content,36,3,Rule,1.0,ID;Concern;Rule
+14,11_SCHEMA_EVOLUTION_COMPATIBILITY_30.csv,content,30,2,Rule,1.0,ID;Rule
+14,12_WEBHOOK_CONTRACT_28.csv,content,28,3,Rule,1.0,ID;Concern;Rule
+14,13_BATCH_FILE_EXCHANGE_CONTRACT_30.csv,content,30,2,Rule,1.0,ID;Rule
+14,14_CDC_SYNC_CONTRACT_28.csv,content,28,3,Rule,1.0,ID;Concern;Rule
+14,15_EXTERNAL_AUTHORITY_INTEGRATION_24.csv,content,24,2,Rule,1.0,ID;Rule
+14,16_ADAPTER_ANTI_CORRUPTION_CONTRACT_24.csv,content,24,2,Rule,1.0,ID;Rule
+14,17_API_GATEWAY_PLATFORM_BOUNDARY_24.csv,content,24,4,STEP14 Rule,1.0,ID;Capability;STEP14 Rule;Downstream Boundary
+14,18_RATE_LIMIT_BACKPRESSURE_QUOTA_24.csv,content,24,2,Rule,1.0,ID;Rule
+14,19_DEPENDENCY_RESILIENCE_CONTRACT_30.csv,content,30,3,Rule,1.0,ID;Concern;Rule
+14,20_RECONCILIATION_CONTROL_TOTALS_28.csv,content,28,2,Rule,1.0,ID;Rule
+14,21_OBSERVABILITY_TRACE_AUDIT_PROPAGATION_30.csv,content,30,3,Rule,1.0,ID;Concern;Rule
+14,22_ENVIRONMENT_BINDING_PROMOTION_24.csv,content,24,2,Rule,1.0,ID;Rule
+14,23_INTEGRATION_SECURITY_BOUNDARY_24.csv,content,24,4,STEP14 Requirement,1.0,ID;Concern;STEP14 Requirement;STEP15 Ownership Boundary
+14,24_CROSS_STEP_TRACEABILITY_18.csv,content,18,5,Coverage,1.0,ID;STEP14 Concern;Frozen Source;STEP14 Artifact;Coverage
+14,25_MASTER_OWNERSHIP_MATRIX_24.csv,content,24,5,Concept,1.0,Concept;Owner Stage;STEP14 Role;May STEP14 Author?;May STEP14 Mutate Authoritative State?
+14,26_SOURCE_OF_TRUTH_MATRIX_24.csv,content,24,5,Authoritative Source,1.0,Concept;Authoritative Source;Integration Copy/Projection;Allowed STEP14 Mutation;Prohibited Claim
+14,27_HIGH_RISK_COLLISION_MATRIX_30.csv,content,30,4,Required Control,1.0,ID;Collision;Severity;Required Control
+14,28_REVIEW_UNIVERSE_24_v1_0_HISTORICAL.csv,content,24,3,Pass Criterion,1.0,ID;Area;Pass Criterion
+14,29_HOSTILE_INTEGRATION_ATTACKS_v1_0_HISTORICAL.csv,content,144,7,Attack,1.0,Attack ID;Review ID;Area;Attack;Severity;Result;Evidence
+14,30_REFERENCE_REGISTER_v1_0_HISTORICAL.csv,content,12,5,Use,1.0,ID;Reference;Version/Date;Use;Status
+14,35_API_OPERATION_INVENTORY_552.csv,content,552,13,Semantic Guard,0.0,Operation ID;Owner Family;Domain;Aggregate;Class;Method;Logical Path Template;Operation IDL;Purpose;Canonical Key;Semantic Guard;Security Boundary;Status
+14,36_EVENT_SCHEMA_CATALOG_306.csv,content,306,11,Invariant/Required Context,0.1,Schema ID;Event Type;Owner;Source Aggregate;Category;Envelope;Identity Binding;Invariant/Required Context;Producer Rule;Consumer Rule;Status
+14,37_PRODUCER_CONSUMER_SUBSCRIPTION_MATRIX_306.csv,content,306,7,Delivery/Idempotency Rule,0.01,Binding ID;Event;Producer;Consumer;Purpose;Delivery/Idempotency Rule;Authority Guard
+14,38_COMPATIBILITY_GOLDEN_FIXTURES_30.csv,content,30,8,Acceptance,0.03,Fixture ID;Producer Aggregate;Consumer Aggregate;Relationship;Fixture Kind;Required Envelope Conditions;Expected Invariant;Acceptance
+14,39_AGGREGATE_API_EVENT_TRACEABILITY_276.csv,content,276,9,Invariant,0.0,Trace ID;Owner Family;Aggregate;Query Operation;Command Operation;Event Schema;Canonical Key;Authoritative Store;Invariant
+14,40_HOSTILE_INTEGRATION_ATTACKS_120_CONCRETE.csv,content,120,7,Attack Scenario,1.0,Attack ID;Area;Attack Scenario;Severity;Expected Safe Behavior;Required Evidence;Result
+14,41_BLIND_REVIEW_OF_REVIEW_UNIVERSE_20.csv,content,20,4,Closure,1.0,ID;Blind Question;Evidence;Closure
+14,42_MACHINE_VALIDATION_GATES_v1_1.csv,content,12,4,Check,1.0,Gate ID;Check;Result;Evidence
+14,43_FIXED_HASH_EVIDENCE_BINDING.csv,content,12,3,SHA256,1.0,Artifact;SHA256;Review Assertion
+14,45_REBASE_MACHINE_GATES.csv,content,10,4,Check,1.0,Gate;Check;Result;Evidence
+14,46_CURRENT_REVALIDATION_v1_1.csv,content,8,4,Observed,1.0,Check;Observed;Result;Evidence
+14,48_OWNER_FREEZE_GATES.csv,content,5,4,Check,1.0,Gate;Check;Result;Evidence
+14,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,48,3,SHA256,1.0,File;SHA256;Bytes
+14,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,51,3,SHA256,1.0,File;SHA256;Bytes
+14,99_MANIFEST_SHA256.csv,governance/manifest,51,3,SHA256,1.0,File;SHA256;Bytes
+15,01_BASELINE_GENEALOGY_v1_1.csv,content,14,4,Binding,0.21,Step;Required Version;Status;Binding
+15,02_SECURITY_GOVERNANCE_PRINCIPLES_72.csv,content,72,6,Rule,0.33,ID;Domain;Aspect;Rule;Normative;Owner
+15,03_TRUST_ZONE_MODEL_16.csv,content,16,5,Mandatory Boundary,1.0,Zone ID;Zone;Scope;Trust;Mandatory Boundary
+15,04_PRINCIPAL_TYPE_CATALOG_20.csv,content,20,5,Rule,1.0,ID;Principal Type;Mode;Identity Source;Rule
+15,05_AUTHENTICATION_ASSURANCE_MATRIX_24.csv,content,24,6,Authenticator Requirement,0.29,ID;Action Context;Risk Context;Principal Requirement;Authenticator Requirement;Session Rule
+15,06_PERMISSION_ACTION_TAXONOMY_24.csv,content,24,4,Meaning,1.0,Action ID;Action;Meaning;Impact
+15,07A_ROLE_ACCESS_PROFILES_36.csv,content,36,6,Permitted Actions,0.44,Role ID;Role;Permitted Family Scope;Permitted Actions;Resource Scope;Hard Boundary
+15,07_ENTERPRISE_ROLE_CATALOG_36.csv,content,36,4,Boundary,1.0,Role ID;Role;Scope;Boundary
+15,08A_FAMILY_ACTION_APPLICABILITY_86.csv,content,86,6,Rule,0.01,Family;Applicable Actions;Mutating Actions;High-Impact Actions;Default;Rule
+15,08_AGGREGATE_AUTHORIZATION_POLICY_276.csv,content,276,11,Mandatory Scope,0.0,Policy ID;Owner Family;Domain;Aggregate;Risk Tier;Base Read Actions;Mutation Actions;Elevated Actions;Mandatory Scope;Additional Gate;SoT Boundary
+15,09A_AUTHORIZATION_DECISION_CONTRACT_40_FIELDS.csv,content,40,4,Rule,0.45,Field ID;Field;Requirement;Rule
+15,09B_POLICY_EVALUATION_ORDER_16.csv,content,16,4,Failure/Outcome,1.0,ID;Order;Evaluation;Failure/Outcome
+15,09C_COMMAND_ACTION_RESOLUTION_CONTRACT_18.csv,content,18,3,Rule,1.0,ID;Rule;Failure/Outcome
+15,09_API_AUTHORIZATION_MATRIX_552.csv,content,552,11,Mandatory Authorization,0.0,Operation ID;Method;Path;Owner Family;Aggregate;Class;Risk Tier;Baseline Action;Mandatory Authorization;Default;Binding
+15,10A_SOD_ENFORCEMENT_CLASSIFICATION_60.csv,content,60,8,Compensating Control Rule,0.02,Conflict ID;Activity A;Activity B;Scope;Rule;Enforcement;Conflict Class;Compensating Control Rule
+15,10_SEGREGATION_OF_DUTIES_CONFLICTS_60.csv,content,60,6,Enforcement,0.02,Conflict ID;Activity A;Activity B;Scope;Rule;Enforcement
+15,11_DOA_POLICY_BINDING_30.csv,content,30,7,Applicability Dimensions,0.03,Rule ID;Authority Level;Decision Class;Threshold Set;Core Rule;Applicability Dimensions;Evidence
+15,12_PRIVILEGED_ACCESS_JIT_PAM_20.csv,content,20,8,Standing Access,0.05,ID;Privilege;Standing Access;Activation;Duration;Monitoring;Termination;Rationale
+15,13_SECRETS_KEY_MANAGEMENT_30.csv,content,30,8,Lifecycle,0.03,ID;Secret/Key Type;Environment;Storage;Access;Exposure Rule;Lifecycle;Metadata
+15,14_SERVICE_MACHINE_IDENTITY_24.csv,content,24,8,Credential,0.04,ID;Workload;Environment;Identity Rule;Credential;Forbidden;Scope;Lifecycle
+15,15_TENANT_ISOLATION_CONTROLS_30.csv,content,30,6,Expected Test,0.03,ID;Control Area;Control Type;Rule;Expected Test;Invariant
+15,16_AUDIT_EVENT_CONTRACT_45_FIELDS.csv,content,45,5,Boundary,0.02,Field ID;Field;Requirement;Semantics;Boundary
+15,17_F01_F86_AUDIT_COVERAGE.csv,content,86,6,Mandatory Security Events,0.01,Family;Domain;Risk Tier;Mandatory Security Events;Minimum Evidence;Owner
+15,18_SECURITY_LOGGING_REDACTION_24.csv,content,24,5,Governance,0.04,ID;Data Category;Rule;Profile;Governance
+15,19_SESSION_TOKEN_LIFECYCLE_24.csv,content,24,6,Rule,0.46,ID;Artifact;Control;Context;Rule;Evidence
+15,20_DATA_CLASSIFICATION_ENFORCEMENT_30.csv,content,30,6,Authorization Requirement,0.17,ID;Classification;Action;Authorization Requirement;Evidence;Propagation
+15,21_CDE_DOCUMENT_SECURITY_24.csv,content,24,5,Control,0.5,ID;Control;Mode;Requirement;Boundary
+15,22_AI_AGENT_SECURITY_BOUNDARY_30.csv,content,30,5,Control,0.5,ID;Control;Mode;Requirement;Boundary
+15,23_RAG_KNOWLEDGE_SECURITY_24.csv,content,24,5,Control,0.5,ID;Control;Mode;Requirement;Boundary
+15,24_INTEGRATION_SECURITY_CONTROLS_24.csv,content,24,5,Control,0.5,ID;Control;Mode;Requirement;Boundary
+15,25_MOBILE_OFFLINE_SECURITY_30.csv,content,30,5,Control,0.5,ID;Control;Mode;Requirement;Boundary
+15,26_BREAK_GLASS_EMERGENCY_ACCESS_16.csv,content,16,5,Invariant,0.06,ID;Stage;Requirement;Evidence;Invariant
+15,27_SECURITY_THREAT_MODEL_80.csv,content,80,6,Required Control Family,0.01,Threat ID;Threat Class;Target;Concrete Threat;Required Control Family;Validation Boundary
+15,28_SECURITY_INCIDENT_RESPONSE_BOUNDARY_24.csv,content,24,5,Invariant,0.04,ID;Stage;Implementation Requirement;Evidence;Invariant
+15,29_MASTER_OWNERSHIP_MATRIX_32.csv,content,32,5,Authoritative Boundary,0.81,ID;Concept;Accountable Owner;Authoritative Boundary;Rule
+15,30_SOURCE_OF_TRUTH_MATRIX_32.csv,content,32,5,Invariant,0.03,ID;Concept;Source of Truth;Authority Type;Invariant
+15,31_CROSS_STEP_SECURITY_TRACEABILITY_18.csv,content,18,6,Boundary,0.11,ID;Upstream Step;Version;Upstream Object;STEP15 Binding;Boundary
+15,32_REVIEW_UNIVERSE_30.csv,content,30,5,Adversarial Requirement,0.03,ID;Area;Evidence Requirement;Adversarial Requirement;Rule
+15,33_HOSTILE_SECURITY_ATTACKS_180.csv,content,180,7,Concrete Attack,1.0,Attack ID;Surface;Concrete Attack;Control Pattern;Evidence;Expected Result;Boundary
+15,34_MACHINE_VALIDATION_GATES.csv,content,15,5,Observed,1.0,Gate;Check;Observed;Result;Evidence
+15,35_REFERENCE_REGISTER_5.csv,content,5,6,Use,1.0,ID;Reference;Authority;Edition/Year;Use;Boundary
+15,36_TECHNICAL_EVIDENCE_INDEX.csv,content,41,3,SHA256,1.0,File;SHA256;Binding
+15,37_FIXED_HASH_REDTEAM_REVIEW_33.csv,content,33,6,Technical Evidence Root,0.03,Review ID;Area;Technical Evidence Root;Result;Evidence Statement;Boundary
+15,39_HOSTILE_AUDIT_FINDINGS_v1_1.csv,content,5,6,Evidence,1.0,Finding ID;Severity;Title;Evidence;Disposition;Remediation
+15,40_HOSTILE_REBUILD_MACHINE_GATES.csv,content,14,5,Evidence,0.93,Gate;Check;Observed;Result;Evidence
+15,41_FIXED_HASH_HOSTILE_REVIEW_v1_1.csv,content,31,6,Evidence Statement,0.06,Review ID;Area;Technical Evidence Root;Result;Evidence Statement;Boundary
+15,43_OWNER_FREEZE_GATES.csv,content,5,5,Observed,1.0,Gate;Check;Observed;Result;Evidence
+15,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,49,2,SHA256,1.0,File;SHA256
+15,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,52,2,SHA256,1.0,File;SHA256
+15,99_MANIFEST_SHA256.csv,governance/manifest,49,2,SHA256,1.0,File;SHA256
+16,01_BASELINE_GENEALOGY_v1_1.csv,content,14,4,Binding,0.14,Step;Required Version;Status;Binding
+16,02_SAAS_COMMERCIAL_PRINCIPLES_60.csv,content,60,3,Principle,1.0,Principle ID;Principle;Level
+16,03_TENANT_LIFECYCLE_MODEL_9.csv,content,9,5,Transition Rule,0.11,State ID;State;Transition Rule;Owner;Evidence
+16,04_TENANT_OBJECT_CONTRACT_42_FIELDS.csv,content,42,3,Rule,0.02,Field;Requiredness;Rule
+16,05_COMMERCIAL_ACCOUNT_CONTRACT_30.csv,content,30,3,Rule,1.0,Field;Requiredness;Rule
+16,06A_PLAN_VERSION_CATALOG_12.csv,content,12,7,Plan Version ID,1.0,Plan Version ID;Plan ID;Version;Effective From;Effective To;Billing Model;Mutability
+16,06_PRODUCT_PLAN_CATALOG_4.csv,content,4,4,Definition,1.0,Plan ID;Edition;Status;Definition
+16,07_FEATURE_ENTITLEMENT_CATALOG_86.csv,content,86,5,Evaluation Source,0.01,Family ID;Entitlement Key;Default Decision;Evaluation Source;Security Boundary
+16,08_PLAN_ENTITLEMENT_MATRIX_344.csv,content,344,5,Entitlement Key,0.25,Plan;Family ID;Decision;Entitlement Key;Binding ID
+16,09_SUBSCRIPTION_CONTRACT_36_FIELDS.csv,content,36,3,Rule,0.03,Field;Requiredness;Rule
+16,10_ENTITLEMENT_DECISION_CONTRACT_32_FIELDS.csv,content,32,3,Rule,0.03,Field;Requiredness;Rule
+16,11_ENTITLEMENT_PRECEDENCE_8.csv,content,8,4,Effect,1.0,Rule ID;Rule;Order;Effect
+16,12_SEAT_LICENSE_MODEL_24.csv,content,24,3,Invariant,1.0,Rule ID;Rule;Invariant
+16,13_USAGE_METER_EVENT_CONTRACT_36_FIELDS.csv,content,36,3,Rule,0.03,Field;Requiredness;Rule
+16,14_METER_CATALOG_30.csv,content,30,5,Metric,1.0,Meter ID;Metric;Unit;Aggregation;Billing Relevance
+16,15_PRICE_BOOK_VERSIONING_40.csv,content,40,3,Control,1.0,Rule ID;Rule;Control
+16,16A_COMMERCIAL_INVOICE_CONTRACT_34_FIELDS.csv,content,34,3,Rule,0.03,Field;Requiredness;Rule
+16,16_BILLING_INVOICE_BOUNDARY_32.csv,content,32,3,Financial Boundary,1.0,Rule ID;Billing Rule;Financial Boundary
+16,17_COMMERCIAL_EVENT_CATALOG_48.csv,content,48,5,Invariant,0.02,Event ID;Event Type;Producer;Consumer;Invariant
+16,18_BILLING_LIFECYCLE_16.csv,content,16,4,Invariant,0.06,State ID;State;Allowed Next;Invariant
+16,19_PAYMENT_PROVIDER_BOUNDARY_24.csv,content,24,3,Security/Financial Boundary,1.0,Rule ID;Rule;Security/Financial Boundary
+16,20_TAX_JURISDICTION_BOUNDARY_20.csv,content,20,3,Boundary,1.0,Rule ID;Rule;Boundary
+16,21_QUOTA_RATE_LIMIT_ENTITLEMENT_BOUNDARY_24.csv,content,24,3,Invariant,1.0,Rule ID;Rule;Invariant
+16,22_TENANT_PROVISIONING_CONTRACT_30.csv,content,30,4,Compensation / Invariant,1.0,Step ID;Provisioning Step;Compensation / Invariant;Audit
+16,23_TENANT_MIGRATION_EXPORT_DELETE_36.csv,content,36,3,Invariant,1.0,Rule ID;Rule;Invariant
+16,24_SUPPORT_IMPERSONATION_ACCESS_24.csv,content,24,3,Control,1.0,Rule ID;Rule;Control
+16,25_SSO_SCIM_TENANT_IDENTITY_BOUNDARY_24.csv,content,24,3,Boundary,1.0,Rule ID;Rule;Boundary
+16,26_SLA_SUPPORT_TIER_MODEL_20.csv,content,20,3,Policy,0.05,Tier Rule;Metric;Policy
+16,27_DATA_RESIDENCY_REGION_POLICY_24.csv,content,24,3,Invariant,1.0,Rule ID;Rule;Invariant
+16,28_COMMERCIAL_FINANCIAL_TRUTH_LADDER_8.csv,content,8,3,Authority,1.0,Level;Object;Authority
+16,29_MASTER_OWNERSHIP_MATRIX_36.csv,content,36,3,Master Owner,0.03,Concept;Master Owner;Mutation Authority
+16,30_SOURCE_OF_TRUTH_MATRIX_36.csv,content,36,3,Derived Views,0.03,Concept;Source of Truth;Derived Views
+16,31_CROSS_STEP_COMMERCIAL_TRACEABILITY_8.csv,content,8,3,Invariant,1.0,Upstream;Binding;Invariant
+16,32_REVIEW_UNIVERSE_32.csv,content,32,3,Required Evidence,0.03,Review ID;Area;Required Evidence
+16,33_HOSTILE_SAAS_COMMERCIAL_ATTACKS_160.csv,content,160,6,Concrete Attack,1.0,Attack ID;Category;Concrete Attack;Required Control Evidence;Design Result;Boundary
+16,34_REFERENCE_REGISTER_4.csv,content,4,3,Use,1.0,Ref ID;Reference;Use
+16,39_HOSTILE_AUDIT_FINDINGS_v1_1.csv,content,5,6,Evidence,1.0,Finding ID;Severity;Title;Evidence;Disposition;Remediation
+16,40_HOSTILE_REBUILD_MACHINE_GATES.csv,content,16,5,Observed,1.0,Gate;Check;Observed;Result;Evidence
+16,41_TECHNICAL_EVIDENCE_INDEX_v1_1.csv,content,37,2,SHA256,1.0,File;SHA256
+16,42_FIXED_HASH_HOSTILE_REVIEW_v1_1.csv,content,32,6,Boundary,0.03,Review ID;Area;Technical Evidence Root;Result;Evidence Statement;Boundary
+16,44_OWNER_FREEZE_GATES.csv,content,5,4,Observed,1.0,Gate;Check;Observed;Result
+16,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,42,2,SHA256,1.0,File;SHA256
+16,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,44,2,SHA256,1.0,File;SHA256
+16,99_MANIFEST_SHA256.csv,governance/manifest,44,2,SHA256,1.0,File;SHA256
+17,01_BASELINE_GENEALOGY_v1_0.csv,content,15,4,Binding,0.13,Step;Required Version;Status;Binding
+17,02_REQUIREMENTS_CONSTITUTION_18.csv,content,18,3,Rule,1.0,ID;Theme;Rule
+17,03_REQUIREMENT_RECORD_CONTRACT_23_FIELDS.csv,content,23,3,Rule,0.04,Field;Required;Rule
+17,04_ATOMIC_REQUIREMENTS_MASTER.csv,content,4602,23,acceptance_then,0.34,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_ACCOUNTING_POSTING_FIELD_62.csv,content,62,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_AGENT_MANIFEST_FIELD_78.csv,content,78,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_API_AUTHORIZATION_552.csv,content,552,23,required_result,0.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_API_OPERATION_552.csv,content,552,23,acceptance_then,0.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_APPROVAL_AUTHORITY_20.csv,content,20,23,acceptance_then,0.05,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_CAPABILITY_BOUNDARY_86.csv,content,86,23,obligation,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_CLAIM_EVIDENCE_FIELD_46.csv,content,46,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_COMMAND_ACTION_RESOLUTION_18.csv,content,18,23,acceptance_then,0.06,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_COMMERCIAL_EVENT_FIELD_61.csv,content,61,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_CONTROLLED_OUTPUT_FIELD_50.csv,content,50,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_COST_LEDGER_FIELD_52.csv,content,52,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_CRITICAL_HANDOFF_34.csv,content,34,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_CROSS_STAGE_INVARIANT_6.csv,content,6,23,acceptance_then,0.17,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_DATA_AUTHORITY_276.csv,content,276,23,acceptance_then,0.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_DATA_IDENTITY_276.csv,content,276,23,acceptance_then,0.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_DATA_LIFECYCLE_276.csv,content,276,23,acceptance_then,0.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_DEPLOYMENT_PROFILE_9.csv,content,9,23,acceptance_then,0.89,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_DOCUMENT_OBJECT_FIELD_64.csv,content,64,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_ENGINEERING_ENGINE_110.csv,content,110,23,acceptance_then,0.01,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_ENGINEERING_RUN_FIELD_64.csv,content,64,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_ENTERPRISE_FUNCTION_39.csv,content,39,23,obligation,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_EVENT_CONTRACT_306.csv,content,306,23,required_result,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_FEATURE_ENTITLEMENT_86.csv,content,86,23,acceptance_then,0.01,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_FORBIDDEN_DEPENDENCY_15.csv,content,15,23,obligation,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_KNOWLEDGE_AUTHORITY_FIELD_68.csv,content,68,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_LOGICAL_COMPONENT_78.csv,content,78,23,required_result,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_NFR_TARGET_18.csv,content,18,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_OPERATING_INVARIANT_26.csv,content,26,23,required_result,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_PLAN_ENTITLEMENT_BINDING_344.csv,content,344,23,obligation,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_PLAN_VERSIONING_12.csv,content,12,23,acceptance_then,0.08,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_POLICY_DECISION_CONTRACT_20.csv,content,20,23,acceptance_then,0.05,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_PRODUCT_BOUNDARY_86.csv,content,86,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_PRODUCT_PACK_15.csv,content,15,23,required_result,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_RETRIEVAL_RERANK_FIELD_60.csv,content,60,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_REVISION_STATE_FIELD_40.csv,content,40,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_RIGHTS_LICENSE_FIELD_50.csv,content,50,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_RUNTIME_ENGINE_43.csv,content,43,23,required_result,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_RUNTIME_FORBIDDEN_EDGE_38.csv,content,38,23,acceptance_then,0.03,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_SEGREGATION_OF_DUTIES_60.csv,content,60,23,required_result,0.03,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_SOLVER_CONTRACT_FIELD_72.csv,content,72,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_TENANT_ISOLATION_30.csv,content,30,23,obligation,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_TOOL_CONTRACT_FIELD_63.csv,content,63,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_TRANSACTION_CONSISTENCY_18.csv,content,18,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_TRANSMITTAL_FIELD_48.csv,content,48,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_UX_JOURNEY_31.csv,content,31,23,required_result,0.03,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_UX_STATE_155.csv,content,155,23,acceptance_then,0.01,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_VALUE_STREAM_31.csv,content,31,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,10_REQ_VVUQ_FIELD_58.csv,content,58,23,acceptance_then,1.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;domain;subject;obligation;condition;required_result;acceptance_given;acceptance_when;acceptance_then;verifica
+17,20_FULL_IMPLEMENTATION_RTM.csv,content,4602,14,evidence_pointer,0.0,requirement_id;requirement_class;source_step;source_artifact;source_object_id;owner_family;implementation_target;planned_test_id;priority;status;design_status;implementation_status;verification_status
+17,21_ACCEPTANCE_CRITERIA_CATALOG.csv,content,4602,6,acceptance_then,0.34,requirement_id;acceptance_given;acceptance_when;acceptance_then;verification_method;planned_test_id
+17,22_IMPLEMENTATION_WORK_PACKAGE_MAP.csv,content,787,7,Exit Gate,0.0,Work Package ID;Implementation Target;Requirement Count;Requirement IDs;Entry Gate;Exit Gate;Status
+17,23_PLANNED_VERIFICATION_TEST_INVENTORY.csv,content,4602,8,acceptance_then,0.34,planned_test_id;requirement_id;verification_method;acceptance_given;acceptance_when;acceptance_then;execution_stage;execution_status
+17,24_UPSTREAM_CHANGE_IMPACT_MATRIX.csv,content,14,4,Affected Requirement IDs,1.0,Source Step;Requirement Count;Affected Requirement IDs;Invalidation Rule
+17,25_REQUIREMENT_COVERAGE_SUMMARY.csv,content,62,5,Expected/Rule,0.03,Dimension;Key;Count;Expected/Rule;Result
+17,30_MACHINE_VALIDATION_GATES.csv,content,38,4,Check,1.0,Gate;Check;Observed;Result
+17,31_HOSTILE_REQUIREMENTS_AUDIT_FINDINGS.csv,content,10,4,Disposition,1.0,Finding ID;Severity;Finding;Disposition
+17,36_TECHNICAL_EVIDENCE_INDEX.csv,content,58,2,SHA256,1.0,File;SHA256
+17,37_FIXED_HASH_REDTEAM_REVIEW.csv,content,38,5,Evidence Root,0.03,Review ID;Evidence Root;Question;Observed;Result
+17,43_OWNER_FREEZE_GATES.csv,content,6,4,Evidence,1.0,Gate_ID;Gate;Result;Evidence
+17,98_PRE_OWNER_MANIFEST_SHA256.csv,governance/manifest,64,2,SHA256,1.0,File;SHA256
+17,99_FROZEN_MANIFEST_SHA256.csv,governance/manifest,68,3,sha256,0.99,relative_path;sha256;bytes
+17,99_MANIFEST_SHA256.csv,governance/manifest,64,2,SHA256,1.0,File;SHA256
