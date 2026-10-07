@@ -1,0 +1,530 @@
+{
+  "suite": "sweep_technical_office",
+  "run": "to2",
+  "tag": "to2",
+  "steps": [
+    {
+      "name": "issuer cannot review own drawing (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: drawing issuer cannot review own drawing\""
+    },
+    {
+      "name": "rejection of a drawing needs comments",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "reviewer approves rev A",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "reviewer and time recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "reviewer approves rev B with comments",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approving rev B supersedes approved rev A (one current approved revision)",
+      "outcome": "PASS",
+      "detail": "B:approved_with_comments,A:superseded"
+    },
+    {
+      "name": "duplicate drawing revision refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint drawings_project_id_drawing_no_revision_key\""
+    },
+    {
+      "name": "submittal due date before submission refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint chk_submittal_due_after_submission\""
+    },
+    {
+      "name": "submitter cannot review own submittal (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: submitter cannot review own submittal\""
+    },
+    {
+      "name": "reviewer starts review",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "resubmit-required without comments refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "submitter resubmits (cycle 2)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "review history keeps both cycles with decisions and comments",
+      "outcome": "PASS",
+      "detail": "[{\"id\":1,\"org_id\":1,\"submittal_id\":2,\"cycle\":1,\"decision\":\"resubmit_required\",\"comment\":\"Provide manufacturer test certificate (fixture)\",\"reviewer_id\":64,\"decided_at\":\"2026-10-07T20:41:36.043Z\"},{\"id"
+    },
+    {
+      "name": "raiser cannot answer own RFI (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: RFI raiser cannot answer own RFI\""
+    },
+    {
+      "name": "designer answers RFI",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "impact-flagged RFI cannot close without a contract-event link or no-impact reason",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"RFI 1 is flagged for cost/time impact: link it to a contract event or state why there is no impact\""
+    },
+    {
+      "name": "raiser closes RFI after linking it to the contract event",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closer recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unanswered RFI past its response date is flagged overdue",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "impact-flagged RFI closed with a stated no-impact reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "method statement rejection needs comments",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "method statement approved by reviewer",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approved method statement cannot be resubmitted",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only draft/rejected method statement can be submitted\""
+    },
+    {
+      "name": "DB: RFI answer immutable once given",
+      "outcome": "PASS",
+      "detail": "ERROR:  RFI 1 question and answer are immutable once answered"
+    },
+    {
+      "name": "DB: submittal review history append-only",
+      "outcome": "PASS",
+      "detail": "ERROR:  submittal_reviews is append-only"
+    },
+    {
+      "name": "DB: reviewed drawing content immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Reviewed drawing 2 is immutable; issue a new revision"
+    },
+    {
+      "name": "DB: approved method statement immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Approved method statement 1 is immutable"
+    },
+    {
+      "name": "tenant B cannot answer tenant A RFI",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"RFI not found\""
+    },
+    {
+      "name": "tenant B cannot read tenant A submittal",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Submittal not found\""
+    },
+    {
+      "name": "tenant B does not see tenant A RFIs",
+      "outcome": "PASS",
+      "detail": ""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/14/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/39/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/39/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/1/status",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: drawing issuer cannot review own drawing"
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/1/status",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/1/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/2/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/drawings?project_id=18",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint drawings_project_id_drawing_no_revision_key"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/submittals",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint chk_submittal_due_after_submission"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/submittals",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/submittals/2/review",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: submitter cannot review own submittal"
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/submittals/2/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/submittals/2/review",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/submittals/2/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/submittals/2/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/submittals/2/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/submittals/2/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/submittals/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/rfis",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/rfis/1/respond",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: RFI raiser cannot answer own RFI"
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/rfis/1/respond",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/rfis/1/close",
+      "status": 422,
+      "ok": false,
+      "error": "RFI 1 is flagged for cost/time impact: link it to a contract event or state why there is no impact"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/14/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/events/9/links",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/rfis/1/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/rfis",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/rfis?project_id=18",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/rfis/2/respond",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/rfis/2/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/method-statements",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/method-statements/1/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/method-statements/1/review",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/method-statements/1/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/method-statements/1/submit",
+      "status": 409,
+      "ok": false,
+      "error": "Only draft/rejected method statement can be submitted"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/rfis/2/respond",
+      "status": 404,
+      "ok": false,
+      "error": "RFI not found"
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/submittals/2",
+      "status": 404,
+      "ok": false,
+      "error": "Submittal not found"
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/rfis",
+      "status": 200,
+      "ok": true,
+      "error": null
+    }
+  ]
+}

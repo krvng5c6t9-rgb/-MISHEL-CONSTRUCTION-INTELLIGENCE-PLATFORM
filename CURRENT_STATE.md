@@ -1,4 +1,4 @@
-# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2 + RK-003 sweep: CC-015…CC-030)
+# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2 + RK-003 sweep: CC-015…CC-031)
 
 | Item | Value |
 |---|---|
@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 53 (`database/migrations/001…053`), all applied from an empty DB |
+| Migrations | 54 (`database/migrations/001…054`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-030
+## Controlled Changes CC-001 → CC-031
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -62,6 +62,7 @@
 | CC-028 | GC-37 HR/payroll: payroll submission crash fixed; payroll/timesheet/leave integrity (051) |
 | CC-029 | GC-03 EDMS: revision-level review, immutable versions, for-construction issue gated on approval (052) |
 | CC-030 | GC-16 claims: lifecycle crash (42P08) fixed; event/notice linkage, determination ≤ claim with SoD and reasons, decided claims immutable; time-bar position shown (053) |
+| CC-031 | Technical office: RFI creation and drawing review crashes fixed; review comments/history, one current approved revision, RFI impact → contract-event linkage (054) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -96,7 +97,8 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_hr_payroll.mjs | 43 | GC-37 |
 | sweep_edms.mjs | 24 | GC-03 |
 | sweep_claims.mjs | 25 | GC-16 |
-| **Total** | **563** | 17 suites, all PASS locally (RUN cl2) |
+| sweep_technical_office.mjs | 30 | GC-03..05 |
+| **Total** | **593** | 18 suites, all PASS locally (RUN to2) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).
@@ -157,6 +159,6 @@ Docker alternative: set `POSTGRES_PASSWORD`, `APP_DB_PASSWORD`, `JWT_SECRET`, `B
 ## VERIFIED vs UNVERIFIED
 **VERIFIED (executed, logs in `takeover/evidence/` and CI):** build, migrations from zero on PG 16.14/16.15/17.11, project-create authorization, SQLSTATE error mapping without SQL leakage, API authentication, DOA-driven approvals with SoD and wrong-role rejection, the commercial-procurement-finance chain to a balanced GL, AP/AR creation, idempotency of GRN confirm and GL posting, cross-tenant read/write/approval isolation at API and DB level, bootstrap refusal on orgs with active users.
 
-**UNVERIFIED:** docker-compose runtime; frontend behaviour in a browser; every module outside the 17 runtime suites (assets/plant, inventory transfers, technical office (RFIs/submittals/method statements), portals, dashboards/reports, AI platform, automation, knowledge, CRM beyond the chain); HR/payroll, QA/QC, HSE, EDMS, planning/CPM, site diary, variations and claims are now runtime-tested for their core paths only; performance/load; backup/restore/DR; penetration testing; production readiness of any kind. All DOA thresholds, CoA codes, GL rules and amounts used in tests are **TEST FIXTURES**, not owner-approved values.
+**UNVERIFIED:** docker-compose runtime; frontend behaviour in a browser; every module outside the 18 runtime suites (assets/plant, inventory transfers, portals, dashboards/reports, AI platform, automation, knowledge, CRM beyond the chain); HR/payroll, QA/QC, HSE, EDMS, planning/CPM, site diary, variations, claims and technical office are now runtime-tested for their core paths only; performance/load; backup/restore/DR; penetration testing; production readiness of any kind. All DOA thresholds, CoA codes, GL rules and amounts used in tests are **TEST FIXTURES**, not owner-approved values.
 
 No secrets are included: credentials appear only as `<placeholders>` and as test-only fixture passwords inside `tests/e2e`.

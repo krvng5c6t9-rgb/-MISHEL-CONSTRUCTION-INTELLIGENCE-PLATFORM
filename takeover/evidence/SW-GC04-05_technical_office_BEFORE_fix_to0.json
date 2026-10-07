@@ -1,0 +1,162 @@
+{
+  "suite": "sweep_technical_office",
+  "run": "to0",
+  "tag": "to0",
+  "steps": [
+    {
+      "name": "issuer cannot review own drawing (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: drawing issuer cannot review own drawing\""
+    },
+    {
+      "name": "rejection of a drawing needs comments",
+      "outcome": "FAIL",
+      "detail": "HTTP 500 \"Internal server error\""
+    },
+    {
+      "name": "reviewer approves rev A",
+      "outcome": "FAIL",
+      "detail": "apA failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"b60cb63c-fda5-43e4-91e0-dba04e5a8897\"}"
+    },
+    {
+      "name": "suite completed",
+      "outcome": "FAIL",
+      "detail": "apA failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"b60cb63c-fda5-43e4-91e0-dba04e5a8897\"}"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/14/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/39/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/39/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/1/status",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: drawing issuer cannot review own drawing"
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/1/status",
+      "status": 500,
+      "ok": false,
+      "error": "Internal server error"
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/1/status",
+      "status": 500,
+      "ok": false,
+      "error": "Internal server error"
+    }
+  ]
+}

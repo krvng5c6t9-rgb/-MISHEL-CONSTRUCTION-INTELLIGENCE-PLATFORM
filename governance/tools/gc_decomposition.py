@@ -124,7 +124,7 @@ gc('GC-25', 'Corporate Month-End', [
 gc('GC-03', 'Drawing/Model Technical Review', [
     ('Register drawing/model and revision context', 'Document controller', 'transmittal', 'controlled revision', 'revision sequence enforced', 'unique doc number per project; versions immutable (CC-029)', 'L0', 'RUNTIME', 'CC-029 sweep_edms 24/24 (edms documents/versions)', ''),
     ('Discipline and interdisciplinary checks', 'Discipline engineer', 'drawing, standards, spec', 'issues with evidence', 'applicable standard from register (not latest by default)', 'SOD15-051', 'L2 check assist (no approval)', 'ABSENT', 'no review-issue entity', 'NDC-027'),
-    ('Engineer disposition and markup', 'Responsible engineer', 'issues', 'review status code', 'disposition codes tenant configured', 'SOD15-051 uploader != reviewer (CC-029)', 'L5 professional judgement', 'PARTIAL', 'CC-029: EDMS approve/reject recorded on revision with reviewer and reason (E1); disposition codes and markup absent', ''),
+    ('Engineer disposition and markup', 'Responsible engineer', 'issues', 'review status code', 'disposition codes tenant configured', 'SOD15-051 uploader != reviewer (CC-029)', 'L5 professional judgement', 'PARTIAL', 'CC-029 EDMS + CC-031 drawing register decisions with comments, one current approved revision (E1); markup absent', ''),
     ('Issue controlled review report', 'Document controller', 'disposition', 'report/transmittal', 'issued output immutable; for-construction only approved current revisions (CC-029)', 'maker != issuer', 'L2', 'RUNTIME', 'CC-029 sweep_edms transmittals', ''),
 ])
 gc('GC-04', 'Design Revision Impact', [
@@ -166,7 +166,7 @@ gc('GC-11', 'Delay & Recovery', [
     ('Management approval and controlled replan', 'Project director', 'scenario', 'approved revision', 'baseline change controlled', 'none', 'L0', 'PARTIAL', 'baseline set-current route', ''),
 ])
 gc('GC-17', 'Material Lifecycle', [
-    ('Technical requirement and submittal', 'Engineer', 'spec', 'submittal', 'submittal approved before PO for listed items', 'SOD15-053', 'L2 compliance check', 'API', 'submittals', ''),
+    ('Technical requirement and submittal', 'Engineer', 'spec', 'submittal', 'submittal approved before PO for listed items', 'SOD15-053', 'L2 compliance check', 'PARTIAL', 'CC-031: submittal review cycles with comments/history runtime-tested (E1); approved-submittal-before-PO gate absent', ''),
     ('Procure (GC-06)', 'Procurement', 'approved submittal', 'PO', 'see GC-06', 'see GC-06', 'L2', 'RUNTIME', 'chain', ''),
     ('Receive, inspect, store', 'Storekeeper + QC', 'delivery', 'GRN, MIR, stock', 'stock by warehouse', 'none', 'L0', 'PARTIAL', 'GRN in chain; inventory routes unverified', ''),
     ('Issue to work front and install', 'Storekeeper', 'MR', 'issue transaction', 'issued qty <= stock', 'SOD15-059', 'L0', 'API', 'inventory transactions', ''),
