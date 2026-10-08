@@ -1,0 +1,525 @@
+{
+  "suite": "sweep_ndc002",
+  "run": "n23",
+  "tag": "n23",
+  "steps": [
+    {
+      "name": "CE with an unconfirmed period rule refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Rule 14 must be a confirmed quotation_due rule of this contract\""
+    },
+    {
+      "name": "CE notified before awareness of the event refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Notification date must be between awareness of the event and today\""
+    },
+    {
+      "name": "CE notified with quotation and reply rules",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "quotation due = notified + 21 days (from confirmed rule)",
+      "outcome": "PASS",
+      "detail": "2026-09-29"
+    },
+    {
+      "name": "missing quotation past its due date flagged overdue",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "acceptance before any quotation refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Only a submitted quotation can be accepted\""
+    },
+    {
+      "name": "quotation submitted (45,000 / 12 days)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "PM reply due = quotation + 14 days",
+      "outcome": "PASS",
+      "detail": "2026-10-17"
+    },
+    {
+      "name": "quotation preparer cannot record the PM decision (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"The decision must be recorded by someone other than the notifier and the quotation preparer\""
+    },
+    {
+      "name": "PM assessment without reasons refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A PM assessment needs amount, time and reasons\""
+    },
+    {
+      "name": "PM assessment recorded (30,000 / 8 days) with reasons",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "quotation preserved beside the assessment",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "decided CE cannot be decided again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Compensation event is already decided\""
+    },
+    {
+      "name": "claim cannot be submitted before its notice is issued",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A claim is submitted only with an issued notice of the claim event\""
+    },
+    {
+      "name": "late condition-precedent notice: submission needs a recorded time-bar position",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"The notice was issued late on a condition-precedent clause: record the time-bar position before submitting\""
+    },
+    {
+      "name": "claim submitted with time-bar position recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NOD before any determination refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A notice of dissatisfaction follows a determination\""
+    },
+    {
+      "name": "determination above the claim refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Determination cannot exceed the claim\""
+    },
+    {
+      "name": "Engineer determination recorded (20 days / 80,000)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NOD recorded against the determination",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "NOD deadline from the confirmed rule and lateness flagged (not decided)",
+      "outcome": "PASS",
+      "detail": "2026-10-01 late=true"
+    },
+    {
+      "name": "arbitration before a DAAB decision refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Arbitration follows a DAAB decision\""
+    },
+    {
+      "name": "the same step cannot be recorded twice",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Step daab_referral already recorded for this claim\""
+    },
+    {
+      "name": "claim view shows the dispute ladder in order",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DB: dispute steps append-only",
+      "outcome": "PASS",
+      "detail": "ERROR:  claim_dispute_steps is append-only"
+    },
+    {
+      "name": "DB: decided CE immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Compensation event 3 is decided and immutable"
+    },
+    {
+      "name": "DB: CEs cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Compensation events cannot be deleted; withdraw them"
+    },
+    {
+      "name": "tenant B cannot quote on tenant A CE",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Obligation rule not found\""
+    },
+    {
+      "name": "tenant B cannot add dispute steps to tenant A claim",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Claim not found\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/15/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/41/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/41/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/15/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/10/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/15/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/11/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/15/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/12/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/15/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/13/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/15/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/15/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/15/compensation-events",
+      "status": 422,
+      "ok": false,
+      "error": "Rule 14 must be a confirmed quotation_due rule of this contract"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/15/compensation-events",
+      "status": 422,
+      "ok": false,
+      "error": "Notification date must be between awareness of the event and today"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/15/compensation-events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/15/compensation-events",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/compensation-events/3/decision",
+      "status": 422,
+      "ok": false,
+      "error": "Only a submitted quotation can be accepted"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/compensation-events/3/quotation",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/compensation-events/3/decision",
+      "status": 422,
+      "ok": false,
+      "error": "The decision must be recorded by someone other than the notifier and the quotation preparer"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/compensation-events/3/decision",
+      "status": 422,
+      "ok": false,
+      "error": "A PM assessment needs amount, time and reasons"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/compensation-events/3/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/compensation-events/3/decision",
+      "status": 409,
+      "ok": false,
+      "error": "Compensation event is already decided"
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/status",
+      "status": 422,
+      "ok": false,
+      "error": "A claim is submitted only with an issued notice of the claim event"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/8/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/status",
+      "status": 422,
+      "ok": false,
+      "error": "The notice was issued late on a condition-precedent clause: record the time-bar position before submitting"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/dispute-steps",
+      "status": 422,
+      "ok": false,
+      "error": "A notice of dissatisfaction follows a determination"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/dispute-steps",
+      "status": 422,
+      "ok": false,
+      "error": "Determination cannot exceed the claim"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/dispute-steps",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/dispute-steps",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/dispute-steps",
+      "status": 422,
+      "ok": false,
+      "error": "Arbitration follows a DAAB decision"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/dispute-steps",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/dispute-steps",
+      "status": 422,
+      "ok": false,
+      "error": "Step daab_referral already recorded for this claim"
+    },
+    {
+      "method": "GET",
+      "path": "/claims/7",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/compensation-events/3/quotation",
+      "status": 404,
+      "ok": false,
+      "error": "Obligation rule not found"
+    },
+    {
+      "method": "POST",
+      "path": "/claims/7/dispute-steps",
+      "status": 404,
+      "ok": false,
+      "error": "Claim not found"
+    }
+  ]
+}

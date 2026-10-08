@@ -12,14 +12,14 @@ export const contractAdminRouter = Router();
 contractAdminRouter.use(authorize('contracts', 'view'));
 
 const pid = (v: string) => { const n = Number(v); if (!Number.isSafeInteger(n) || n <= 0) throw new AppError(400, 'Invalid id'); return n; };
-async function conflictOr404(table: 'contract_notices' | 'contract_obligation_rules', id: number, msg: string): Promise<never> {
+async function conflictOr404(table: 'contract_notices' | 'contract_obligation_rules' | 'compensation_events', id: number, msg: string): Promise<never> {
   const exists = (await query(`select 1 from ${table} where id=$1`, [id]))[0];
   throw exists ? new AppError(409, msg) : new AppError(404, table === 'contract_notices' ? 'Notice not found' : 'Obligation rule not found');
 }
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const ruleBody = z.object({
   clause_ref: z.string().trim().min(1).max(60),
-  obligation_type: z.enum(['notice_of_claim', 'notice_of_delay', 'early_warning', 'variation_notice', 'notice_of_dispute', 'response_due', 'particulars_due', 'other']),
+  obligation_type: z.enum(['notice_of_claim', 'notice_of_delay', 'early_warning', 'variation_notice', 'notice_of_dispute', 'response_due', 'particulars_due', 'quotation_due', 'other']),
   responsible_party: z.enum(['contractor', 'employer', 'engineer', 'project_manager', 'subcontractor']),
   trigger_description: z.string().trim().min(5),
   period_value: z.number().int().positive().max(3650),
@@ -232,4 +232,36 @@ contractAdminRouter.post('/programme-submissions/:id/decision', authorize('contr
     await client.query('commit');
     res.json({ success: true, data: r });
   } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
+}));
+
+// CC-034 (NDC-002): compensation-event register. Deadlines only from confirmed contract rules; decisions recorded by
+// someone other than the notifier and the quotation preparer; decided events are immutable.
+const ceDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+contractAdminRouter.get('/contracts/:contractId/compensation-events', asyncHandler(async (req, res) => {
+  res.json({ success: true, data: await query(`select ce.*, (ce.status='notified' and ce.quotation_due < current_date) as quotation_overdue,
+      (ce.status='quotation_submitted' and ce.reply_due < current_date) as reply_overdue
+    from compensation_events ce where ce.contract_id=$1 and ce.org_id=$2 order by ce.notified_on desc, ce.id desc`, [pid(req.params.contractId), req.user!.org_id]) });
+}));
+contractAdminRouter.post('/contracts/:contractId/compensation-events', authorize('contracts', 'create'), asyncHandler(async (req, res) => {
+  const b = z.object({ event_id: z.number().int().positive(), ce_no: z.string().trim().min(1).max(30), description: z.string().trim().min(5), notified_on: ceDate,
+    quotation_rule_id: z.number().int().positive().optional(), reply_rule_id: z.number().int().positive().optional() }).parse(req.body);
+  const [r] = await query(`insert into compensation_events(org_id,contract_id,event_id,ce_no,description,notified_on,quotation_rule_id,reply_rule_id,created_by) values($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *`,
+    [req.user!.org_id, pid(req.params.contractId), b.event_id, b.ce_no, b.description, b.notified_on, b.quotation_rule_id ?? null, b.reply_rule_id ?? null, req.user!.id]);
+  res.status(201).json({ success: true, data: r });
+}));
+contractAdminRouter.post('/compensation-events/:id/quotation', authorize('contracts', 'create'), asyncHandler(async (req, res) => {
+  const b = z.object({ amount: z.number(), time_days: z.number().int().nonnegative(), submitted_on: ceDate }).parse(req.body);
+  const rows = await query(`update compensation_events set status='quotation_submitted',quotation_amount=$2,quotation_time_days=$3,quotation_submitted_on=$4,quotation_by=$5 where id=$1 and org_id=$6 and status='notified' returning *`,
+    [pid(req.params.id), String(b.amount), b.time_days, b.submitted_on, req.user!.id, req.user!.org_id]);
+  if (!rows[0]) await conflictOr404('compensation_events', pid(req.params.id), 'Only a notified compensation event takes a quotation');
+  res.json({ success: true, data: rows[0] });
+}));
+contractAdminRouter.post('/compensation-events/:id/decision', authorize('contracts', 'approve'), asyncHandler(async (req, res) => {
+  const b = z.object({ decision: z.enum(['accepted', 'pm_assessed', 'not_a_ce', 'withdrawn']), decision_on: ceDate.optional(), reference: z.string().trim().max(500).optional(),
+    amount: z.number().optional(), time_days: z.number().int().nonnegative().optional(), reason: z.string().trim().max(4000).optional() }).parse(req.body);
+  const rows = await query(`update compensation_events set status=$2::varchar,decision_on=$3::date,decision_reference=$4::text,decided_amount=$5::numeric,decided_time_days=$6::int,decision_reason=$7::text,decision_recorded_by=$8::bigint
+     where id=$1 and org_id=$9 and status in ('notified','quotation_submitted') returning *`,
+    [pid(req.params.id), b.decision, b.decision_on ?? null, b.reference ?? null, b.amount == null ? null : String(b.amount), b.time_days ?? null, b.reason ?? null, req.user!.id, req.user!.org_id]);
+  if (!rows[0]) await conflictOr404('compensation_events', pid(req.params.id), 'Compensation event is already decided');
+  res.json({ success: true, data: rows[0] });
 }));

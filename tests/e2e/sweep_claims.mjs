@@ -50,7 +50,8 @@ try {
   const thin = must(await claim(C.a, { claim_no: `CL2-${TAG}`, claim_type: 'eot', notice_date: day(-1) }), 'thin');
   must(await api('POST', `/claims/${thin.id}/status`, C.a, { status: 'notified' }), 'thin notified');
   await expectStatus('submission without claimed days and basis refused', () => api('POST', `/claims/${thin.id}/status`, C.a, { status: 'submitted' }), 422);
-  must(await api('POST', `/claims/${k.id}/status`, C.a, { status: 'submitted' }), 'submitted');
+  await expectStatus('submission refused without a time-bar position on a late condition-precedent notice (CC-034)', () => api('POST', `/claims/${k.id}/status`, C.a, { status: 'submitted' }), 422);
+  must(await api('POST', `/claims/${k.id}/status`, C.a, { status: 'submitted', time_bar_position: 'Late notice; relying on PC-20.1 waiver correspondence ref L-77 (fixture)' }), 'submitted');
   await expectStatus('claimed entitlement frozen after submission', () => api('PATCH', `/claims/${k.id}`, C.a, { claimed_amount: 999999 }), 409);
   must(await api('POST', `/claims/${k.id}/status`, C.b, { status: 'under_review' }), 'review');
   await expectStatus('claim creator cannot determine own claim (SoD)', () => api('PATCH', `/claims/${k.id}`, C.a, { approved_days: 20, approved_amount: 100000 }), 403);

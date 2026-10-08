@@ -1,4 +1,4 @@
-# HANDOFF — v0.5.4-stage4 — DATE: 2026-10-05
+# HANDOFF — v0.5.5-stage5 — DATE: 2026-10-05
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
@@ -6,8 +6,8 @@
 - Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-028; CC-029 queued at handoff.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-033 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–056.
-- **Runtime suites, all from zero (E1):** 20 suites, 641 checks, all PASS (Stage 1 claims 25, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21).
+- **Change controls:** CC-001…CC-034 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–057.
+- **Runtime suites, all from zero (E1):** 21 suites, 671 checks, all PASS (Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -71,7 +71,8 @@
 - Stage 2 — Technical Office: **DONE** (CC-031).
 - Stage 3 — Assets & Equipment: **DONE** (CC-032).
 - Stage 4 — Inventory transfers: **DONE** (CC-033; DEC-014 + NDC-030 opened).
-- **Stage 5 — NDC-002 remainder (NEXT):** NDC-002 remainder (NEC CE register, FIDIC determination/DAAB, claim gating). Stage 6 — NDC-011 remainder (accruals, reproducible EAC).
+- Stage 5 — NDC-002 remainder: **DONE** (CC-034).
+- **Stage 6 (NEXT) — NDC-011 remainder (accruals, reproducible EAC).
 - Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
 - DEC-009 / DEC-012 / DEC-013 / DEC-014 stay OPEN for the Finance/Accounting expert review — do not hard-code a policy.
 
