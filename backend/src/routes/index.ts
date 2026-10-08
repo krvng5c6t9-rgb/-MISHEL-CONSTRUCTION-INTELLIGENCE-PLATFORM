@@ -39,6 +39,7 @@ import { aiPlatformRouter } from '../modules/aiPlatform/aiPlatform.routes.js';
 import { commercialPlatformRouter } from '../modules/commercialPlatform/commercialPlatform.routes.js';
 import { automationRouter } from '../modules/automation/automation.routes.js';
 import { knowledgeRouter } from '../modules/knowledge/knowledge.routes.js';
+import { risksRouter } from '../modules/risks/risks.routes.js';
 
 export const apiRouter = Router();
 
@@ -52,6 +53,7 @@ apiRouter.use('/clients', clientsRouter);
 apiRouter.use('/crm', crmRouter);
 apiRouter.use('/tendering', tenderingRouter);
 apiRouter.use('/contracts', contractsRouter);
+apiRouter.use('/risks', risksRouter);
 apiRouter.use('/subcontracts', subcontractsRouter);
 apiRouter.use('/inventory', inventoryRouter);
 apiRouter.use('/claims', claimsRouter);

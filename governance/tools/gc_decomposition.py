@@ -31,7 +31,7 @@ gc('GC-01', 'Tender-to-Award', [
     ('Rate build-up and pricing', 'Estimator', 'resource library, quotes, productivity norms', 'unit rates with build-up', 'rate = sum(resource qty x cost) + on-costs', 'reviewer != preparer', 'L2 rate suggestion from history', 'RUNTIME', 'boq rate-buildup (chain)', 'DFS-002'),
     ('Subcontract/supplier enquiries for pricing', 'Procurement', 'packages, vendor list', 'quotes, comparison', 'like-for-like normalisation', 'SOD15-021 evaluation vs award', 'L2 normalisation draft', 'PARTIAL', 'rfqs exist for projects, not for tenders', ''),
     ('Tender programme, resources and cash-flow', 'Planner', 'scope, durations, rates', 'tender programme, S-curve', 'CPM; cash-flow from priced programme', 'none', 'L2 programme draft', 'PARTIAL', 'planning/cpm route exists for projects only', 'NDC-010'),
-    ('Risk and opportunity assessment, contingency', 'Commercial manager', 'risk register, contract data', 'priced risk, contingency', 'risk quantification method (tenant configured)', 'none', 'L1 risk suggestions', 'ABSENT', 'no risk register table', ''),
+    ('Risk and opportunity assessment, contingency', 'Commercial manager', 'risk register, contract data', 'priced risk, contingency', 'risk quantification method (tenant configured); 1-5 x 1-5 ranking + optional % x cost expected value (information)', 'none', 'L1 risk suggestions', 'RUNTIME', 'CC-041 sweep_risks: tender risks, EV summary for contingency, carried to project at award', ''),
     ('Tender review and approval to submit', 'Bid board per DOA', 'tender summary, margin, risk', 'approved bid', 'DOA decision class Contract; margin floor is owner configuration', 'SOD15-021; DOA Contract', 'L0 summary', 'RUNTIME', 'tender submit-approval + DOA + SoD (chain)', ''),
     ('Submission, clarifications and negotiation', 'Commercial manager', 'clarifications, client queries', 'clarification log, revised bid', 'every client query answered with traceable revision', 'none', 'L2 response drafts', 'API', 'tender clarifications routes', ''),
     ('Award / loss decision and lessons', 'BD manager', 'award letter or loss notice', 'won/lost status, lessons', 'win/loss reasons captured', 'none', 'L1 loss analysis', 'PARTIAL', 'tender status; lessons absent', 'NDC-026'),
@@ -215,9 +215,9 @@ gc('GC-24', 'Import Legacy Data', [
     ('Controlled import and reconciliation with lineage', 'Data owner', 'validated data', 'imported records + control totals', 'control totals source = target', 'loader != approver', 'L3', 'ABSENT', '', 'NDC-011'),
 ])
 gc('GC-26', 'Risk-to-Action', [
-    ('Identify and assess risk/opportunity', 'Risk owner', 'project data', 'risk register entry', 'probability/impact scales configured', 'none', 'L1 risk suggestions', 'ABSENT', 'no risk table', ''),
-    ('Response, owner, due date, links', 'Risk owner', 'risk', 'actions', 'linked to cost/schedule/contract', 'none', 'L1', 'ABSENT', '', ''),
-    ('Monitor triggers, escalate, close, lesson', 'PM', 'triggers', 'closure + lesson', 'lesson feeds knowledge loop', 'none', 'L1', 'ABSENT', '', 'NDC-026'),
+    ('Identify and assess risk/opportunity', 'Risk owner', 'project data', 'risk register entry', '1-5 probability x impact (score ranks only; bands are company policy); DB-kept assessment history', 'none', 'L1 risk suggestions', 'RUNTIME', 'CC-041 sweep_risks', ''),
+    ('Response, owner, due date, links', 'Risk owner', 'risk', 'actions', 'strategy must fit threat/opportunity; owner + due date; overdue flagged', 'none', 'L1', 'RUNTIME', 'CC-041 sweep_risks (cost/schedule links: EV and time impact on the risk; no cost-code link yet)', ''),
+    ('Monitor triggers, escalate, close, lesson', 'PM', 'triggers', 'closure + lesson', 'escalation named + reasoned; close needs no open responses, reason, lesson; closer != raiser; occurred threat links its contract event', 'closer != raiser (CC-041)', 'L1', 'PARTIAL', 'CC-041 sweep_risks; trigger monitoring is manual (no automatic trigger evaluation); lessons not yet fed to the knowledge module', 'NDC-026'),
 ])
 gc('GC-27', 'Field-to-Office Offline Workflow', [
     ('Download authorised field package', 'Field user', 'assignment', 'offline package', 'only permitted data', 'none', 'L0', 'ABSENT', 'no offline client', ''),

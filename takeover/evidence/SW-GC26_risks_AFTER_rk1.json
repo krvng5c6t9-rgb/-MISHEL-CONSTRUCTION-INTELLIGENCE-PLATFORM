@@ -1,0 +1,509 @@
+{
+  "suite": "sweep_risks",
+  "run": "rk1",
+  "tag": "rk1",
+  "steps": [
+    {
+      "name": "a risk must belong to a tender or a project",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "probability level outside 1-5 refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "owner must be an active user of this organization",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Risk owner must be an active user of this organization\""
+    },
+    {
+      "name": "viewer cannot raise a risk",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: projects.create\""
+    },
+    {
+      "name": "threat raised at tender: P4 x I4, 40% x 100,000",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "score 16 and expected value 40,000 computed by the database",
+      "outcome": "PASS",
+      "detail": "16/40000.00"
+    },
+    {
+      "name": "duplicate risk number refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint risks_org_id_risk_no_key\""
+    },
+    {
+      "name": "tender summary: threat EV 40,000, opportunity EV 10,000, top risk is the threat",
+      "outcome": "PASS",
+      "detail": "{\"open_risks\":2,\"escalated\":0,\"reviews_overdue\":0,\"open_threat_expected_value\":\"40000.00\",\"open_opportunity_expected_value\":\"10000.00\",\"threats_not_quantified\":0,\"largest_open_time_impact_days\":20,\"to"
+    },
+    {
+      "name": "tender risk carried to the project",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "project link cannot be changed once set",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Risk already belongs to a project\""
+    },
+    {
+      "name": "reassessed after site investigation: P2 x I4, 20%",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "assessment history kept by the database (initial + reassessment)",
+      "outcome": "PASS",
+      "detail": "[[4,85],[2,86]]"
+    },
+    {
+      "name": "opportunity strategy refused on a threat",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Strategy exploit does not apply to a threat\""
+    },
+    {
+      "name": "mitigation response owned by R2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "response past its due date is flagged overdue",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "escalation needs a reason",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "risk escalated to R2 with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "the person who raised the risk cannot close it (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: a risk is closed by someone other than the person who raised it\""
+    },
+    {
+      "name": "a risk with open responses cannot be closed",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Close or cancel the open responses of risk 2 first\""
+    },
+    {
+      "name": "finishing a response needs an outcome",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "closing without a lesson learned refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "opportunity closure type refused on a threat",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Value violates check constraint risks_check3\""
+    },
+    {
+      "name": "materialised event must be a contract event of the project",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Materialised event must be a contract event of the same project\""
+    },
+    {
+      "name": "R2 closes the threat as mitigated with lesson learned",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closer and time recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closed risk cannot be reassessed",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Risk is closed\""
+    },
+    {
+      "name": "opportunity closed as realised by someone other than its raiser",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "review past due is flagged; unquantified threats are counted, not guessed",
+      "outcome": "PASS",
+      "detail": "{\"open_risks\":1,\"escalated\":0,\"reviews_overdue\":1,\"open_threat_expected_value\":\"0.00\",\"open_opportunity_expected_value\":\"0.00\",\"threats_not_quantified\":1,\"largest_open_time_impact_days\":null,\"top_risk"
+    },
+    {
+      "name": "DB: closed risk immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Risk 2 is closed and immutable"
+    },
+    {
+      "name": "DB: risks cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Risks are never deleted; close them with a reason"
+    },
+    {
+      "name": "DB: assessment history append-only",
+      "outcome": "PASS",
+      "detail": "ERROR:  Risk assessment history is append-only"
+    },
+    {
+      "name": "DB: finished response immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Response 2 is finished and immutable"
+    },
+    {
+      "name": "DB: closing by the raiser refused at DB level",
+      "outcome": "PASS",
+      "detail": "ERROR:  new row for relation \"risks\" violates check constraint \"risks_check2\""
+    },
+    {
+      "name": "tenant B does not see tenant A risks",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot read a tenant A risk",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Risk not found\""
+    },
+    {
+      "name": "tenant B cannot escalate a tenant A risk",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Risk not found\""
+    },
+    {
+      "name": "tenant B cannot raise a risk on a tenant A project",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Project not found in this organization\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/tendering/tenders",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 422,
+      "ok": false,
+      "error": "Risk owner must be an active user of this organization"
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: projects.create"
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint risks_org_id_risk_no_key"
+    },
+    {
+      "method": "GET",
+      "path": "/risks/summary?tender_id=2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/assign-project",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/assign-project",
+      "status": 409,
+      "ok": false,
+      "error": "Risk already belongs to a project"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/assess",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/risks/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/responses",
+      "status": 422,
+      "ok": false,
+      "error": "Strategy exploit does not apply to a threat"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/responses",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/risks/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/escalate",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/escalate",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/close",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: a risk is closed by someone other than the person who raised it"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/close",
+      "status": 422,
+      "ok": false,
+      "error": "Close or cancel the open responses of risk 2 first"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/responses/2/finish",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/responses/2/finish",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/close",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/close",
+      "status": 422,
+      "ok": false,
+      "error": "Value violates check constraint risks_check3"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/close",
+      "status": 422,
+      "ok": false,
+      "error": "Materialised event must be a contract event of the same project"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks/2/assess",
+      "status": 409,
+      "ok": false,
+      "error": "Risk is closed"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/3/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/risks/summary?project_id=27",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/risks",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/risks/5",
+      "status": 404,
+      "ok": false,
+      "error": "Risk not found"
+    },
+    {
+      "method": "POST",
+      "path": "/risks/5/escalate",
+      "status": 404,
+      "ok": false,
+      "error": "Risk not found"
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 422,
+      "ok": false,
+      "error": "Project not found in this organization"
+    }
+  ]
+}
