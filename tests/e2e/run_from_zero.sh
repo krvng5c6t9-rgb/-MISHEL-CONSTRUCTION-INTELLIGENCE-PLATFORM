@@ -52,4 +52,5 @@ OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_cost_eac.mjs
 APP_PSQL_URL="$APP_URL_BASE/$DB$Q" OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_view_isolation.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_sessions.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_time_for_completion.mjs
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_inventory_controls.mjs
 PROBE_OUT="out/G015_RUNTIME_PROBE_$RUN.csv" python3 "$ROOT/governance/tools/probe_shared_guards.py" "$OWNER_URL_BASE/$DB$Q"

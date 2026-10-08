@@ -1,0 +1,600 @@
+{
+  "suite": "sweep_inventory_controls",
+  "run": "ic1",
+  "tag": "ic1",
+  "steps": [
+    {
+      "name": "S1 dispatches 30 from W1 to W2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "dispatched stock leaves W1 and is in transit, not yet in W2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "dispatcher cannot confirm own receipt (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: receipt must be confirmed by someone other than the dispatcher\""
+    },
+    {
+      "name": "receipt above the dispatched quantity refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Received quantity must be between 0 and the dispatched quantity\""
+    },
+    {
+      "name": "short receipt without a discrepancy reason refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A short receipt needs a quantity below the dispatched quantity and a discrepancy reason\""
+    },
+    {
+      "name": "S2 receives 27 with a discrepancy reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "short receipt recorded; W2 holds 27; nothing left in transit",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a transfer cannot be received twice",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Transfer is already received\""
+    },
+    {
+      "name": "receiver cannot accept own shortage (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: a transit shortage is accepted by someone other than the dispatcher and the receiver\""
+    },
+    {
+      "name": "dispatcher cannot accept the shortage (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: a transit shortage is accepted by someone other than the dispatcher and the receiver\""
+    },
+    {
+      "name": "shortage acceptance needs a note",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "third person accepts the transit shortage",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "full receipt recorded as received",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "quantity conserved: W1 60 + W2 37 + accepted shortage 3 = 100",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "issue 2 from W2 to project 2 against cost code 2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "issue carries its cost code",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "issue against an unknown cost code refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Cost code 999999 not found in this organization\""
+    },
+    {
+      "name": "only the counter records lines",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Only the counter records count lines\""
+    },
+    {
+      "name": "submission refused while a variance is unexplained",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Every count line needs its system quantity and every variance an explanation\""
+    },
+    {
+      "name": "counter submits the count sheet",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "system quantity snapshotted (35) and variance -2",
+      "outcome": "PASS",
+      "detail": "[{\"id\":1,\"org_id\":1,\"stock_count_id\":1,\"inventory_item_id\":4,\"counted_quantity\":\"33.000\",\"system_quantity\":\"35.000\",\"variance\":\"-2.000\",\"variance_reason\":\"Two bundles damaged by rain, scrapped (fixture)\",\"unit_cost\":\"5.0000\"}]"
+    },
+    {
+      "name": "lines cannot change after submission",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Lines of a submitted count are immutable\""
+    },
+    {
+      "name": "counter cannot approve own count (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the counter cannot approve own count\""
+    },
+    {
+      "name": "another person approves the count",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approved variance posted: W2 = 33",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approval refused when stock moved after submission (recount)",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Stock of item 4 moved since the count was submitted; recount\""
+    },
+    {
+      "name": "rejection needs a reason",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"A rejected count needs a reason\""
+    },
+    {
+      "name": "stale count rejected with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "rejected count posted nothing: W2 = 32",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DB: a received transfer cannot be re-quantified",
+      "outcome": "PASS",
+      "detail": "ERROR:  Invalid stock transfer change (shortage_accepted -> shortage_accepted)"
+    },
+    {
+      "name": "DB: transfers cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Stock transfers cannot be deleted"
+    },
+    {
+      "name": "DB: one-step (instant) transfer legs refused",
+      "outcome": "PASS",
+      "detail": "ERROR:  Transfers go through a dispatched transfer document and a separate receipt"
+    },
+    {
+      "name": "DB: an approved count line cannot be posted twice",
+      "outcome": "PASS",
+      "detail": "ERROR:  Count line 1 is already posted"
+    },
+    {
+      "name": "DB: lines of a decided count are immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Lines of a submitted count are immutable"
+    },
+    {
+      "name": "tenant B cannot receive a tenant A transfer",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Transfer not found\""
+    },
+    {
+      "name": "tenant B sees no tenant A transfers",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot count a tenant A store",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Warehouse not found in this organization\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/warehouses",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/warehouses",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/in-transit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/receive",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: receipt must be confirmed by someone other than the dispatcher"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/receive",
+      "status": 422,
+      "ok": false,
+      "error": "Received quantity must be between 0 and the dispatched quantity"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/receive",
+      "status": 422,
+      "ok": false,
+      "error": "A short receipt needs a quantity below the dispatched quantity and a discrepancy reason"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/receive",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/in-transit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/receive",
+      "status": 409,
+      "ok": false,
+      "error": "Transfer is already received"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/accept-shortage",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: a transit shortage is accepted by someone other than the dispatcher and the receiver"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/accept-shortage",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: a transit shortage is accepted by someone other than the dispatcher and the receiver"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/accept-shortage",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/accept-shortage",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/8/receive",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 422,
+      "ok": false,
+      "error": "Cost code 999999 not found in this organization"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/1/lines",
+      "status": 403,
+      "ok": false,
+      "error": "Only the counter records count lines"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/1/submit",
+      "status": 422,
+      "ok": false,
+      "error": "Every count line needs its system quantity and every variance an explanation"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/1/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/1/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/1/lines",
+      "status": 409,
+      "ok": false,
+      "error": "Lines of a submitted count are immutable"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/1/decision",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the counter cannot approve own count"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/1/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/2/lines",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/2/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/2/decision",
+      "status": 409,
+      "ok": false,
+      "error": "Stock of item 4 moved since the count was submitted; recount"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/2/decision",
+      "status": 400,
+      "ok": false,
+      "error": "A rejected count needs a reason"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts/2/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfers/7/receive",
+      "status": 404,
+      "ok": false,
+      "error": "Transfer not found"
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/transfers",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/stock-counts",
+      "status": 422,
+      "ok": false,
+      "error": "Warehouse not found in this organization"
+    }
+  ]
+}

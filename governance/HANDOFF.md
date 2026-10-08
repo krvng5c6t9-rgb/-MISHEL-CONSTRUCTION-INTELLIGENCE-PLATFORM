@@ -1,13 +1,13 @@
-# HANDOFF — v0.5.9-stage9 — DATE: 2026-10-08
+# HANDOFF — v0.5.10-stage10 — DATE: 2026-10-08
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
 - Waves 1–2 are built and runtime-tested (CC-015…CC-024). The RK-003 module sweep has executed variations, QA/HSE, approval rejection paths, HR/payroll and EDMS for the first time (CC-025…CC-029).
-- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037/CC-038 runs to verify.
+- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…CC-039 runs to verify.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-038 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–061.
-- **Runtime suites, all from zero (E1):** 25 suites, 729 checks + shared-guard probe, all PASS, RUN tf1 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30).
+- **Change controls:** CC-001…CC-039 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–062.
+- **Runtime suites, all from zero (E1):** 26 suites, 768 checks + shared-guard probe, all PASS, RUN ic1 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -77,8 +77,8 @@
   - Stage 7 — G-015/G-016 hardening: **DONE** (CC-036; 4 views were leaking at DB level).
   - Stage 8 — G-013 session revocation: **DONE** (CC-037; G-017 login throttling opened).
   - Stage 9 — NDC-029: **DONE** (CC-038; signed-terms defect fixed; F-20/F-21). Was: NDC-029 approved-EOT/CE propagation to time-for-completion, LD exposure and budget (time-for-completion revisions).
-  - **Stage 10 (NEXT) — NDC-030 inventory control workflows (in-transit, stock count, approved adjustments).
-  - Stage 11 — G-017 login throttling/lockout mechanism (configurable; values are owner/security policy).
+  - Stage 10 — NDC-030: **DONE** (CC-039; F-22 direct adjustments, F-23 open items). Was: NDC-030 inventory control workflows (in-transit, stock count, approved adjustments).
+  - **Stage 11 (NEXT) — G-017 login throttling/lockout mechanism (configurable; values are owner/security policy).
   - Then: remaining ABSENT Golden Case steps by business priority; frontend browser verification; performance/DR/pentest preparation.
 - Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
 - DEC-009 / DEC-012 / DEC-013 / DEC-014 stay OPEN for the Finance/Accounting expert review — do not hard-code a policy.

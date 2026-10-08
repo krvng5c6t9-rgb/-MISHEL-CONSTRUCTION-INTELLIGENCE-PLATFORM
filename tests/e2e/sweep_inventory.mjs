@@ -29,10 +29,13 @@ try {
   check('W1 holds 100', await stock(w1) === 100);
 
   // --- Transfers.
-  const tr = await run('transfer 40 bags W1 -> W2', async () => must(await api('POST', '/inventory/transfer', clerk, { from_warehouse_id: w1, to_warehouse_id: w2, inventory_item_id: item, quantity: 40, project_id: p2 }), 'transfer'));
-  check('transfer legs balance (-40 / +40) and are linked', Number(tr.transfer_out.quantity) === -40 && Number(tr.transfer_in.quantity) === 40 && Number(tr.transfer_in.source_record_id) === Number(tr.transfer_out.id));
+  const tr = await run('transfer 40 bags W1 -> W2 dispatched', async () => must(await api('POST', '/inventory/transfer', clerk, { from_warehouse_id: w1, to_warehouse_id: w2, inventory_item_id: item, quantity: 40, project_id: p2 }), 'transfer'));
+  check('dispatch leg (-40) linked to its transfer document', Number(tr.transfer_out.quantity) === -40 && tr.transfer_out.source_table === 'stock_transfer' && Number(tr.transfer_out.source_record_id) === Number(tr.transfer.id) && tr.transfer.status === 'dispatched');
+  check('balances W1 60 / W2 0 while 40 are in transit (NDC-030)', await stock(w1) === 60 && await stock(w2) === 0);
+  const rc = await run('store manager at W2 confirms receipt of 40', async () => must(await api('POST', `/inventory/transfers/${tr.transfer.id}/receive`, mgr, { received_quantity: 40 }), 'receive'));
+  tr.transfer_in = rc.transfer_in;
   check('transfer carries the source valuation (5.00) on both legs', Number(tr.transfer_out.unit_cost) === 5 && Number(tr.transfer_in.unit_cost) === 5, `${tr.transfer_out.unit_cost}/${tr.transfer_in.unit_cost}`);
-  check('balances W1 60 / W2 40', await stock(w1) === 60 && await stock(w2) === 40);
+  check('balances W1 60 / W2 40 after receipt', await stock(w1) === 60 && await stock(w2) === 40);
   await expectStatus('transfer at a made-up unit cost refused', () => api('POST', '/inventory/transfer', clerk, { from_warehouse_id: w1, to_warehouse_id: w2, inventory_item_id: item, quantity: 1, unit_cost: 99 }), 422);
   await expectStatus('transfer more than available refused', () => api('POST', '/inventory/transfer', clerk, { from_warehouse_id: w2, to_warehouse_id: w1, inventory_item_id: item, quantity: 41 }), 409);
   await expectStatus('future-dated transfer refused', () => api('POST', '/inventory/transfer', clerk, { from_warehouse_id: w1, to_warehouse_id: w2, inventory_item_id: item, quantity: 1, transaction_date: day(5) }), 422);
@@ -46,7 +49,7 @@ try {
   // --- Concurrency: 6 parallel transfers of 15 from W1 (60 on hand) -> exactly 4 succeed, never negative.
   const res = await Promise.all(Array.from({ length: 6 }, () => api('POST', '/inventory/transfer', clerk, { from_warehouse_id: w1, to_warehouse_id: w2, inventory_item_id: item, quantity: 15 })));
   const okN = res.filter(r => r.status === 201).length;
-  check('parallel transfers: exactly 4 of 6 succeed and W1 ends at 0', okN === 4 && await stock(w1) === 0, `ok=${okN} w1=${await stock(w1)}`);
+  check('parallel dispatches: exactly 4 of 6 succeed and W1 ends at 0', okN === 4 && await stock(w1) === 0, `ok=${okN} w1=${await stock(w1)}`);
 
   if (OWNER) {
     const probe = (name, text) => { const r = sql(OWNER, text); check(name, !r.ok, r.out.split('\n').find(l => /ERROR/.test(l)) ?? r.out.slice(0, 120)); };
