@@ -61,6 +61,8 @@ try {
   await expectStatus('agreed amount different from lines refused (revise lines first)', () => api('POST', `/contracts/variations/${v1.id}/client-decision`, qs, { decision: 'agreed', decided_on: today, reference: 'Engineer VO-7 (fixture)', agreed_amount: 3000 }), 422);
   await run('client agreement recorded (3,500, +5 days)', async () => must(await api('POST', `/contracts/variations/${v1.id}/client-decision`, qs, { decision: 'agreed', decided_on: today, reference: 'Engineer VO-7 (fixture)', agreed_amount: 3500, agreed_time_days: 5 }), 'agree'));
   const after2 = must(await api('GET', `/boq/project/${project}`, admin), 'pb2');
+  const tfc = must(await api('GET', `/contract-admin/contracts/${contract}/time-revisions`, qs), 'tfc');
+  check('agreed +5 days creates one Time for Completion revision from the variation (NDC-029)', tfc.length === 1 && tfc[0].source_type === 'variation' && Number(tfc[0].source_id) === Number(v1.id) && tfc[0].days === 5, JSON.stringify(tfc));
   const i11 = after2.find(r => r.item_no === '1.1'), newItem = after2.find(r => r.item_no !== '1.1');
   check('agreed variation revises item 1.1 to 120 m2 / 18,000', Number(i11.revised_quantity) === 120 && Number(i11.revised_amount) === 18000, JSON.stringify(i11));
   check('agreed new item added to execution BOQ (10 m x 50)', newItem && Number(newItem.revised_quantity) === 10 && Number(newItem.revised_amount) === 500 && Number(newItem.contract_quantity) === 0, JSON.stringify(newItem));

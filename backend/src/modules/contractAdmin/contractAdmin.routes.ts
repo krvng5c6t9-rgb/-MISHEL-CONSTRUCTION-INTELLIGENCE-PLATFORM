@@ -265,3 +265,39 @@ contractAdminRouter.post('/compensation-events/:id/decision', authorize('contrac
   if (!rows[0]) await conflictOr404('compensation_events', pid(req.params.id), 'Compensation event is already decided');
   res.json({ success: true, data: rows[0] });
 }));
+
+// NDC-029 (migration 061): Time for Completion revisions (written by the DB when a claim, compensation event or
+// variation decision grants days), contract LD terms (second-person confirmed) and the time / LD position.
+// LD exposure is information for people; the platform never decides LD entitlement.
+contractAdminRouter.get('/contracts/:contractId/time-position', asyncHandler(async (req, res) => {
+  const forecast = req.query.forecast_completion === undefined ? null : isoDate.parse(req.query.forecast_completion);
+  const [p] = await query(`select * from contract_time_position($1::bigint, $2::date)`, [pid(req.params.contractId), forecast]);
+  if (!p) throw new AppError(404, 'Contract not found');
+  res.json({ success: true, data: p });
+}));
+contractAdminRouter.get('/contracts/:contractId/time-revisions', asyncHandler(async (req, res) => {
+  res.json({ success: true, data: await query(`select * from time_for_completion_revisions where contract_id=$1 and org_id=$2 order by revision_seq`, [pid(req.params.contractId), req.user!.org_id]) });
+}));
+contractAdminRouter.get('/contracts/:contractId/ld-terms', asyncHandler(async (req, res) => {
+  const [t] = await query(`select * from contract_ld_terms where contract_id=$1 and org_id=$2`, [pid(req.params.contractId), req.user!.org_id]);
+  res.json({ success: true, data: t ?? null });
+}));
+contractAdminRouter.post('/contracts/:contractId/ld-terms', authorize('contracts', 'create'), asyncHandler(async (req, res) => {
+  const b = z.object({ basis: z.enum(['amount_per_day', 'percent_of_contract_value_per_day']), rate: z.number().positive(),
+    cap_basis: z.enum(['none', 'amount', 'percent_of_contract_value']), cap_value: z.number().positive().optional(),
+    clause_ref: z.string().trim().min(1).max(60), source_reference: z.string().trim().min(3).max(500) }).parse(req.body);
+  if ((b.cap_basis === 'none') !== (b.cap_value === undefined)) throw new AppError(400, 'cap_value is required for a cap and not allowed without one');
+  const [t] = await query(`insert into contract_ld_terms(org_id,contract_id,basis,rate,cap_basis,cap_value,clause_ref,source_reference,created_by) values($1,$2,$3,$4::numeric,$5,$6::numeric,$7,$8,$9) returning *`,
+    [req.user!.org_id, pid(req.params.contractId), b.basis, String(b.rate), b.cap_basis, b.cap_value === undefined ? null : String(b.cap_value), b.clause_ref, b.source_reference, req.user!.id]);
+  res.status(201).json({ success: true, data: t });
+}));
+contractAdminRouter.post('/ld-terms/:id/confirm', authorize('contracts', 'approve'), asyncHandler(async (req, res) => {
+  const id = pid(req.params.id);
+  const cur = (await query<any>(`select created_by,status from contract_ld_terms where id=$1 and org_id=$2`, [id, req.user!.org_id]))[0];
+  if (!cur) throw new AppError(404, 'LD terms not found');
+  if (cur.status !== 'draft') throw new AppError(409, 'LD terms are already confirmed');
+  if (Number(cur.created_by) === req.user!.id) throw new AppError(403, 'Segregation of duties: LD terms must be confirmed by someone other than their author');
+  const [t] = await query(`update contract_ld_terms set status='confirmed',confirmed_by=$2,confirmed_at=now() where id=$1 and status='draft' returning *`, [id, req.user!.id]);
+  if (!t) throw new AppError(409, 'LD terms are already confirmed');
+  res.json({ success: true, data: t });
+}));

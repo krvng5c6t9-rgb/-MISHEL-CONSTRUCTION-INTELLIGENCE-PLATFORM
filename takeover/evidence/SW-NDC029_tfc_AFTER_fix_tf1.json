@@ -1,0 +1,565 @@
+{
+  "suite": "sweep_time_for_completion",
+  "run": "tf1",
+  "tag": "tf1",
+  "steps": [
+    {
+      "name": "completion period of a signed contract cannot be edited",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Contract 16 is signed: its terms are frozen (changes go through variations, claims or a formal amendment)\""
+    },
+    {
+      "name": "contract value of a signed contract cannot be edited",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Contract 16 is signed: its terms are frozen (changes go through variations, claims or a formal amendment)\""
+    },
+    {
+      "name": "commencement date recorded once after signing",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "recorded commencement date cannot be changed",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Contract 17 commencement date is recorded and cannot be changed\""
+    },
+    {
+      "name": "status-only change (signed -> active) still allowed",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "original completion = commencement + period; no extension yet",
+      "outcome": "PASS",
+      "detail": "{\"contract_id\":16,\"commencement_date\":\"2026-03-22\",\"completion_period_days\":180,\"original_completion\":\"2026-09-18\",\"approved_extension_days\":0,\"revisions\":0,\"revised_completion\":\"2026-09-18\",\"forecast_completion\":null,\"forecast_source\":\"none\",\"days_late\":null,\"ld_terms_status\":\"not_recorded\",\"ld_daily_amount\":null,\"ld_gross\":null,\"ld_cap\":null,\"ld_exposure\":null,\"programme_update_outstanding\":false}"
+    },
+    {
+      "name": "no forecast without an accepted programme or a stated date (days late unknown, not zero)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no revision before the decision (determination alone does not move the date)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "decided claim creates exactly one revision of 20 days from that claim",
+      "outcome": "PASS",
+      "detail": "[{\"id\":4,\"org_id\":1,\"contract_id\":16,\"revision_seq\":1,\"source_type\":\"claim\",\"source_id\":8,\"days\":20,\"cumulative_days\":20,\"decided_on\":\"2026-10-08\",\"created_by\":78,\"created_at\":\"2026-10-08T18:54:00.733Z\"}]"
+    },
+    {
+      "name": "revised completion = original + 20 + 8 days; original preserved",
+      "outcome": "PASS",
+      "detail": "{\"contract_id\":16,\"commencement_date\":\"2026-03-22\",\"completion_period_days\":180,\"original_completion\":\"2026-09-18\",\"approved_extension_days\":28,\"revisions\":2,\"revised_completion\":\"2026-10-16\",\"forecast_completion\":null,\"forecast_source\":\"none\",\"days_late\":null,\"ld_terms_status\":\"not_recorded\",\"ld_daily_amount\":null,\"ld_gross\":null,\"ld_cap\":null,\"ld_exposure\":null,\"programme_update_outstanding\":true}"
+    },
+    {
+      "name": "programme update flagged outstanding after the time revision",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "claim view still shows the claimed 30 days beside the 20 granted",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "LD cap basis without a cap value refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"cap_value is required for a cap and not allowed without one\""
+    },
+    {
+      "name": "LD terms recorded: 1,000/day, cap 10% of contract value",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "unconfirmed LD terms give no exposure figure",
+      "outcome": "PASS",
+      "detail": "{\"contract_id\":16,\"commencement_date\":\"2026-03-22\",\"completion_period_days\":180,\"original_completion\":\"2026-09-18\",\"approved_extension_days\":28,\"revisions\":2,\"revised_completion\":\"2026-10-16\",\"forecast_completion\":\"2027-03-15\",\"forecast_source\":\"stated\",\"days_late\":150,\"ld_terms_status\":\"draft\",\"ld_daily_amount\":null,\"ld_gross\":null,\"ld_cap\":null,\"ld_exposure\":null,\"programme_update_outstanding\":true}"
+    },
+    {
+      "name": "author cannot confirm own LD terms (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: LD terms must be confirmed by someone other than their author\""
+    },
+    {
+      "name": "second person confirms LD terms",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "confirmed LD terms cannot be confirmed again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"LD terms are already confirmed\""
+    },
+    {
+      "name": "10 days late against the REVISED date -> exposure 10,000 (not 38 days against the original)",
+      "outcome": "PASS",
+      "detail": "{\"contract_id\":16,\"commencement_date\":\"2026-03-22\",\"completion_period_days\":180,\"original_completion\":\"2026-09-18\",\"approved_extension_days\":28,\"revisions\":2,\"revised_completion\":\"2026-10-16\",\"forecast_completion\":\"2026-10-26\",\"forecast_source\":\"stated\",\"days_late\":10,\"ld_terms_status\":\"confirmed\",\"ld_daily_amount\":\"1000.00\",\"ld_gross\":\"10000.00\",\"ld_cap\":\"100000.00\",\"ld_exposure\":\"10000.00\",\"programme_update_outstanding\":true}"
+    },
+    {
+      "name": "150 days late -> gross 150,000 capped at 100,000",
+      "outcome": "PASS",
+      "detail": "{\"contract_id\":16,\"commencement_date\":\"2026-03-22\",\"completion_period_days\":180,\"original_completion\":\"2026-09-18\",\"approved_extension_days\":28,\"revisions\":2,\"revised_completion\":\"2026-10-16\",\"forecast_completion\":\"2027-03-15\",\"forecast_source\":\"stated\",\"days_late\":150,\"ld_terms_status\":\"confirmed\",\"ld_daily_amount\":\"1000.00\",\"ld_gross\":\"150000.00\",\"ld_cap\":\"100000.00\",\"ld_exposure\":\"100000.00\",\"programme_update_outstanding\":true}"
+    },
+    {
+      "name": "forecast within the revised date -> 0 days late, 0 exposure",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "malformed forecast date refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "DB: time revisions cannot be edited",
+      "outcome": "PASS",
+      "detail": "ERROR:  Time for Completion revisions are append-only"
+    },
+    {
+      "name": "DB: time revisions cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Time for Completion revisions are append-only"
+    },
+    {
+      "name": "DB: a revision not matching a decided source is refused",
+      "outcome": "PASS",
+      "detail": "ERROR:  A Time for Completion revision needs a decided claim on this contract granting exactly 25 days"
+    },
+    {
+      "name": "DB: signed contract terms frozen at DB level",
+      "outcome": "PASS",
+      "detail": "ERROR:  Contract 16 is signed: its terms are frozen (changes go through variations, claims or a formal amendment)"
+    },
+    {
+      "name": "DB: confirmed LD terms immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Confirmed LD terms are immutable"
+    },
+    {
+      "name": "tenant B cannot read tenant A time position",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Contract not found\""
+    },
+    {
+      "name": "tenant B sees no tenant A revisions",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot record LD terms on tenant A contract",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Contract 17 not found in this organization\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/16/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/43/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/43/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/17/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/44/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/44/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/contracts/16",
+      "status": 422,
+      "ok": false,
+      "error": "Contract 16 is signed: its terms are frozen (changes go through variations, claims or a formal amendment)"
+    },
+    {
+      "method": "PATCH",
+      "path": "/contracts/16",
+      "status": 422,
+      "ok": false,
+      "error": "Contract 16 is signed: its terms are frozen (changes go through variations, claims or a formal amendment)"
+    },
+    {
+      "method": "PATCH",
+      "path": "/contracts/17",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/contracts/17",
+      "status": 422,
+      "ok": false,
+      "error": "Contract 17 commencement date is recorded and cannot be changed"
+    },
+    {
+      "method": "PATCH",
+      "path": "/contracts/16",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-position",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/16/rules",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/rules/15/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/16/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/notices/9/issue",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/8/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/8/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/8/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/claims/8",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-revisions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/claims/8/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-revisions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/16/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/16/compensation-events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/compensation-events/4/quotation",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/compensation-events/4/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-position",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/claims/8",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/16/ld-terms",
+      "status": 400,
+      "ok": false,
+      "error": "cap_value is required for a cap and not allowed without one"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/16/ld-terms",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-position?forecast_completion=2027-03-15",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/ld-terms/1/confirm",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: LD terms must be confirmed by someone other than their author"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/ld-terms/1/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/ld-terms/1/confirm",
+      "status": 409,
+      "ok": false,
+      "error": "LD terms are already confirmed"
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-position?forecast_completion=2026-10-26",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-position?forecast_completion=2027-03-15",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-position?forecast_completion=2026-10-13",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-position?forecast_completion=soon",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-position",
+      "status": 404,
+      "ok": false,
+      "error": "Contract not found"
+    },
+    {
+      "method": "GET",
+      "path": "/contract-admin/contracts/16/time-revisions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/17/ld-terms",
+      "status": 422,
+      "ok": false,
+      "error": "Contract 17 not found in this organization"
+    }
+  ]
+}
