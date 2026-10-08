@@ -8,6 +8,8 @@ const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(4000),
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
+  // CC-037: optional previous signing key, accepted for verification only during a key rotation window.
+  JWT_SECRET_PREVIOUS: z.string().min(32).optional(),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   BOOTSTRAP_ADMIN_TOKEN: z.string().min(32, 'BOOTSTRAP_ADMIN_TOKEN must be at least 32 characters'),
   // F-08/G-006: the global bootstrap token may create a tenant only on first run (no user exists in any

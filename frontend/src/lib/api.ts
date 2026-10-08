@@ -13,6 +13,15 @@ export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
 }
 
+// G-013: revoke the session server-side (best effort) before dropping the local token.
+export async function logout() {
+  const token = getToken();
+  if (token) {
+    await fetch(`${API_BASE_URL}/auth/logout`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).catch(() => null);
+  }
+  clearToken();
+}
+
 async function request<T = any>(path: string, init: RequestInit = {}): Promise<T> {
   const token = getToken();
   const headers = new Headers(init.headers);

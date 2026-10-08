@@ -36,12 +36,15 @@ const bootstrapSchema = z.object({
   message: 'Provide org_id or organization details'
 });
 
-function signToken(user: { id: number; org_id: number; role_id: number; email: string }) {
+function signToken(user: { id: number; org_id: number; role_id: number; email: string; token_version: number }) {
+  // CC-037: tv = session epoch (users.token_version), jti = session id for per-session logout.
   return jwt.sign({
     sub: String(user.id),
     org_id: user.org_id,
     role_id: user.role_id,
-    email: user.email
+    email: user.email,
+    tv: user.token_version,
+    jti: crypto.randomUUID()
   }, env.JWT_SECRET, { expiresIn: '8h' });
 }
 
@@ -58,10 +61,10 @@ authRouter.post('/login', asyncHandler(async (req, res) => {
   const body = loginSchema.parse(req.body);
   const rows = await withDbContext({ mode: 'login' }, () => query<{
     id: number; org_id: number; employee_id: number | null; role_id: number;
-    role_name: string; full_name: string; email: string; password_hash: string; user_type: string;
+    role_name: string; full_name: string; email: string; password_hash: string; user_type: string; token_version: number;
   }>(`
     select u.id, u.org_id, u.employee_id, u.role_id, r.role_name,
-           u.full_name, u.email, u.password_hash, u.user_type
+           u.full_name, u.email, u.password_hash, u.user_type, u.token_version
     from users u
     join roles r on r.id = u.role_id
     where lower(u.email) = lower($1)
@@ -204,7 +207,7 @@ authRouter.post('/bootstrap-admin', asyncHandler(async (req, res) => {
     const userResult = await client.query(`
       insert into users (org_id, role_id, full_name, email, password_hash, user_type, is_active)
       values ($1, $2, $3, lower($4), $5, 'internal', true)
-      returning id, org_id, employee_id, role_id, full_name, email, user_type
+      returning id, org_id, employee_id, role_id, full_name, email, user_type, token_version
     `, [orgId, role.id, body.full_name, body.email, passwordHash]);
 
     await client.query('commit');
@@ -224,4 +227,25 @@ authRouter.post('/bootstrap-admin', asyncHandler(async (req, res) => {
   } finally {
     await releaseClient(client);
   }
+}));
+
+// CC-037 (G-013): logout (this session), logout everywhere, password change. Every token carries the session epoch
+// (users.token_version); the database bumps it on password / activation / role / email change.
+authRouter.post('/logout', authenticate, asyncHandler(async (req, res) => {
+  const session = res.locals.session as { jti: string; exp: number };
+  await query(`insert into revoked_sessions(jti, org_id, user_id, expires_at, reason) values($1,$2,$3,to_timestamp($4),'logout') on conflict (jti) do nothing`,
+    [session.jti, req.user!.org_id, req.user!.id, session.exp]);
+  res.json({ success: true, data: { revoked: 'this_session' } });
+}));
+authRouter.post('/logout-all', authenticate, asyncHandler(async (req, res) => {
+  await query(`update users set token_version = token_version + 1, updated_at = now() where id = $1 and org_id = $2`, [req.user!.id, req.user!.org_id]);
+  res.json({ success: true, data: { revoked: 'all_sessions' } });
+}));
+authRouter.post('/change-password', authenticate, asyncHandler(async (req, res) => {
+  const b = z.object({ current_password: z.string().min(1), new_password: z.string().min(8).max(100) })
+    .refine(v => v.current_password !== v.new_password, { message: 'New password must differ from the current one', path: ['new_password'] }).parse(req.body);
+  const [u] = await query<{ password_hash: string }>(`select password_hash from users where id = $1 and org_id = $2`, [req.user!.id, req.user!.org_id]);
+  if (!u || !(await bcrypt.compare(b.current_password, u.password_hash))) throw new AppError(403, 'Current password is incorrect');
+  await query(`update users set password_hash = $3, updated_at = now() where id = $1 and org_id = $2`, [req.user!.id, req.user!.org_id, await bcrypt.hash(b.new_password, 12)]);
+  res.json({ success: true, data: { changed: true, sessions: 'revoked' } });
 }));

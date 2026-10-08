@@ -24,4 +24,7 @@ export interface JwtPayload {
   org_id: number;
   role_id: number;
   email: string;
+  tv: number;
+  jti: string;
+  exp?: number;
 }

@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 59 (`database/migrations/001…059`), all applied from an empty DB |
+| Migrations | 60 (`database/migrations/001…060`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-036
+## Controlled Changes CC-001 → CC-037
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -68,6 +68,7 @@
 | CC-034 | NDC-002: compensation-event register, FIDIC dispute ladder, claim gating on notices (057) |
 | CC-035 | NDC-011: budgets, derived accrual, reproducible EAC snapshots, reconciliation, per-project cost summary (058) |
 | CC-036 | G-015 shared-guard audit + runtime probe in gate; G-016 security_invoker on all views (059) |
+| CC-037 | G-013 session revocation: token epoch + revoked jti (060), logout / logout-all / change-password / admin revoke, key-rotation verify |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -91,7 +92,7 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | wave1_vendor_master.mjs | 41 | G-002 |
 | wave1_doa_governance.mjs | 26 | G-004 |
 | wave1_tenant_onboarding.mjs | 20 | F-08/G-003/G-006/G-014 |
-| wave1_subcontract_ipc.mjs | 22 | GC-12 |
+| wave1_subcontract_ipc.mjs | 24 | GC-12 |
 | wave2_notice_engine.mjs | 36 | NDC-001, F-13 |
 | hostile_concurrency.mjs | 17 | G-010 races, period lock/reopen, token after deactivation |
 | wave2_daily_record_changes.mjs | 29 | NDC-014, NDC-002 |
@@ -101,15 +102,16 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_approval_rejection.mjs | 29 | approval reject/return across modules |
 | sweep_hr_payroll.mjs | 43 | GC-37 |
 | sweep_edms.mjs | 24 | GC-03 |
-| sweep_claims.mjs | 25 | GC-16 |
+| sweep_claims.mjs | 26 | GC-16 |
 | sweep_technical_office.mjs | 30 | GC-03..05 |
 | sweep_assets.mjs | 27 | plant & equipment |
 | sweep_inventory.mjs | 21 | inventory movements |
 | sweep_ndc002.mjs | 29 | NDC-002 CE / dispute / gating |
 | sweep_cost_eac.mjs | 19 | NDC-011 budgets / accrual / EAC |
 | sweep_view_isolation.mjs | 10 | G-016 DB-level view isolation |
+| sweep_sessions.mjs | 20 | G-013 logout / logout-all / password change / admin revoke / reactivation |
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
-| **Total** | **700** | 23 suites + probe, all PASS locally (RUN s7) |
+| **Total** | **698** | 24 suites + probe, all PASS locally (RUN se1; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

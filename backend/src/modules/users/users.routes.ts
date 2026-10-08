@@ -82,3 +82,12 @@ usersRouter.patch('/:id/status', requireSystemRole(), asyncHandler(async (req, r
   if (!rows[0]) throw new AppError(404, 'User not found');
   res.json({ success: true, data: rows[0] });
 }));
+
+// CC-037: administrator revokes every session of a user (compromise response) without deactivating the account.
+usersRouter.post('/:id/revoke-sessions', requireSystemRole(), asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) throw new AppError(400, 'Invalid user id');
+  const rows = await query(`update users set token_version = token_version + 1, updated_at = now() where id = $1 and org_id = $2 returning id`, [id, req.user!.org_id]);
+  if (!rows[0]) throw new AppError(404, 'User not found');
+  res.json({ success: true, data: { user_id: id, sessions: 'revoked' } });
+}));

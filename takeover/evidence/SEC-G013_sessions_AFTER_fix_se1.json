@@ -1,0 +1,361 @@
+{
+  "suite": "sweep_sessions",
+  "run": "se1",
+  "tag": "se1",
+  "steps": [
+    {
+      "name": "two independent sessions are valid",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "session 1 logs out",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "logged-out session refused",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "other session unaffected by a single logout",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "logout-all revokes every session",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a fresh login works after logout-all",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "password change with a wrong current password refused",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Current password is incorrect\""
+    },
+    {
+      "name": "new password equal to the current one refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "password changed",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "password change revokes all existing sessions",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "old password no longer logs in",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "admin revokes the user's sessions",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "admin revoke invalidates the session",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "deactivation refuses the session",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a session issued before deactivation stays dead after reactivation",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B admin cannot revoke tenant A sessions",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"User not found\""
+    },
+    {
+      "name": "token with a tampered session epoch refused (signature)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DB: live revocations cannot be purged",
+      "outcome": "PASS",
+      "detail": "ERROR:  A revocation can only be purged after the token has expired"
+    },
+    {
+      "name": "DB: session epoch can never move backwards",
+      "outcome": "PASS",
+      "detail": "ERROR:  token_version can only increase"
+    },
+    {
+      "name": "current session still valid at the end",
+      "outcome": "PASS",
+      "detail": ""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/logout",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 401,
+      "ok": false,
+      "error": "Session has been revoked"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/logout-all",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 401,
+      "ok": false,
+      "error": "Session has been revoked"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 401,
+      "ok": false,
+      "error": "Session has been revoked"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/change-password",
+      "status": 403,
+      "ok": false,
+      "error": "Current password is incorrect"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/change-password",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/change-password",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 401,
+      "ok": false,
+      "error": "Session has been revoked"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 401,
+      "ok": false,
+      "error": "Session has been revoked"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users/75/revoke-sessions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 401,
+      "ok": false,
+      "error": "Session has been revoked"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/75/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 401,
+      "ok": false,
+      "error": "User is inactive or not found"
+    },
+    {
+      "method": "PATCH",
+      "path": "/users/75/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 401,
+      "ok": false,
+      "error": "Session has been revoked"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users/75/revoke-sessions",
+      "status": 404,
+      "ok": false,
+      "error": "User not found"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid or expired token"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "status": 200,
+      "ok": true,
+      "error": null
+    }
+  ]
+}

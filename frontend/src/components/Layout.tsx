@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { clearToken } from '../lib/api';
+import { logout } from '../lib/api';
 import { BarChart3, ClipboardCheck, FolderKanban, Landmark, PackageCheck, ScrollText, DraftingCompass, CalendarDays, HardHat, UsersRound, Wrench, ShieldCheck, ShieldAlert, FolderArchive, FileBarChart, MonitorCheck, Globe2, Bot, Workflow, BookOpenCheck, BadgeDollarSign } from 'lucide-react';
 
 const navItems = [
@@ -54,7 +54,7 @@ export function Layout() {
             </NavLink>
           ))}
         </nav>
-      <button className="logout" onClick={() => { clearToken(); window.location.href = '/login'; }}>Logout</button>
+      <button className="logout" onClick={async () => { await logout(); window.location.href = '/login'; }}>Logout</button>
       </aside>
       <main className="content">
         <Outlet />
