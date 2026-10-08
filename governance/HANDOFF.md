@@ -1,4 +1,4 @@
-# HANDOFF — v0.5.5-stage5 — DATE: 2026-10-05
+# HANDOFF — v0.5.6-stage6 — DATE: 2026-10-05
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
@@ -6,8 +6,8 @@
 - Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-028; CC-029 queued at handoff.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-034 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–057.
-- **Runtime suites, all from zero (E1):** 21 suites, 671 checks, all PASS (Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29).
+- **Change controls:** CC-001…CC-035 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–058.
+- **Runtime suites, all from zero (E1):** 22 suites, 690 checks, all PASS (Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -72,7 +72,13 @@
 - Stage 3 — Assets & Equipment: **DONE** (CC-032).
 - Stage 4 — Inventory transfers: **DONE** (CC-033; DEC-014 + NDC-030 opened).
 - Stage 5 — NDC-002 remainder: **DONE** (CC-034).
-- **Stage 6 (NEXT) — NDC-011 remainder (accruals, reproducible EAC).
+- Stage 6 — NDC-011 remainder: **DONE** (CC-035).
+- **Next stages (derived from directive, gaps and discovery; owner confirms by "كمل"):**
+  - **Stage 7 (NEXT) — G-015/G-016 hardening:** audit every shared TG_TABLE_NAME guard and every view (security_invoker / route filters) with a one-row-per-table runtime probe; fix through CC.
+  - Stage 8 — G-013 token revocation (session invalidation on deactivation/password change/logout).
+  - Stage 9 — NDC-029 approved-EOT/CE propagation to time-for-completion, LD exposure and budget (time-for-completion revisions).
+  - Stage 10 — NDC-030 inventory control workflows (in-transit, stock count, approved adjustments).
+  - Then: remaining ABSENT Golden Case steps by business priority; frontend browser verification; performance/DR/pentest preparation.
 - Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
 - DEC-009 / DEC-012 / DEC-013 / DEC-014 stay OPEN for the Finance/Accounting expert review — do not hard-code a policy.
 

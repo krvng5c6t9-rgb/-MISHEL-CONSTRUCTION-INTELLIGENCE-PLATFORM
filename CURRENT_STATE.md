@@ -1,4 +1,4 @@
-# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2 + RK-003 sweep: CC-015…CC-034)
+# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2 + RK-003 sweep + stages 1–6: CC-015…CC-035)
 
 | Item | Value |
 |---|---|
@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 57 (`database/migrations/001…057`), all applied from an empty DB |
+| Migrations | 58 (`database/migrations/001…058`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-034
+## Controlled Changes CC-001 → CC-035
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -66,6 +66,7 @@
 | CC-032 | Plant & equipment: usage submission crash fixed; mobilisation, machine-hour, operator and maintenance rules (055) |
 | CC-033 | Inventory: transfer crash fixed; paired legs, controlled adjustments, carried cost (provisional, DEC-014) (056) |
 | CC-034 | NDC-002: compensation-event register, FIDIC dispute ladder, claim gating on notices (057) |
+| CC-035 | NDC-011: budgets, derived accrual, reproducible EAC snapshots, reconciliation, per-project cost summary (058) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -104,7 +105,8 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_assets.mjs | 27 | plant & equipment |
 | sweep_inventory.mjs | 21 | inventory movements |
 | sweep_ndc002.mjs | 29 | NDC-002 CE / dispute / gating |
-| **Total** | **671** | 21 suites, all PASS locally (RUN n23; claims now 26) |
+| sweep_cost_eac.mjs | 19 | NDC-011 budgets / accrual / EAC |
+| **Total** | **690** | 22 suites, all PASS locally (RUN co1) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

@@ -1,0 +1,300 @@
+{
+  "suite": "sweep_cost_eac",
+  "run": "co1",
+  "tag": "co1",
+  "steps": [
+    {
+      "name": "QS prepares original budget 50,000",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "preparer cannot approve own budget",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A budget is approved by someone other than its preparer\""
+    },
+    {
+      "name": "cost manager approves budget",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "summary lists the global cost code for this project",
+      "outcome": "PASS",
+      "detail": "[{\"project_id\":1,\"cost_code_id\":2,\"code\":\"MAT-000\",\"description\":\"Material (fixture description)\",\"budget\":\"50000.00\",\"committed\":\"20000.00\",\"actual\":\"20000.00\""
+    },
+    {
+      "name": "summary actual/committed equal this project ledger only (not other projects on the same code)",
+      "outcome": "PASS",
+      "detail": "row=20000.00/20000.00 truth=20000.00/20000.00 others=30200.00"
+    },
+    {
+      "name": "summary budget = approved 50,000",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "manual ETC without a basis refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "QS captures snapshot as of yesterday (ETC = budget remaining)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "snapshot inputs captured from the ledger, not from the request",
+      "outcome": "PASS",
+      "detail": "actual=0.00/0.00 accrual=0.00/0.00"
+    },
+    {
+      "name": "EAC = actual + accrual + ETC(budget remaining)",
+      "outcome": "PASS",
+      "detail": "50000.00 50000.00"
+    },
+    {
+      "name": "preparer cannot approve own snapshot",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"The preparer cannot approve the snapshot\""
+    },
+    {
+      "name": "cost manager approves snapshot",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "recompute from stored inputs: zero unexplained difference",
+      "outcome": "PASS",
+      "detail": "{\"committed\":\"0.00\",\"actual\":\"0.00\",\"accrual\":\"0.00\"}"
+    },
+    {
+      "name": "back-dated posting after approval is listed as unexplained (+200 actual)",
+      "outcome": "PASS",
+      "detail": "{\"committed\":\"0.00\",\"actual\":\"200.00\",\"accrual\":\"0.00\"}"
+    },
+    {
+      "name": "DB: approved snapshot immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Approved snapshot 1 is immutable"
+    },
+    {
+      "name": "DB: snapshots cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Cost snapshots cannot be deleted"
+    },
+    {
+      "name": "DB: approved budget immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Approved budget 1 is immutable; use a revised budget"
+    },
+    {
+      "name": "tenant B cannot reconcile tenant A snapshot",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Snapshot not found\""
+    },
+    {
+      "name": "tenant B summary for tenant A project is empty",
+      "outcome": "PASS",
+      "detail": ""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/projects",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/cost-transactions/budgets",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/cost-transactions/budgets/1/approve",
+      "status": 422,
+      "ok": false,
+      "error": "A budget is approved by someone other than its preparer"
+    },
+    {
+      "method": "POST",
+      "path": "/cost-transactions/budgets/1/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/cost-transactions/control-summary?project_id=1",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/cost-transactions/snapshots",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/cost-transactions/snapshots",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/cost-transactions/snapshots/1/approve",
+      "status": 422,
+      "ok": false,
+      "error": "The preparer cannot approve the snapshot"
+    },
+    {
+      "method": "POST",
+      "path": "/cost-transactions/snapshots/1/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/cost-transactions/snapshots/1/reconcile",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/3/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment-usage/8/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/42/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage/8/post-cost",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/cost-transactions/snapshots/1/reconcile",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/cost-transactions/snapshots/1/reconcile",
+      "status": 404,
+      "ok": false,
+      "error": "Snapshot not found"
+    },
+    {
+      "method": "GET",
+      "path": "/cost-transactions/control-summary?project_id=1",
+      "status": 200,
+      "ok": true,
+      "error": null
+    }
+  ]
+}
