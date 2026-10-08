@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 62 (`database/migrations/001…062`), all applied from an empty DB |
+| Migrations | 63 (`database/migrations/001…063`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-039
+## Controlled Changes CC-001 → CC-040
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -71,6 +71,7 @@
 | CC-037 | G-013 session revocation: token epoch + revoked jti (060), logout / logout-all / change-password / admin revoke, key-rotation verify |
 | CC-038 | NDC-029 signed terms frozen; Time for Completion revisions from decided claims/CEs/variations; confirmed LD terms; time/LD position (061) |
 | CC-039 | NDC-030 two-step transfers / in-transit / shortage acceptance, stock counts with SoD approval, issue cost codes (062) |
+| CC-040 | G-017 login lockout / address limit / constant-time unknown accounts / admin unlock / login events (063) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -114,8 +115,9 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_sessions.mjs | 20 | G-013 logout / logout-all / password change / admin revoke / reactivation |
 | sweep_time_for_completion.mjs | 30 | NDC-029 revisions, frozen terms, LD terms, exposure |
 | sweep_inventory_controls.mjs | 37 | NDC-030 transfers in transit, receipts, shortages, stock counts |
+| sweep_login_throttling.mjs | 20 | G-017 lockout, address limit, unlock, login events |
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
-| **Total** | **768** | 26 suites + probe, all PASS locally (RUN ic1; earlier "700" was a records error, F-19) |
+| **Total** | **788** | 27 suites + probe, all PASS locally (RUN lt1; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).
@@ -135,7 +137,7 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 ## Open gaps / risks / owner decisions (see `governance/registers/07,09,12`)
 - Open gaps: G-003 commercial provisioning (DEC-010 decided; owner plan/pricing inputs) · G-004 owner DOA matrix (API done) · G-005 IPC/retention posting (DEC-009 OPEN) · G-006 (partially closed) · G-008 dropped frozen scope · G-009 D-pack coverage · G-010 hostile concurrency tests · G-011 STEP02 atlas · G-012 unread archives (owner action) · G-013 token revocation.
 - Closed: G-001 (CC-015), G-002 (CC-016), G-007 Golden Cases decomposed (R13), G-014 (CC-019); F-06/F-07 (CC-013), F-08 takeover (CC-018), F-13 (CC-021), F-14 (CC-022), F-15 (CC-024); G-010 hostile concurrency executed (CC-022).
-- Owner decisions open: DEC-009 (IPC revenue/retention), DEC-012 (subcontract certificate posting basis, F-12), DEC-013 (payroll cost basis: net vs gross, F-16), DEC-014 (inventory valuation method, F-17), DEC-010 follow-up (plan catalogue/pricing), real DOA bands / CoA / posting rules / clause periods (never invented by the platform).
+- Owner decisions open: DEC-009 (IPC revenue/retention), DEC-012 (subcontract certificate posting basis, F-12), DEC-013 (payroll cost basis: net vs gross, F-16), DEC-014 (inventory valuation method, F-17), DEC-015 (sign-in security policy values / MFA, F-24), DEC-010 follow-up (plan catalogue/pricing), real DOA bands / CoA / posting rules / clause periods (never invented by the platform).
 - Risks: RK-001 unread archives may change scope · RK-002 templated sources mistaken for specification · RK-003 similar defect density in untested modules — **confirmed** by GC-12 (5 defects at first execution).
 
 ## Install / build / migrate / run / test from zero

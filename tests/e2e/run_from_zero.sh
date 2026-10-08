@@ -16,6 +16,8 @@ MIGRATION_DATABASE_URL="$OWNER_URL_BASE/$DB$Q" APP_DB_ROLE="$(node -e "console.l
   MIGRATIONS_DIR=../database/migrations node dist/db/migrate.js | tail -1
 
 export DATABASE_URL="$APP_URL_BASE/$DB$Q" PORT="$PORT_" NODE_ENV=development ALLOW_MULTI_TENANT_BOOTSTRAP=true
+# G-017 login throttling: TEST FIXTURE values (production values are the owner's security policy, DEC-015).
+export LOGIN_MAX_FAILED_ATTEMPTS=5 LOGIN_FAILURE_WINDOW_MINUTES=15 LOGIN_LOCKOUT_MINUTES=15 LOGIN_ADDRESS_MAX_FAILURES=20 TRUST_PROXY=1
 export JWT_SECRET="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
 export BOOTSTRAP_ADMIN_TOKEN="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
 # F-13: run the API in a non-UTC zone (Egypt-first target) so date-handling defects surface in every run.
@@ -53,4 +55,5 @@ APP_PSQL_URL="$APP_URL_BASE/$DB$Q" OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_sessions.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_time_for_completion.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_inventory_controls.mjs
+APP_PSQL_URL="$APP_URL_BASE/$DB$Q" OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_login_throttling.mjs
 PROBE_OUT="out/G015_RUNTIME_PROBE_$RUN.csv" python3 "$ROOT/governance/tools/probe_shared_guards.py" "$OWNER_URL_BASE/$DB$Q"

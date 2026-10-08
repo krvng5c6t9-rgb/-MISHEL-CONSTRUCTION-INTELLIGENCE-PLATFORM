@@ -57,8 +57,22 @@ async function permissionsForRole(roleId: number) {
   `, [roleId]);
 }
 
+// G-017: unknown accounts do the same bcrypt work as wrong passwords (no timing signal for account enumeration).
+const DUMMY_HASH = bcrypt.hashSync(crypto.randomBytes(16).toString('hex'), 12);
+const throttleArgs = () => [env.LOGIN_MAX_FAILED_ATTEMPTS, env.LOGIN_FAILURE_WINDOW_MINUTES, env.LOGIN_LOCKOUT_MINUTES, env.LOGIN_ADDRESS_MAX_FAILURES];
+async function recordLogin(orgId: number, email: string, address: string | null, success: boolean) {
+  await query(`select login_record($1::bigint,$2::text,$3::text,$4::boolean,$5::int,$6::int,$7::int,$8::int)`, [orgId, email, address, success, ...throttleArgs()]);
+}
+
 authRouter.post('/login', asyncHandler(async (req, res) => {
   const body = loginSchema.parse(req.body);
+  const address = req.ip ?? null;
+  const [gate] = await query<{ allowed: boolean; retry_after_seconds: number }>(`select * from login_gate($1::bigint,$2::text,$3::text,$4::int,$5::int)`,
+    [body.org_id, body.email, address, env.LOGIN_ADDRESS_MAX_FAILURES, env.LOGIN_FAILURE_WINDOW_MINUTES]);
+  if (!gate.allowed) {
+    res.setHeader('Retry-After', String(gate.retry_after_seconds));
+    throw new AppError(429, 'Too many failed sign-in attempts. Try again later.');
+  }
   const rows = await withDbContext({ mode: 'login' }, () => query<{
     id: number; org_id: number; employee_id: number | null; role_id: number;
     role_name: string; full_name: string; email: string; password_hash: string; user_type: string; token_version: number;
@@ -75,10 +89,12 @@ authRouter.post('/login', asyncHandler(async (req, res) => {
   `, [body.email, body.org_id ?? null]));
 
   const user = rows[0];
-  if (!user) throw new AppError(401, 'Invalid email or password');
-
-  const ok = await bcrypt.compare(body.password, user.password_hash);
-  if (!ok) throw new AppError(401, 'Invalid email or password');
+  const ok = await bcrypt.compare(body.password, user ? user.password_hash : DUMMY_HASH);
+  if (!user || !ok) {
+    await recordLogin(body.org_id, body.email, address, false);
+    throw new AppError(401, 'Invalid email or password');
+  }
+  await recordLogin(body.org_id, body.email, address, true);
 
   const permissions = await withDbContext({ orgId: user.org_id, userId: user.id }, async () => {
     await query('update users set last_login_at = now() where id = $1', [user.id]);

@@ -7,6 +7,8 @@ import { apiRouter } from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errors.js';
 
 const app = express();
+// G-017: req.ip is the client address only when the proxy hop count is configured (0 = use the socket address).
+if (env.TRUST_PROXY > 0) app.set('trust proxy', env.TRUST_PROXY);
 
 app.use(helmet());
 app.use(cors({ origin: env.CORS_ORIGIN }));

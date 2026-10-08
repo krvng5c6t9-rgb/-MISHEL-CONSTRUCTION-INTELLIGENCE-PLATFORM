@@ -84,6 +84,18 @@ usersRouter.patch('/:id/status', requireSystemRole(), asyncHandler(async (req, r
 }));
 
 // CC-037: administrator revokes every session of a user (compromise response) without deactivating the account.
+// G-017: lift a temporary sign-in lockout for a user of this organization; login events for this organization.
+usersRouter.post('/:id/unlock-login', requireSystemRole(), asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) throw new AppError(400, 'Invalid user id');
+  const [r] = await query<{ ok: boolean }>(`select login_unlock($1::bigint) as ok`, [id]);
+  if (!r.ok) throw new AppError(404, 'User not found');
+  res.json({ success: true, data: { user_id: id, sign_in: 'unlocked' } });
+}));
+usersRouter.get('/login-events', requireSystemRole(), asyncHandler(async (req, res) => {
+  const limit = Math.min(Math.max(Number(req.query.limit ?? 100) || 100, 1), 500);
+  res.json({ success: true, data: await query(`select id, email_key, address, outcome, occurred_at from login_events where org_id = $1 order by id desc limit $2`, [req.user!.org_id, limit]) });
+}));
 usersRouter.post('/:id/revoke-sessions', requireSystemRole(), asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id) || id <= 0) throw new AppError(400, 'Invalid user id');

@@ -43,6 +43,15 @@ async function grantAppRole(role: string) {
     `alter default privileges in schema public grant usage, select on sequences to ${role}`,
     `alter default privileges in schema public grant execute on functions to ${role}`
   ]) await client.query(stmt);
+  // G-017: tables marked in their comment keep the API role away from them ([app:none]) or read-only ([app:read]).
+  const marked = await client.query<{ name: string; mode: string }>(
+    `select quote_ident(c.relname) as name, substring(obj_description(c.oid, 'pg_class') from '^\\[app:(none|read)\\]') as mode
+       from pg_class c join pg_namespace n on n.oid = c.relnamespace
+      where n.nspname = 'public' and c.relkind = 'r' and obj_description(c.oid, 'pg_class') ~ '^\\[app:(none|read)\\]'`);
+  for (const t of marked.rows) {
+    await client.query(`revoke all on ${t.name} from ${role}`);
+    if (t.mode === 'read') await client.query(`grant select on ${t.name} to ${role}`);
+  }
   process.stdout.write(`GRANTED ${role}\n`);
 }
 

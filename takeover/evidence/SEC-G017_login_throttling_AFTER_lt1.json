@@ -1,0 +1,578 @@
+{
+  "suite": "sweep_login_throttling",
+  "run": "lt1",
+  "tag": "lt1",
+  "steps": [
+    {
+      "name": "five wrong passwords answer 401 (the 5th locks the account key)",
+      "outcome": "PASS",
+      "detail": "401,401,401,401,401"
+    },
+    {
+      "name": "correct password refused while locked: 429 with Retry-After",
+      "outcome": "PASS",
+      "detail": "HTTP 429 \"Too many failed sign-in attempts. Try again later.\""
+    },
+    {
+      "name": "lockout follows the account, not the address",
+      "outcome": "PASS",
+      "detail": "HTTP 429 \"Too many failed sign-in attempts. Try again later.\""
+    },
+    {
+      "name": "unknown email locks the same way with the same message",
+      "outcome": "PASS",
+      "detail": "HTTP 429"
+    },
+    {
+      "name": "unknown email takes comparable time to a wrong password (bcrypt work done)",
+      "outcome": "PASS",
+      "detail": "unknown=345ms known=339ms"
+    },
+    {
+      "name": "tenant B admin cannot unlock a tenant A user",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"User not found\""
+    },
+    {
+      "name": "tenant A admin unlocks the user",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "user signs in after unlock",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "4 + success + 4 failures does not lock",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "W locked",
+      "outcome": "PASS",
+      "detail": "HTTP 429 \"Too many failed sign-in attempts. Try again later.\""
+    },
+    {
+      "name": "sign-in allowed again once the lockout has expired",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "address over its failure limit is refused even with a correct password",
+      "outcome": "PASS",
+      "detail": "HTTP 429"
+    },
+    {
+      "name": "same user from another address still signs in",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "events record failures, lockout, blocked attempt, unlock and success for the account",
+      "outcome": "PASS",
+      "detail": "success,unlocked,blocked_locked,blocked_locked,locked_out,failure,failure,failure,failure,failure"
+    },
+    {
+      "name": "tenant B sees no tenant A login events",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "non-admin cannot read login events",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"System Admin role required\""
+    },
+    {
+      "name": "DB: API role cannot read throttle state",
+      "outcome": "PASS",
+      "detail": "ERROR:  permission denied for table login_account_throttle"
+    },
+    {
+      "name": "DB: API role cannot reset address throttle",
+      "outcome": "PASS",
+      "detail": "ERROR:  permission denied for table login_address_throttle"
+    },
+    {
+      "name": "DB: API role cannot forge login events",
+      "outcome": "PASS",
+      "detail": "ERROR:  permission denied for table login_events"
+    },
+    {
+      "name": "DB: login events are append-only",
+      "outcome": "PASS",
+      "detail": "ERROR:  Login events are append-only"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 429,
+      "ok": false,
+      "error": "Too many failed sign-in attempts. Try again later."
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 429,
+      "ok": false,
+      "error": "Too many failed sign-in attempts. Try again later."
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 429,
+      "ok": false,
+      "error": "Too many failed sign-in attempts. Try again later."
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users/82/unlock-login",
+      "status": 404,
+      "ok": false,
+      "error": "User not found"
+    },
+    {
+      "method": "POST",
+      "path": "/users/82/unlock-login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 429,
+      "ok": false,
+      "error": "Too many failed sign-in attempts. Try again later."
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 429,
+      "ok": false,
+      "error": "Too many failed sign-in attempts. Try again later."
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 401,
+      "ok": false,
+      "error": "Invalid email or password"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 429,
+      "ok": false,
+      "error": "Too many failed sign-in attempts. Try again later."
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/users/login-events?limit=500",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/users/login-events?limit=500",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/users/login-events",
+      "status": 403,
+      "ok": false,
+      "error": "System Admin role required"
+    }
+  ]
+}
