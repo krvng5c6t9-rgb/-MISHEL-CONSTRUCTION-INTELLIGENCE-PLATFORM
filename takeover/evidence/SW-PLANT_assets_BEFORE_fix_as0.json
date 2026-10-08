@@ -1,0 +1,270 @@
+{
+  "suite": "sweep_assets",
+  "run": "as0",
+  "tag": "as0",
+  "steps": [
+    {
+      "name": "excavator registered",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "duplicate asset code refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint assets_equipment_org_id_asset_code_key\""
+    },
+    {
+      "name": "asset put in use without a project refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "asset mobilised to project 1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "missing asset returns 404",
+      "outcome": "FAIL",
+      "detail": "HTTP 200 \"\""
+    },
+    {
+      "name": "usage 8 h x 150 on project 1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "usage cost computed in DB = 1,200",
+      "outcome": "PASS",
+      "detail": "1200.00"
+    },
+    {
+      "name": "usage on a project where the asset is not mobilised refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "more than 24 machine-hours on one day refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "terminated operator refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "usage dated in the future refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "usage submitted for approval",
+      "outcome": "FAIL",
+      "detail": "submit failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"a6349339-0808-4761-9d70-8204cfd241f7\"}"
+    },
+    {
+      "name": "suite completed",
+      "outcome": "FAIL",
+      "detail": "submit failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"a6349339-0808-4761-9d70-8204cfd241f7\"}"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/51/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/6/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint assets_equipment_org_id_asset_code_key"
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/1/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/1/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/999999999/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment-usage/1/approve",
+      "status": 500,
+      "ok": false,
+      "error": "Internal server error"
+    }
+  ]
+}

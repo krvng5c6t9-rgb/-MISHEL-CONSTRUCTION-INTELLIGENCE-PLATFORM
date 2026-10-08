@@ -1,0 +1,452 @@
+{
+  "suite": "sweep_assets",
+  "run": "as1",
+  "tag": "as1",
+  "steps": [
+    {
+      "name": "excavator registered",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "duplicate asset code refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint assets_equipment_org_id_asset_code_key\""
+    },
+    {
+      "name": "asset put in use without a project refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"An asset in use must be mobilised to a project\""
+    },
+    {
+      "name": "asset mobilised to project 1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "missing asset returns 404",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Asset not found\""
+    },
+    {
+      "name": "usage 8 h x 150 on project 1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "usage cost computed in DB = 1,200",
+      "outcome": "PASS",
+      "detail": "1200.00"
+    },
+    {
+      "name": "usage on a project where the asset is not mobilised refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Asset 1 is not mobilised to project 20 (status in_use)\""
+    },
+    {
+      "name": "more than 24 machine-hours on one day refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Asset 1 would have 25.00 machine-hours on 2026-10-07\""
+    },
+    {
+      "name": "terminated operator refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Operator 6 is not an employee of this organization employed on 2026-10-06\""
+    },
+    {
+      "name": "usage dated in the future refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Usage cannot be dated in the future\""
+    },
+    {
+      "name": "usage submitted for approval",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DB: usage under approval cannot be edited",
+      "outcome": "PASS",
+      "detail": "ERROR:  Equipment usage 1 is under approval or approved and cannot be edited"
+    },
+    {
+      "name": "submitter cannot approve own usage (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: initiator cannot approve the same transaction\""
+    },
+    {
+      "name": "posting before approval refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only approved equipment usage can be posted\""
+    },
+    {
+      "name": "second user approves usage",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approved usage posted to project cost",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "cost transaction = 1,200 actual on project 1",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "usage cannot be posted twice",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Equipment usage already posted to cost transactions\""
+    },
+    {
+      "name": "next maintenance due before the maintenance date refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Next due date is before the maintenance date\""
+    },
+    {
+      "name": "preventive maintenance recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "usage while the asset is under maintenance refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Asset 1 is not mobilised to project 19 (status maintenance)\""
+    },
+    {
+      "name": "retired asset cannot be returned to service",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Retired asset 1 cannot return to service\""
+    },
+    {
+      "name": "maintenance on a retired asset refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Maintenance cannot be recorded on a retired asset\""
+    },
+    {
+      "name": "tenant B cannot change tenant A asset",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Asset not found\""
+    },
+    {
+      "name": "tenant B does not see tenant A maintenance",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot book usage on tenant A asset",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Asset 1 not found in this organization\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/approvals/configuration/doa",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/configuration/doa/51/confirm",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/hr/employees",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/hr/employees/6/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint assets_equipment_org_id_asset_code_key"
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/1/status",
+      "status": 422,
+      "ok": false,
+      "error": "An asset in use must be mobilised to a project"
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/1/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/999999999/status",
+      "status": 404,
+      "ok": false,
+      "error": "Asset not found"
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 422,
+      "ok": false,
+      "error": "Asset 1 is not mobilised to project 20 (status in_use)"
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 422,
+      "ok": false,
+      "error": "Asset 1 would have 25.00 machine-hours on 2026-10-07"
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 422,
+      "ok": false,
+      "error": "Operator 6 is not an employee of this organization employed on 2026-10-06"
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 422,
+      "ok": false,
+      "error": "Usage cannot be dated in the future"
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment-usage/1/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/40/actions",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: initiator cannot approve the same transaction"
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage/1/post-cost",
+      "status": 409,
+      "ok": false,
+      "error": "Only approved equipment usage can be posted"
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/40/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage/1/post-cost",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage/1/post-cost",
+      "status": 409,
+      "ok": false,
+      "error": "Equipment usage already posted to cost transactions"
+    },
+    {
+      "method": "POST",
+      "path": "/assets/maintenance",
+      "status": 422,
+      "ok": false,
+      "error": "Next due date is before the maintenance date"
+    },
+    {
+      "method": "POST",
+      "path": "/assets/maintenance",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/1/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 422,
+      "ok": false,
+      "error": "Asset 1 is not mobilised to project 19 (status maintenance)"
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/1/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/1/status",
+      "status": 422,
+      "ok": false,
+      "error": "Retired asset 1 cannot return to service"
+    },
+    {
+      "method": "POST",
+      "path": "/assets/maintenance",
+      "status": 422,
+      "ok": false,
+      "error": "Maintenance cannot be recorded on a retired asset"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/1/status",
+      "status": 404,
+      "ok": false,
+      "error": "Asset not found"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/maintenance",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 422,
+      "ok": false,
+      "error": "Asset 1 not found in this organization"
+    }
+  ]
+}

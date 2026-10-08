@@ -23,8 +23,9 @@ assetsRouter.post('/equipment', authorize('assets', 'create'), asyncHandler(asyn
 
 assetsRouter.patch('/equipment/:id/status', authorize('assets', 'edit'), asyncHandler(async (req, res) => {
   const b = z.object({ status: z.enum(['available','in_use','maintenance','retired']), current_project_id: z.number().int().positive().optional() }).parse(req.body);
-  const [updated] = await query(`update assets_equipment set status=$2, current_project_id=$3, updated_at=now() where id=$1 returning *`, [Number(req.params.id), b.status, b.current_project_id ?? null]);
-  res.json({ success: true, data: updated ?? null });
+  const [updated] = await query(`update assets_equipment set status=$2, current_project_id=$3, updated_at=now() where id=$1 and org_id=$4 returning *`, [Number(req.params.id), b.status, b.current_project_id ?? null, req.user!.org_id]);
+  if (!updated) throw new AppError(404, 'Asset not found');
+  res.json({ success: true, data: updated });
 }));
 
 assetsRouter.get('/equipment-usage', asyncHandler(async (req, res) => {
@@ -35,7 +36,7 @@ assetsRouter.get('/equipment-usage', asyncHandler(async (req, res) => {
 
 assetsRouter.post('/equipment-usage', authorize('assets', 'create'), asyncHandler(async (req, res) => {
   const b = z.object({ asset_id: z.number().int().positive(), project_id: z.number().int().positive(), usage_date: z.string().optional(), hours_used: z.number().positive(), operator_id: z.number().int().positive().optional(), cost_code_id: z.number().int().positive().optional(), currency_id: z.number().int().positive(), hourly_rate: z.number().nonnegative() }).parse(req.body);
-  const [created] = await query(`insert into equipment_usage (asset_id, project_id, usage_date, hours_used, operator_id, cost_code_id, currency_id, hourly_rate) values ($1,$2,coalesce($3::date,current_date),$4,$5,$6,$7,$8) returning *`, [b.asset_id, b.project_id, b.usage_date ?? null, b.hours_used, b.operator_id ?? null, b.cost_code_id ?? null, b.currency_id, b.hourly_rate]);
+  const [created] = await query(`insert into equipment_usage (asset_id, project_id, usage_date, hours_used, operator_id, cost_code_id, currency_id, hourly_rate, created_by) values ($1,$2,coalesce($3::date,current_date),$4,$5,$6,$7,$8,$9) returning *`, [b.asset_id, b.project_id, b.usage_date ?? null, b.hours_used, b.operator_id ?? null, b.cost_code_id ?? null, b.currency_id, b.hourly_rate, req.user!.id]);
   res.status(201).json({ success: true, data: created });
 }));
 

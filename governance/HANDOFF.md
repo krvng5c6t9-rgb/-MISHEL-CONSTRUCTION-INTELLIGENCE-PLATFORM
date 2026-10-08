@@ -1,4 +1,4 @@
-# HANDOFF — v0.5.2-stage2 — DATE: 2026-10-05
+# HANDOFF — v0.5.3-stage3 — DATE: 2026-10-05
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
@@ -6,8 +6,8 @@
 - Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-028; CC-029 queued at handoff.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-031 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–054.
-- **Runtime suites, all from zero (E1):** 18 suites, 593 checks, all PASS (claims 25 in Stage 1, technical office 30 in Stage 2).
+- **Change controls:** CC-001…CC-032 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–055.
+- **Runtime suites, all from zero (E1):** 19 suites, 620 checks, all PASS (claims 25 in Stage 1, technical office 30 in Stage 2, assets 27 in Stage 3).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -68,8 +68,9 @@
 ## Next authorized step (owner-controlled staged execution; STOP after each stage and wait for "كمل")
 - Stage 1 — GC-16 Claims: **DONE** (CC-030).
 - Stage 2 — Technical Office: **DONE** (CC-031).
-- **Stage 3 — Assets & Equipment (NEXT):** runtime suite on assets/equipment usage/maintenance + cost posting, defects via CC, regression, evidence; then stop.
-- Stage 4 — Inventory transfers. Stage 5 — NDC-002 remainder (NEC CE register, FIDIC determination/DAAB, claim gating). Stage 6 — NDC-011 remainder (accruals, reproducible EAC).
+- Stage 3 — Assets & Equipment: **DONE** (CC-032).
+- **Stage 4 — Inventory transfers (NEXT):** runtime suite on stock issues/transfers/balances, defects via CC, regression, evidence; then stop.
+- Stage 5 — NDC-002 remainder (NEC CE register, FIDIC determination/DAAB, claim gating). Stage 6 — NDC-011 remainder (accruals, reproducible EAC).
 - Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
 - DEC-009 / DEC-012 / DEC-013 stay OPEN for the Finance/Accounting expert review — do not hard-code a policy.
 
@@ -78,5 +79,5 @@
 - **Run every static check after any frontend edit.** CC-017's CI went red because a red-team script greps the Admin UI.
 - New suites must test SoD with a user who holds *all* permissions. A permission-denied 403 is not SoD evidence.
 - Never treat static checks or name-mapping as implementation evidence.
-- Shared trigger functions dispatching on TG_TABLE_NAME must not reference another table's columns in one condition (CC-006, CC-028): PL/pgSQL resolves fields at run time.
+- Shared trigger functions dispatching on TG_TABLE_NAME must not reference another table's columns in one condition (CC-006, CC-028, CC-031, CC-032 — audit the remaining shared guards): PL/pgSQL resolves fields at run time.
 - A suite that fails stops `run_from_zero.sh` (set -e); to capture pre-fix evidence for a later suite, temporarily remove earlier new checks.
