@@ -1,0 +1,373 @@
+{
+  "suite": "sweep_inventory",
+  "run": "in1",
+  "tag": "in1",
+  "steps": [
+    {
+      "name": "store clerk cannot post a stock adjustment",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Stock adjustments require procurement.approve\""
+    },
+    {
+      "name": "adjustment without a reason refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "store manager posts opening balance 100 bags with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "W1 holds 100",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "transfer 40 bags W1 -> W2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "transfer legs balance (-40 / +40) and are linked",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "transfer carries the source valuation (5.00) on both legs",
+      "outcome": "PASS",
+      "detail": "5.0000/5.0000"
+    },
+    {
+      "name": "balances W1 60 / W2 40",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "transfer at a made-up unit cost refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Transfer cost is carried from the source store and cannot be entered\""
+    },
+    {
+      "name": "transfer more than available refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Insufficient stock. Available 40.000\""
+    },
+    {
+      "name": "future-dated transfer refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Stock movements cannot be dated in the future\""
+    },
+    {
+      "name": "transfer tagged to a project other than the destination store refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Transfer project must be the destination store project\""
+    },
+    {
+      "name": "issue without a project refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "issue 5 bags from W2 to project 2",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "issue beyond stock refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Insufficient stock. Available 35.000\""
+    },
+    {
+      "name": "parallel transfers: exactly 4 of 6 succeed and W1 ends at 0",
+      "outcome": "PASS",
+      "detail": "ok=4 w1=0"
+    },
+    {
+      "name": "DB: stock ledger rows cannot be edited",
+      "outcome": "PASS",
+      "detail": "ERROR:  Inventory ledger is append-only; post a compensating transaction"
+    },
+    {
+      "name": "DB: stock ledger rows cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Inventory ledger is append-only; post a compensating transaction"
+    },
+    {
+      "name": "DB: an unpaired transfer leg cannot be inserted",
+      "outcome": "PASS",
+      "detail": "ERROR:  A transfer receipt must mirror exactly one transfer issue (item, quantity, cost)"
+    },
+    {
+      "name": "tenant B cannot transfer from tenant A store",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Warehouse not found in current organization\""
+    },
+    {
+      "name": "tenant B does not see tenant A stock",
+      "outcome": "PASS",
+      "detail": ""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/warehouses",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/warehouses",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 403,
+      "ok": false,
+      "error": "Stock adjustments require procurement.approve"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 422,
+      "ok": false,
+      "error": "Transfer cost is carried from the source store and cannot be entered"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 409,
+      "ok": false,
+      "error": "Insufficient stock. Available 40.000"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 422,
+      "ok": false,
+      "error": "Stock movements cannot be dated in the future"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 422,
+      "ok": false,
+      "error": "Transfer project must be the destination store project"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 409,
+      "ok": false,
+      "error": "Insufficient stock. Available 35.000"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 409,
+      "ok": false,
+      "error": "Insufficient stock. Available 0.000"
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 409,
+      "ok": false,
+      "error": "Insufficient stock. Available 0.000"
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 422,
+      "ok": false,
+      "error": "Warehouse not found in current organization"
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    }
+  ]
+}

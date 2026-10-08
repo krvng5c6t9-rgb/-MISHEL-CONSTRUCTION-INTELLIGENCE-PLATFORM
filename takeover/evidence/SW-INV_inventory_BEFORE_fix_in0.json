@@ -1,0 +1,158 @@
+{
+  "suite": "sweep_inventory",
+  "run": "in0",
+  "tag": "in0",
+  "steps": [
+    {
+      "name": "store clerk cannot post a stock adjustment",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "adjustment without a reason refused",
+      "outcome": "FAIL",
+      "detail": "HTTP 201 \"\""
+    },
+    {
+      "name": "store manager posts opening balance 100 bags with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "W1 holds 100",
+      "outcome": "FAIL",
+      "detail": ""
+    },
+    {
+      "name": "transfer 40 bags W1 -> W2",
+      "outcome": "FAIL",
+      "detail": "transfer failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"39ba35e8-af12-4a37-8eb2-1cd79d4e253d\"}"
+    },
+    {
+      "name": "suite completed",
+      "outcome": "FAIL",
+      "detail": "transfer failed: HTTP 500 {\"success\":false,\"error\":\"Internal server error\",\"ref\":\"39ba35e8-af12-4a37-8eb2-1cd79d4e253d\"}"
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/warehouses",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/warehouses",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transactions",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/inventory/stock",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/inventory/transfer",
+      "status": 500,
+      "ok": false,
+      "error": "Internal server error"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2 + RK-003 sweep: CC-015…CC-032)
+# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2 + RK-003 sweep: CC-015…CC-033)
 
 | Item | Value |
 |---|---|
@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 55 (`database/migrations/001…055`), all applied from an empty DB |
+| Migrations | 56 (`database/migrations/001…056`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-032
+## Controlled Changes CC-001 → CC-033
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -64,6 +64,7 @@
 | CC-030 | GC-16 claims: lifecycle crash (42P08) fixed; event/notice linkage, determination ≤ claim with SoD and reasons, decided claims immutable; time-bar position shown (053) |
 | CC-031 | Technical office: RFI creation and drawing review crashes fixed; review comments/history, one current approved revision, RFI impact → contract-event linkage (054) |
 | CC-032 | Plant & equipment: usage submission crash fixed; mobilisation, machine-hour, operator and maintenance rules (055) |
+| CC-033 | Inventory: transfer crash fixed; paired legs, controlled adjustments, carried cost (provisional, DEC-014) (056) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -100,7 +101,8 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_claims.mjs | 25 | GC-16 |
 | sweep_technical_office.mjs | 30 | GC-03..05 |
 | sweep_assets.mjs | 27 | plant & equipment |
-| **Total** | **620** | 19 suites, all PASS locally (RUN as1) |
+| sweep_inventory.mjs | 21 | inventory movements |
+| **Total** | **641** | 20 suites, all PASS locally (RUN in1) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).
@@ -120,7 +122,7 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 ## Open gaps / risks / owner decisions (see `governance/registers/07,09,12`)
 - Open gaps: G-003 commercial provisioning (DEC-010 decided; owner plan/pricing inputs) · G-004 owner DOA matrix (API done) · G-005 IPC/retention posting (DEC-009 OPEN) · G-006 (partially closed) · G-008 dropped frozen scope · G-009 D-pack coverage · G-010 hostile concurrency tests · G-011 STEP02 atlas · G-012 unread archives (owner action) · G-013 token revocation.
 - Closed: G-001 (CC-015), G-002 (CC-016), G-007 Golden Cases decomposed (R13), G-014 (CC-019); F-06/F-07 (CC-013), F-08 takeover (CC-018), F-13 (CC-021), F-14 (CC-022), F-15 (CC-024); G-010 hostile concurrency executed (CC-022).
-- Owner decisions open: DEC-009 (IPC revenue/retention), DEC-012 (subcontract certificate posting basis, F-12), DEC-013 (payroll cost basis: net vs gross, F-16), DEC-010 follow-up (plan catalogue/pricing), real DOA bands / CoA / posting rules / clause periods (never invented by the platform).
+- Owner decisions open: DEC-009 (IPC revenue/retention), DEC-012 (subcontract certificate posting basis, F-12), DEC-013 (payroll cost basis: net vs gross, F-16), DEC-014 (inventory valuation method, F-17), DEC-010 follow-up (plan catalogue/pricing), real DOA bands / CoA / posting rules / clause periods (never invented by the platform).
 - Risks: RK-001 unread archives may change scope · RK-002 templated sources mistaken for specification · RK-003 similar defect density in untested modules — **confirmed** by GC-12 (5 defects at first execution).
 
 ## Install / build / migrate / run / test from zero
@@ -161,6 +163,6 @@ Docker alternative: set `POSTGRES_PASSWORD`, `APP_DB_PASSWORD`, `JWT_SECRET`, `B
 ## VERIFIED vs UNVERIFIED
 **VERIFIED (executed, logs in `takeover/evidence/` and CI):** build, migrations from zero on PG 16.14/16.15/17.11, project-create authorization, SQLSTATE error mapping without SQL leakage, API authentication, DOA-driven approvals with SoD and wrong-role rejection, the commercial-procurement-finance chain to a balanced GL, AP/AR creation, idempotency of GRN confirm and GL posting, cross-tenant read/write/approval isolation at API and DB level, bootstrap refusal on orgs with active users.
 
-**UNVERIFIED:** docker-compose runtime; frontend behaviour in a browser; every module outside the 19 runtime suites (inventory transfers, portals, dashboards/reports, AI platform, automation, knowledge, CRM beyond the chain); HR/payroll, QA/QC, HSE, EDMS, planning/CPM, site diary, variations, claims, technical office and plant are now runtime-tested for their core paths only; performance/load; backup/restore/DR; penetration testing; production readiness of any kind. All DOA thresholds, CoA codes, GL rules and amounts used in tests are **TEST FIXTURES**, not owner-approved values.
+**UNVERIFIED:** docker-compose runtime; frontend behaviour in a browser; every module outside the 20 runtime suites (portals, dashboards/reports, AI platform, automation, knowledge, CRM beyond the chain); HR/payroll, QA/QC, HSE, EDMS, planning/CPM, site diary, variations, claims, technical office, plant and inventory movements are now runtime-tested for their core paths only; performance/load; backup/restore/DR; penetration testing; production readiness of any kind. All DOA thresholds, CoA codes, GL rules and amounts used in tests are **TEST FIXTURES**, not owner-approved values.
 
 No secrets are included: credentials appear only as `<placeholders>` and as test-only fixture passwords inside `tests/e2e`.

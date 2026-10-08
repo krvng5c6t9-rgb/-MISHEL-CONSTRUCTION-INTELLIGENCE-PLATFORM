@@ -1,4 +1,4 @@
-# HANDOFF — v0.5.3-stage3 — DATE: 2026-10-05
+# HANDOFF — v0.5.4-stage4 — DATE: 2026-10-05
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
@@ -6,8 +6,8 @@
 - Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-028; CC-029 queued at handoff.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-032 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–055.
-- **Runtime suites, all from zero (E1):** 19 suites, 620 checks, all PASS (claims 25 in Stage 1, technical office 30 in Stage 2, assets 27 in Stage 3).
+- **Change controls:** CC-001…CC-033 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–056.
+- **Runtime suites, all from zero (E1):** 20 suites, 641 checks, all PASS (Stage 1 claims 25, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -53,6 +53,7 @@
   - Today the system posts the net amount as cost: 18,000 posted for 20,000 gross (F-12).
   - Recommendation: gross-basis cost with a separate retention-payable liability. Decide together with DEC-009.
 - **DEC-013 (new), payroll cost basis.** Payroll lines post *net* pay as project labour cost (gross 11,500 − deductions 1,500 → 10,000 posted; F-16). Recommendation: gross pay as cost, deductions to payables; add employer contributions when modelled. Decide with DEC-009/012.
+- **DEC-014 (new), inventory valuation method** (F-17): transfers currently carry the source store's average inbound cost as a provisional default only.
 - **DEC-010 follow-up:** plan catalogue and pricing for commercial tenant provisioning. These are owner-only values.
 - **G-012:** make the three Drive archives readable, either by splitting them into parts under 10 MB or by allowing `drive.usercontent.google.com`.
 - **Real values (the platform enforces structure but never invents values):**
@@ -69,10 +70,10 @@
 - Stage 1 — GC-16 Claims: **DONE** (CC-030).
 - Stage 2 — Technical Office: **DONE** (CC-031).
 - Stage 3 — Assets & Equipment: **DONE** (CC-032).
-- **Stage 4 — Inventory transfers (NEXT):** runtime suite on stock issues/transfers/balances, defects via CC, regression, evidence; then stop.
-- Stage 5 — NDC-002 remainder (NEC CE register, FIDIC determination/DAAB, claim gating). Stage 6 — NDC-011 remainder (accruals, reproducible EAC).
+- Stage 4 — Inventory transfers: **DONE** (CC-033; DEC-014 + NDC-030 opened).
+- **Stage 5 — NDC-002 remainder (NEXT):** NDC-002 remainder (NEC CE register, FIDIC determination/DAAB, claim gating). Stage 6 — NDC-011 remainder (accruals, reproducible EAC).
 - Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
-- DEC-009 / DEC-012 / DEC-013 stay OPEN for the Finance/Accounting expert review — do not hard-code a policy.
+- DEC-009 / DEC-012 / DEC-013 / DEC-014 stay OPEN for the Finance/Accounting expert review — do not hard-code a policy.
 
 ## Warnings for next session
 - Postgres in this container stops between sessions. Restart with `pg_ctl` (see CURRENT_STATE).
