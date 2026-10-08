@@ -1,4 +1,4 @@
-# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2 + RK-003 sweep + stages 1–6: CC-015…CC-035)
+# CURRENT STATE — MISHEL Construction Intelligence Platform (Investigation R01–R14 + Build Waves 1–2 + RK-003 sweep + stages 1–7: CC-015…CC-036)
 
 | Item | Value |
 |---|---|
@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 58 (`database/migrations/001…058`), all applied from an empty DB |
+| Migrations | 59 (`database/migrations/001…059`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-035
+## Controlled Changes CC-001 → CC-036
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -67,6 +67,7 @@
 | CC-033 | Inventory: transfer crash fixed; paired legs, controlled adjustments, carried cost (provisional, DEC-014) (056) |
 | CC-034 | NDC-002: compensation-event register, FIDIC dispute ladder, claim gating on notices (057) |
 | CC-035 | NDC-011: budgets, derived accrual, reproducible EAC snapshots, reconciliation, per-project cost summary (058) |
+| CC-036 | G-015 shared-guard audit + runtime probe in gate; G-016 security_invoker on all views (059) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -106,7 +107,9 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_inventory.mjs | 21 | inventory movements |
 | sweep_ndc002.mjs | 29 | NDC-002 CE / dispute / gating |
 | sweep_cost_eac.mjs | 19 | NDC-011 budgets / accrual / EAC |
-| **Total** | **690** | 22 suites, all PASS locally (RUN co1) |
+| sweep_view_isolation.mjs | 10 | G-016 DB-level view isolation |
+| probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
+| **Total** | **700** | 23 suites + probe, all PASS locally (RUN s7) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

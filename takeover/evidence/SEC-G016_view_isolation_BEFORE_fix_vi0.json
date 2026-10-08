@@ -1,0 +1,58 @@
+{
+  "suite": "sweep_view_isolation",
+  "run": "vi0",
+  "tag": "vi0",
+  "steps": [
+    {
+      "name": "v_ap_aging: tenant B sees no tenant A rows (by vendor_id)",
+      "outcome": "PASS",
+      "detail": "visible vendor_ids=0 foreign=0"
+    },
+    {
+      "name": "v_ar_aging: tenant B sees no tenant A rows (by client_id)",
+      "outcome": "PASS",
+      "detail": "visible client_ids=0 foreign=0"
+    },
+    {
+      "name": "v_boq_vs_actual: tenant B sees no tenant A rows (by project_id)",
+      "outcome": "FAIL",
+      "detail": "visible project_ids=2 foreign=2"
+    },
+    {
+      "name": "v_cost_control_summary: tenant B sees no tenant A rows (by project_id)",
+      "outcome": "PASS",
+      "detail": "visible project_ids=0 foreign=0"
+    },
+    {
+      "name": "v_portfolio_kpis: tenant B sees no tenant A rows (by org_id)",
+      "outcome": "PASS",
+      "detail": "visible org_ids=1 foreign=0"
+    },
+    {
+      "name": "v_portfolio_summary: tenant B sees no tenant A rows (by project_id)",
+      "outcome": "FAIL",
+      "detail": "visible project_ids=22 foreign=21"
+    },
+    {
+      "name": "v_procurement_cycle_time: tenant B sees no tenant A rows (by project_id)",
+      "outcome": "FAIL",
+      "detail": "visible project_ids=2 foreign=2"
+    },
+    {
+      "name": "v_tender_pipeline_summary: tenant B sees no tenant A rows (by org_id)",
+      "outcome": "PASS",
+      "detail": "visible org_ids=0 foreign=0"
+    },
+    {
+      "name": "v_tender_win_loss: tenant B sees no tenant A rows (by org_id)",
+      "outcome": "PASS",
+      "detail": "visible org_ids=0 foreign=0"
+    },
+    {
+      "name": "v_vendor_performance: tenant B sees no tenant A rows (by vendor_id)",
+      "outcome": "FAIL",
+      "detail": "visible vendor_ids=5 foreign=5"
+    }
+  ],
+  "http": []
+}

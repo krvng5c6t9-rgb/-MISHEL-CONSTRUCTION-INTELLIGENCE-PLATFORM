@@ -1,0 +1,120 @@
+table,result,detail
+accounts_payable,OK,
+accounts_receivable,OK,
+approval_actions_log,OK,
+approval_instances,OK,
+approval_workflow_steps,OK,
+assets_equipment,OK,
+attendance,NOT_PROBED,no rows
+audit_log,REFUSED_BY_RULE,ERROR:  audit_log is append-only
+bank_accounts,OK,
+bank_reconciliation,NOT_PROBED,no rows
+boq_handovers,REFUSED_BY_RULE,ERROR:  boq_handovers: only pending_acceptance -> completed/rejected is permitted
+boq_master,OK,
+boq_rate_buildup,OK,
+budgets,REFUSED_BY_RULE,ERROR:  Approved budget 1 is immutable; use a revised budget
+cash_flow_actual,NOT_PROBED,no rows
+cash_flow_forecast,NOT_PROBED,no rows
+chart_of_accounts,OK,
+claim_dispute_steps,REFUSED_BY_RULE,ERROR:  claim_dispute_steps is append-only
+client_portal_access,NOT_PROBED,no rows
+clients,OK,
+company_cash_position,NOT_PROBED,no rows
+comparative_statements,OK,
+compensation_events,REFUSED_BY_RULE,ERROR:  Compensation event 3 is decided and immutable
+contract_claims,REFUSED_BY_RULE,ERROR:  Claim 4 is decided (partially_approved) and immutable
+contract_clauses,NOT_PROBED,no rows
+contract_event_links,REFUSED_BY_RULE,ERROR:  Event links are append-only
+contract_events,REFUSED_BY_RULE,ERROR:  Contract events are append-only; record a new event to correct
+contract_notices,REFUSED_BY_RULE,ERROR:  Invalid notice transition acknowledged -> acknowledged
+contract_obligation_rules,REFUSED_BY_RULE,ERROR:  Confirmed obligation rule 1 is immutable (only retirement is allowed)
+contracts,OK,
+cost_adjustment_requests,NOT_PROBED,no rows
+cost_adjustment_sets,NOT_PROBED,no rows
+cost_codes,OK,
+cost_forecast_snapshots,REFUSED_BY_RULE,ERROR:  Approved snapshot 1 is immutable
+cost_forecasts,NOT_PROBED,no rows
+cost_transactions,REFUSED_BY_RULE,ERROR:  cost_transactions is an append-only ledger — UPDATE is not permitted on row id 1. Post a correction via cost_adjustment_requests instead.
+delegation_of_authority,REFUSED_BY_RULE,ERROR:  Confirmed DOA rule 1 is immutable; retire it with a reason and create a superseding draft
+departments,NOT_PROBED,no rows
+diary_equipment,NOT_PROBED,no rows
+diary_manpower,REFUSED_BY_RULE,ERROR:  Entries of a signed site diary are immutable
+document_registers,NOT_PROBED,no rows
+document_transmittals,OK,
+document_versions,OK,
+documents,OK,
+drawings,OK,
+early_warnings,REFUSED_BY_RULE,ERROR:  Closed early warning 1 is immutable
+employees,OK,
+equipment_usage,OK,
+evm_snapshots,NOT_PROBED,no rows
+fiscal_periods,OK,
+general_ledger,REFUSED_BY_RULE,ERROR:  general_ledger is an append-only ledger — UPDATE is not permitted on row id 1. Corrections must be posted as a new balanced batch via manual_journal_ent
+gl_posting_rules,OK,
+goods_receipt_notes,OK,
+grn_lines,OK,
+incidents,OK,
+inspection_checklists,OK,
+inventory_transactions,REFUSED_BY_RULE,ERROR:  Inventory ledger is append-only; post a compensating transaction
+ipc_boq_lines,NOT_PROBED,no rows
+ipc_supporting_docs,NOT_PROBED,no rows
+ipcs,OK,
+lead_activities,NOT_PROBED,no rows
+leads,OK,
+leave_requests,OK,
+maintenance_log,REFUSED_BY_RULE,ERROR:  Maintenance cannot be recorded on a retired asset
+manual_journal_entries,OK,
+manual_journal_entry_lines,REFUSED_BY_RULE,"ERROR:  manual_journal_entry_lines cannot be UPDATEed — parent entry 1 has status ""posted"", not ""draft""."
+material_requisitions,OK,
+method_statements,OK,
+milestones,NOT_PROBED,no rows
+mr_lines,OK,
+ncrs,OK,
+opportunities,OK,
+payments,OK,
+payroll_lines,OK,
+payroll_runs,OK,
+permissions,OK,
+permits_to_work,OK,
+po_lines,OK,
+programme_submission_activities,REFUSED_BY_RULE,ERROR:  Programme snapshots are immutable
+programme_submissions,REFUSED_BY_RULE,ERROR:  Invalid programme submission transition superseded -> superseded
+progress_updates,NOT_PROBED,no rows
+project_boq,OK,
+projects,OK,
+punch_lists,NOT_PROBED,no rows
+purchase_orders,OK,
+quantity_sheets,NOT_PROBED,no rows
+recruitment,NOT_PROBED,no rows
+resource_library,NOT_PROBED,no rows
+retention_ledger,OK,
+rfis,OK,
+rfq_vendors,OK,
+rfqs,OK,
+roles,OK,
+schedule_activities,OK,
+schedule_baselines,NOT_PROBED,no rows
+schedule_relationships,OK,
+site_diary,OK,
+site_diary_amendments,REFUSED_BY_RULE,ERROR:  site_diary_amendments is append-only
+site_instructions,NOT_PROBED,no rows
+subcontract_certificate_lines,REFUSED_BY_RULE,ERROR:  Certificate lines can only change while the certificate is draft (status posted)
+subcontract_certificates,OK,
+subcontractor_portal_access,NOT_PROBED,no rows
+subcontracts,OK,
+submittal_reviews,REFUSED_BY_RULE,ERROR:  submittal_reviews is append-only
+submittals,OK,
+tender_clarifications,NOT_PROBED,no rows
+tender_documents,NOT_PROBED,no rows
+tenders,OK,
+timesheets,REFUSED_BY_RULE,ERROR:  Approved timesheet 1 is immutable
+toolbox_talks,NOT_PROBED,no rows
+transmittal_lines,OK,
+users,OK,
+variation_boq_lines,REFUSED_BY_RULE,ERROR:  Variation lines can only change while the variation is proposed (status approved)
+variations,OK,
+vendor_bank_change_requests,REFUSED_BY_RULE,ERROR:  vendor bank change request: only pending -> approved/rejected is permitted
+vendor_invoices,OK,
+vendor_quotations,OK,
+vendor_status_events,REFUSED_BY_RULE,ERROR:  vendor_status_events is append-only
+vendors_subcontractors,OK,
