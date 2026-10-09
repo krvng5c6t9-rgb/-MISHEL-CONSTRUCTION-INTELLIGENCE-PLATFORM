@@ -205,7 +205,12 @@ financeRouter.post('/ipcs/:id/client-approve', authorize('finance', 'manage'), a
     certified_amount: z.number().nonnegative(),
     client_reference: z.string().trim().min(3).max(100),
     certified_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    difference_reason: z.string().trim().min(10).optional()
+    difference_reason: z.string().trim().min(10).optional(),
+    // F-36: the client's breakdown, all four together or none.
+    certified_gross: z.number().nonnegative().optional(),
+    certified_retention: z.number().nonnegative().optional(),
+    certified_advance_recovery: z.number().nonnegative().optional(),
+    certified_previous: z.number().nonnegative().optional()
   }).parse(req.body);
   const [ipc] = await query<any>(`select id, status, prepared_by from ipcs where id = $1 and org_id = $2`, [id, req.user!.org_id]);
   if (!ipc) throw new AppError(404, 'IPC not found');
@@ -213,10 +218,12 @@ financeRouter.post('/ipcs/:id/client-approve', authorize('finance', 'manage'), a
   if (ipc.status !== 'submitted_to_client') throw new AppError(409, 'IPC must be submitted_to_client before client approval');
   const rows = await query(`
     update ipcs set status='client_approved', client_approved_date=$3::date, client_certified_amount=$4, client_reference=$5,
-      client_certified_on=$3::date, certification_recorded_by=$6, certification_difference_reason=$7, updated_at=now()
+      client_certified_on=$3::date, certification_recorded_by=$6, certification_difference_reason=$7,
+      client_certified_gross=$8, client_certified_retention=$9, client_certified_advance_recovery=$10, client_certified_previous=$11, updated_at=now()
     where id=$1 and org_id=$2 and status='submitted_to_client'
     returning *, net_amount_due - client_certified_amount as certification_difference
-  `, [id, req.user!.org_id, b.certified_on, b.certified_amount, b.client_reference, req.user!.id, b.difference_reason ?? null]);
+  `, [id, req.user!.org_id, b.certified_on, b.certified_amount, b.client_reference, req.user!.id, b.difference_reason ?? null,
+      b.certified_gross ?? null, b.certified_retention ?? null, b.certified_advance_recovery ?? null, b.certified_previous ?? null]);
   if (!rows[0]) throw new AppError(409, 'IPC must be submitted_to_client before client approval');
   res.json({ success: true, data: rows[0] });
 }));

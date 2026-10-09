@@ -301,3 +301,27 @@ contractAdminRouter.post('/ld-terms/:id/confirm', authorize('contracts', 'approv
   if (!t) throw new AppError(409, 'LD terms are already confirmed');
   res.json({ success: true, data: t });
 }));
+
+// Stage 24 (F-37, migration 072): payment period stated in the contract, confirmed by a second person; receivable
+// due dates are computed from it.
+contractAdminRouter.get('/contracts/:contractId/payment-terms', asyncHandler(async (req, res) => {
+  const [t] = await query(`select * from contract_payment_terms where contract_id=$1 and org_id=$2`, [pid(req.params.contractId), req.user!.org_id]);
+  res.json({ success: true, data: t ?? null });
+}));
+contractAdminRouter.post('/contracts/:contractId/payment-terms', authorize('contracts', 'create'), asyncHandler(async (req, res) => {
+  const b = z.object({ basis: z.enum(['after_submission', 'after_client_certification']), days: z.number().int().min(0).max(3650),
+    clause_ref: z.string().trim().min(1).max(60), source_reference: z.string().trim().min(3).max(500) }).parse(req.body);
+  const [t] = await query(`insert into contract_payment_terms(org_id,contract_id,basis,days,clause_ref,source_reference,created_by) values($1,$2,$3,$4,$5,$6,$7) returning *`,
+    [req.user!.org_id, pid(req.params.contractId), b.basis, b.days, b.clause_ref, b.source_reference, req.user!.id]);
+  res.status(201).json({ success: true, data: t });
+}));
+contractAdminRouter.post('/payment-terms/:id/confirm', authorize('contracts', 'approve'), asyncHandler(async (req, res) => {
+  const id = pid(req.params.id);
+  const cur = (await query<any>(`select created_by,status from contract_payment_terms where id=$1 and org_id=$2`, [id, req.user!.org_id]))[0];
+  if (!cur) throw new AppError(404, 'Payment terms not found');
+  if (cur.status !== 'draft') throw new AppError(409, 'Payment terms are already confirmed');
+  if (Number(cur.created_by) === req.user!.id) throw new AppError(403, 'Segregation of duties: payment terms must be confirmed by someone other than their author');
+  const [t] = await query(`update contract_payment_terms set status='confirmed',confirmed_by=$2,confirmed_at=now() where id=$1 and status='draft' returning *`, [id, req.user!.id]);
+  if (!t) throw new AppError(409, 'Payment terms are already confirmed');
+  res.json({ success: true, data: t });
+}));

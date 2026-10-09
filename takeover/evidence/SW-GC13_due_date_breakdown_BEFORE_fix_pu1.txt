@@ -1,0 +1,9 @@
+GC-13 F-36/F-37 BEFORE migration 072 (gate RUN pu1 data, schema 071).
+Receivables: due date = IPC period end (no contract payment terms exist in the schema); retention ledger at submitted retention even where the client certified a different net:
+ ipc_no  | period_to  | submitted_date | client_certified_on | ar_due_date | net_amount_due | client_certified_amount | less_retention | retention_ledger 
+---------+------------+----------------+---------------------+-------------+----------------+-------------------------+----------------+------------------
+ IPC-pu1 | 2026-10-09 | 2026-10-09     | 2026-10-09          | 2026-10-09  |       95000.00 |                95000.00 |        5000.00 |          5000.00
+ CC1-pu1 | 2026-10-08 | 2026-10-09     | 2026-10-09          | 2026-10-08  |       95000.00 |                90000.00 |        5000.00 |          5000.00
+(2 rows)
+
+contract payment terms table exists: false

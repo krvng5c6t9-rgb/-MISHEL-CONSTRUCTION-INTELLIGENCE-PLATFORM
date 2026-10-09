@@ -118,6 +118,8 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
   // F-35 (migration 071): the receivable is the amount the client certified; IPCs approved before 071 have no
   // certified amount recorded and post at the submitted net (legacy).
   const legacy = ipc.client_certified_amount === null;
+  // F-37 (migration 072): due date from the confirmed contract payment terms; NULL when none are recorded.
+  const dueDate = (await client.query(`select ipc_payment_due_date($1) as d`, [ipc.id])).rows[0].d;
   const amount = String(legacy ? ipc.net_amount_due : ipc.client_certified_amount);
   const rule = await getActiveRule(client, Number(ipc.org_id), 'ipc', null);
   if (!rule) throw new AppError(422, 'No active GL posting rule for IPC');
@@ -127,7 +129,7 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
       (org_id, client_id, project_id, ipc_id, amount, currency_id, due_date)
     values ($1,$2,$3,$4,$5,$6,$7)
     returning *
-  `, [ipc.org_id, ipc.client_id, ipc.project_id, ipc.id, amount, ipc.project_currency_id, ipc.period_to]);
+  `, [ipc.org_id, ipc.client_id, ipc.project_id, ipc.id, amount, ipc.project_currency_id, dueDate]);
 
   const batch = await insertBalancedGlBatch(client, {
     org_id: Number(ipc.org_id),
@@ -144,13 +146,13 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
   });
 
   await client.query(`update ipcs set status = 'posted', posted_ar_id = $2, updated_at = now() where id = $1`, [ipc.id, ar.rows[0].id]);
-  if (Number(ipc.less_retention) > 0) {
+  if (Number(ipc.client_certified_retention ?? ipc.less_retention) > 0) {
     await client.query(`
       insert into retention_ledger (org_id, project_id, ipc_id, retained_amount, release_type)
       values ($1,$2,$3,$4,'other')
-    `, [ipc.org_id, ipc.project_id, ipc.id, ipc.less_retention]);
+    `, [ipc.org_id, ipc.project_id, ipc.id, ipc.client_certified_retention ?? ipc.less_retention]);
   }
-  return { accounts_receivable: ar.rows[0], gl: batch, basis: legacy ? 'submitted_net_legacy' : 'client_certified' };
+  return { accounts_receivable: ar.rows[0], gl: batch, basis: legacy ? 'submitted_net_legacy' : 'client_certified', due_date_basis: dueDate ? 'contract_payment_terms' : 'no_confirmed_payment_terms' };
 }
 
 export async function postApprovedPaymentToGl(client: PoolClient, paymentId: number) {
