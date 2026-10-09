@@ -47,7 +47,7 @@
 - **Commercial provisioning (DEC-010):** decided by the owner; needs the owner's plan catalogue and pricing.
 
 ## Owner decisions required (decision | options | recommendation | reason)
-- **DEC-009, IPC revenue/retention accounting.** Still OPEN, pending expert review.
+- **DEC-009, IPC revenue/retention accounting.** DECIDED 2026-10-09 by owner (gross + retention receivable; IPC = billing; revenue over time, cost-to-cost); implementation Stages 28-29.
   - The frozen STEP09 rule that certification is not revenue requires, at minimum, the structure "IPC → receivable/contract balance; revenue from a policy engine".
 - **DEC-012 (new), subcontract certificate valuation model and cost/AP posting basis.**
   - Today the system posts the net amount as cost: 18,000 posted for 20,000 gross (F-12).
@@ -93,12 +93,16 @@
   - Stage 23 — Payments & Certification screen + browser check in CI: **DONE** (CC-052; F-38 closed).
   - Stage 24 — contract payment terms → due dates; client certified breakdown (F-36, F-37): **DONE** (CC-053; F-40 opened).
   - Stage 25 — collection/settlement (GC-13 s8 + AP mirror) and F-40 UI: **DONE** (CC-054; F-41 opened).
-  - **Stage 26 (NEXT) — GC-13 step 7 revenue recognition remains DEC-009 (owner); next autonomous candidate: GC-24 legacy data import (opening balances, open commitments) with reconciliation suite, or the cash-flow forecast from due dates (GC-13 s8 remainder).**
+  - Owner DECIDED DEC-009/012/013/014/015 on 2026-10-09 (register 09). Implementation plan:
+  - **Stage 26 (NEXT) — DEC-013 + DEC-014: payroll cost at gross with deductions to payables; inventory weighted average per store formalised (specific identification for tagged items).**
+  - Stage 27 — DEC-012: subcontract cumulative valuation, cost at gross, retention payable, advances as prepayment (F-33).
+  - Stages 28-29 — DEC-009: IPC as billing + retention receivable; revenue recognition run (cost-to-cost, second-person approval); contract asset/liability.
+  - Stages 30-31 — DEC-015: per-address limit enabled per deployment; TOTP MFA mandatory for admin, finance and DOA approvers.
   - Later candidates: GC-24 legacy import; GC-12 advance recovery/back-charges; snapshot ZIP when the owner asks.
   - Gate order note: wave1_boq_handover now runs BEFORE chain.mjs (it configures contract-signing DOA and signers the chain uses).
   - Then: remaining ABSENT Golden Case steps by business priority; frontend browser verification; performance/DR/pentest preparation.
 - Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
-- DEC-015 (sign-in policy values, MFA) OPEN for owner/security; set TRUST_PROXY on Render before enabling the address limit.
+- DEC-015 DECIDED (2026-10-09): lockout 5/15/15 adopted; address limit to be enabled per deployment with TRUST_PROXY; MFA mandatory for admin/finance/DOA approvers (Stages 30-31).
 - DEC-009 / DEC-012 / DEC-013 / DEC-014 stay OPEN for the Finance/Accounting expert review — do not hard-code a policy.
 
 ## Warnings for next session
