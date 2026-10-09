@@ -1,0 +1,25 @@
+GC-13 client IPC deductions BEFORE migration 070 (gate RUN sd2 data): chain contract, advance_payment_percent not set, no advance received; one earlier posted IPC.
+BEGIN
+ id | contract_value | retention_percent | advance_payment_percent | contract_status 
+----+----------------+-------------------+-------------------------+-----------------
+  4 |     1000000.00 |              5.00 |                         | signed
+(1 row)
+
+ ipc_no  | status | gross_work_done_this_period | less_retention | net_amount_due 
+---------+--------+-----------------------------+----------------+----------------
+ IPC-sd2 | posted |                   100000.00 |        5000.00 |       95000.00
+(1 row)
+
+ ipc_no  | retention_20pct_on_5pct_contract | recovered_without_advance | previous_above_95000_certified | net_amount_due 
+---------+----------------------------------+---------------------------+--------------------------------+----------------
+ PROBE-2 |                         60000.00 |                  20000.00 |                      200000.00 |       20000.00
+(1 row)
+
+INSERT 0 1
+       status        
+---------------------
+ submitted_to_client
+(1 row)
+
+UPDATE 1
+ROLLBACK

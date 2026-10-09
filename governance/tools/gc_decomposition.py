@@ -81,7 +81,7 @@ gc('GC-12', 'Contractor/Subcontractor IPC', [
 gc('GC-13', 'Client IPC / Revenue', [
     ('Prepare valuation from approved progress', 'QS', 'measured quantities, BOQ', 'IPC draft', 'qty <= contract qty unless variation', 'SOD15-029', 'L2', 'RUNTIME', 'IPC create (chain)', 'NDC-012'),
     ('Add variations, claims (only agreed), MOS', 'QS', 'variation status', 'gross valuation', 'claims not included until agreed (STEP09)', 'none', 'L2', 'PARTIAL', 'ipc_boq_lines need project_boq (F-01)', 'G-001'),
-    ('Retention and advance recovery', 'QS', 'contract terms', 'net certified amount', 'per Contract Data Pack', 'none', 'L4', 'RUNTIME', 'retention in chain (100,000 gross / 95,000 net)', ''),
+    ('Retention and advance recovery', 'QS', 'contract terms', 'net certified amount', 'per Contract Data Pack', 'none', 'L4', 'RUNTIME', 'retention in chain (100,000 gross / 95,000 net) [chain]; retention within contract %, client advances within contract %, received with SoD, recovered at the recorded rate and never above outstanding (race-safe), less previous capped at net certified (CC-050) [sweep_client_ipc_deductions]', ''),
     ('Internal approval and submission to client', 'Commercial manager', 'IPC', 'submitted IPC', 'DOA', 'DOA Payment', 'L0', 'RUNTIME', 'submit-to-client (chain)', ''),
     ('Client certification', 'Client (external)', 'submitted IPC', 'certified amount', 'certified amount may differ; difference tracked', 'external authority', 'L5', 'RUNTIME', 'client-approve (chain)', ''),
     ('Receivable / contract balance recognition', 'Finance', 'certified IPC', 'AR, retention receivable', 'certification != revenue (STEP09); AR = certified net', 'SOD15-015', 'L4', 'PARTIAL', 'posts net to revenue directly (F-05, DEC-009 OPEN)', 'DEC-009'),
