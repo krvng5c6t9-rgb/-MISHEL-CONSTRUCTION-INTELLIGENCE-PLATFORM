@@ -1,13 +1,13 @@
-# HANDOFF — v0.5.24-stage24 — DATE: 2026-10-09
+# HANDOFF — v0.5.25-stage25 — DATE: 2026-10-09
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
 - Waves 1–2 are built and runtime-tested (CC-015…CC-024). The RK-003 module sweep has executed variations, QA/HSE, approval rejection paths, HR/payroll and EDMS for the first time (CC-025…CC-029).
-- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052/053 runs to verify.
+- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…054 runs to verify.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-053 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–072.
-- **Runtime suites, all from zero (E1):** 36 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,095 checks + shared-guard probe + Golden Case status check, all PASS, RUN pt2 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
+- **Change controls:** CC-001…CC-054 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–073.
+- **Runtime suites, all from zero (E1):** 37 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,114 checks + shared-guard probe + Golden Case status check, all PASS, RUN co3 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -92,7 +92,8 @@
   - Stage 22 — GC-13 client certification evidence, dispute/resubmission, AR = certified (F-35): **DONE** (CC-051; F-36/F-37/F-38 opened).
   - Stage 23 — Payments & Certification screen + browser check in CI: **DONE** (CC-052; F-38 closed).
   - Stage 24 — contract payment terms → due dates; client certified breakdown (F-36, F-37): **DONE** (CC-053; F-40 opened).
-  - **Stage 25 (NEXT) — F-40 UI (payment terms, client breakdown) + GC-13 step 8 collection: receipts against receivables (part payments, overdue by due date) with runtime suite and browser check.**
+  - Stage 25 — collection/settlement (GC-13 s8 + AP mirror) and F-40 UI: **DONE** (CC-054; F-41 opened).
+  - **Stage 26 (NEXT) — GC-13 step 7 revenue recognition remains DEC-009 (owner); next autonomous candidate: GC-24 legacy data import (opening balances, open commitments) with reconciliation suite, or the cash-flow forecast from due dates (GC-13 s8 remainder).**
   - Later candidates: GC-24 legacy import; GC-12 advance recovery/back-charges; snapshot ZIP when the owner asks.
   - Gate order note: wave1_boq_handover now runs BEFORE chain.mjs (it configures contract-signing DOA and signers the chain uses).
   - Then: remaining ABSENT Golden Case steps by business priority; frontend browser verification; performance/DR/pentest preparation.

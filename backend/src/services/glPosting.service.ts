@@ -186,13 +186,8 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
   });
 
   await client.query(`update payments set status = 'posted', updated_at = now() where id = $1`, [payment.id]);
-  if (payment.related_ap_id) {
-    await client.query(`update accounts_payable set status = 'paid', updated_at = now() where id = $1`, [payment.related_ap_id]);
-  }
-  if (payment.related_ar_id) {
-    await client.query(`update accounts_receivable set status = 'paid', updated_at = now() where id = $1`, [payment.related_ar_id]);
-    await client.query(`update ipcs set status = 'paid', paid_date = $2, updated_at = now() where posted_ar_id = $1`, [payment.related_ar_id, payment.payment_date]);
-  }
+  // Stage 25 (migration 073): the receivable/payable status (partially_paid / paid) and the IPC 'paid' state follow the
+  // sum actually settled, set by trg_payment_settlement_status; a posting no longer marks them paid unconditionally.
   return batch;
 }
 

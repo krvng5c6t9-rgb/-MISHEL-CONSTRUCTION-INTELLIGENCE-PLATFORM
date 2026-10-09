@@ -1,0 +1,14 @@
+GC-13 step 8 collection BEFORE migration 073 (gate RUN pt2 data). An incoming receipt is accepted for another client and above the receivable (only one currency exists in the fixture, so the currency check is shown at runtime after the fix); and glPosting.service.ts postApprovedPaymentToGl (E3, @af8dba0) sets accounts_receivable.status=paid and the IPC paid on posting ANY receipt, whatever its amount.
+BEGIN
+ id | client_id |  amount  | currency_id | status 
+----+-----------+----------+-------------+--------
+  1 |         2 | 95000.00 |           1 | open
+(1 row)
+
+ id | other_client | triple_the_receivable | status 
+----+--------------+-----------------------+--------
+  4 |            1 |             285000.00 | draft
+(1 row)
+
+INSERT 0 1
+ROLLBACK

@@ -26,6 +26,8 @@ export function CommercialPayments() {
   const [scPos, setScPos] = useState<Row | null>(null);
   const [scAdvances, setScAdvances] = useState<Row[]>([]);
   const [backcharges, setBackcharges] = useState<Row[]>([]);
+  const [terms, setTerms] = useState<Row | null>(null);
+  const [aging, setAging] = useState<Row[]>([]);
 
   async function load() {
     const missed = new Set<string>();
@@ -33,9 +35,11 @@ export function CommercialPayments() {
     setIpcs((await settle(apiGet<any>('/finance/ipcs'), { data: [] }, 'client IPCs')).data.map((i: Row) => ({
       ...i, certification_difference: i.client_certified_amount === null ? null : (Number(i.net_amount_due) - Number(i.client_certified_amount)).toFixed(2) })));
     setSubcontracts((await settle(apiGet<any>('/subcontracts'), { data: [] }, 'subcontracts')).data);
+    setAging((await settle(apiGet<any>('/finance/receivables/aging'), { data: [] }, 'receivable aging')).data);
     if (contractId) {
       setAdvances((await settle(apiGet<any>(`/finance/client-advances?contract_id=${contractId}`), { data: [] }, 'client advances')).data);
       setAdvPos((await settle(apiGet<any>(`/finance/contracts/${contractId}/advance-position`), { data: null }, 'client advance position')).data);
+      setTerms((await settle(apiGet<any>(`/contract-admin/contracts/${contractId}/payment-terms`), { data: null }, 'payment terms')).data);
     }
     if (scId) {
       setScPos((await settle(apiGet<any>(`/subcontracts/${scId}/deductions-position`), { data: null }, 'subcontract position')).data);
@@ -51,6 +55,13 @@ export function CommercialPayments() {
     const amount = ask(`Amount certified by the client (submitted net ${money(i.net_amount_due)})`);
     const body: Row = { certified_amount: Number(amount), client_reference: ask('Client certificate reference'), certified_on: ask('Certification date (YYYY-MM-DD)') || today() };
     if (Number(amount) !== Number(i.net_amount_due)) body.difference_reason = ask('Reason for the difference to the submitted net');
+    // F-36: the client's breakdown is optional; when given it must be complete and add up to the certified net.
+    if (window.confirm('Record the client breakdown (gross, retention, advance recovery, previous)?')) {
+      body.certified_gross = Number(ask('Certified gross'));
+      body.certified_retention = Number(ask('Certified retention'));
+      body.certified_advance_recovery = Number(ask('Certified advance recovery'));
+      body.certified_previous = Number(ask('Previously certified (deducted by the client)'));
+    }
     await apiPost(`/finance/ipcs/${i.id}/client-approve`, body);
   });
   const contracts = [...new Map(ipcs.map(i => [Number(i.contract_id), i.contract_ref + ' — ' + i.project_name])).entries()];
@@ -77,6 +88,12 @@ export function CommercialPayments() {
           <option value={0}>Select a contract</option>{contracts.map(([cid, label]) => <option key={cid} value={cid}>{label}</option>)}</select></label>
         {contractId > 0 && <>
           <Position data={advPos} labels={[['advance_limit', 'Limit'], ['advances_received', 'Received'], ['advance_recovered', 'Recovered'], ['advance_outstanding', 'Outstanding'], ['net_certified', 'Net certified']]} />
+          <div data-section="payment-terms"><h3>Payment terms</h3>
+            {terms ? <p>{terms.days} days {terms.basis === 'after_submission' ? 'after submission' : 'after client certification'} — clause {terms.clause_ref} — <strong>{terms.status}</strong></p>
+              : <p className="muted">No payment terms recorded: receivable due dates stay empty until terms are entered and confirmed.</p>}
+            {!terms && <button onClick={() => run(() => apiPost(`/contract-admin/contracts/${contractId}/payment-terms`, { basis: ask('Basis: after_submission / after_client_certification'), days: Number(ask('Days stated in the contract')), clause_ref: ask('Clause reference'), source_reference: ask('Source (document and page)') }))}>Enter payment terms</button>}
+            {terms?.status === 'draft' && <button onClick={() => run(() => apiPost(`/contract-admin/payment-terms/${terms.id}/confirm`, {}))}>Confirm terms</button>}
+          </div>
           <button onClick={() => run(() => apiPost('/finance/client-advances', { contract_id: contractId, amount: Number(ask('Advance amount')), recovery_percent: Number(ask('Recovery % of gross per IPC from the contract (empty if none)')) || undefined, guarantee_ref: ask('Advance payment guarantee reference') || undefined }))}>Record advance</button>
           <Table rows={advances} cols={[['amount', 'Amount'], ['recovery_percent', 'Recovery %'], ['guarantee_ref', 'Guarantee'], ['status', 'Status'], ['receipt_reference', 'Receipt']]}
             actions={a => <>
@@ -84,6 +101,10 @@ export function CommercialPayments() {
               {a.status === 'approved' && <button onClick={() => run(() => apiPost(`/finance/client-advances/${a.id}/received`, { receipt_reference: ask('Receipt reference') }))}>Received</button>}
             </>} />
         </>}
+      </div>
+
+      <div className="panel" data-section="aging"><h2>Receivables outstanding</h2>
+        <Table rows={aging} cols={[['ipc_no', 'IPC'], ['client_name', 'Client'], ['project_name', 'Project'], ['amount', 'Amount'], ['received', 'Received'], ['outstanding', 'Outstanding'], ['due_date', 'Due'], ['days_overdue', 'Days overdue'], ['aging_basis', 'Basis']]} />
       </div>
 
       <div className="panel" data-section="subcontracts"><h2>Subcontract advances &amp; back-charges</h2>

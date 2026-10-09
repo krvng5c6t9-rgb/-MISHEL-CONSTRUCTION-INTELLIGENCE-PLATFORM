@@ -260,6 +260,21 @@ financeRouter.post('/ipcs/:id/post-ar-gl', authorize('finance', 'post'), asyncHa
   }
 }));
 
+// Stage 25 (GC-13 step 8): outstanding receivables against their contractual due dates (information).
+financeRouter.get('/receivables/aging', asyncHandler(async (req, res) => {
+  const q = z.object({ as_of: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional() }).parse(req.query);
+  const rows = await query(`
+    select a.*, c.client_name, p.project_name, i.ipc_no
+    from receivable_aging(coalesce($2::date, current_date)) a
+    join accounts_receivable ar on ar.id = a.receivable_id and ar.org_id = $1
+    join clients c on c.id = a.client_id
+    join projects p on p.id = a.project_id
+    left join ipcs i on i.id = a.ipc_id
+    order by a.days_overdue desc nulls last, a.due_date
+  `, [req.user!.org_id, q.as_of ?? null]);
+  res.json({ success: true, data: rows });
+}));
+
 financeRouter.get('/ap', asyncHandler(async (req, res) => {
   const orgId = Number(req.user!.org_id);
   const rows = await query(`

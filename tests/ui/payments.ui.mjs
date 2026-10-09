@@ -22,8 +22,8 @@ const consoleErrors = [], apiFailures = [], foreignHosts = new Set();
 page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource: the server responded with a status of 403/.test(m.text())) consoleErrors.push(m.text()); });
 page.on('response', r => { if (r.url().includes('/api/') && r.status() >= 400) apiFailures.push({ phase, status: r.status(), method: r.request().method(), path: r.url().replace(/^.*\/api/, '') }); });
 page.on('request', r => { const h = new URL(r.url()).hostname; if (!['localhost', '127.0.0.1'].includes(h) && !r.url().startsWith('data:')) foreignHosts.add(h); });
-const answers = [];
-page.on('dialog', d => d.accept(d.type() === 'prompt' ? (answers.length ? answers.shift() : '') : undefined));
+const answers = [], confirms = []; // queued answers for prompt(); confirm() answers (default: No)
+page.on('dialog', d => d.type() === 'confirm' ? (confirms.shift() ? d.accept() : d.dismiss()) : d.accept(d.type() === 'prompt' ? (answers.length ? answers.shift() : '') : undefined));
 
 const settleUi = () => page.waitForTimeout(1500);
 const section = (name) => page.locator(`[data-section="${name}"]`);
@@ -61,10 +61,14 @@ try {
 
   await signIn('cifm2');
   check('subcontract section the finance user may not read is named, not shown empty', /subcontracts \(Missing permission/.test(await section('unloaded').innerText().catch(() => '')), (await section('unloaded').innerText().catch(() => '(no notice)')).slice(0, 160));
-  await click(ipcRow(), 'Record certification', '45000', `CC3-REF-${TAG}`, today, 'Client excluded 2,500 of unapproved materials (UI fixture)');
+  confirms.push(true); // record the client breakdown: 47,000 gross - 2,000 retention - 0 - 0 = 45,000
+  await click(ipcRow(), 'Record certification', '45000', `CC3-REF-${TAG}`, today, 'Client excluded 2,500 of unapproved materials (UI fixture)', '47000', '2000', '0', '0');
   const certified = (await ipcRow().innerText()).replace(/\s+/g, ' ');
   check('second person records certification: 45,000 certified, 2,500 difference, client reference shown', /client_approved/.test(certified) && /45000/.test(certified) && /2500\.00/.test(certified) && new RegExp(`CC3-REF-${TAG}`).test(certified) && !(await alertText()), certified);
+  const agingText = (await section('aging').innerText()).replace(/\s+/g, ' ');
+  check('receivables outstanding listed; one without contractual terms shown as no_due_date_recorded', new RegExp(`PT ${TAG}`).test(agingText) && /no_due_date_recorded/.test(agingText), agingText.slice(0, 200));
   await pick('Contract', `— CI ${TAG}`);
+  check('payment terms the finance user may not read are named, not shown as absent', /payment terms \(Missing permission/.test(await section('unloaded').innerText().catch(() => '')));
   const advText = (await section('client-advances').innerText()).replace(/\s+/g, ' ');
   check('client advance position: 50,000 received and fully recovered', /Received 50,000\.00/.test(advText) && /Outstanding 0\.00/.test(advText), advText.slice(0, 200));
   await page.screenshot({ path: `${OUT}/ui_payments_certification.png`, fullPage: true });
