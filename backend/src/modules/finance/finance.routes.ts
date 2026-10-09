@@ -351,16 +351,20 @@ financeRouter.post('/payments', authorize('finance', 'manage'), asyncHandler(asy
     payment_date: z.string().optional(),
     bank_account_id: z.number().int().positive(),
     method: z.enum(['transfer','cheque','cash']),
-    reference_no: z.string().max(50).nullable().optional()
+    reference_no: z.string().max(50).nullable().optional(),
+    // DEC-017: tax withheld by the client as stated on its withholding certificate (receipts only).
+    withheld_tax_amount: z.number().nonnegative().optional(),
+    withholding_certificate_ref: z.string().trim().min(3).max(100).optional()
   }).parse(req.body);
   const rows = await query(`
     insert into payments
       (org_id, payment_type, party_type, party_id, related_ap_id, related_ar_id, amount,
-       currency_id, payment_date, bank_account_id, method, reference_no, created_by)
-    values ($1,$2,$3,$4,$5,$6,$7,$8,coalesce($9::date,current_date),$10,$11,$12,$13)
+       currency_id, payment_date, bank_account_id, method, reference_no, created_by, withheld_tax_amount, withholding_certificate_ref)
+    values ($1,$2,$3,$4,$5,$6,$7,$8,coalesce($9::date,current_date),$10,$11,$12,$13,$14,$15)
     returning *
   `, [orgId, body.payment_type, body.party_type, body.party_id, body.related_ap_id ?? null, body.related_ar_id ?? null,
-      body.amount, body.currency_id, body.payment_date ?? null, body.bank_account_id, body.method, body.reference_no ?? null, userId]);
+      body.amount, body.currency_id, body.payment_date ?? null, body.bank_account_id, body.method, body.reference_no ?? null, userId,
+      body.withheld_tax_amount ?? 0, body.withholding_certificate_ref ?? null]);
   res.status(201).json({ success: true, data: rows[0] });
 }));
 

@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 73 (`database/migrations/001…073`), all applied from an empty DB |
+| Migrations | 74 (`database/migrations/001…074`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-054
+## Controlled Changes CC-001 → CC-055
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -86,6 +86,7 @@
 | CC-052 | Payments & Certification screen + browser check in CI (F-38) |
 | CC-053 | Contract payment terms → receivable due date; client certified breakdown (072) |
 | CC-054 | Receipts/payments settle within outstanding, partial/paid status, aging; payment terms & breakdown UI (073) |
+| CC-055 | Tax engine (DEC-016/017): confirmed versioned tax codes, profiles, output tax into AR/GL, e-invoice ref, client withholding (074) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -140,11 +141,12 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_ipc_client_certification.mjs | 22 | GC-13 s5-6 client certification, dispute, AR = certified |
 | sweep_ipc_terms_breakdown.mjs | 21 | GC-13 s5-8 payment terms due date, client breakdown |
 | sweep_collections.mjs | 17 | GC-13 s8 receipts, partial/paid, race, aging, AP mirror |
+| sweep_tax.mjs | 33 | DEC-016/017 tax codes, profiles, output tax, e-invoice, withholding, position |
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
 | gc_status_check.py | 167 steps | F-25 Golden Case statuses agree with gate suites (gate step) |
 | project_controls.ui.mjs | 23 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI) |
 | payments.ui.mjs | 16 | Browser: Payments & Certification (certification SoD, advance positions, back-charge SoD) |
-| **Total** | **1,114** | 37 API suites + 2 browser checks, all PASS locally (RUN co3; earlier "700" was a records error, F-19) |
+| **Total** | **1,147** | 38 API suites + 2 browser checks, all PASS locally (RUN tx3; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).
@@ -164,7 +166,7 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 ## Open gaps / risks / owner decisions (see `governance/registers/07,09,12`)
 - Open gaps: G-003 commercial provisioning (DEC-010 decided; owner plan/pricing inputs) · G-004 owner DOA matrix (API done) · G-005 IPC/retention posting (DEC-009 OPEN) · G-006 (partially closed) · G-008 dropped frozen scope · G-009 D-pack coverage · G-010 hostile concurrency tests · G-011 STEP02 atlas · G-012 unread archives (owner action) · G-013 token revocation.
 - Closed: G-001 (CC-015), G-002 (CC-016), G-007 Golden Cases decomposed (R13), G-014 (CC-019); F-06/F-07 (CC-013), F-08 takeover (CC-018), F-13 (CC-021), F-14 (CC-022), F-15 (CC-024); G-010 hostile concurrency executed (CC-022).
-- Owner decisions DECIDED 2026-10-09: DEC-009 (gross + retention receivable, IPC = billing, revenue over time cost-to-cost), DEC-012 (cumulative valuation, cost at gross, retention payable, advances as prepayment), DEC-013 (labour cost at gross pay), DEC-014 (weighted average per store), DEC-015 (5/15/15 lockout, address limit per deployment, MFA for admin/finance/DOA approvers) — implementation pending (Stages 26-31); provisional behaviour remains until each stage lands.
+- Owner decisions DECIDED 2026-10-09: DEC-009 (gross + retention receivable, IPC = billing, revenue over time cost-to-cost), DEC-012 (cumulative valuation, cost at gross, retention payable, advances as prepayment), DEC-013 (labour cost at gross pay), DEC-014 (weighted average per store), DEC-015 (5/15/15 lockout, address limit per deployment, MFA for admin/finance/DOA approvers) — implementation pending (Stages 26-31); provisional behaviour remains until each stage lands. DEC-016..019 decided professionally (tax engine implemented CC-055; cut-over methodology for GC-24). Remaining owner inputs are company data only: OI-1 tax codes/rates entered by the company's tax advisor, OI-2 e-invoice credentials, OI-3 optional IFRS need, OI-4 go-live date.
 - Risks: RK-001 unread archives may change scope · RK-002 templated sources mistaken for specification · RK-003 similar defect density in untested modules — **confirmed** by GC-12 (5 defects at first execution).
 
 ## Install / build / migrate / run / test from zero

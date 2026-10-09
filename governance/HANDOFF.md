@@ -1,13 +1,13 @@
-# HANDOFF — v0.5.25-stage25 — DATE: 2026-10-09
+# HANDOFF — v0.5.26-stage26 — DATE: 2026-10-09
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
 - Waves 1–2 are built and runtime-tested (CC-015…CC-024). The RK-003 module sweep has executed variations, QA/HSE, approval rejection paths, HR/payroll and EDMS for the first time (CC-025…CC-029).
-- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…054 runs to verify.
+- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…055 runs to verify.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-054 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–073.
-- **Runtime suites, all from zero (E1):** 37 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,114 checks + shared-guard probe + Golden Case status check, all PASS, RUN co3 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
+- **Change controls:** CC-001…CC-055 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–074.
+- **Runtime suites, all from zero (E1):** 38 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,147 checks + shared-guard probe + Golden Case status check, all PASS, RUN tx3 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -94,10 +94,12 @@
   - Stage 24 — contract payment terms → due dates; client certified breakdown (F-36, F-37): **DONE** (CC-053; F-40 opened).
   - Stage 25 — collection/settlement (GC-13 s8 + AP mirror) and F-40 UI: **DONE** (CC-054; F-41 opened).
   - Owner DECIDED DEC-009/012/013/014/015 on 2026-10-09 (register 09). Implementation plan:
-  - **Stage 26 (NEXT) — DEC-013 + DEC-014: payroll cost at gross with deductions to payables; inventory weighted average per store formalised (specific identification for tagged items).**
-  - Stage 27 — DEC-012: subcontract cumulative valuation, cost at gross, retention payable, advances as prepayment (F-33).
-  - Stages 28-29 — DEC-009: IPC as billing + retention receivable; revenue recognition run (cost-to-cost, second-person approval); contract asset/liability.
-  - Stages 30-31 — DEC-015: per-address limit enabled per deployment; TOTP MFA mandatory for admin, finance and DOA approvers.
+  - Stage 26 — DEC-016..019 decided professionally; tax engine (client side): **DONE** (CC-055).
+  - **Stage 27 (NEXT) — DEC-013 + DEC-014: payroll cost at gross with deductions to payables; inventory weighted average per store formalised (specific identification for tagged items).**
+  - Stage 28 — DEC-012: subcontract cumulative valuation, cost at gross, subcontract AP (F-42), retention payable, advances as prepayment (F-33), input tax and supplier withholding (DEC-016/017 supplier side).
+  - Stages 29-30 — DEC-009: IPC as billing + retention receivable; revenue recognition run (cost-to-cost, second-person approval); contract asset/liability.
+  - Stages 31-32 — DEC-015: per-address limit enabled per deployment; TOTP MFA mandatory for admin, finance and DOA approvers.
+  - Stage 33 — GC-24 legacy import per DEC-019 methodology (opening TB, in-flight contracts/subcontracts cumulative, reconciliation report).
   - Later candidates: GC-24 legacy import; GC-12 advance recovery/back-charges; snapshot ZIP when the owner asks.
   - Gate order note: wave1_boq_handover now runs BEFORE chain.mjs (it configures contract-signing DOA and signers the chain uses).
   - Then: remaining ABSENT Golden Case steps by business priority; frontend browser verification; performance/DR/pentest preparation.

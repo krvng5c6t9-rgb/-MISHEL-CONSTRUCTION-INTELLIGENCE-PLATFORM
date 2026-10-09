@@ -121,6 +121,9 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
   // F-37 (migration 072): due date from the confirmed contract payment terms; NULL when none are recorded.
   const dueDate = (await client.query(`select ipc_payment_due_date($1) as d`, [ipc.id])).rows[0].d;
   const amount = String(legacy ? ipc.net_amount_due : ipc.client_certified_amount);
+  // DEC-016 (migration 074): output tax computed at certification; the receivable includes it.
+  const tax = Number(ipc.output_tax_amount ?? 0);
+  const receivable = (await client.query(`select ($1::numeric + $2::numeric)::text as v`, [amount, String(ipc.output_tax_amount ?? 0)])).rows[0].v;
   const rule = await getActiveRule(client, Number(ipc.org_id), 'ipc', null);
   if (!rule) throw new AppError(422, 'No active GL posting rule for IPC');
 
@@ -129,7 +132,7 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
       (org_id, client_id, project_id, ipc_id, amount, currency_id, due_date)
     values ($1,$2,$3,$4,$5,$6,$7)
     returning *
-  `, [ipc.org_id, ipc.client_id, ipc.project_id, ipc.id, amount, ipc.project_currency_id, dueDate]);
+  `, [ipc.org_id, ipc.client_id, ipc.project_id, ipc.id, receivable, ipc.project_currency_id, dueDate]);
 
   const batch = await insertBalancedGlBatch(client, {
     org_id: Number(ipc.org_id),
@@ -145,6 +148,18 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
     description: `AR/GL posting from IPC ${ipc.ipc_no}`
   });
 
+  let taxBatch = null;
+  if (tax > 0) {
+    const tc = (await client.query(`select code, gl_account_id from tax_codes where id = $1`, [ipc.output_tax_code_id])).rows[0];
+    taxBatch = await insertBalancedGlBatch(client, {
+      org_id: Number(ipc.org_id), project_id: Number(ipc.project_id),
+      debit_account_id: Number(rule.debit_account_id), credit_account_id: Number(tc.gl_account_id),
+      amount: String(ipc.output_tax_amount), currency_id: Number(ipc.project_currency_id),
+      transaction_date: ipc.client_approved_date ?? new Date().toISOString().slice(0, 10),
+      source_module: 'ipc', source_table: 'ipcs', source_record_id: Number(ipc.id),
+      description: `Output tax ${tc.code} on IPC ${ipc.ipc_no}`
+    });
+  }
   await client.query(`update ipcs set status = 'posted', posted_ar_id = $2, updated_at = now() where id = $1`, [ipc.id, ar.rows[0].id]);
   if (Number(ipc.client_certified_retention ?? ipc.less_retention) > 0) {
     await client.query(`
@@ -152,7 +167,8 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
       values ($1,$2,$3,$4,'other')
     `, [ipc.org_id, ipc.project_id, ipc.id, ipc.client_certified_retention ?? ipc.less_retention]);
   }
-  return { accounts_receivable: ar.rows[0], gl: batch, basis: legacy ? 'submitted_net_legacy' : 'client_certified', due_date_basis: dueDate ? 'contract_payment_terms' : 'no_confirmed_payment_terms' };
+  return { accounts_receivable: ar.rows[0], gl: batch, basis: legacy ? 'submitted_net_legacy' : 'client_certified', due_date_basis: dueDate ? 'contract_payment_terms' : 'no_confirmed_payment_terms',
+    tax_treatment: ipc.tax_treatment ?? 'legacy_no_tax', tax_gl: taxBatch };
 }
 
 export async function postApprovedPaymentToGl(client: PoolClient, paymentId: number) {
@@ -185,10 +201,22 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
     description: `GL posting from ${payment.payment_type} payment ${payment.reference_no ?? payment.id}`
   });
 
+  // DEC-017 (migration 074): tax withheld by the client settles the receivable as a tax credit asset.
+  let withholdingBatch = null;
+  if (Number(payment.withheld_tax_amount) > 0) {
+    const tc = (await client.query(`select code, gl_account_id from tax_codes where id = $1`, [payment.withholding_tax_code_id])).rows[0];
+    withholdingBatch = await insertBalancedGlBatch(client, {
+      org_id: Number(payment.org_id), project_id: null,
+      debit_account_id: Number(tc.gl_account_id), credit_account_id: Number(rule.credit_account_id),
+      amount: String(payment.withheld_tax_amount), currency_id: Number(payment.currency_id), transaction_date: payment.payment_date,
+      source_module: 'payment', source_table: 'payments', source_record_id: Number(payment.id),
+      description: `Tax withheld by client ${tc.code} (certificate ${payment.withholding_certificate_ref})`
+    });
+  }
   await client.query(`update payments set status = 'posted', updated_at = now() where id = $1`, [payment.id]);
   // Stage 25 (migration 073): the receivable/payable status (partially_paid / paid) and the IPC 'paid' state follow the
   // sum actually settled, set by trg_payment_settlement_status; a posting no longer marks them paid unconditionally.
-  return batch;
+  return { ...batch, withholding_gl: withholdingBatch };
 }
 
 export async function postManualJournalToGl(client: PoolClient, journalEntryId: number) {
