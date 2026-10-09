@@ -138,7 +138,7 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
 | gc_status_check.py | 167 steps | F-25 Golden Case statuses agree with gate suites (gate step) |
 | project_controls.ui.mjs | 23 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI) |
-| **Total** | **1,060** | 35 API suites (1,037, RUN cc2) + browser check (23, last local RUN ci2; in CI each push) + probe, all PASS ( earlier "700" was a records error, F-19) |
+| **Total** | **1,060** | 35 API suites + browser check, all PASS locally (RUN cc3; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

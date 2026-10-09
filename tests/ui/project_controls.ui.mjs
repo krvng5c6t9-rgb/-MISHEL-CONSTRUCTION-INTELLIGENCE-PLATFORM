@@ -54,6 +54,8 @@ const signIn = async (u) => {
   await page.waitForURL(/project-controls/);
 };
 const open = async (code) => {
+  // The project list loads asynchronously after navigation; wait for the option instead of reading too early (CI pg16 run 37918239131).
+  await page.waitForFunction((want) => [...document.querySelectorAll('select[aria-label="Project"] option')].some(o => o.textContent.startsWith(`${want} —`)), `${code}-${TAG}`, { timeout: 15000 }).catch(() => {});
   const value = await page.locator('select[aria-label="Project"] option').evaluateAll((os, want) => os.find(o => o.textContent.startsWith(`${want} —`))?.value, `${code}-${TAG}`);
   if (!value) throw new Error(`project ${code}-${TAG} not in the list`);
   await page.selectOption('select[aria-label="Project"]', value);
