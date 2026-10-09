@@ -1,0 +1,9 @@
+{
+  "name": "mishel-ui-checks",
+  "private": true,
+  "type": "module",
+  "description": "Browser checks run by tests/e2e/run_from_zero.sh when UI_CHECK=1",
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

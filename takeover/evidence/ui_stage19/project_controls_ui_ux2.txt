@@ -1,0 +1,25 @@
+PASS  admin signs in and opens Project Controls from the navigation
+PASS  time section shows revised completion, LD terms and exposure for the TF contract :: Time for completion & LD exposure |  | LD exposure is information only; entitlement is decided by people. | 
+PASS  mobilisation section shows the decided GO gate and its items :: Mobilisation readiness gate |  | Gate 1: go — open mandatory items: 0
+PASS  a risk raised from the form appears in the register
+PASS  raiser closing own risk is refused on screen (SoD) :: Segregation of duties: a risk is closed by someone other than the person who raised it
+PASS  report packs listed for RP
+PASS  opened pack shows hash verification, as-of cost and reconciliation exceptions :: Pack 2 — approved |  | Hash valid: true · Data changed since freeze: true
+PASS  pack frozen from the screen for the requested period :: weekly 2026-09-12 2026-09-18 0 draft Open
+PASS  pack submitted from the screen
+PASS  preparer approving own pack is refused on screen (SoD) :: Segregation of duties: the preparer cannot approve or reject own report pack
+PASS  commissioning readiness shows the handed-over HVAC system :: Commissioning readiness | System	Name	Packs accepted	Packs	Open A	Open B	Dossier done	Dossier required	Ready	Handed over | HVAC-ux2	HVAC level 1 (fixture)	2	2	0	2	1	1	true	true
+PASS  readiness item added from the screen as mandatory and open :: permit Hoarding permit (UI fixture) true open — CloseRisk-accept
+PASS  item closed with an evidence note
+PASS  preparer deciding own gate is refused on screen (SoD) :: Segregation of duties: the gate is decided by someone other than its preparer
+PASS  impact item dispositioned from the screen
+PASS  impact closed from the screen once every object is assessed :: M-500-ux2 — closed
+PASS  sections the approver may not read are named on screen, not shown as empty tables :: Not loaded for this user: contracts (Missing permission: contracts.view); commissioning (Missing permission: site.view); design impacts (Missing permission: tec
+PASS  second person decides GO on screen
+PASS  second person closes the risk with reason and lesson learned :: UI-ux2-59371 threat Crane access restricted (UI check) 9 — closed false 0 
+PASS  second person approves the pack on screen
+PASS  only the three SoD refusals failed for the admin; the approver saw only read 403s; no 5xx :: []
+PASS  no browser console errors besides permission refusals
+PASS  no third-party host contacted (fonts bundled, F-28)
+
+SUMMARY project_controls_ui PASS=23 FAIL=0

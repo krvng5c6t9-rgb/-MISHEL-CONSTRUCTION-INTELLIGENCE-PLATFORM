@@ -4,10 +4,12 @@
 #   PG_ADMIN_URL   superuser URL to a maintenance DB (used to drop/create the test DB)
 #   OWNER_URL_BASE owner (BYPASSRLS) URL without database name, e.g. postgresql://erp_owner:pw@localhost:5432
 #   APP_URL_BASE   app role URL without database name,         e.g. postgresql://erp_app:pw@localhost:5432
-# Optional: TEST_DB (default erp_e2e), PG_URL_QUERY (e.g. "?host=/run/postgresql"), API_PORT (default 4100), RUN_ID
+# Optional: TEST_DB (default erp_e2e), PG_URL_QUERY (e.g. "?host=/run/postgresql"), API_PORT (default 4100), RUN_ID,
+#           UI_CHECK=1 (F-29: build the frontend against this API and run the browser checks in tests/ui; needs Chromium
+#           via `npm ci` + `npx playwright install chromium` in tests/ui, or CHROMIUM_PATH), UI_PORT (default 4173)
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-DB="${TEST_DB:-erp_e2e}"; Q="${PG_URL_QUERY:-}"; PORT_="${API_PORT:-4100}"; RUN="${RUN_ID:-$(date +%s)}"
+DB="${TEST_DB:-erp_e2e}"; Q="${PG_URL_QUERY:-}"; PORT_="${API_PORT:-4100}"; UI_PORT_="${UI_PORT:-4173}"; RUN="${RUN_ID:-$(date +%s)}"
 OWNER_ROLE="$(node -e "console.log(new URL(process.argv[1]).username)" "$OWNER_URL_BASE")"
 psql "$PG_ADMIN_URL" -qv ON_ERROR_STOP=1 -c "drop database if exists $DB" -c "create database $DB owner $OWNER_ROLE"
 
@@ -15,7 +17,7 @@ cd "$ROOT/backend"
 MIGRATION_DATABASE_URL="$OWNER_URL_BASE/$DB$Q" APP_DB_ROLE="$(node -e "console.log(new URL(process.argv[1]).username)" "$APP_URL_BASE")" \
   MIGRATIONS_DIR=../database/migrations node dist/db/migrate.js | tail -1
 
-export DATABASE_URL="$APP_URL_BASE/$DB$Q" PORT="$PORT_" NODE_ENV=development ALLOW_MULTI_TENANT_BOOTSTRAP=true
+export DATABASE_URL="$APP_URL_BASE/$DB$Q" PORT="$PORT_" NODE_ENV=development ALLOW_MULTI_TENANT_BOOTSTRAP=true CORS_ORIGIN="http://localhost:$UI_PORT_"
 # G-017 login throttling: TEST FIXTURE values (production values are the owner's security policy, DEC-015).
 export LOGIN_MAX_FAILED_ATTEMPTS=5 LOGIN_FAILURE_WINDOW_MINUTES=15 LOGIN_LOCKOUT_MINUTES=15 LOGIN_ADDRESS_MAX_FAILURES=20 TRUST_PROXY=1
 export JWT_SECRET="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
@@ -65,3 +67,15 @@ OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_mobilisation.mjs
 PROBE_OUT="out/G015_RUNTIME_PROBE_$RUN.csv" python3 "$ROOT/governance/tools/probe_shared_guards.py" "$OWNER_URL_BASE/$DB$Q"
 # F-25: Golden Case step statuses must agree with the suites this gate runs.
 (cd "$ROOT" && python3 governance/tools/gc_status_check.py)
+
+# F-29: browser checks of the Project Controls screen, driven against this gate's data and API.
+if [ "${UI_CHECK:-0}" = "1" ]; then
+  UI_DIST="${TMPDIR:-/tmp}/erp_ui_dist_$RUN"
+  (cd "$ROOT/frontend" && VITE_API_BASE_URL="$API_BASE" npx vite build --outDir "$UI_DIST" --emptyOutDir >/dev/null)
+  (cd "$ROOT/frontend" && npx vite preview --outDir "$UI_DIST" --port "$UI_PORT_" --strictPort > "${TMPDIR:-/tmp}/erp_ui_preview_$RUN.log" 2>&1) &
+  UI_PID=$!
+  trap 'kill $SERVER_PID $UI_PID 2>/dev/null || true; pkill -f "vite preview --outDir $UI_DIST" 2>/dev/null || true' EXIT
+  for _ in $(seq 1 30); do curl -sf "http://localhost:$UI_PORT_/login" >/dev/null && break; sleep 0.5; done
+  mkdir -p out/ui
+  UI_BASE="http://localhost:$UI_PORT_" UI_API="$API_BASE" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/project_controls.ui.mjs" | tee "out/ui/project_controls_ui_$RUN.txt"
+fi

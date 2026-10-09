@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-047
+## Controlled Changes CC-001 → CC-048
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -79,6 +79,7 @@
 | CC-045 | GC-04 design-revision impact: links, auto-opened impacts, dispositions, entitlement closing (067) |
 | CC-046 | IPC requires signed contract (defect); GC-02 mobilisation gate; chain signs + hands over BOQ (068) |
 | CC-047 | Project Controls UI screen + browser check (Playwright, 11/11, manual); layout overflow fix |
+| CC-048 | Bundled font (F-28); unloaded sections named (F-30); browser decision flows by two people with SoD, in CI (F-29) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -130,7 +131,8 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_mobilisation.mjs | 28 | GC-02 s9 mobilisation readiness gate |
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
 | gc_status_check.py | 167 steps | F-25 Golden Case statuses agree with gate suites (gate step) |
-| **Total** | **954** | 32 suites + probe, all PASS locally (RUN ui3; earlier "700" was a records error, F-19) |
+| project_controls.ui.mjs | 23 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI) |
+| **Total** | **977** | 32 API suites + browser check + probe, all PASS locally (RUN ux2; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

@@ -38,23 +38,27 @@ export function ProjectControls() {
   const [impact, setImpact] = useState<Row | null>(null);
   const emptyRisk = { risk_no: '', kind: 'threat', title: '', cause: '', effect: '', probability_level: 3, impact_level: 3 };
   const [risk, setRisk] = useState(emptyRisk);
+  const [unloaded, setUnloaded] = useState<string[]>([]);
 
   const run = async (fn: () => Promise<unknown>) => { try { setErr(''); await fn(); await load(projectId); } catch (x: any) { setErr(x.message); } };
 
   async function load(pid: number) {
     if (!pid) return;
-    const settle = async <T,>(p: Promise<T>, fallback: T) => { try { return await p; } catch { return fallback; } };
-    const contracts = (await settle(apiGet<any>('/contracts'), { data: [] })).data.filter((c: Row) => Number(c.project_id) === pid && ['signed', 'active'].includes(c.contract_status));
-    const positions = await Promise.all(contracts.map(async (c: Row) => ({ contract_id: c.id, ...(await settle(apiGet<any>(`/contract-admin/contracts/${c.id}/time-position`), { data: {} })).data })));
+    // A section the user may not read (or that fails) is named on screen instead of showing as an empty table.
+    const missed = new Set<string>();
+    const settle = async <T,>(p: Promise<T>, fallback: T, section: string) => { try { return await p; } catch (x: any) { missed.add(`${section} (${x.message})`); return fallback; } };
+    const contracts = (await settle(apiGet<any>('/contracts'), { data: [] }, 'contracts')).data.filter((c: Row) => Number(c.project_id) === pid && ['signed', 'active'].includes(c.contract_status));
+    const positions = await Promise.all(contracts.map(async (c: Row) => ({ contract_id: c.id, ...(await settle(apiGet<any>(`/contract-admin/contracts/${c.id}/time-position`), { data: {} }, 'time position')).data })));
     setTime(positions);
-    setRisks((await settle(apiGet<any>(`/risks?project_id=${pid}`), { data: [] })).data);
-    setRiskSummary((await settle(apiGet<any>(`/risks/summary?project_id=${pid}`), { data: null })).data);
-    const g = (await settle(apiGet<any>(`/mobilisation/gates?project_id=${pid}`), { data: [] })).data;
+    setRisks((await settle(apiGet<any>(`/risks?project_id=${pid}`), { data: [] }, 'risks')).data);
+    setRiskSummary((await settle(apiGet<any>(`/risks/summary?project_id=${pid}`), { data: null }, 'risk summary')).data);
+    const g = (await settle(apiGet<any>(`/mobilisation/gates?project_id=${pid}`), { data: [] }, 'mobilisation')).data;
     setGates(g);
-    setGate(g[0] ? (await settle(apiGet<any>(`/mobilisation/gates/${g[0].id}`), { data: null })).data : null);
-    setPacks((await settle(apiGet<any>(`/reports/packs?project_id=${pid}`), { data: [] })).data);
-    setSystems((await settle(apiGet<any>(`/commissioning/systems?project_id=${pid}`), { data: [] })).data);
-    setImpacts((await settle(apiGet<any>(`/technical-office/design-impacts?project_id=${pid}`), { data: [] })).data);
+    setGate(g[0] ? (await settle(apiGet<any>(`/mobilisation/gates/${g[0].id}`), { data: null }, 'mobilisation gate')).data : null);
+    setPacks((await settle(apiGet<any>(`/reports/packs?project_id=${pid}`), { data: [] }, 'report packs')).data);
+    setSystems((await settle(apiGet<any>(`/commissioning/systems?project_id=${pid}`), { data: [] }, 'commissioning')).data);
+    setImpacts((await settle(apiGet<any>(`/technical-office/design-impacts?project_id=${pid}`), { data: [] }, 'design impacts')).data);
+    setUnloaded([...missed]);
   }
 
   useEffect(() => {
@@ -73,6 +77,7 @@ export function ProjectControls() {
       <header className="page-header"><div><p className="eyebrow">Project Controls</p><h1>Project Controls</h1>
         <p>Time for completion and LD exposure, risks, mobilisation readiness, report packs, commissioning and design-revision impacts for one project.</p></div></header>
       {err && <div className="notice" role="alert">{err}</div>}
+      {unloaded.length > 0 && <div className="notice muted" data-section="unloaded">Not loaded for this user: {unloaded.join('; ')}</div>}
       <div className="panel"><div className="form-row">
         <label>Project <select aria-label="Project" value={projectId} onChange={e => setProjectId(Number(e.target.value))}>
           <option value={0}>Select a project</option>

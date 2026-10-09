@@ -49,12 +49,16 @@ jobs:
         run: |
           (cd backend && for s in tenant phase2 phase3 phase4 phase5 phase6 phase7; do npm run -s security:$s; done)
           for f in scripts/*.mjs; do node "$f" >/dev/null || { echo "FAILED $f"; exit 1; }; done
+      - name: Browser checks install (F-29)
+        working-directory: tests/ui
+        run: npm ci --no-audit --no-fund && npx playwright install --with-deps chromium
       - name: Runtime gate from zero
         env:
           PG_ADMIN_URL: postgresql://postgres:ci_superuser_pw@localhost:5432/postgres
           OWNER_URL_BASE: postgresql://erp_owner:ci_owner_pw@localhost:5432
           APP_URL_BASE: postgresql://erp_app:ci_app_pw@localhost:5432
           RUN_ID: ci${{ github.run_id }}pg${{ matrix.postgres }}
+          UI_CHECK: '1'
         run: bash tests/e2e/run_from_zero.sh
       - name: Upload runtime evidence
         if: always()
