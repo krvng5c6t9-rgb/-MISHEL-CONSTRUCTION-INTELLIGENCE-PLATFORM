@@ -115,6 +115,10 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
   if (ipc.status !== 'client_approved') throw new AppError(409, 'Only client_approved IPC can be posted');
   if (ipc.posted_ar_id) throw new AppError(409, 'IPC already posted to AR/GL');
 
+  // F-35 (migration 071): the receivable is the amount the client certified; IPCs approved before 071 have no
+  // certified amount recorded and post at the submitted net (legacy).
+  const legacy = ipc.client_certified_amount === null;
+  const amount = String(legacy ? ipc.net_amount_due : ipc.client_certified_amount);
   const rule = await getActiveRule(client, Number(ipc.org_id), 'ipc', null);
   if (!rule) throw new AppError(422, 'No active GL posting rule for IPC');
 
@@ -123,14 +127,14 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
       (org_id, client_id, project_id, ipc_id, amount, currency_id, due_date)
     values ($1,$2,$3,$4,$5,$6,$7)
     returning *
-  `, [ipc.org_id, ipc.client_id, ipc.project_id, ipc.id, ipc.net_amount_due, ipc.project_currency_id, ipc.period_to]);
+  `, [ipc.org_id, ipc.client_id, ipc.project_id, ipc.id, amount, ipc.project_currency_id, ipc.period_to]);
 
   const batch = await insertBalancedGlBatch(client, {
     org_id: Number(ipc.org_id),
     project_id: Number(ipc.project_id),
     debit_account_id: Number(rule.debit_account_id),
     credit_account_id: Number(rule.credit_account_id),
-    amount: String(ipc.net_amount_due),
+    amount,
     currency_id: Number(ipc.project_currency_id),
     transaction_date: ipc.client_approved_date ?? new Date().toISOString().slice(0, 10),
     source_module: 'ipc',
@@ -146,7 +150,7 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
       values ($1,$2,$3,$4,'other')
     `, [ipc.org_id, ipc.project_id, ipc.id, ipc.less_retention]);
   }
-  return { accounts_receivable: ar.rows[0], gl: batch };
+  return { accounts_receivable: ar.rows[0], gl: batch, basis: legacy ? 'submitted_net_legacy' : 'client_certified' };
 }
 
 export async function postApprovedPaymentToGl(client: PoolClient, paymentId: number) {

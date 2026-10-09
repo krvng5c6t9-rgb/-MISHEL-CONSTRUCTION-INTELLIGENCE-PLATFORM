@@ -155,7 +155,11 @@ try {
   ids.ipc = await run('create IPC', async () => must(await api('POST', '/finance/ipcs', admin, { project_id: ids.project, contract_id: ids.contract, ipc_no: `IPC-${TAG}`, period_from: today, period_to: today, gross_work_done_this_period: 100000, cumulative_gross_work_done: 100000, less_retention: 5000 }), 'ipc').id);
   const ipca = await run('submit IPC', async () => must(await api('POST', `/finance/ipcs/${ids.ipc}/submit-to-client`, admin), 'ipcs').approval);
   await approve(U.pm, ipca.id, 'IPC (Project Manager)');
-  await run('client approves IPC', async () => must(await api('POST', `/finance/ipcs/${ids.ipc}/client-approve`, admin), 'ipcca'));
+  // Stage 22 (F-35): the client's certification is recorded by someone other than the preparer, with reference and amount.
+  await expectFail('IPC preparer cannot record the client certification (SoD)', () => api('POST', `/finance/ipcs/${ids.ipc}/client-approve`, admin, { certified_amount: 95000, client_reference: `CC-${TAG}`, certified_on: today }), 403);
+  const ccRole = must(await api('POST', '/roles', admin, { role_name: `Client Cert Recorder ${TAG}`, permissions: [['finance', 'view'], ['finance', 'manage']].map(([module, action]) => ({ module, action, scope: 'all' })) }), 'cc role').id;
+  const ccRec = await mkUser('ccrec', ccRole);
+  await run('client certification recorded (amount, reference, date)', async () => must(await api('POST', `/finance/ipcs/${ids.ipc}/client-approve`, ccRec, { certified_amount: 95000, client_reference: `CC-${TAG}`, certified_on: today }), 'ipcca'));
   await run('post IPC to AR/GL', async () => must(await api('POST', `/finance/ipcs/${ids.ipc}/post-ar-gl`, admin), 'ipcgl'));
 
   // --- Payment

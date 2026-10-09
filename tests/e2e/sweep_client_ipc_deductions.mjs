@@ -45,7 +45,7 @@ try {
   const i1 = await run('IPC 1 created: retention 5,000, recovery 20,000 at the recorded rate (net 75,000)', async () => must(await ipc({ gross_work_done_this_period: 100000, cumulative_gross_work_done: 100000, less_retention: 5000, less_advance_recovery: 20000 }), 'ipc1'));
   check('IPC 1 net is 75,000', Number(i1.net_amount_due) === 75000, i1.net_amount_due);
   must(await approve(pm, must(await api('POST', `/finance/ipcs/${i1.id}/submit-to-client`, fm1), 'submit').approval.id), 'pm approve');
-  await run('client certification recorded for IPC 1', async () => must(await api('POST', `/finance/ipcs/${i1.id}/client-approve`, fm2), 'client approve'));
+  await run('client certification recorded for IPC 1', async () => must(await api('POST', `/finance/ipcs/${i1.id}/client-approve`, fm2, { certified_amount: 75000, client_reference: `CC1-${TAG}`, certified_on: today }), 'client approve'));
 
   await refused('less previous above the 75,000 certified refused', { gross_work_done_this_period: 150000, cumulative_gross_work_done: 250000, less_retention: 7500, less_advance_recovery: 30000, less_previous_certified: 80000 }, /exceeds the net certified/);
   await refused('recovery above the outstanding 30,000 refused', { gross_work_done_this_period: 200000, cumulative_gross_work_done: 300000, less_advance_recovery: 40000 }, /exceeds the outstanding|recovery due 30000/);

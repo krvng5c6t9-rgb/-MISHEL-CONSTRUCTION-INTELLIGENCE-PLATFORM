@@ -197,14 +197,43 @@ financeRouter.post('/ipcs/:id/submit-to-client', authorize('finance', 'manage'),
   }
 }));
 
+// Stage 22 (F-35, migration 071): the client's certification is recorded as evidence - amount certified, client
+// reference and date - by someone other than the preparer; a difference to the submitted net needs a reason.
 financeRouter.post('/ipcs/:id/client-approve', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
   const { id } = idParam.parse(req.params);
+  const b = z.object({
+    certified_amount: z.number().nonnegative(),
+    client_reference: z.string().trim().min(3).max(100),
+    certified_on: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    difference_reason: z.string().trim().min(10).optional()
+  }).parse(req.body);
+  const [ipc] = await query<any>(`select id, status, prepared_by from ipcs where id = $1 and org_id = $2`, [id, req.user!.org_id]);
+  if (!ipc) throw new AppError(404, 'IPC not found');
+  if (Number(ipc.prepared_by) === Number(req.user!.id)) throw new AppError(403, 'Segregation of duties: the IPC preparer cannot record the client certification');
+  if (ipc.status !== 'submitted_to_client') throw new AppError(409, 'IPC must be submitted_to_client before client approval');
   const rows = await query(`
-    update ipcs set status='client_approved', client_approved_date=current_date, updated_at=now()
-    where id=$1 and status='submitted_to_client'
-    returning *
-  `, [id]);
+    update ipcs set status='client_approved', client_approved_date=$3::date, client_certified_amount=$4, client_reference=$5,
+      client_certified_on=$3::date, certification_recorded_by=$6, certification_difference_reason=$7, updated_at=now()
+    where id=$1 and org_id=$2 and status='submitted_to_client'
+    returning *, net_amount_due - client_certified_amount as certification_difference
+  `, [id, req.user!.org_id, b.certified_on, b.certified_amount, b.client_reference, req.user!.id, b.difference_reason ?? null]);
   if (!rows[0]) throw new AppError(409, 'IPC must be submitted_to_client before client approval');
+  res.json({ success: true, data: rows[0] });
+}));
+
+financeRouter.post('/ipcs/:id/client-dispute', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
+  const { id } = idParam.parse(req.params);
+  const b = z.object({ reason: z.string().trim().min(10) }).parse(req.body);
+  const rows = await query(`update ipcs set status='disputed', dispute_reason=$3, updated_at=now() where id=$1 and org_id=$2 and status='submitted_to_client' returning *`, [id, req.user!.org_id, b.reason]);
+  if (!rows[0]) throw new AppError(409, 'Only an IPC submitted to the client can be recorded as disputed');
+  res.json({ success: true, data: rows[0] });
+}));
+
+financeRouter.post('/ipcs/:id/resubmit-to-client', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
+  const { id } = idParam.parse(req.params);
+  const b = z.object({ note: z.string().trim().min(10) }).parse(req.body);
+  const rows = await query(`update ipcs set status='submitted_to_client', resubmission_note=$3, submitted_date=current_date, updated_at=now() where id=$1 and org_id=$2 and status='disputed' returning *`, [id, req.user!.org_id, b.note]);
+  if (!rows[0]) throw new AppError(409, 'Only a disputed IPC can be resubmitted');
   res.json({ success: true, data: rows[0] });
 }));
 

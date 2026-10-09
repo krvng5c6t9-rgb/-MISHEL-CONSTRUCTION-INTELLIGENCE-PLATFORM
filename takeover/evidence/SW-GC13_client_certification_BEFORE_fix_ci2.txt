@@ -1,0 +1,11 @@
+GC-13 client certification BEFORE migration 071 (gate RUN ci2 data, schema 070).
+Columns of ipcs (no certified amount, client reference, certification date or recorder exist):
+id, project_id, contract_id, ipc_no, period_from, period_to, gross_work_done_this_period, cumulative_gross_work_done, materials_on_site_value, less_retention, less_advance_recovery, less_previous_certified, net_amount_due, status, approval_instance_id, prepared_by, submitted_date, client_approved_date, posted_ar_id, paid_date, created_at, updated_at, org_id
+Client-approved/posted IPCs and their AR (AR always = submitted net; who recorded the client approval is not stored):
+ ipc_no  |     status      | prepared_by | client_approved_date | net_amount_due | ar_amount 
+---------+-----------------+-------------+----------------------+----------------+-----------
+ IPC-ci2 | posted          |           1 | 2026-10-09           |       95000.00 |  95000.00
+ CI4-ci2 | client_approved |         103 | 2026-10-09           |       75000.00 |          
+(2 rows)
+
+Route before (finance.routes.ts @738f48d): update ipcs set status='client_approved', client_approved_date=current_date ... no body, no SoD check.
