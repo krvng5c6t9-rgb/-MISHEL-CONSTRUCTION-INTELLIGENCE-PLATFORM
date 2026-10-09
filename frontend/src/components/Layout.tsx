@@ -5,6 +5,7 @@ import { BarChart3, ClipboardCheck, FolderKanban, Landmark, PackageCheck, Scroll
 const navItems = [
   { to: '/', label: 'Dashboard', icon: BarChart3 },
   { to: '/projects', label: 'Projects', icon: FolderKanban },
+  { to: '/project-controls', label: 'Project Controls', icon: ShieldCheck },
   { to: '/users', label: 'Users / Roles / DOA', icon: UsersRound },
   { to: '/crm', label: 'CRM', icon: UsersRound },
   { to: '/tendering', label: 'Tendering', icon: ClipboardCheck },

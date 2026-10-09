@@ -29,6 +29,11 @@ mobilisationRouter.post('/gates', authorize('projects', 'create'), asyncHandler(
   const [g] = await query(`insert into mobilisation_gates(org_id, project_id, prepared_by) values ($1,$2,$3) returning *`, [req.user!.org_id, b.project_id, req.user!.id]);
   res.status(201).json({ success: true, data: g });
 }));
+mobilisationRouter.get('/gates', asyncHandler(async (req, res) => {
+  const q = z.object({ project_id: z.coerce.number().int().positive() }).parse(req.query);
+  res.json({ success: true, data: await query(`select g.*, (select count(*)::int from mobilisation_gate_items i where i.gate_id = g.id and i.mandatory and i.status = 'open') as open_mandatory
+     from mobilisation_gates g where g.org_id = $1 and g.project_id = $2 order by g.id desc`, [req.user!.org_id, q.project_id]) });
+}));
 mobilisationRouter.get('/gates/:id', asyncHandler(async (req, res) => {
   const g = await gate(pid(req.params.id), req.user!.org_id);
   const items = await query<any>(`select * from mobilisation_gate_items where gate_id = $1 order by mandatory desc, category, id`, [g.id]);

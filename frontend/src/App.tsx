@@ -33,6 +33,7 @@ import { AIPlatform } from './pages/AIPlatform';
 import { CommercialPlatform } from './pages/CommercialPlatform';
 import { Automation } from './pages/Automation';
 import { Knowledge } from './pages/Knowledge';
+import { ProjectControls } from './pages/ProjectControls';
 
 export function App() {
   return (
@@ -44,6 +45,7 @@ export function App() {
           <Route element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="project-controls" element={<ProjectControls />} />
             <Route path="users" element={<Admin />} />
             <Route path="boq" element={<BOQ />} />
             <Route path="crm" element={<CRM />} />

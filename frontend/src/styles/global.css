@@ -2,14 +2,14 @@
 :root { --navy:#1B2A41; --blue:#2E5C8A; --grey:#E8EBEF; --gold:#C9A961; --orange:#D97A2B; --white:#ffffff; }
 * { box-sizing: border-box; }
 body { margin: 0; font-family: Cairo, system-ui, sans-serif; background: #f5f6f8; color: var(--navy); }
-.app-shell { min-height: 100vh; display: grid; grid-template-columns: 280px 1fr; direction: ltr; }
+.app-shell { min-height: 100vh; display: grid; grid-template-columns: 280px minmax(0, 1fr); direction: ltr; }
 .sidebar { background: var(--navy); color: var(--white); padding: 24px 18px; direction: rtl; }
 .brand { display: flex; gap: 12px; align-items: center; margin-bottom: 30px; }
 .brand-mark { border: 1px solid var(--gold); color: var(--gold); padding: 8px; border-radius: 10px; font-weight: 800; }
 .brand small { display: block; opacity: .75; }
 .nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin: 6px 0; border-radius: 12px; color: #fff; text-decoration: none; }
 .nav-item.active, .nav-item:hover { background: rgba(201,169,97,.18); color: var(--gold); }
-.content { padding: 32px; direction: rtl; }
+.content { padding: 32px; direction: rtl; min-width: 0; }
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
 h1 { margin: 0; font-size: 30px; } .eyebrow { margin: 0; color: var(--blue); font-weight: 800; }
 .status-pill { background: var(--navy); color: var(--gold); border-radius: 999px; padding: 8px 14px; font-weight: 800; }
