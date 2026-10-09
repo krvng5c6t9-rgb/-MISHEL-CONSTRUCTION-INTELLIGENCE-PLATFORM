@@ -1,0 +1,574 @@
+{
+  "suite": "sweep_report_packs",
+  "run": "rp3",
+  "tag": "rp3",
+  "steps": [
+    {
+      "name": "weekly-executive counts only this project's pending approvals (other project pending: 1, this: 0)",
+      "outcome": "PASS",
+      "detail": "{\"project_id\":28,\"project_name\":\"RP rp3\",\"status\":\"execution\",\"spi\":null,\"cpi\":null,\"evm_available\":false,\"pending_approvals\":0,\"open_ncrs\":0,\"open_snags\":0,\"major_hse_incidents\":0}"
+    },
+    {
+      "name": "the other project shows its own pending approval",
+      "outcome": "PASS",
+      "detail": "{\"project_id\":29,\"project_name\":\"RPO rp3\",\"status\":\"execution\",\"spi\":null,\"cpi\":null,\"evm_available\":false,\"pending_approvals\":1,\"open_ncrs\":0,\"open_snags\":0,\"major_hse_incidents\":0}"
+    },
+    {
+      "name": "without an EVM snapshot SPI/CPI are null, not 0",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a pack cannot be frozen for a period that has not ended",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A report pack cannot be frozen for a period that has not ended\""
+    },
+    {
+      "name": "viewer cannot freeze a pack",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Missing permission: reports.create\""
+    },
+    {
+      "name": "preparer freezes weekly pack (day -13 .. -7)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "content computed by the database as of the data date (actual 400; budget approved later not counted)",
+      "outcome": "PASS",
+      "detail": "{\"basis\":\"as_of\",\"actual\":400,\"budget\":0,\"accrual\":0,\"committed\":0,\"actual_plus_accrual\":400}"
+    },
+    {
+      "name": "reconciliation lists: actual not posted to GL, actual without approved budget, unsigned diary",
+      "outcome": "PASS",
+      "detail": "actual_not_posted_to_gl,actual_without_approved_budget,unsigned_site_diaries_in_period"
+    },
+    {
+      "name": "status-based sections are labelled at_capture",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "one live pack per project period",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint uq_report_pack_live_period\""
+    },
+    {
+      "name": "submission refused while exceptions are unexplained",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Explain the 3 reconciliation exception(s) in the narrative before submitting\""
+    },
+    {
+      "name": "only the preparer writes the narrative",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Only the preparer writes the narrative\""
+    },
+    {
+      "name": "preparer submits the explained pack",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "narrative frozen once submitted",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"The narrative is frozen once submitted\""
+    },
+    {
+      "name": "preparer cannot approve own pack (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the preparer cannot approve or reject own report pack\""
+    },
+    {
+      "name": "second person approves the pack",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "stored hash verifies and data unchanged since freeze",
+      "outcome": "PASS",
+      "detail": "{\"stored_hash_valid\":true,\"data_changed_since_freeze\":false}"
+    },
+    {
+      "name": "approved pack still verifies, and flags that the data behind it changed",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "next pack reports the back-dated posting (1 entry, 200)",
+      "outcome": "PASS",
+      "detail": "[{\"type\":\"actual_not_posted_to_gl\",\"count\":2,\"amount\":600},{\"type\":\"backdated_into_approved_period\",\"count\":1,\"amount\":200}]"
+    },
+    {
+      "name": "rejection needs a reason",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"A rejected pack needs a reason\""
+    },
+    {
+      "name": "approver rejects with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a rejected period can be frozen again",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DB: frozen content cannot be edited",
+      "outcome": "PASS",
+      "detail": "ERROR:  A frozen report pack cannot change its period or content; reject it and freeze a new one"
+    },
+    {
+      "name": "DB: approved pack cannot be deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Submitted or decided report packs cannot be deleted"
+    },
+    {
+      "name": "DB: approved pack cannot be re-decided",
+      "outcome": "PASS",
+      "detail": "ERROR:  Report pack 2 is decided and immutable"
+    },
+    {
+      "name": "DB: supplied figures are ignored - the database computes the content",
+      "outcome": "PASS",
+      "detail": "BEGIN | 600.00 | INSERT 0 1 | ROLLBACK"
+    },
+    {
+      "name": "tenant B sees no tenant A packs",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "tenant B cannot read a tenant A pack",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Report pack not found\""
+    },
+    {
+      "name": "tenant B cannot freeze a pack for a tenant A project",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Project not found in this organization\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/4/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment/5/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment-usage/9/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/reports/weekly-executive?project_id=28",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/reports/weekly-executive?project_id=29",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment-usage/10/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/46/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage/10/post-cost",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/cost-transactions/budgets",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/cost-transactions/budgets/2/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/site/diaries",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs",
+      "status": 422,
+      "ok": false,
+      "error": "A report pack cannot be frozen for a period that has not ended"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs",
+      "status": 403,
+      "ok": false,
+      "error": "Missing permission: reports.create"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint uq_report_pack_live_period"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs/2/submit",
+      "status": 422,
+      "ok": false,
+      "error": "Explain the 3 reconciliation exception(s) in the narrative before submitting"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/packs/2/narrative",
+      "status": 403,
+      "ok": false,
+      "error": "Only the preparer writes the narrative"
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/packs/2/narrative",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs/2/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/packs/2/narrative",
+      "status": 409,
+      "ok": false,
+      "error": "The narrative is frozen once submitted"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs/2/decision",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the preparer cannot approve or reject own report pack"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs/2/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/reports/packs/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/assets/equipment-usage/11/approve",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/47/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/assets/equipment-usage/11/post-cost",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/reports/packs/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/reports/packs/4/narrative",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs/4/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs/4/decision",
+      "status": 400,
+      "ok": false,
+      "error": "A rejected pack needs a reason"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs/4/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/reports/packs",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/reports/packs/2",
+      "status": 404,
+      "ok": false,
+      "error": "Report pack not found"
+    },
+    {
+      "method": "POST",
+      "path": "/reports/packs",
+      "status": 422,
+      "ok": false,
+      "error": "Project not found in this organization"
+    }
+  ]
+}

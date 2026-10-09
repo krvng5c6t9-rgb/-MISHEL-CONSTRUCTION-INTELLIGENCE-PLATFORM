@@ -1,13 +1,13 @@
-# HANDOFF — v0.5.13-stage13 — DATE: 2026-10-09
+# HANDOFF — v0.5.14-stage14 — DATE: 2026-10-09
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
 - Waves 1–2 are built and runtime-tested (CC-015…CC-024). The RK-003 module sweep has executed variations, QA/HSE, approval rejection paths, HR/payroll and EDMS for the first time (CC-025…CC-029).
-- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…040 green; CC-041/042 runs to verify.
+- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…041 green; CC-042/043 runs to verify.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-042 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–064.
-- **Runtime suites, all from zero (E1):** 28 suites, 825 checks + shared-guard probe + Golden Case status check, all PASS, RUN gc1 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37).
+- **Change controls:** CC-001…CC-043 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–065.
+- **Runtime suites, all from zero (E1):** 29 suites, 854 checks + shared-guard probe + Golden Case status check, all PASS, RUN rp3 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -81,8 +81,9 @@
   - Stage 11 — G-017: **DONE** (CC-040; DEC-015, G-018 MFA, F-24). Was: G-017 login throttling/lockout mechanism (configurable; values are owner/security policy).
   - Stage 12 — GC-26 + GC-01 s8 risk & opportunity register: **DONE** (CC-041; GC RUNTIME 49 / PARTIAL 52 / ABSENT 56; F-25 stale statuses, F-26 open risk items).
   - Stage 13 — Golden Case status reconciliation: **DONE** (CC-042; RUNTIME 56 / PARTIAL 54 / ABSENT 51 / API 5 / SCHEMA 1; checker in gate).
-  - **Stage 14 (NEXT) — GC-10 weekly/monthly project report: freeze data-as-of, cross-module reconciliation, report pack approval (GC-10 steps 1, 2, 4 ABSENT; not blocked by an owner decision).**
-  - Later candidates: GC-20 commissioning-to-handover; GC-24 legacy import.
+  - Stage 14 — GC-10 report packs: **DONE** (CC-043; weekly-executive defects fixed; RUNTIME 59 / PARTIAL 54 / ABSENT 48).
+  - **Stage 15 (NEXT) — GC-20 commissioning-to-handover: systems and readiness criteria, test packs, handover dossier completeness, handover/DLP (GC-20 steps 1, 2, 4, 5 ABSENT; punch list API exists, never executed).**
+  - Later candidates: GC-24 legacy import; GC-04 design-revision impact trace.
   - Then: remaining ABSENT Golden Case steps by business priority; frontend browser verification; performance/DR/pentest preparation.
 - Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
 - DEC-015 (sign-in policy values, MFA) OPEN for owner/security; set TRUST_PROXY on Render before enabling the address limit.

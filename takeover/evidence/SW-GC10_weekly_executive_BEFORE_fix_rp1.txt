@@ -1,0 +1,5 @@
+# Pre-CC-043 weekly-executive SQL (git 50bcfc7) run on RUN rp1 data, org 1; org-wide pending approvals = 4
+project_id|project_name|status|spi|cpi|pending_approvals|open_ncrs|open_snags|major_hse_incidents
+28|RP rp1|execution|0|0|4|0|0|0
+29|RPO rp1|execution|0|0|4|0|0|0
+(2 rows)

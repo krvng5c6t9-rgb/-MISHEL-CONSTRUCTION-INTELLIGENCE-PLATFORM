@@ -153,10 +153,10 @@ gc('GC-09', 'HSE Control', [
     ('Stop-work and near-miss without retaliation', 'Any worker', 'hazard', 'stop-work record', 'anonymous option', 'none', 'L0', 'ABSENT', '', 'NDC-016'),
 ])
 gc('GC-10', 'Weekly/Monthly Project Report', [
-    ('Freeze data-as-of', 'Project controls', 'all modules', 'snapshot', 'snapshot immutable', 'none', 'L4', 'ABSENT', 'reports are live queries', ''),
-    ('Reconcile across modules', 'Project controls', 'snapshot', 'exceptions', 'cost vs GL vs progress reconciled', 'none', 'L2', 'ABSENT', '', 'NDC-011'),
-    ('Calculate KPIs and explain variances', 'Project manager', 'snapshot', 'KPI + narrative', 'KPI definitions from dictionary', 'none', 'L2 narrative with citations', 'PARTIAL', 'reports weekly-executive', ''),
-    ('Approve report pack', 'Project director', 'draft pack', 'approved pack', 'approver != author', 'none', 'L0', 'ABSENT', '', ''),
+    ('Freeze data-as-of', 'Project controls', 'all modules', 'snapshot', 'snapshot immutable', 'none', 'L4', 'RUNTIME', 'CC-043 sweep_report_packs: DB-computed pack as of the data date (ledger figures as_of, status figures labelled at_capture), SHA-256 stored and re-verified, content immutable', ''),
+    ('Reconcile across modules', 'Project controls', 'snapshot', 'exceptions', 'cost vs GL vs progress reconciled', 'none', 'L2', 'RUNTIME', 'CC-043 sweep_report_packs: exceptions for actual not posted to GL, commitment above budget, actual without approved budget, back-dated postings into approved periods, open notices past deadline, unsigned diaries; progress (EVM) reconciliation absent', 'NDC-011'),
+    ('Calculate KPIs and explain variances', 'Project manager', 'snapshot', 'KPI + narrative', 'KPI definitions from dictionary', 'none', 'L2 narrative with citations', 'PARTIAL', 'sweep_report_packs: weekly-executive project-scoped approvals and null SPI/CPI without EVM (CC-043); narrative must explain exceptions; KPI dictionary absent', ''),
+    ('Approve report pack', 'Project director', 'draft pack', 'approved pack', 'approver != author', 'SoD preparer != approver (CC-043)', 'L0', 'RUNTIME', 'CC-043 sweep_report_packs: submit by preparer only, approve/reject by another person (reason required), decided packs immutable, rejected period can be re-frozen', ''),
 ])
 gc('GC-11', 'Delay & Recovery', [
     ('Detect schedule variance', 'Planner', 'updates', 'variance list', 'float erosion thresholds configured', 'none', 'L4 detect', 'PARTIAL', 'wave2_programme: CPM verified against hand calculation (E1); variance against the accepted programme not computed', ''),
