@@ -1,0 +1,29 @@
+GC-12 deductions BEFORE migration 069 (gate RUN ux2 data). Subcontract of the SC suite: advance_payment_percent not set, no advance table exists, no back-charge record exists.
+BEGIN
+ id | contract_value | retention_percent | advance_payment_percent | status 
+----+----------------+-------------------+-------------------------+--------
+  2 |      100000.00 |             10.00 |                         | active
+(1 row)
+
+Earlier certificates of this subcontract (status, net):
+ certificate_no |  status  | net_amount_due 
+----------------+----------+----------------
+ C1-ux2         | posted   |       18000.00
+ C2-ux2         | draft    |       99999.00
+ C3-ux2         | draft    |         500.00
+ C4-ux2         | rejected |         900.00
+(4 rows)
+
+ id | gross_work_done | less_advance_recovery | less_previous_paid | penalties_deductions | net_amount_due 
+----+-----------------+-----------------------+--------------------+----------------------+----------------
+ 35 |        10000.00 |               4000.00 |            9000.00 |              2500.00 |       -5500.00
+(1 row)
+
+INSERT 0 1
+    status     | recovered_without_any_advance | deducted_without_any_backcharge | previous_above_all_certified 
+---------------+-------------------------------+---------------------------------+------------------------------
+ site_verified |                       4000.00 |                         2500.00 |                      9000.00
+(1 row)
+
+UPDATE 1
+ROLLBACK
