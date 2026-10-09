@@ -1,0 +1,4 @@
+# RUN di3 data (pre-CC-046 code): chain IPC created, client-approved and posted to AR/GL against a DRAFT contract
+contract_id|contract_status|ipc_id|ipc_status|gl_rows
+1|draft|1|posted|2
+(1 row)

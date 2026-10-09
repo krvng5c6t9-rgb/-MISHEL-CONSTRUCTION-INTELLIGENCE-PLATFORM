@@ -138,6 +138,20 @@ try {
 
   // --- Contract -> IPC -> AR
   ids.contract = await run('create contract', async () => must(await api('POST', '/contracts', admin, { project_id: ids.project, client_id: ids.client, contract_type: 'lump_sum', contract_value: 1000000, currency_id: cur, retention_percent: 5 }), 'contract').id);
+  // Stage 17 (CC-046): an IPC bills the client under the contract, so the contract must be signed first.
+  const ipcBody = { project_id: ids.project, contract_id: ids.contract, ipc_no: `IPC0-${TAG}`, period_from: today, period_to: today, gross_work_done_this_period: 1, cumulative_gross_work_done: 1, less_retention: 0 };
+  const unsignedIpc = await api('POST', '/finance/ipcs', admin, ipcBody);
+  step('IPC on an unsigned (draft) contract refused', unsignedIpc.status === 422 ? 'PASS' : 'FAIL', `HTTP ${unsignedIpc.status} ${JSON.stringify(unsignedIpc.body?.error ?? '')}`);
+  const sgn1 = await login(`w1s1.${TAG}@test.local`, 'Passw0rd!w1s1'), sgn2 = await login(`w1s2.${TAG}@test.local`, 'Passw0rd!w1s2');
+  const csa = await run('submit contract for signing', async () => must(await api('POST', `/contracts/${ids.contract}/submit-approval`, admin), 'csub').approval);
+  await approve(sgn1, csa.id, 'contract signatory 1');
+  await approve(sgn2, csa.id, 'contract signatory 2');
+  // F-27: hand the estimating BOQ over to the execution BOQ in this project (difference to contract value accepted with reason).
+  const ho = await run('hand over BOQ to execution (difference declared)', async () => must(await api('POST', `/boq/project/${ids.project}/handover`, admin, { contract_id: ids.contract, difference_reason: 'Chain fixture: contract value covers scope beyond the single priced item' }), 'handover'));
+  const appr = await login(`w1appr.${TAG}@test.local`, 'Passw0rd!w1appr');
+  if (ho.handover?.status !== 'accepted') await run('independent approver accepts BOQ handover difference', async () => must(await api('POST', `/boq/handovers/${ho.handover.id}/accept`, appr, { difference_reason: 'Chain fixture: remaining scope priced at contract level (fixture)' }), 'accept'));
+  const pb = must(await api('GET', `/boq/project/${ids.project}`, admin), 'project boq');
+  step('chain project now has an execution BOQ', pb.length >= 1 ? 'PASS' : 'FAIL', `${pb.length} lines`);
   ids.ipc = await run('create IPC', async () => must(await api('POST', '/finance/ipcs', admin, { project_id: ids.project, contract_id: ids.contract, ipc_no: `IPC-${TAG}`, period_from: today, period_to: today, gross_work_done_this_period: 100000, cumulative_gross_work_done: 100000, less_retention: 5000 }), 'ipc').id);
   const ipca = await run('submit IPC', async () => must(await api('POST', `/finance/ipcs/${ids.ipc}/submit-to-client`, admin), 'ipcs').approval);
   await approve(U.pm, ipca.id, 'IPC (Project Manager)');

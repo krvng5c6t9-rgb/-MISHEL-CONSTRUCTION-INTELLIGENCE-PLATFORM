@@ -41,6 +41,7 @@ import { automationRouter } from '../modules/automation/automation.routes.js';
 import { knowledgeRouter } from '../modules/knowledge/knowledge.routes.js';
 import { risksRouter } from '../modules/risks/risks.routes.js';
 import { commissioningRouter } from '../modules/commissioning/commissioning.routes.js';
+import { mobilisationRouter } from '../modules/projects/mobilisation.routes.js';
 
 export const apiRouter = Router();
 
@@ -56,6 +57,7 @@ apiRouter.use('/tendering', tenderingRouter);
 apiRouter.use('/contracts', contractsRouter);
 apiRouter.use('/risks', risksRouter);
 apiRouter.use('/commissioning', commissioningRouter);
+apiRouter.use('/mobilisation', mobilisationRouter);
 apiRouter.use('/subcontracts', subcontractsRouter);
 apiRouter.use('/inventory', inventoryRouter);
 apiRouter.use('/claims', claimsRouter);

@@ -1,0 +1,471 @@
+{
+  "suite": "sweep_mobilisation",
+  "run": "mb1",
+  "tag": "mb1",
+  "steps": [
+    {
+      "name": "preparer opens the mobilisation gate",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "one live gate per project",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint uq_mobilisation_gate_live\""
+    },
+    {
+      "name": "a draft document is not evidence",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Evidence must be an approved document of the same project\""
+    },
+    {
+      "name": "permit closed with the approved permit document",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closing without evidence or note refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "CAR policy closed with a note",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a resolved item cannot be resolved again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Readiness item is already resolved\""
+    },
+    {
+      "name": "risk acceptance needs a risk of the same project",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Risk acceptance must reference an open threat in this project's risk register\""
+    },
+    {
+      "name": "optional items are not risk-accepted",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Only mandatory items are risk-accepted; close optional items with a note\""
+    },
+    {
+      "name": "risk acceptance needs a reason",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "bond risk-accepted against the risk register entry",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "only the preparer submits",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Only the preparer submits the gate\""
+    },
+    {
+      "name": "preparer submits the gate",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no new items after submission",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Items are added while the gate is draft\""
+    },
+    {
+      "name": "preparer cannot decide own gate (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: the gate is decided by someone other than its preparer\""
+    },
+    {
+      "name": "second person decides GO (optional HSE item still open)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "decision recorded with decider",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "items of a decided gate are frozen",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Gate 1 is decided; its items are frozen\""
+    },
+    {
+      "name": "GO refused while a mandatory item is open (count stated)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 GO refused: 1 mandatory item(s) neither closed nor risk-accepted"
+    },
+    {
+      "name": "no-go needs a reason",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"A no-go decision needs a reason\""
+    },
+    {
+      "name": "no-go recorded with reason",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a new gate can be opened after a no-go",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DB: gates are never deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Mobilisation gates are never deleted"
+    },
+    {
+      "name": "DB: a decided gate is immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Gate 1 is decided and immutable"
+    },
+    {
+      "name": "DB: risk acceptance without a risk refused",
+      "outcome": "PASS",
+      "detail": "ERROR:  Risk acceptance must reference an open threat in this project's risk register"
+    },
+    {
+      "name": "tenant B cannot read a tenant A gate",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Mobilisation gate not found\""
+    },
+    {
+      "name": "tenant B cannot decide a tenant A gate",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Mobilisation gate not found\""
+    },
+    {
+      "name": "tenant B cannot open a gate on a tenant A project",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Project not found in this organization\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint uq_mobilisation_gate_live"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/1/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/1/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/1/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/1/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/1/close",
+      "status": 422,
+      "ok": false,
+      "error": "Evidence must be an approved document of the same project"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/5/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/5/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/1/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/2/close",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/2/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/2/close",
+      "status": 409,
+      "ok": false,
+      "error": "Readiness item is already resolved"
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/3/risk-accept",
+      "status": 422,
+      "ok": false,
+      "error": "Risk acceptance must reference an open threat in this project's risk register"
+    },
+    {
+      "method": "POST",
+      "path": "/risks",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/4/risk-accept",
+      "status": 422,
+      "ok": false,
+      "error": "Only mandatory items are risk-accepted; close optional items with a note"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/3/risk-accept",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/3/risk-accept",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/1/submit",
+      "status": 403,
+      "ok": false,
+      "error": "Only the preparer submits the gate"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/1/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/1/items",
+      "status": 422,
+      "ok": false,
+      "error": "Items are added while the gate is draft"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/1/decision",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: the gate is decided by someone other than its preparer"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/1/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/items/4/close",
+      "status": 422,
+      "ok": false,
+      "error": "Gate 1 is decided; its items are frozen"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/3/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/3/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/3/decision",
+      "status": 422,
+      "ok": false,
+      "error": "GO refused: 1 mandatory item(s) neither closed nor risk-accepted"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/3/decision",
+      "status": 400,
+      "ok": false,
+      "error": "A no-go decision needs a reason"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/3/decision",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/4/items",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/mobilisation/gates/1",
+      "status": 404,
+      "ok": false,
+      "error": "Mobilisation gate not found"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates/3/decision",
+      "status": 404,
+      "ok": false,
+      "error": "Mobilisation gate not found"
+    },
+    {
+      "method": "POST",
+      "path": "/mobilisation/gates",
+      "status": 422,
+      "ok": false,
+      "error": "Project not found in this organization"
+    }
+  ]
+}

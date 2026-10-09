@@ -29,9 +29,10 @@ for _ in $(seq 1 30); do curl -sf "http://localhost:$PORT_/api/health" >/dev/nul
 cd "$ROOT/tests/e2e"; mkdir -p out
 export API_BASE="http://localhost:$PORT_/api"
 node probe.mjs | head -2
+# Stage 17: wave1_boq_handover configures contract signing (DOA) and its signers; the chain now signs its contract with them.
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_boq_handover.mjs
 PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node chain.mjs
 APP_PSQL_URL="$APP_URL_BASE/$DB$Q" node isolation.mjs "out/chain_$RUN.json"
-OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_boq_handover.mjs
 APP_PSQL_URL="$APP_URL_BASE/$DB$Q" OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_vendor_master.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_doa_governance.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node wave1_tenant_onboarding.mjs
@@ -60,6 +61,7 @@ OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_risks.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_report_packs.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_commissioning.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_design_impact.mjs
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_mobilisation.mjs
 PROBE_OUT="out/G015_RUNTIME_PROBE_$RUN.csv" python3 "$ROOT/governance/tools/probe_shared_guards.py" "$OWNER_URL_BASE/$DB$Q"
 # F-25: Golden Case step statuses must agree with the suites this gate runs.
 (cd "$ROOT" && python3 governance/tools/gc_status_check.py)
