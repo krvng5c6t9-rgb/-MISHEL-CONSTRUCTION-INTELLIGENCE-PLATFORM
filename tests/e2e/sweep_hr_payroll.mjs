@@ -46,7 +46,7 @@ try {
 
   // --- Submission freezes the run; approval by a second person.
   const pa = await run('payroll run submitted for approval', async () => must(await api('PATCH', `/hr/payroll-runs/${pr.id}/approve`, H.a), 'submit').approval);
-  check('approval amount = sum of net pay (18,000)', Number(pa.amount) === 18000, String(pa.amount));
+  check('approval amount = sum of gross pay (19,500, DEC-013)', Number(pa.amount) === 19500, String(pa.amount));
   await expectStatus('lines cannot be added once submitted', () => line({ employee_id: e2.id, basic: 1 }), 422);
   if (OWNER) {
     const probe = (name, text) => { const r = sql(OWNER, text); check(name, !r.ok, r.out.split('\n').find(l => /ERROR/.test(l)) ?? r.out.slice(0, 120)); };
@@ -58,7 +58,21 @@ try {
   check('payroll run approved', ok.finalization?.record?.status === 'approved');
   await expectStatus('lines cannot be added after approval', () => line({ employee_id: e2.id, basic: 1 }), 422);
   const ct = await run('project payroll line posted to cost', async () => must(await api('POST', `/hr/payroll-lines/${l1.id}/post-cost`, H.a), 'post'));
-  check('posted payroll cost recorded (basis: net pay; F-16 open for owner decision)', Number(ct.amount) === 10000, String(ct.amount));
+  // DEC-013 (owner decision 2026-10-09): labour cost = gross pay 11,500 (10,000 + 500 + 1,000); deductions 1,500 are a liability.
+  check('posted payroll cost is the gross pay 11,500 (DEC-013), not the net 10,000', Number(ct.amount) === 11500, String(ct.amount));
+  const coa = async (code, name, type) => must(await api('POST', '/finance/chart-of-accounts', admin, { account_code: `${code}-${TAG}`, account_name: name, account_type: type }), 'coa').id;
+  const labour = await coa('5200', 'Site labour cost (fixture)', 'expense'), netPay = await coa('2400', 'Salaries payable (fixture)', 'liability'), dedPay = await coa('2410', 'Payroll deductions payable (fixture)', 'liability');
+  await expectStatus('GL posting of a payroll cost with deductions needs a deductions rule', async () => {
+    must(await api('POST', '/finance/gl-posting-rules', admin, { source_module: 'cost_transaction', source_subtype: 'hr_payroll', debit_account_id: labour, credit_account_id: netPay, notes: 'TEST FIXTURE' }), 'payroll rule');
+    return api('POST', `/finance/cost-transactions/${ct.id}/post-gl`, admin);
+  }, 422);
+  must(await api('POST', '/finance/gl-posting-rules', admin, { source_module: 'cost_transaction', source_subtype: 'payroll_deductions', debit_account_id: labour, credit_account_id: dedPay, notes: 'TEST FIXTURE' }), 'deductions rule');
+  const gl = await run('payroll cost posted to GL', async () => must(await api('POST', `/finance/cost-transactions/${ct.id}/post-gl`, admin), 'post gl'));
+  check('GL batches returned for net pay and deductions', !!gl.deductions_gl, JSON.stringify(Object.keys(gl)));
+  if (OWNER) {
+    const sum = (acct, col) => sql(OWNER, `select coalesce(sum(${col}),0) from general_ledger where source_table='cost_transactions' and source_record_id=${ct.id} and account_id=${acct}`).out.trim();
+    check('GL: labour cost debited 11,500; salaries payable credited 10,000; deductions payable credited 1,500', sum(labour, 'debit') === '11500.00' && sum(netPay, 'credit') === '10000.00' && sum(dedPay, 'credit') === '1500.00', `${sum(labour, 'debit')} / ${sum(netPay, 'credit')} / ${sum(dedPay, 'credit')}`);
+  }
   await expectStatus('payroll line cannot be posted twice', () => api('POST', `/hr/payroll-lines/${l1.id}/post-cost`, H.a), 409);
 
   // --- Return for correction (CC-027 path on payroll): back to draft, editable, resubmittable.

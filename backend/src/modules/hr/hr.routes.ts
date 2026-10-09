@@ -161,7 +161,7 @@ hrRouter.patch('/payroll-runs/:id/approve', authorize('hr', 'approve'), asyncHan
     if (run.status !== 'draft') throw new AppError(409, 'Only draft payroll runs can be submitted for approval');
     const totals = (await client.query(`
       select count(*)::int as line_count, count(distinct currency_id)::int as currency_count,
-             min(currency_id)::bigint as currency_id, coalesce(sum(net_pay),0)::numeric(18,2) as total_amount
+             min(currency_id)::bigint as currency_id, coalesce(sum(basic+overtime+allowances),0)::numeric(18,2) as total_amount
       from payroll_lines where payroll_run_id=$1
     `, [payrollRunId])).rows[0];
     if (!totals || Number(totals.line_count) === 0) throw new AppError(422, 'Payroll run has no lines');

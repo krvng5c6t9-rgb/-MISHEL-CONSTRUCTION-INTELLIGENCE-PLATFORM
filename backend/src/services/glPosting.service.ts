@@ -83,22 +83,37 @@ export async function postCostTransactionToGl(client: PoolClient, costTransactio
   const rule = await getActiveRule(client, Number(ct.org_id), 'cost_transaction', ct.source_module ?? null);
   if (!rule) throw new AppError(422, `No active GL posting rule for cost_transaction / ${ct.source_module}`);
 
+  // DEC-013: payroll cost is gross; the employee deductions part is credited to deductions payable, the rest to the
+  // rule's credit account (net pay payable). Other sources post the full amount to the rule's credit account.
+  let deductions = '0';
+  let dedRule: any = null;
+  if (ct.source_module === 'hr_payroll' && ct.source_table === 'payroll_lines') {
+    deductions = String((await client.query(`select deductions from payroll_lines where id = $1`, [ct.source_record_id])).rows[0]?.deductions ?? '0');
+    if (Number(deductions) > 0) {
+      dedRule = await getActiveRule(client, Number(ct.org_id), 'cost_transaction', 'payroll_deductions');
+      if (!dedRule || dedRule.source_subtype !== 'payroll_deductions') throw new AppError(422, 'No active GL posting rule for payroll deductions (cost_transaction / payroll_deductions)');
+    }
+  }
+  const main = (await client.query(`select ($1::numeric - $2::numeric)::text as v`, [ct.amount, deductions])).rows[0].v;
+  const base = { org_id: Number(ct.org_id), project_id: Number(ct.project_id), currency_id: Number(ct.currency_id), transaction_date: ct.transaction_date,
+    source_module: 'cost_transaction' as const, source_table: 'cost_transactions', source_record_id: Number(ct.id) };
   const batch = await insertBalancedGlBatch(client, {
-    org_id: Number(ct.org_id),
-    project_id: Number(ct.project_id),
+    ...base,
     debit_account_id: Number(rule.debit_account_id),
     credit_account_id: Number(rule.credit_account_id),
-    amount: String(ct.amount),
-    currency_id: Number(ct.currency_id),
-    transaction_date: ct.transaction_date,
-    source_module: 'cost_transaction',
-    source_table: 'cost_transactions',
-    source_record_id: Number(ct.id),
+    amount: main,
     description: `GL posting from cost transaction ${ct.id} (${ct.transaction_type})`
   });
+  const deductionsBatch = dedRule ? await insertBalancedGlBatch(client, {
+    ...base,
+    debit_account_id: Number(rule.debit_account_id),
+    credit_account_id: Number(dedRule.credit_account_id),
+    amount: deductions,
+    description: `Employee deductions payable from cost transaction ${ct.id}`
+  }) : null;
 
   await client.query(`update cost_transactions set is_posted_to_gl = true where id = $1`, [ct.id]);
-  return batch;
+  return deductionsBatch ? { ...batch, deductions_gl: deductionsBatch } : batch;
 }
 
 export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number) {

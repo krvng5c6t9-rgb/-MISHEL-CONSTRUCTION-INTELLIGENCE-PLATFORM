@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 74 (`database/migrations/001…074`), all applied from an empty DB |
+| Migrations | 76 (`database/migrations/001…076`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-055
+## Controlled Changes CC-001 → CC-056
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -87,6 +87,7 @@
 | CC-053 | Contract payment terms → receivable due date; client certified breakdown (072) |
 | CC-054 | Receipts/payments settle within outstanding, partial/paid status, aging; payment terms & breakdown UI (073) |
 | CC-055 | Tax engine (DEC-016/017): confirmed versioned tax codes, profiles, output tax into AR/GL, e-invoice ref, client withholding (074) |
+| CC-056 | DEC-013 payroll cost at gross (net/deductions payable); DEC-014 moving average per store (075, 076) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -142,11 +143,12 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_ipc_terms_breakdown.mjs | 21 | GC-13 s5-8 payment terms due date, client breakdown |
 | sweep_collections.mjs | 17 | GC-13 s8 receipts, partial/paid, race, aging, AP mirror |
 | sweep_tax.mjs | 33 | DEC-016/017 tax codes, profiles, output tax, e-invoice, withholding, position |
+| sweep_inventory_valuation.mjs | 14 | DEC-014 moving average per store, outflows valued by DB |
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
 | gc_status_check.py | 167 steps | F-25 Golden Case statuses agree with gate suites (gate step) |
 | project_controls.ui.mjs | 23 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI) |
 | payments.ui.mjs | 16 | Browser: Payments & Certification (certification SoD, advance positions, back-charge SoD) |
-| **Total** | **1,147** | 38 API suites + 2 browser checks, all PASS locally (RUN tx3; earlier "700" was a records error, F-19) |
+| **Total** | **1,165** | 39 API suites + 2 browser checks, all PASS locally (RUN iv3; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

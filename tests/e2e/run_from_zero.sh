@@ -70,6 +70,7 @@ OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_ipc_client_certi
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_ipc_terms_breakdown.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_collections.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_tax.mjs
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_inventory_valuation.mjs
 PROBE_OUT="out/G015_RUNTIME_PROBE_$RUN.csv" python3 "$ROOT/governance/tools/probe_shared_guards.py" "$OWNER_URL_BASE/$DB$Q"
 # F-25: Golden Case step statuses must agree with the suites this gate runs.
 (cd "$ROOT" && python3 governance/tools/gc_status_check.py)
