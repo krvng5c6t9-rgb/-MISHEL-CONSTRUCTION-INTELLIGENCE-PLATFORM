@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 65 (`database/migrations/001…065`), all applied from an empty DB |
+| Migrations | 66 (`database/migrations/001…066`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-043
+## Controlled Changes CC-001 → CC-044
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -75,6 +75,7 @@
 | CC-041 | GC-26 risk & opportunity register: history, responses, escalation, SoD closing, EV summary (064) |
 | CC-042 | Golden Case status reconciliation; gc_status_check.py in the gate (at CC-042: RUNTIME 56 / PARTIAL 54 / ABSENT 51; after CC-043: RUNTIME 59 / ABSENT 48) |
 | CC-043 | GC-10 frozen/reconciled/approved report packs; weekly-executive per-project approvals + null SPI/CPI (065) |
+| CC-044 | GC-20 commissioning: staged verified test packs, punch categories, dossier, evidence-gated taking-over + DLP (066) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -121,9 +122,10 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_login_throttling.mjs | 20 | G-017 lockout, address limit, unlock, login events |
 | sweep_risks.mjs | 37 | GC-26 / GC-01 s8 risk & opportunity register |
 | sweep_report_packs.mjs | 29 | GC-10 report packs, reconciliation, approval |
+| sweep_commissioning.mjs | 37 | GC-20 commissioning-to-handover |
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
 | gc_status_check.py | 167 steps | F-25 Golden Case statuses agree with gate suites (gate step) |
-| **Total** | **854** | 29 suites + probe, all PASS locally (RUN rp3; earlier "700" was a records error, F-19) |
+| **Total** | **891** | 30 suites + probe, all PASS locally (RUN cm1; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

@@ -173,11 +173,11 @@ gc('GC-17', 'Material Lifecycle', [
     ('Link to installed asset and handover', 'Engineer', 'installation record', 'asset record', 'traceability to batch/certificate', 'none', 'L0', 'ABSENT', '', ''),
 ])
 gc('GC-20', 'Commissioning-to-Handover', [
-    ('Define systems and readiness criteria', 'Commissioning manager', 'design', 'system register', 'gate sequence MC->pre-comm->energise->functional->integrated->performance', 'none', 'L1', 'ABSENT', '', 'NDC-004'),
-    ('Execute test packs', 'Commissioning engineer', 'test packs', 'results', 'witness by client where required', 'SOD15-049', 'L0', 'ABSENT', '', 'NDC-004'),
-    ('Punch list management', 'Site engineer', 'walkdowns', 'punch items', 'category A blocks handover', 'none', 'L1', 'API', 'punch-list routes', ''),
-    ('Handover dossier completeness', 'Document controller', 'as-builts, O&M, warranties', 'dossier', 'completeness checklist per system', 'none', 'L2 completeness check', 'ABSENT', '', 'NDC-023'),
-    ('Handover, DLP, final account', 'Project director', 'dossier', 'taking-over, DLP register', 'retention release per contract', 'DOA Payment', 'L0', 'ABSENT', '', ''),
+    ('Define systems and readiness criteria', 'Commissioning manager', 'design', 'system register', 'gate sequence MC->pre-comm->energise->functional->integrated->performance', 'none', 'L1', 'RUNTIME', 'CC-044 sweep_commissioning: system register per project; staged test packs with acceptance criteria; stage order enforced at acceptance', 'NDC-004'),
+    ('Execute test packs', 'Commissioning engineer', 'test packs', 'results', 'witness by client where required', 'SOD15-049 executor != verifier (CC-044)', 'L0', 'RUNTIME', 'CC-044 sweep_commissioning: append-only runs; witness name+reference required where flagged; a later failure withdraws acceptance', 'NDC-004'),
+    ('Punch list management', 'Site engineer', 'walkdowns', 'punch items', 'category A blocks handover', 'A closed by someone other than its raiser (CC-044)', 'L1', 'RUNTIME', 'CC-044 sweep_commissioning: categories A/B/C, closure who+how, A blocks taking-over; close of missing item 404 (was 200 null), no re-close', ''),
+    ('Handover dossier completeness', 'Document controller', 'as-builts, O&M, warranties', 'dossier', 'completeness checklist per system', 'none', 'L2 completeness check', 'RUNTIME', 'CC-044 sweep_commissioning: required documents per system satisfied only by approved EDMS documents of the project; frozen after taking-over', 'NDC-023'),
+    ('Handover, DLP, final account', 'Project director', 'dossier', 'taking-over, DLP register', 'retention release per contract', 'DOA Payment', 'L0', 'PARTIAL', 'CC-044 sweep_commissioning: taking-over refused unless ready; DLP end from the contract defects liability period; DLP defects tracked; retention release and final account not automated (DEC-009/DEC-012)', ''),
 ])
 gc('GC-28', 'Asset Traceability', [
     ('Select asset/location/model element', 'Any authorised user', 'asset id', 'asset view', 'permissions per object', 'none', 'L0', 'PARTIAL', 'assets_equipment is plant, not installed assets', ''),

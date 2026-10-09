@@ -91,14 +91,25 @@ siteRouter.get('/punch-list', asyncHandler(async (req, res) => {
 }));
 
 siteRouter.post('/punch-list', authorize('site', 'manage'), asyncHandler(async (req, res) => {
-  const body = z.object({ project_id: z.number().int().positive(), location: z.string().max(150).optional(), description: z.string().min(1), assigned_to: z.number().int().positive().optional(), due_date: z.string().optional() }).parse(req.body);
-  const [created] = await query(`insert into punch_lists (project_id, location, description, raised_by, assigned_to, due_date) values ($1,$2,$3,$4,$5,$6) returning *`, [body.project_id, body.location ?? null, body.description, req.user!.id, body.assigned_to ?? null, body.due_date ?? null]);
+  const body = z.object({ project_id: z.number().int().positive(), location: z.string().max(150).optional(), description: z.string().min(1), assigned_to: z.number().int().positive().optional(), due_date: z.string().optional(),
+    category: z.enum(['A', 'B', 'C']).default('B'), system_id: z.number().int().positive().optional() }).parse(req.body);
+  const [created] = await query(`insert into punch_lists (project_id, location, description, raised_by, assigned_to, due_date, category, system_id) values ($1,$2,$3,$4,$5,$6,$7,$8) returning *`,
+    [body.project_id, body.location ?? null, body.description, req.user!.id, body.assigned_to ?? null, body.due_date ?? null, body.category, body.system_id ?? null]);
   res.status(201).json({ success: true, data: created });
 }));
 
+// Stage 15: closing records who and how; a missing item is 404 (was 200 with data:null) and a closed item cannot be
+// closed again (was silently re-closed with a new date).
 siteRouter.patch('/punch-list/:id/close', authorize('site', 'manage'), asyncHandler(async (req, res) => {
-  const [updated] = await query(`update punch_lists set status='closed', closed_date=current_date, updated_at=now() where id=$1 returning *`, [Number(req.params.id)]);
-  res.json({ success: true, data: updated ?? null });
+  const id = Number(req.params.id);
+  if (!Number.isSafeInteger(id) || id <= 0) throw new AppError(400, 'Invalid id');
+  const body = z.object({ closure_note: z.string().trim().min(5).max(4000) }).parse(req.body ?? {});
+  const [cur] = await query<any>(`select id, status from punch_lists where id=$1 and org_id=$2`, [id, req.user!.org_id]);
+  if (!cur) throw new AppError(404, 'Punch item not found');
+  if (cur.status === 'closed') throw new AppError(409, 'Punch item is already closed');
+  const [updated] = await query(`update punch_lists set status='closed', closed_date=current_date, closed_by=$2, closure_note=$3, updated_at=now() where id=$1 and status <> 'closed' returning *`, [id, req.user!.id, body.closure_note]);
+  if (!updated) throw new AppError(409, 'Punch item is already closed');
+  res.json({ success: true, data: updated });
 }));
 
 siteRouter.get('/site-instructions', asyncHandler(async (req, res) => {

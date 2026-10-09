@@ -1,0 +1,642 @@
+{
+  "suite": "sweep_commissioning",
+  "run": "cm1",
+  "tag": "cm1",
+  "steps": [
+    {
+      "name": "HVAC system registered",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "duplicate system code refused",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint commissioning_systems_project_id_system_code_key\""
+    },
+    {
+      "name": "test pack without acceptance criteria refused",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "witnessed pack refused without client witness",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Test pack TP-FN requires a client witness: record the witness name and reference\""
+    },
+    {
+      "name": "test run dated in the future refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A test run cannot be dated in the future\""
+    },
+    {
+      "name": "executor cannot verify own result (SoD)",
+      "outcome": "PASS",
+      "detail": "HTTP 403 \"Segregation of duties: a test result is verified by someone other than the person who executed it\""
+    },
+    {
+      "name": "functional stage cannot be accepted before mechanical completion",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Stage functional cannot be accepted before every earlier-stage pack of the system is accepted\""
+    },
+    {
+      "name": "mechanical completion verified by a second person",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "functional test verified after mechanical completion",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a failed run cannot be verified",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Only a passed run is verified; record a new run after a failure\""
+    },
+    {
+      "name": "a later failure withdraws acceptance of the pack (1 of 2 accepted)",
+      "outcome": "PASS",
+      "detail": "{\"test_packs\":2,\"packs_accepted\":1,\"open_category_a\":0,\"open_category_b\":0,\"open_category_c\":0,\"dossier_required\":0,\"dossier_satisfied\":0,\"ready\":false}"
+    },
+    {
+      "name": "an already-verified run cannot be verified again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Test run is already verified\""
+    },
+    {
+      "name": "taking-over refused with an open category-A item and incomplete dossier (reason states both)",
+      "outcome": "PASS",
+      "detail": "HTTP 422 System not ready for taking-over: test packs accepted 2/2, open category-A items 1, dossier 0/1"
+    },
+    {
+      "name": "closing needs a resolution note",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "category-A item cannot be closed by the person who raised it",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A category-A item is closed by someone other than the person who raised it\""
+    },
+    {
+      "name": "category-A item closed by another person with resolution",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closer and resolution recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closed item cannot be closed again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Punch item is already closed\""
+    },
+    {
+      "name": "missing punch item is 404 (was 200 with null)",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Punch item not found\""
+    },
+    {
+      "name": "a draft document does not satisfy the dossier",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"A dossier requirement is satisfied only by an approved document of the same project\""
+    },
+    {
+      "name": "approved O&M manual linked to the dossier",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "taking-over refused when the contract has no defects liability period",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"The contract has no defects liability period recorded; record it before taking-over\""
+    },
+    {
+      "name": "taking-over cannot be future-dated",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Taking-over cannot be dated in the future\""
+    },
+    {
+      "name": "taking-over recorded (category-B item may remain open)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DLP end = taking-over + 12 months from the contract",
+      "outcome": "PASS",
+      "detail": "2027-10-09 vs 2027-10-09"
+    },
+    {
+      "name": "no test runs after taking-over",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"System 1 is handed over\""
+    },
+    {
+      "name": "dossier frozen after taking-over",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"System 1 is handed over; its dossier is frozen\""
+    },
+    {
+      "name": "a system is taken over once",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint handover_certificates_system_id_key\""
+    },
+    {
+      "name": "DLP register: defects raised after taking-over are tracked with days remaining",
+      "outcome": "PASS",
+      "detail": "{\"id\":4,\"org_id\":1,\"system_id\":1,\"contract_id\":18,\"certificate_no\":\"TOC-cm1\",\"taking_over_date\":\"2026-10-09\",\"dlp_end_date\":\"2027-10-09\",\"client_reference\":\"Engineer letter EL-40 (fixture)\",\"recorded_by\":94,\"created_at\":\"2026-10-09T00:24:02.965Z\",\"dlp_days_remaining\":365,\"dlp_defects_open\":1}"
+    },
+    {
+      "name": "DB: test runs append-only (no delete)",
+      "outcome": "PASS",
+      "detail": "ERROR:  Test runs are append-only"
+    },
+    {
+      "name": "DB: a recorded result cannot be rewritten",
+      "outcome": "PASS",
+      "detail": "ERROR:  Test runs are append-only; only a passed run may be verified once"
+    },
+    {
+      "name": "DB: taking-over certificate immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Taking-over certificates are immutable records"
+    },
+    {
+      "name": "DB: punch items are never deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Punch items are closed, never deleted"
+    },
+    {
+      "name": "DB: closing an A item by its raiser refused at DB level",
+      "outcome": "PASS",
+      "detail": "ERROR:  A category-A item is closed by someone other than the person who raised it"
+    },
+    {
+      "name": "tenant B cannot read a tenant A system",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"System not found\""
+    },
+    {
+      "name": "tenant B cannot verify a tenant A test run",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Test run not found\""
+    },
+    {
+      "name": "tenant B cannot close a tenant A punch item",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Punch item not found\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/clients",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/18/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/48/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/48/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/contracts/19/submit-approval",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/49/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/approvals/49/actions",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint commissioning_systems_project_id_system_code_key"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/test-packs",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/test-packs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/test-packs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-packs/2/runs",
+      "status": 422,
+      "ok": false,
+      "error": "Test pack TP-FN requires a client witness: record the witness name and reference"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-packs/1/runs",
+      "status": 422,
+      "ok": false,
+      "error": "A test run cannot be dated in the future"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-packs/1/runs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-packs/2/runs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-runs/3/verify",
+      "status": 403,
+      "ok": false,
+      "error": "Segregation of duties: a test result is verified by someone other than the person who executed it"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-runs/4/verify",
+      "status": 422,
+      "ok": false,
+      "error": "Stage functional cannot be accepted before every earlier-stage pack of the system is accepted"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-runs/3/verify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-runs/4/verify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-packs/1/runs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-runs/5/verify",
+      "status": 409,
+      "ok": false,
+      "error": "Only a passed run is verified; record a new run after a failure"
+    },
+    {
+      "method": "GET",
+      "path": "/commissioning/systems/1",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-runs/3/verify",
+      "status": 409,
+      "ok": false,
+      "error": "Test run is already verified"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-packs/1/runs",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-runs/6/verify",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/site/punch-list",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/site/punch-list",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/dossier",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/taking-over",
+      "status": 422,
+      "ok": false,
+      "error": "System not ready for taking-over: test packs accepted 2/2, open category-A items 1, dossier 0/1"
+    },
+    {
+      "method": "PATCH",
+      "path": "/site/punch-list/1/close",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "PATCH",
+      "path": "/site/punch-list/1/close",
+      "status": 422,
+      "ok": false,
+      "error": "A category-A item is closed by someone other than the person who raised it"
+    },
+    {
+      "method": "PATCH",
+      "path": "/site/punch-list/1/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/site/punch-list/1/close",
+      "status": 409,
+      "ok": false,
+      "error": "Punch item is already closed"
+    },
+    {
+      "method": "PATCH",
+      "path": "/site/punch-list/999999999/close",
+      "status": 404,
+      "ok": false,
+      "error": "Punch item not found"
+    },
+    {
+      "method": "GET",
+      "path": "/commissioning/systems/1",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/dossier/1/link",
+      "status": 422,
+      "ok": false,
+      "error": "A dossier requirement is satisfied only by an approved document of the same project"
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/4/submit",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/edms/documents/4/review",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/dossier/1/link",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/taking-over",
+      "status": 422,
+      "ok": false,
+      "error": "The contract has no defects liability period recorded; record it before taking-over"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/taking-over",
+      "status": 422,
+      "ok": false,
+      "error": "Taking-over cannot be dated in the future"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/taking-over",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-packs/1/runs",
+      "status": 422,
+      "ok": false,
+      "error": "System 1 is handed over"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/dossier",
+      "status": 422,
+      "ok": false,
+      "error": "System 1 is handed over; its dossier is frozen"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/systems/1/taking-over",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint handover_certificates_system_id_key"
+    },
+    {
+      "method": "POST",
+      "path": "/site/punch-list",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/commissioning/systems/1",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/commissioning/systems/1",
+      "status": 404,
+      "ok": false,
+      "error": "System not found"
+    },
+    {
+      "method": "POST",
+      "path": "/commissioning/test-runs/6/verify",
+      "status": 404,
+      "ok": false,
+      "error": "Test run not found"
+    },
+    {
+      "method": "PATCH",
+      "path": "/site/punch-list/2/close",
+      "status": 404,
+      "ok": false,
+      "error": "Punch item not found"
+    }
+  ]
+}
