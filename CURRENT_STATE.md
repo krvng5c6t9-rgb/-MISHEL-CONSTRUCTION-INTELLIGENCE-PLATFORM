@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-051
+## Controlled Changes CC-001 → CC-052
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -83,6 +83,7 @@
 | CC-049 | GC-12 subcontract advances/recovery, back-charges, less-previous cap; negative-net check defect fixed (069) |
 | CC-050 | GC-13 client advances/recovery, retention cap, less-previous cap on IPCs; CC-049 cap correction (070) |
 | CC-051 | GC-13 client certification evidence with SoD, dispute/resubmission, AR at certified amount (071) |
+| CC-052 | Payments & Certification screen + browser check in CI (F-38) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -138,7 +139,8 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
 | gc_status_check.py | 167 steps | F-25 Golden Case statuses agree with gate suites (gate step) |
 | project_controls.ui.mjs | 23 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI) |
-| **Total** | **1,060** | 35 API suites + browser check, all PASS locally (RUN cc3; earlier "700" was a records error, F-19) |
+| payments.ui.mjs | 14 | Browser: Payments & Certification (certification SoD, advance positions, back-charge SoD) |
+| **Total** | **1,074** | 35 API suites + 2 browser checks, all PASS locally (RUN pu1; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

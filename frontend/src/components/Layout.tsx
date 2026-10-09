@@ -1,11 +1,12 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { logout } from '../lib/api';
-import { BarChart3, ClipboardCheck, FolderKanban, Landmark, PackageCheck, ScrollText, DraftingCompass, CalendarDays, HardHat, UsersRound, Wrench, ShieldCheck, ShieldAlert, FolderArchive, FileBarChart, MonitorCheck, Globe2, Bot, Workflow, BookOpenCheck, BadgeDollarSign } from 'lucide-react';
+import { Receipt, BarChart3, ClipboardCheck, FolderKanban, Landmark, PackageCheck, ScrollText, DraftingCompass, CalendarDays, HardHat, UsersRound, Wrench, ShieldCheck, ShieldAlert, FolderArchive, FileBarChart, MonitorCheck, Globe2, Bot, Workflow, BookOpenCheck, BadgeDollarSign } from 'lucide-react';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: BarChart3 },
   { to: '/projects', label: 'Projects', icon: FolderKanban },
   { to: '/project-controls', label: 'Project Controls', icon: ShieldCheck },
+  { to: '/payments-certification', label: 'Payments & Certification', icon: Receipt },
   { to: '/users', label: 'Users / Roles / DOA', icon: UsersRound },
   { to: '/crm', label: 'CRM', icon: UsersRound },
   { to: '/tendering', label: 'Tendering', icon: ClipboardCheck },

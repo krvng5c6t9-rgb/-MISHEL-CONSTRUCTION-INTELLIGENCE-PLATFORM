@@ -1,0 +1,16 @@
+PASS  finance preparer opens Payments & Certification from the navigation
+PASS  submitted IPC listed with its submitted net :: CC3-pu1 CC pu1 CON-21 submitted_to_client 47500.00 — — — — Record certificationDispute
+PASS  IPC preparer recording the client certification is refused on screen (SoD) :: Segregation of duties: the IPC preparer cannot record the client certification
+PASS  subcontract section the finance user may not read is named, not shown empty :: Not loaded for this user: subcontracts (Missing permission: contracts.view)
+PASS  second person records certification: 45,000 certified, 2,500 difference, client reference shown :: CC3-pu1 CC pu1 CON-21 client_approved 47500.00 45000.00 2500.00 CC3-REF-pu1 — 
+PASS  client advance position: 50,000 received and fully recovered :: Client advance position Contract Select a contract CON-21 — CC pu1 CON-20 — CI pu1 CON-4 — E2E Project pu1 Limit 50,000.00 Received 50,000.00 Recovered 50,000.00 Outstanding 0.00 Net certified 75,000.
+PASS  client IPC section the QS may not read is named on screen
+PASS  subcontract position: 20,000 paid and recovered, 3,000 disputed back-charges :: Subcontract advances & back-charges Subcontract Select a subcontract SD pkg pu1 — SD Sub pu1 SC pkg pu1 — SC Sub pu1 Advance limit 20,000.00 Paid 20,000.00 Recovered 20,000.00 Outstanding 0.00 Disputed back-charges 3,000
+PASS  back-charge raised from the screen :: UIBC-pu1 Scaffold left standing in zone D removed by main contractor (UI fixture) 750.00 raised — none — Notice sentApproveWithdrawResponse
+PASS  raiser approving own back-charge is refused on screen (SoD) :: Segregation of duties: a back-charge is approved by someone other than the person who raised it
+PASS  second person approves the noticed back-charge :: UIBC-pu1 Scaffold left standing in zone D removed by main contractor (UI fixture) 750.00 approved 2026-10-09 none — ApplyWithdrawResponse
+PASS  only the two SoD refusals failed; other failures are permission-scoped reads; no 5xx :: []
+PASS  no browser console errors besides permission refusals
+PASS  no third-party host contacted
+
+SUMMARY payments_ui PASS=14 FAIL=0

@@ -81,4 +81,5 @@ if [ "${UI_CHECK:-0}" = "1" ]; then
   for _ in $(seq 1 30); do curl -sf "http://localhost:$UI_PORT_/login" >/dev/null && break; sleep 0.5; done
   mkdir -p out/ui
   UI_BASE="http://localhost:$UI_PORT_" UI_API="$API_BASE" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/project_controls.ui.mjs" | tee "out/ui/project_controls_ui_$RUN.txt"
+  UI_BASE="http://localhost:$UI_PORT_" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/payments.ui.mjs" | tee "out/ui/payments_ui_$RUN.txt"
 fi
