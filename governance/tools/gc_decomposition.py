@@ -128,9 +128,9 @@ gc('GC-03', 'Drawing/Model Technical Review', [
     ('Issue controlled review report', 'Document controller', 'disposition', 'report/transmittal', 'issued output immutable; for-construction only approved current revisions (CC-029)', 'maker != issuer', 'L2', 'RUNTIME', 'CC-029 sweep_edms transmittals', ''),
 ])
 gc('GC-04', 'Design Revision Impact', [
-    ('Detect new revision', 'Document controller', 'revision', 'change event', 'superseded revision flagged everywhere used', 'none', 'L4 notify', 'PARTIAL', 'document_versions', ''),
-    ('Trace affected quantities, BOQ, activities, POs, inspections', 'Technical office', 'links graph', 'impact list', 'requires document-to-object links', 'none', 'L1 impact list', 'ABSENT', 'no cross-object link model', 'DFS-006'),
-    ('Raise change/variation where entitled', 'Contracts manager', 'impact list', 'change event (GC-15)', 'notice obligations apply', 'none', 'L2', 'ABSENT', '', 'NDC-001'),
+    ('Detect new revision', 'Document controller', 'revision', 'change event', 'superseded revision flagged everywhere used', 'none', 'L4 notify', 'RUNTIME', 'CC-045 sweep_design_impact: new current revision opens an impact automatically; links on the superseded revision show stale in where-used; no push notification yet', ''),
+    ('Trace affected quantities, BOQ, activities, POs, inspections', 'Technical office', 'links graph', 'impact list', 'requires document-to-object links', 'none', 'L1 impact list', 'RUNTIME', 'CC-045 sweep_design_impact: drawing-number links to BOQ items, activities, PO lines, inspections (same project); impact lists each object with label and based-on revision', 'DFS-006'),
+    ('Raise change/variation where entitled', 'Contracts manager', 'impact list', 'change event (GC-15)', 'notice obligations apply', 'none', 'L2', 'RUNTIME', 'CC-045 sweep_design_impact: every object dispositioned by a person; required changes close only with a contract event of the project (NDC-001 notices apply) or a stated no-entitlement reason', 'NDC-001'),
 ])
 gc('GC-07', 'Site Daily Control', [
     ('Record manpower, equipment, weather, work fronts', 'Site engineer', 'site observations', 'daily diary', 'mandatory fields enforced at signing', 'none', 'L2 from voice/photos', 'RUNTIME', 'CC-023 structured diary [wave2_daily_record_changes]', 'NDC-014'),

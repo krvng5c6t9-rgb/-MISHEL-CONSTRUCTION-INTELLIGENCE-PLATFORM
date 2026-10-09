@@ -1,0 +1,548 @@
+{
+  "suite": "sweep_design_impact",
+  "run": "di3",
+  "tag": "di3",
+  "steps": [
+    {
+      "name": "first approved revision opens no impact",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a PO line of another project cannot be linked",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"po_line 3 not found in this project\""
+    },
+    {
+      "name": "object from another project cannot be linked",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"activity 8 not found in this project\""
+    },
+    {
+      "name": "the same object is linked once per drawing",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Duplicate value violates unique constraint design_links_project_id_drawing_no_object_type_object_id_key\""
+    },
+    {
+      "name": "where-used lists 3 objects on revision A, none stale",
+      "outcome": "PASS",
+      "detail": "[[\"activity\",\"Activity DI-A1-di3 Slab L3 formwork (fixture)\"],[\"boq_item\",\"BOQ 1.1 VA item\"],[\"inspection\",\"Inspection 2 slab_L3_rebar \"]]"
+    },
+    {
+      "name": "a revision under review opens nothing yet",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "approving revision B opens one impact with the 3 linked objects (A -> B)",
+      "outcome": "PASS",
+      "detail": "{\"id\":2,\"org_id\":1,\"project_id\":12,\"drawing_no\":\"S-300-di3\",\"new_drawing_id\":5,\"superseded_drawing_id\":4,\"status\":\"open\",\"contract_event_id\":null,\"no_entitlement_reason\":null,\"closed_by\":null,\"closed_at\":null,\"created_at\":\"2026-10-09T01:02:23.151Z\",\"new_revision\":\"B\",\"superseded_revision\":\"A\",\"items\":3,\"pending_items\":3}"
+    },
+    {
+      "name": "every link is flagged stale (based on superseded revision A)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "impact items carry a readable label and the revision they were based on",
+      "outcome": "PASS",
+      "detail": "[\"Activity DI-A1-di3 Slab L3 formwork (fixture)\",\"BOQ 1.1 VA item\",\"Inspection 2 slab_L3_rebar \"]"
+    },
+    {
+      "name": "closing refused while objects are not assessed",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Every impacted object must be dispositioned before closing\""
+    },
+    {
+      "name": "a disposition needs a reason",
+      "outcome": "PASS",
+      "detail": "HTTP 400 \"Validation failed\""
+    },
+    {
+      "name": "a dispositioned object cannot be re-assessed",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Impact item 1 is already dispositioned\""
+    },
+    {
+      "name": "assessed links are re-based on revision B (no longer stale)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "required change: closing refused without a contract event or no-entitlement reason",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"Changes are required: link the contract event raised for them, or state why there is no entitlement\""
+    },
+    {
+      "name": "a contract event of another project is refused",
+      "outcome": "PASS",
+      "detail": "HTTP 422 \"The contract event must belong to a contract of the same project\""
+    },
+    {
+      "name": "impact closed with the contract event raised for the change",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closer and event recorded",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "a closed impact cannot be closed again",
+      "outcome": "PASS",
+      "detail": "HTTP 409 \"Design impact is already closed\""
+    },
+    {
+      "name": "a revised pump schedule lists the purchase-order line bought against it",
+      "outcome": "PASS",
+      "detail": "[\"PO AR-PO-di3 line 3 AR material\"]"
+    },
+    {
+      "name": "revision without links opens an impact with 0 objects (nothing traced is visible, not silent)",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "impact without required changes closes without event",
+      "outcome": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "DB: impacts are never deleted",
+      "outcome": "PASS",
+      "detail": "ERROR:  Design revision impacts are never deleted"
+    },
+    {
+      "name": "DB: closed impact immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Impact 2 is closed"
+    },
+    {
+      "name": "DB: impact items of a closed impact immutable",
+      "outcome": "PASS",
+      "detail": "ERROR:  Impact 2 is closed"
+    },
+    {
+      "name": "DB: a link with impact history cannot be removed",
+      "outcome": "PASS",
+      "detail": "ERROR:  A link with impact history cannot be removed"
+    },
+    {
+      "name": "tenant B cannot read a tenant A impact",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Design impact not found\""
+    },
+    {
+      "name": "tenant B cannot link to a tenant A drawing",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Drawing not found\""
+    },
+    {
+      "name": "tenant B cannot disposition a tenant A item",
+      "outcome": "PASS",
+      "detail": "HTTP 404 \"Impact item not found\""
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/roles",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/users",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/projects",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/projects",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/boq/project/12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/activities",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/planning/activities",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/qaqc/inspections",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/4/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-impacts?project_id=12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-links",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-links",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-links",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-links",
+      "status": 422,
+      "ok": false,
+      "error": "po_line 3 not found in this project"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-links",
+      "status": 422,
+      "ok": false,
+      "error": "activity 8 not found in this project"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-links",
+      "status": 409,
+      "ok": false,
+      "error": "Duplicate value violates unique constraint design_links_project_id_drawing_no_object_type_object_id_key"
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-links?project_id=12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-impacts?project_id=12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/5/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-impacts?project_id=12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-links?project_id=12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-impacts/2",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impacts/2/close",
+      "status": 422,
+      "ok": false,
+      "error": "Every impacted object must be dispositioned before closing"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impact-items/2/disposition",
+      "status": 400,
+      "ok": false,
+      "error": "Validation failed"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impact-items/2/disposition",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impact-items/1/disposition",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impact-items/3/disposition",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impact-items/1/disposition",
+      "status": 422,
+      "ok": false,
+      "error": "Impact item 1 is already dispositioned"
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-links?project_id=12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impacts/2/close",
+      "status": 422,
+      "ok": false,
+      "error": "Changes are required: link the contract event raised for them, or state why there is no entitlement"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impacts/2/close",
+      "status": 422,
+      "ok": false,
+      "error": "The contract event must belong to a contract of the same project"
+    },
+    {
+      "method": "POST",
+      "path": "/contract-admin/contracts/9/events",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impacts/2/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impacts/2/close",
+      "status": 409,
+      "ok": false,
+      "error": "Design impact is already closed"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/6/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-links",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/7/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-impacts?project_id=14",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-impacts/3",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/8/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/drawings",
+      "status": 201,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "PATCH",
+      "path": "/technical-office/drawings/9/status",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-impacts?project_id=12",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impacts/4/close",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "method": "GET",
+      "path": "/technical-office/design-impacts/2",
+      "status": 404,
+      "ok": false,
+      "error": "Design impact not found"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-links",
+      "status": 404,
+      "ok": false,
+      "error": "Drawing not found"
+    },
+    {
+      "method": "POST",
+      "path": "/technical-office/design-impact-items/2/disposition",
+      "status": 404,
+      "ok": false,
+      "error": "Impact item not found"
+    }
+  ]
+}

@@ -32,3 +32,53 @@ technicalOfficeRouter.get('/method-statements',asyncHandler(async(req,res)=>{con
 technicalOfficeRouter.post('/method-statements',authorize('technical_office','manage'),asyncHandler(async(req,res)=>{const b=methodStatementSchema.parse(req.body);const [r]=await query<any>(`insert into method_statements(project_id,activity_name,document_id,status,created_by) values($1,$2,$3,'draft',$4) returning *`,[b.project_id,b.activity_name,b.document_id??null,req.user!.id]);res.status(201).json({success:true,data:r});}));
 technicalOfficeRouter.post('/method-statements/:id/submit',authorize('technical_office','manage'),asyncHandler(async(req,res)=>{const id=parseId(req.params.id);const current=(await query<any>(`select * from method_statements where id=$1`,[id]))[0];if(!current)throw new AppError(404,'Method statement not found');if(!['draft','rejected'].includes(current.status))throw new AppError(409,'Only draft/rejected method statement can be submitted');if(current.created_by&&Number(current.created_by)!==req.user!.id)throw new AppError(403,'Only maker can submit this method statement');const [r]=await query<any>(`update method_statements set status='submitted',submitted_by=$2,submitted_at=now(),approved_by=null,approval_date=null,updated_at=now() where id=$1 returning *`,[id,req.user!.id]);res.json({success:true,data:r});}));
 technicalOfficeRouter.post('/method-statements/:id/review',authorize('technical_office','manage'),asyncHandler(async(req,res)=>{const id=parseId(req.params.id);const b=z.object({action:z.enum(['approved','rejected']),comment:z.string().trim().max(4000).optional()}).refine(v=>v.action==='approved'||(v.comment??'').length>=5,{message:'Rejection comments required (at least 5 characters)',path:['comment']}).parse(req.body);const current=(await query<any>(`select * from method_statements where id=$1`,[id]))[0];if(!current)throw new AppError(404,'Method statement not found');if(current.status!=='submitted')throw new AppError(409,'Method statement is not submitted');if(Number(current.created_by)===req.user!.id||Number(current.submitted_by)===req.user!.id)throw new AppError(403,'Segregation of duties: maker/submitter cannot review own method statement');const [r]=await query<any>(`update method_statements set status=$2,approved_by=$3,approval_date=current_date,review_comment=$4,updated_at=now() where id=$1 returning *`,[id,b.action,req.user!.id,b.comment??null]);res.json({success:true,data:r});}));
+
+// Stage 16 (GC-04, migration 067): design links and revision impacts. Links tie a drawing number to the objects that
+// rely on it; a new current revision opens an impact listing them; people disposition each object and close the impact
+// with a contract event or a stated no-entitlement reason. The platform never decides entitlement.
+const linkTypes = z.enum(['boq_item', 'activity', 'po_line', 'inspection']);
+technicalOfficeRouter.post('/design-links', authorize('technical_office', 'manage'), asyncHandler(async (req, res) => {
+  const b = z.object({ drawing_id: z.number().int().positive(), object_type: linkTypes, object_id: z.number().int().positive() }).parse(req.body);
+  const [d] = await query<any>(`select id, project_id, drawing_no from drawings where id = $1 and org_id = $2`, [b.drawing_id, req.user!.org_id]);
+  if (!d) throw new AppError(404, 'Drawing not found');
+  const [l] = await query(`insert into design_links(org_id, project_id, drawing_no, object_type, object_id, based_on_drawing_id, created_by) values ($1,$2,$3,$4,$5,$6,$7) returning *`,
+    [req.user!.org_id, d.project_id, d.drawing_no, b.object_type, b.object_id, d.id, req.user!.id]);
+  res.status(201).json({ success: true, data: l });
+}));
+// Where-used: every link of a project (or of one object) with its label and whether it rests on a superseded revision.
+technicalOfficeRouter.get('/design-links', asyncHandler(async (req, res) => {
+  const q = z.object({ project_id: z.coerce.number().int().positive(), object_type: linkTypes.optional(), object_id: z.coerce.number().int().positive().optional() }).parse(req.query);
+  res.json({ success: true, data: await query(`select l.*, d.revision as based_on_revision, (d.status = 'superseded') as stale, design_object_label(l.object_type, l.object_id, l.project_id) as object_label
+     from design_links l join drawings d on d.id = l.based_on_drawing_id
+     where l.org_id = $1 and l.project_id = $2 and ($3::varchar is null or l.object_type = $3::varchar) and ($4::bigint is null or l.object_id = $4::bigint)
+     order by l.drawing_no, l.object_type, l.object_id`, [req.user!.org_id, q.project_id, q.object_type ?? null, q.object_id ?? null]) });
+}));
+technicalOfficeRouter.get('/design-impacts', asyncHandler(async (req, res) => {
+  const q = z.object({ project_id: z.coerce.number().int().positive(), status: z.enum(['open', 'closed']).optional() }).parse(req.query);
+  res.json({ success: true, data: await query(`select i.*, nd.revision as new_revision, sd.revision as superseded_revision,
+       (select count(*)::int from design_impact_items x where x.impact_id = i.id) as items,
+       (select count(*)::int from design_impact_items x where x.impact_id = i.id and x.disposition = 'pending') as pending_items
+     from design_revision_impacts i join drawings nd on nd.id = i.new_drawing_id join drawings sd on sd.id = i.superseded_drawing_id
+     where i.org_id = $1 and i.project_id = $2 and ($3::varchar is null or i.status = $3::varchar) order by i.id desc`, [req.user!.org_id, q.project_id, q.status ?? null]) });
+}));
+technicalOfficeRouter.get('/design-impacts/:id', asyncHandler(async (req, res) => {
+  const [i] = await query<any>(`select * from design_revision_impacts where id = $1 and org_id = $2`, [parseId(req.params.id), req.user!.org_id]);
+  if (!i) throw new AppError(404, 'Design impact not found');
+  res.json({ success: true, data: { ...i, items: await query(`select * from design_impact_items where impact_id = $1 order by object_type, object_id`, [i.id]) } });
+}));
+technicalOfficeRouter.post('/design-impact-items/:id/disposition', authorize('technical_office', 'manage'), asyncHandler(async (req, res) => {
+  const b = z.object({ disposition: z.enum(['no_change', 'change_required']), reason: z.string().trim().min(5).max(4000) }).parse(req.body);
+  const [cur] = await query<any>(`select id from design_impact_items where id = $1 and org_id = $2`, [parseId(req.params.id), req.user!.org_id]);
+  if (!cur) throw new AppError(404, 'Impact item not found');
+  const [x] = await query(`update design_impact_items set disposition = $2::varchar, reason = $3, assessed_by = $4, assessed_at = now() where id = $1 returning *`, [cur.id, b.disposition, b.reason, req.user!.id]);
+  res.json({ success: true, data: x });
+}));
+technicalOfficeRouter.post('/design-impacts/:id/close', authorize('technical_office', 'manage'), asyncHandler(async (req, res) => {
+  const b = z.object({ contract_event_id: z.number().int().positive().optional(), no_entitlement_reason: z.string().trim().max(4000).optional() }).parse(req.body);
+  const [cur] = await query<any>(`select id, status from design_revision_impacts where id = $1 and org_id = $2`, [parseId(req.params.id), req.user!.org_id]);
+  if (!cur) throw new AppError(404, 'Design impact not found');
+  if (cur.status === 'closed') throw new AppError(409, 'Design impact is already closed');
+  const [i] = await query(`update design_revision_impacts set status = 'closed', contract_event_id = $2, no_entitlement_reason = $3, closed_by = $4, closed_at = now() where id = $1 returning *`,
+    [cur.id, b.contract_event_id ?? null, b.no_entitlement_reason ?? null, req.user!.id]);
+  res.json({ success: true, data: i });
+}));
