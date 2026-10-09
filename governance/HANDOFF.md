@@ -7,7 +7,7 @@
 
 ## Done (numbers)
 - **Change controls:** CC-001…CC-056 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–076.
-- **Runtime suites, all from zero (E1):** 39 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,165 checks + shared-guard probe + Golden Case status check, all PASS, RUN iv3 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
+- **Runtime suites, all from zero (E1):** 39 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,165 checks + shared-guard probe + Golden Case status check, all PASS, RUN iv4 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|

@@ -1,14 +1,13 @@
 import type { PoolClient } from 'pg';
 import { AppError } from '../middleware/errors.js';
 
-// DEC-013 (owner decision 2026-10-09): labour cost is the gross pay (basic + overtime + allowances); employee
-// deductions are withheld from the employee and are a liability to the authorities, not a reduction of cost.
-// Employer contributions are added when they are modelled (DEC-013 option b).
-const grossPay = (line: any) => (Number(line.basic) + Number(line.overtime) + Number(line.allowances)).toFixed(2);
+// DEC-013 (owner decision 2026-10-09): labour cost is the gross pay (basic + overtime + allowances), computed in SQL
+// NUMERIC (never Float64); employee deductions are withheld from the employee and are a liability to the authorities,
+// not a reduction of cost. Employer contributions are added when they are modelled (DEC-013 option b).
 
 export async function postPayrollLineToCostTransaction(client: PoolClient, payrollLineId: number) {
   const result = await client.query(`
-    select pl.*, pr.status as payroll_status
+    select pl.*, pr.status as payroll_status, (pl.basic + pl.overtime + pl.allowances)::text as gross_pay
     from payroll_lines pl
     join payroll_runs pr on pr.id = pl.payroll_run_id
     where pl.id = $1
@@ -27,7 +26,7 @@ export async function postPayrollLineToCostTransaction(client: PoolClient, payro
        transaction_type, amount, currency_id, transaction_date, description)
     values ($1,$2,'hr_payroll','payroll_lines',$3,'actual',$4,$5,current_date,$6)
     returning *
-  `, [line.project_id, line.cost_code_id, line.id, grossPay(line), line.currency_id, `Actual payroll cost (gross pay) from payroll line ${line.id}`]);
+  `, [line.project_id, line.cost_code_id, line.id, line.gross_pay, line.currency_id, `Actual payroll cost (gross pay) from payroll line ${line.id}`]);
 
   await client.query(`update payroll_lines set posted_cost_transaction_id=$2 where id=$1`, [line.id, inserted.rows[0].id]);
   return inserted.rows[0];
@@ -60,7 +59,7 @@ async function nextBatchId(client: PoolClient) {
 
 export async function postPayrollOverheadToGl(client: PoolClient, payrollLineId: number) {
   const lineResult = await client.query(`
-    select pl.*, pr.org_id, pr.status as payroll_status
+    select pl.*, pr.org_id, pr.status as payroll_status, (pl.basic + pl.overtime + pl.allowances)::text as gross_pay, (pl.deductions > 0) as has_deductions
     from payroll_lines pl
     join payroll_runs pr on pr.id = pl.payroll_run_id
     where pl.id=$1
@@ -82,12 +81,11 @@ export async function postPayrollOverheadToGl(client: PoolClient, payrollLineId:
   const rule = ruleResult.rows[0];
   if (!rule) throw new AppError(422, 'No active GL posting rule for payroll_overhead');
 
-  const amount = grossPay(line);
-  const deductions = Number(line.deductions);
-  const dedRule = deductions > 0 ? (await client.query(`
+  const amount = String(line.gross_pay);
+  const dedRule = line.has_deductions ? (await client.query(`
     select * from gl_posting_rules where org_id=$1 and source_module='cost_transaction' and source_subtype='payroll_deductions' and is_active=true
       and effective_from <= current_date and (effective_to is null or effective_to >= current_date) order by effective_from desc, id desc limit 1`, [line.org_id])).rows[0] : null;
-  if (deductions > 0 && !dedRule) throw new AppError(422, 'No active GL posting rule for payroll deductions (cost_transaction / payroll_deductions)');
+  if (line.has_deductions && !dedRule) throw new AppError(422, 'No active GL posting rule for payroll deductions (cost_transaction / payroll_deductions)');
   const validAmount = (await client.query(`select ($1::numeric > 0) as ok`, [amount])).rows[0]?.ok === true;
   if (!validAmount) throw new AppError(422, 'Payroll overhead amount must be greater than zero');
 
@@ -107,7 +105,7 @@ export async function postPayrollOverheadToGl(client: PoolClient, payrollLineId:
     returning *
   `, [line.org_id, rule.credit_account_id, String(line.net_pay), line.currency_id, line.id, batchId, `Overhead payroll GL posting from payroll line ${line.id} (net pay payable)`]);
   const lines = [debit.rows[0], credit.rows[0]];
-  if (deductions > 0) {
+  if (line.has_deductions) {
     lines.push((await client.query(`
       insert into general_ledger
         (org_id, project_id, account_id, transaction_date, debit, credit, currency_id,

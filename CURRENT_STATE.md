@@ -148,7 +148,7 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | gc_status_check.py | 167 steps | F-25 Golden Case statuses agree with gate suites (gate step) |
 | project_controls.ui.mjs | 23 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI) |
 | payments.ui.mjs | 16 | Browser: Payments & Certification (certification SoD, advance positions, back-charge SoD) |
-| **Total** | **1,165** | 39 API suites + 2 browser checks, all PASS locally (RUN iv3; earlier "700" was a records error, F-19) |
+| **Total** | **1,165** | 39 API suites + 2 browser checks, all PASS locally (RUN iv4; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

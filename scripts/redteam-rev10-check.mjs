@@ -17,7 +17,8 @@ must(approval.includes("'payroll_run'") && approval.includes("'equipment_usage'"
 must(hr.includes("module: 'payroll_run'") && !hr.includes("update payroll_runs set status='approved'"), 'payroll route cannot directly self-approve');
 must(assets.includes("module: 'equipment_usage'") && !assets.includes("update equipment_usage set status='approved'"), 'equipment usage route cannot directly self-approve');
 must(hr.includes('count(distinct currency_id)') && hr.includes('Payroll run must use one currency before approval'), 'payroll DOA amount has deterministic currency');
-must(phase5.includes('const amount = String(line.net_pay)') && !phase5.includes('Number(line.net_pay)'), 'payroll overhead GL avoids Float64 monetary conversion');
+// DEC-013 (CC-056): payroll posts gross pay computed in SQL NUMERIC; no monetary field of a payroll line passes through Number().
+must(phase5.includes('as gross_pay') && phase5.includes('const amount = String(line.gross_pay)') && !/Number\(line\./.test(phase5), 'payroll cost/GL avoid Float64 monetary conversion (gross computed in SQL)');
 
 const all=[procurement,subcontracts,contracts,tendering,finance].join('\n');
 for(const pattern of ['Number(po.rows[0].total_amount)','Number(s.contract_value)','Number(cert.net_amount_due)','Number(contract.contract_value)','Number(v.cost_impact)','Number(tender.estimated_value)','Number(ipc.net_amount_due)','Number(payment.amount)']){

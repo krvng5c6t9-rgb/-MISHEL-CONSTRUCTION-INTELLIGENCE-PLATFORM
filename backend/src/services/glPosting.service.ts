@@ -88,8 +88,9 @@ export async function postCostTransactionToGl(client: PoolClient, costTransactio
   let deductions = '0';
   let dedRule: any = null;
   if (ct.source_module === 'hr_payroll' && ct.source_table === 'payroll_lines') {
-    deductions = String((await client.query(`select deductions from payroll_lines where id = $1`, [ct.source_record_id])).rows[0]?.deductions ?? '0');
-    if (Number(deductions) > 0) {
+    const d = (await client.query(`select deductions::text as deductions, (deductions > 0) as has_deductions from payroll_lines where id = $1`, [ct.source_record_id])).rows[0];
+    deductions = d?.deductions ?? '0';
+    if (d?.has_deductions) {
       dedRule = await getActiveRule(client, Number(ct.org_id), 'cost_transaction', 'payroll_deductions');
       if (!dedRule || dedRule.source_subtype !== 'payroll_deductions') throw new AppError(422, 'No active GL posting rule for payroll deductions (cost_transaction / payroll_deductions)');
     }
