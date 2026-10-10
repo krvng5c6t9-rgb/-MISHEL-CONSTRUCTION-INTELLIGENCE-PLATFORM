@@ -1,13 +1,13 @@
-# HANDOFF — v0.5.29-stage29 — DATE: 2026-10-10
+# HANDOFF — v0.5.30-stage30 — DATE: 2026-10-10
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
 - Waves 1–2 are built and runtime-tested (CC-015…CC-024). The RK-003 module sweep has executed variations, QA/HSE, approval rejection paths, HR/payroll and EDMS for the first time (CC-025…CC-029).
-- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…058 runs to verify.
+- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…059 runs to verify.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-058 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–078.
-- **Runtime suites, all from zero (E1):** 41 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,215 checks + shared-guard probe + Golden Case status check, all PASS, RUN sg5 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
+- **Change controls:** CC-001…CC-059 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–079.
+- **Runtime suites, all from zero (E1):** 42 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,249 checks + shared-guard probe + Golden Case status check, all PASS, RUN sg6 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -98,7 +98,8 @@
   - Stage 27 — DEC-013 + DEC-014: **DONE** (CC-056; F-43 opened).
   - Stage 28 — DEC-012 core: **DONE** (CC-057; F-42 closed).
   - Stage 29 — DEC-012 remainder + DEC-016/017 supplier side: **DONE** (CC-058; F-33 closed; F-44 found and closed — payments now clear the account their payable was credited to).
-  - **Stage 30 (NEXT) — DEC-009 part 1: client advance received through receipts with GL (client-advance liability, mirror of F-33 — today `/client-advances/:id/received` is a typed reference with no cash/GL), retention receivable as a separate conditional asset at client certification, contract asset/liability position per contract.**
+  - Stage 30 — DEC-009 part 1: **DONE** (CC-059; F-45/F-46 found and closed; known limitation: released retention stays in the retention GL account until collected).
+  - **Stage 31 (NEXT) — DEC-009 part 2: revenue recognition run per contract (transaction price = contract value + approved variations + only second-person-approved estimates of unpriced variations/claims; progress = cost to date / EAC from the latest approved cost snapshot, output method optional per contract with approval; cumulative revenue − previous = period revenue; Dr billings / Cr revenue; contract asset/liability per contract; onerous contract provision in full when EAC > price; prepared by one, approved by another; frozen hashed snapshot; approved periods locked). Needs a GL source for the run (new source_module) — also resolves the retention reclassification limitation.**
   - Stages 30-31 — DEC-009: IPC as billing + retention receivable; revenue recognition run (cost-to-cost, second-person approval); contract asset/liability.
   - Stages 32-33 — DEC-015: per-address limit enabled per deployment; TOTP MFA mandatory for admin, finance and DOA approvers.
   - Stage 34 — GC-24 legacy import per DEC-019 methodology (opening TB, in-flight contracts/subcontracts cumulative, reconciliation report).

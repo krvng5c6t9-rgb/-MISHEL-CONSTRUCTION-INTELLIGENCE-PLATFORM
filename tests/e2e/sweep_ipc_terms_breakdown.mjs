@@ -33,8 +33,13 @@ try {
 
   // --- Client advance received (manual recovery: no rate recorded).
   const adv = must(await api('POST', '/finance/client-advances', fm1, { contract_id: contract, amount: 40000, guarantee_ref: `APG-PT-${TAG}` }), 'adv');
-  must(await api('POST', `/finance/client-advances/${adv.id}/approve`, fm2), 'adv approve');
-  must(await api('POST', `/finance/client-advances/${adv.id}/received`, fm2, { receipt_reference: `RCP-PT-${TAG}` }), 'adv received');
+  const advAr = must(await api('POST', `/finance/client-advances/${adv.id}/approve`, fm2), 'adv approve').accounts_receivable;
+  // Stage 30 / DEC-009: the advance is received through a posted receipt against its request receivable.
+  const fin = await existing('fin');
+  const bankId = must(await api('GET', '/finance/bank-accounts', admin), 'banks').find(b => b.account_no === `ACC-${TAG}`).id;
+  const rcp = must(await api('POST', '/finance/payments', fm1, { payment_type: 'incoming', party_type: 'client', party_id: client, related_ar_id: advAr.id, amount: 40000, currency_id: 1, bank_account_id: bankId, method: 'transfer', reference_no: `RCP-PT-${TAG}` }), 'adv receipt');
+  must(await approve(fin, must(await api('POST', `/finance/payments/${rcp.id}/submit-approval`, fm1), 'submit receipt').approval.id), 'approve receipt');
+  must(await api('POST', `/finance/payments/${rcp.id}/post-gl`, fm2), 'adv received');
 
   let n = 0;
   const submitted = async (contractId, body) => {

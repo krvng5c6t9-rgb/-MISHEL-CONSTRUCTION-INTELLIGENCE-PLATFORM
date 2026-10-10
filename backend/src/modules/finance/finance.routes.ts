@@ -292,11 +292,14 @@ financeRouter.get('/ap', asyncHandler(async (req, res) => {
 financeRouter.get('/ar', asyncHandler(async (req, res) => {
   const orgId = Number(req.user!.org_id);
   const rows = await query(`
-    select ar.*, c.client_name, p.project_name, i.ipc_no
+    select ar.*, c.client_name, p.project_name, coalesce(i.ipc_no, ri.ipc_no) as ipc_no
     from accounts_receivable ar
     join clients c on c.id = ar.client_id
     join projects p on p.id = ar.project_id
-    join ipcs i on i.id = ar.ipc_id
+    -- DEC-009 (079): advance requests and released retention are receivables too (no IPC of their own).
+    left join ipcs i on i.id = ar.ipc_id
+    left join retention_ledger rl on ar.source_type = 'retention_release' and rl.id = ar.source_record_id
+    left join ipcs ri on ri.id = rl.ipc_id
     where ar.org_id = $1
     order by ar.created_at desc
     limit 300

@@ -120,10 +120,13 @@ try {
 
   // --- Finance configuration (fixtures)
   const coa = {};
-  for (const [k, code, name, type] of [['exp', '5100', 'Material cost (fixture)', 'expense'], ['ap', '2100', 'Accounts payable (fixture)', 'liability'], ['ar', '1200', 'Accounts receivable (fixture)', 'asset'], ['rev', '4100', 'Contract revenue (fixture)', 'revenue'], ['bank', '1010', 'Bank (fixture)', 'asset']]) {
+  for (const [k, code, name, type] of [['exp', '5100', 'Material cost (fixture)', 'expense'], ['ap', '2100', 'Accounts payable (fixture)', 'liability'], ['ar', '1200', 'Accounts receivable (fixture)', 'asset'], ['rev', '4100', 'Contract revenue (fixture)', 'revenue'], ['bank', '1010', 'Bank (fixture)', 'asset'],
+    ['ret', '1250', 'Retention receivable from clients (fixture)', 'asset'], ['cadv', '2200', 'Advances from clients (fixture)', 'liability']]) {
     coa[k] = await run(`create CoA ${code}`, async () => must(await api('POST', '/finance/chart-of-accounts', admin, { account_code: `${code}-${TAG}`, account_name: name, account_type: type }), 'coa').id);
   }
-  for (const [m, sub, d, c] of [['cost_transaction', 'procurement', coa.exp, coa.ap], ['ipc', null, coa.ar, coa.rev], ['payment', 'outgoing', coa.ap, coa.bank]]) {
+  for (const [m, sub, d, c] of [['cost_transaction', 'procurement', coa.exp, coa.ap], ['ipc', null, coa.ar, coa.rev], ['payment', 'outgoing', coa.ap, coa.bank], ['payment', 'incoming', coa.bank, coa.ar],
+    // DEC-009 (Stage 30): retention kept by the client and advance recovered are debited by their own IPC rules.
+    ['ipc', 'retention_receivable', coa.ret, coa.rev], ['ipc', 'client_advance', coa.cadv, coa.rev]]) {
     await run(`create GL rule ${m}/${sub}`, async () => must(await api('POST', '/finance/gl-posting-rules', admin, { source_module: m, source_subtype: sub, debit_account_id: d, credit_account_id: c, notes: 'TEST FIXTURE' }), 'rule'));
   }
   const d = new Date(); const y = d.getUTCFullYear(), mth = d.getUTCMonth() + 1;

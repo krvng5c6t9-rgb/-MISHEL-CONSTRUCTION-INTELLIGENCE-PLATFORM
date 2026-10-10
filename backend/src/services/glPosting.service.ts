@@ -193,6 +193,26 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
     description: `AR/GL posting from IPC ${ipc.ipc_no}`
   });
 
+  // DEC-009 (migration 079): the IPC is a billing. The period billing (gross) is credited to the IPC rule account
+  // (contract billings); besides the receivable (certified net), the retention kept by the client is a conditional
+  // contract asset and the advance recovered reduces the client advances liability - each by its own rule when non-zero.
+  const parts = (await client.query(`select coalesce(client_certified_retention, less_retention)::text r, coalesce(client_certified_advance_recovery, less_advance_recovery)::text a,
+    (coalesce(client_certified_retention, less_retention) > 0) hr, (coalesce(client_certified_advance_recovery, less_advance_recovery) > 0) ha from ipcs where id = $1`, [ipc.id])).rows[0];
+  const billingSplits = [];
+  for (const [has, amt, subtype, label] of [[parts.hr, parts.r, 'retention_receivable', 'Retention kept by client'], [parts.ha, parts.a, 'client_advance', 'Client advance recovered']] as const) {
+    if (!has) continue;
+    const r = await getActiveRule(client, Number(ipc.org_id), 'ipc', subtype);
+    if (!r || r.source_subtype !== subtype) throw new AppError(422, `No active GL posting rule for ipc / ${subtype}`);
+    billingSplits.push(await insertBalancedGlBatch(client, {
+      org_id: Number(ipc.org_id), project_id: Number(ipc.project_id),
+      debit_account_id: Number(r.debit_account_id), credit_account_id: Number(rule.credit_account_id),
+      amount: amt, currency_id: Number(ipc.project_currency_id),
+      transaction_date: ipc.client_approved_date ?? new Date().toISOString().slice(0, 10),
+      source_module: 'ipc', source_table: 'ipcs', source_record_id: Number(ipc.id),
+      description: `${label} on IPC ${ipc.ipc_no}`
+    }));
+  }
+
   let taxBatch = null;
   if (tax > 0) {
     const tc = (await client.query(`select code, gl_account_id from tax_codes where id = $1`, [ipc.output_tax_code_id])).rows[0];
@@ -213,7 +233,7 @@ export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number
     `, [ipc.org_id, ipc.project_id, ipc.id, ipc.client_certified_retention ?? ipc.less_retention]);
   }
   return { accounts_receivable: ar.rows[0], gl: batch, basis: legacy ? 'submitted_net_legacy' : 'client_certified', due_date_basis: dueDate ? 'contract_payment_terms' : 'no_confirmed_payment_terms',
-    tax_treatment: ipc.tax_treatment ?? 'legacy_no_tax', tax_gl: taxBatch };
+    tax_treatment: ipc.tax_treatment ?? 'legacy_no_tax', tax_gl: taxBatch, billing_gl: billingSplits };
 }
 
 export async function postApprovedPaymentToGl(client: PoolClient, paymentId: number) {
@@ -236,6 +256,19 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
   // by the subcontract cost rules (payable, retention payable); an advance payable carries no GL of its own, so paying
   // it debits the advance asset (the account certificate recoveries credit). Vendor invoices keep the payment rule.
   let debitAccount = Number(rule.debit_account_id);
+  let creditAccount = Number(rule.credit_account_id);
+  // DEC-009 (migration 079): a receipt clears the account its receivable was debited to - an advance request carries
+  // no GL of its own, so the receipt credits the client advances liability; released retention credits the retention
+  // receivable. IPC receivables keep the incoming-payment rule.
+  if (payment.payment_type === 'incoming' && payment.related_ar_id) {
+    const ar = (await client.query(`select source_type from accounts_receivable where id = $1`, [payment.related_ar_id])).rows[0];
+    const subtype = ({ client_advance: 'client_advance', retention_release: 'retention_receivable' } as Record<string, string>)[ar?.source_type];
+    if (subtype) {
+      const r = await getActiveRule(client, Number(payment.org_id), 'ipc', subtype);
+      if (!r || r.source_subtype !== subtype) throw new AppError(422, `No active GL posting rule for ipc / ${subtype} (account cleared by this receipt)`);
+      creditAccount = Number(r.debit_account_id);
+    }
+  }
   if (payment.payment_type === 'outgoing' && payment.related_ap_id) {
     const ap = (await client.query(`select source_type from accounts_payable where id = $1`, [payment.related_ap_id])).rows[0];
     const subtype = ({ subcontract_certificate: 'subcontract', subcontract_retention: 'subcontract_retention', subcontract_advance: 'subcontract_advance' } as Record<string, string>)[ap?.source_type];
@@ -249,7 +282,7 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
     org_id: Number(payment.org_id),
     project_id: null,
     debit_account_id: debitAccount,
-    credit_account_id: Number(rule.credit_account_id),
+    credit_account_id: creditAccount,
     amount: String(payment.amount),
     currency_id: Number(payment.currency_id),
     transaction_date: payment.payment_date,
@@ -267,7 +300,7 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
     const incoming = payment.payment_type === 'incoming';
     withholdingBatch = await insertBalancedGlBatch(client, {
       org_id: Number(payment.org_id), project_id: null,
-      debit_account_id: incoming ? Number(tc.gl_account_id) : debitAccount, credit_account_id: incoming ? Number(rule.credit_account_id) : Number(tc.gl_account_id),
+      debit_account_id: incoming ? Number(tc.gl_account_id) : debitAccount, credit_account_id: incoming ? creditAccount : Number(tc.gl_account_id),
       amount: String(payment.withheld_tax_amount), currency_id: Number(payment.currency_id), transaction_date: payment.payment_date,
       source_module: 'payment', source_table: 'payments', source_record_id: Number(payment.id),
       description: incoming ? `Tax withheld by client ${tc.code} (certificate ${payment.withholding_certificate_ref})` : `Tax withheld from subcontractor ${tc.code} (notice ${payment.withholding_certificate_ref})`
