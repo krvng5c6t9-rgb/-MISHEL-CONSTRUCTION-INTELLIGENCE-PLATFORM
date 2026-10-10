@@ -160,14 +160,16 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
 
   if (module === 'subcontract_certificate') {
     const cert = (await client.query(`
-      select sc.*, s.cost_code_id, s.currency_id, s.vendor_id, s.org_id as sc_org_id, (sc.net_amount_due > 0) as has_net, (sc.less_retention > 0) as has_retention
+      select sc.*, s.cost_code_id, s.currency_id, s.vendor_id, s.org_id as sc_org_id, (sc.less_retention > 0) as has_retention
       from subcontract_certificates sc
       join subcontracts s on s.id = sc.subcontract_id
       where sc.id = $1 for update
     `, [recordId])).rows[0];
     if (!cert) throw new AppError(404, 'Subcontract certificate not found');
     if (cert.status !== 'qs_certified') throw new AppError(409, 'Subcontract certificate is not QS-certified');
-    await client.query(`update subcontract_certificates set status='approved', updated_at=now() where id=$1`, [recordId]);
+    // DEC-016 (migration 078): approval applies the subcontract's confirmed input tax code; the payable = net + input tax.
+    const due = (await client.query(`update subcontract_certificates set status='approved', updated_at=now() where id=$1
+      returning (net_amount_due + coalesce(input_tax_amount, 0))::text as payable, (net_amount_due + coalesce(input_tax_amount, 0) > 0) as has_payable`, [recordId])).rows[0];
     if (!cert.cost_code_id) throw new AppError(422, 'Subcontract requires cost_code_id before cost posting');
     const existing = (await client.query(`select id from cost_transactions where source_module='subcontract' and source_table='subcontract_certificates' and source_record_id=$1`, [recordId])).rows[0];
     if (existing) throw new AppError(409, 'Subcontract certificate already has a cost transaction');
@@ -179,10 +181,10 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
     `, [cert.project_id, cert.cost_code_id, cert.id, cert.gross_work_done, cert.currency_id, `Actual subcontract cost (gross) from certificate ${cert.certificate_no}`])).rows[0];
     // DEC-012 (migration 077): cost at gross; the subcontractor's payable is the net amount due; retention withheld is a
     // liability held until released. Advance recovery and back-charges are credited in the GL posting of the cost.
-    const payable = cert.has_net ? (await client.query(`
+    const payable = due.has_payable ? (await client.query(`
       insert into accounts_payable (org_id, vendor_id, project_id, source_type, source_record_id, amount, currency_id)
       values ($1,$2,$3,'subcontract_certificate',$4,$5,$6) returning *
-    `, [cert.sc_org_id, cert.vendor_id, cert.project_id, cert.id, cert.net_amount_due, cert.currency_id])).rows[0] : null;
+    `, [cert.sc_org_id, cert.vendor_id, cert.project_id, cert.id, due.payable, cert.currency_id])).rows[0] : null;
     const retention = cert.has_retention ? (await client.query(`
       insert into subcontract_retentions (org_id, subcontract_id, certificate_id, amount) values ($1,$2,$3,$4) returning *
     `, [cert.sc_org_id, cert.subcontract_id, cert.id, cert.less_retention])).rows[0] : null;

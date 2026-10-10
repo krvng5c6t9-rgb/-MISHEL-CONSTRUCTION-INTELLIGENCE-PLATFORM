@@ -133,6 +133,14 @@ export async function postCostTransactionToGl(client: PoolClient, costTransactio
     splitBatches.push(await insertBalancedGlBatch(client, { ...base, debit_account_id: Number(rule.debit_account_id), credit_account_id: Number(s.rule.credit_account_id),
       amount: s.amount, description: `${s.label} from cost transaction ${ct.id}` }));
   }
+  // DEC-016 (migration 078): input tax applied at certificate approval is recoverable: Dr the tax code's account /
+  // Cr the subcontractors payable, so the payable credit equals the certificate payable (net + input tax).
+  if (ct.source_module === 'subcontract' && ct.source_table === 'subcontract_certificates') {
+    const t = (await client.query(`select c.input_tax_amount::text amount, t.gl_account_id, t.code from subcontract_certificates c
+      join tax_codes t on t.id = c.input_tax_code_id where c.id = $1 and c.input_tax_amount > 0`, [ct.source_record_id])).rows[0];
+    if (t) splitBatches.push(await insertBalancedGlBatch(client, { ...base, debit_account_id: Number(t.gl_account_id), credit_account_id: Number(rule.credit_account_id),
+      amount: t.amount, description: `Input tax ${t.code} on subcontract certificate (cost transaction ${ct.id})` }));
+  }
   await client.query(`update cost_transactions set is_posted_to_gl = true where id = $1`, [ct.id]);
   if (splitBatches.length) return { ...(batch ?? {}), split_gl: splitBatches };
   return deductionsBatch ? { ...(batch ?? {}), deductions_gl: deductionsBatch } : batch;
@@ -224,10 +232,23 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
   const rule = await getActiveRule(client, Number(payment.org_id), 'payment', payment.payment_type);
   if (!rule) throw new AppError(422, `No active GL posting rule for payment / ${payment.payment_type}`);
 
+  // F-44 (migration 078): a payment clears the account its payable was credited to. Subcontract payables were credited
+  // by the subcontract cost rules (payable, retention payable); an advance payable carries no GL of its own, so paying
+  // it debits the advance asset (the account certificate recoveries credit). Vendor invoices keep the payment rule.
+  let debitAccount = Number(rule.debit_account_id);
+  if (payment.payment_type === 'outgoing' && payment.related_ap_id) {
+    const ap = (await client.query(`select source_type from accounts_payable where id = $1`, [payment.related_ap_id])).rows[0];
+    const subtype = ({ subcontract_certificate: 'subcontract', subcontract_retention: 'subcontract_retention', subcontract_advance: 'subcontract_advance' } as Record<string, string>)[ap?.source_type];
+    if (subtype) {
+      const r = await getActiveRule(client, Number(payment.org_id), 'cost_transaction', subtype);
+      if (!r || r.source_subtype !== subtype) throw new AppError(422, `No active GL posting rule for cost_transaction / ${subtype} (account cleared by this payment)`);
+      debitAccount = Number(r.credit_account_id);
+    }
+  }
   const batch = await insertBalancedGlBatch(client, {
     org_id: Number(payment.org_id),
     project_id: null,
-    debit_account_id: Number(rule.debit_account_id),
+    debit_account_id: debitAccount,
     credit_account_id: Number(rule.credit_account_id),
     amount: String(payment.amount),
     currency_id: Number(payment.currency_id),
@@ -238,16 +259,18 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
     description: `GL posting from ${payment.payment_type} payment ${payment.reference_no ?? payment.id}`
   });
 
-  // DEC-017 (migration 074): tax withheld by the client settles the receivable as a tax credit asset.
+  // DEC-017 (migrations 074/078): tax withheld by the client settles the receivable as a tax credit asset; tax we
+  // withhold from a subcontractor settles the payable against the withholding liability.
   let withholdingBatch = null;
-  if (Number(payment.withheld_tax_amount) > 0) {
+  if (payment.withheld_tax_amount !== null && (await client.query(`select $1::numeric > 0 as yes`, [payment.withheld_tax_amount])).rows[0].yes) {
     const tc = (await client.query(`select code, gl_account_id from tax_codes where id = $1`, [payment.withholding_tax_code_id])).rows[0];
+    const incoming = payment.payment_type === 'incoming';
     withholdingBatch = await insertBalancedGlBatch(client, {
       org_id: Number(payment.org_id), project_id: null,
-      debit_account_id: Number(tc.gl_account_id), credit_account_id: Number(rule.credit_account_id),
+      debit_account_id: incoming ? Number(tc.gl_account_id) : debitAccount, credit_account_id: incoming ? Number(rule.credit_account_id) : Number(tc.gl_account_id),
       amount: String(payment.withheld_tax_amount), currency_id: Number(payment.currency_id), transaction_date: payment.payment_date,
       source_module: 'payment', source_table: 'payments', source_record_id: Number(payment.id),
-      description: `Tax withheld by client ${tc.code} (certificate ${payment.withholding_certificate_ref})`
+      description: incoming ? `Tax withheld by client ${tc.code} (certificate ${payment.withholding_certificate_ref})` : `Tax withheld from subcontractor ${tc.code} (notice ${payment.withholding_certificate_ref})`
     });
   }
   await client.query(`update payments set status = 'posted', updated_at = now() where id = $1`, [payment.id]);

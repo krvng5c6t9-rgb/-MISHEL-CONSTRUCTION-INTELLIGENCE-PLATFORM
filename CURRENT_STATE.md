@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 77 (`database/migrations/001…077`), all applied from an empty DB |
+| Migrations | 78 (`database/migrations/001…078`), all applied from an empty DB |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-057
+## Controlled Changes CC-001 → CC-058
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -89,6 +89,7 @@
 | CC-055 | Tax engine (DEC-016/017): confirmed versioned tax codes, profiles, output tax into AR/GL, e-invoice ref, client withholding (074) |
 | CC-056 | DEC-013 payroll cost at gross (net/deductions payable); DEC-014 moving average per store (075, 076) |
 | CC-057 | DEC-012 cumulative valuation, cost at gross, subcontract AP, retention payable, GL split (077) |
+| CC-058 | Advance paid through payments + GL (F-33), payment clears its payable account (F-44), input tax, supplier withholding (078) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -138,19 +139,20 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_commissioning.mjs | 37 | GC-20 commissioning-to-handover |
 | sweep_design_impact.mjs | 28 | GC-04 design-revision impact |
 | sweep_mobilisation.mjs | 28 | GC-02 s9 mobilisation readiness gate |
-| sweep_subcontract_deductions.mjs | 36 | GC-12 s4-5 advances, back-charges, less previous, negative net, race |
+| sweep_subcontract_deductions.mjs | 41 | GC-12 s4-5 advances (paid via payments), back-charges, less previous, negative net, race |
 | sweep_client_ipc_deductions.mjs | 23 | GC-13 s3 client advances, retention cap, less previous, race |
 | sweep_ipc_client_certification.mjs | 22 | GC-13 s5-6 client certification, dispute, AR = certified |
 | sweep_ipc_terms_breakdown.mjs | 21 | GC-13 s5-8 payment terms due date, client breakdown |
 | sweep_collections.mjs | 17 | GC-13 s8 receipts, partial/paid, race, aging, AP mirror |
 | sweep_tax.mjs | 33 | DEC-016/017 tax codes, profiles, output tax, e-invoice, withholding, position |
 | sweep_inventory_valuation.mjs | 14 | DEC-014 moving average per store, outflows valued by DB |
-| sweep_subcontract_gl.mjs | 20 | DEC-012 cumulative, gross cost, AP, retention release, GL split, payment |
+| sweep_subcontract_gl.mjs | 22 | DEC-012 cumulative, gross cost, AP, retention release, GL split, payment (F-44 GL check) |
+| sweep_subcontract_tax.mjs | 23 | DEC-012/016/017 advance via payments, input tax, supplier withholding, payment GL accounts |
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
 | gc_status_check.py | 167 steps | F-25 Golden Case statuses agree with gate suites (gate step) |
 | project_controls.ui.mjs | 23 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI) |
 | payments.ui.mjs | 16 | Browser: Payments & Certification (certification SoD, advance positions, back-charge SoD) |
-| **Total** | **1,185** | 40 API suites + 2 browser checks, all PASS locally (RUN sg4; earlier "700" was a records error, F-19) |
+| **Total** | **1,215** | 41 API suites + 2 browser checks, all PASS locally (RUN sg5; earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

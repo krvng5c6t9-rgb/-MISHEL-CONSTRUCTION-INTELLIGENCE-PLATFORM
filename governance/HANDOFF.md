@@ -1,13 +1,13 @@
-# HANDOFF — v0.5.28-stage28 — DATE: 2026-10-09
+# HANDOFF — v0.5.29-stage29 — DATE: 2026-10-10
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
 - Waves 1–2 are built and runtime-tested (CC-015…CC-024). The RK-003 module sweep has executed variations, QA/HSE, approval rejection paths, HR/payroll and EDMS for the first time (CC-025…CC-029).
-- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…057 runs to verify.
+- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…058 runs to verify.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-057 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–077.
-- **Runtime suites, all from zero (E1):** 40 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,185 checks + shared-guard probe + Golden Case status check, all PASS, RUN sg4 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
+- **Change controls:** CC-001…CC-058 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–078.
+- **Runtime suites, all from zero (E1):** 41 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,215 checks + shared-guard probe + Golden Case status check, all PASS, RUN sg5 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -97,8 +97,8 @@
   - Stage 26 — DEC-016..019 decided professionally; tax engine (client side): **DONE** (CC-055).
   - Stage 27 — DEC-013 + DEC-014: **DONE** (CC-056; F-43 opened).
   - Stage 28 — DEC-012 core: **DONE** (CC-057; F-42 closed).
-  - **Stage 29 (NEXT) — DEC-012 remainder + DEC-016/017 supplier side: subcontract advance payments through payables/payments with GL (F-33), input tax on subcontract certificates, withholding on subcontractor payments.**
-  - (was) Stage 28 — DEC-012: subcontract cumulative valuation, cost at gross, subcontract AP (F-42), retention payable, advances as prepayment (F-33), input tax and supplier withholding (DEC-016/017 supplier side).**
+  - Stage 29 — DEC-012 remainder + DEC-016/017 supplier side: **DONE** (CC-058; F-33 closed; F-44 found and closed — payments now clear the account their payable was credited to).
+  - **Stage 30 (NEXT) — DEC-009 part 1: client advance received through receipts with GL (client-advance liability, mirror of F-33 — today `/client-advances/:id/received` is a typed reference with no cash/GL), retention receivable as a separate conditional asset at client certification, contract asset/liability position per contract.**
   - Stages 30-31 — DEC-009: IPC as billing + retention receivable; revenue recognition run (cost-to-cost, second-person approval); contract asset/liability.
   - Stages 32-33 — DEC-015: per-address limit enabled per deployment; TOTP MFA mandatory for admin, finance and DOA approvers.
   - Stage 34 — GC-24 legacy import per DEC-019 methodology (opening TB, in-flight contracts/subcontracts cumulative, reconciliation report).
@@ -107,7 +107,7 @@
   - Then: remaining ABSENT Golden Case steps by business priority; frontend browser verification; performance/DR/pentest preparation.
 - Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
 - DEC-015 DECIDED (2026-10-09): lockout 5/15/15 adopted; address limit to be enabled per deployment with TRUST_PROXY; MFA mandatory for admin/finance/DOA approvers (Stages 30-31).
-- DEC-009 / DEC-012 / DEC-013 / DEC-014 stay OPEN for the Finance/Accounting expert review — do not hard-code a policy.
+- DEC-009 / DEC-012 / DEC-013 / DEC-014 were DECIDED by the owner on 2026-10-09 (register 09); DEC-012/013/014 are implemented (CC-056…058); DEC-009 is Stages 30-31. (Records correction: this line said "stay OPEN" after the decision.)
 
 ## Warnings for next session
 - Postgres in this container stops between sessions. Restart with `pg_ctl` (see CURRENT_STATE).

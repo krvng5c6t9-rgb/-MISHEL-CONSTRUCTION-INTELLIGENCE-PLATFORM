@@ -34,9 +34,26 @@ try {
   await expectStatus('a further advance beyond the limit is refused', () => api('POST', '/subcontracts/advances', maker, { subcontract_id: sc.id, amount: 1 }), 422);
   await expectStatus('preparer cannot approve own advance (SoD)', () => api('POST', `/subcontracts/advances/${adv.id}/approve`, maker), 403);
   await expectStatus('an unapproved advance cannot be paid', () => api('POST', `/subcontracts/advances/${adv.id}/paid`, qs, { payment_reference: `PAY-${TAG}` }), 409);
-  must(await api('POST', `/subcontracts/advances/${adv.id}/approve`, qs), 'approve adv');
-  await expectStatus('payment needs a payment reference', () => api('POST', `/subcontracts/advances/${adv.id}/paid`, qs2, {}), 400);
-  await run('advance recorded as paid with its payment reference', async () => must(await api('POST', `/subcontracts/advances/${adv.id}/paid`, qs2, { payment_reference: `PAY-${TAG}` }), 'paid'));
+  const apv = await run('approval opens the advance payable (F-33)', async () => must(await api('POST', `/subcontracts/advances/${adv.id}/approve`, qs), 'approve adv'));
+  check('advance payable: source subcontract_advance, 20,000, subcontractor', apv.accounts_payable?.source_type === 'subcontract_advance' && Number(apv.accounts_payable.amount) === 20000 && Number(apv.accounts_payable.vendor_id) === vendor && Number(apv.payable_id) === Number(apv.accounts_payable.id), JSON.stringify(apv.accounts_payable));
+  await expectStatus('an advance can no longer be marked paid by typing a reference (F-33)', () => api('POST', `/subcontracts/advances/${adv.id}/paid`, qs2, { payment_reference: `PAY-${TAG}` }), 409);
+  // Paid through Finance: payment against the advance payable, approved under the DOA, posted; GL Dr advance asset / Cr bank.
+  const fin = await existing('fin');
+  const sdfm = await mkUser('sdfm', await mkRole('SD Finance', ['view', 'manage', 'approve', 'post'].map(a => ['finance', a])));
+  const advAcc = must(await api('POST', '/finance/chart-of-accounts', admin, { account_code: `1151-${TAG}`, account_name: 'Advances to subcontractors (SD fixture)', account_type: 'asset' }), 'coa adv').id;
+  const bank = must(await api('GET', '/finance/bank-accounts', admin), 'banks').find(b => b.account_no === `ACC-${TAG}`);
+  const advPay = must(await api('POST', '/finance/payments', sdfm, { payment_type: 'outgoing', party_type: 'vendor', party_id: vendor, related_ap_id: apv.accounts_payable.id, amount: 20000, currency_id: 1, bank_account_id: bank.id, method: 'transfer', reference_no: `PAY-${TAG}` }), 'adv payment');
+  must(await api('POST', `/approvals/${must(await api('POST', `/finance/payments/${advPay.id}/submit-approval`, sdfm), 'submit adv pay').approval.id}/actions`, fin, { action: 'approved', comment: 'sd' }), 'approve adv pay');
+  await expectStatus('posting the advance payment needs the advance account rule', () => api('POST', `/finance/payments/${advPay.id}/post-gl`, sdfm), 422);
+  const costAcc = must(await api('GET', '/finance/chart-of-accounts', admin), 'coa').find(a => a.account_type === 'expense').id;
+  must(await api('POST', '/finance/gl-posting-rules', admin, { source_module: 'cost_transaction', source_subtype: 'subcontract_advance', debit_account_id: costAcc, credit_account_id: advAcc, notes: 'TEST FIXTURE' }), 'rule adv');
+  await run('advance payment posted', async () => must(await api('POST', `/finance/payments/${advPay.id}/post-gl`, sdfm), 'post adv pay'));
+  const advRow = must(await api('GET', `/subcontracts/advances?subcontract_id=${sc.id}`, qs), 'advances').find(x => Number(x.id) === Number(adv.id));
+  check('advance becomes paid from the settled payable, with the payment as evidence', advRow.status === 'paid' && Number(advRow.paid_payment_id) === Number(advPay.id) && advRow.payment_reference === `PAY-${TAG}`, JSON.stringify(advRow));
+  if (OWNER) {
+    const gl = sql(OWNER, `select string_agg(a.account_code || ':' || g.debit || '/' || g.credit, ' ' order by g.id) from general_ledger g join chart_of_accounts a on a.id = g.account_id where g.source_table = 'payments' and g.source_record_id = ${advPay.id}`).out.trim();
+    check('GL: Dr advances to subcontractors 20,000 / Cr bank 20,000 (not accounts payable)', gl.includes(`1151-${TAG}:20000.00/0.00`) && /:0\.00\/20000\.00/.test(gl) && !/^2100/.test(gl), gl);
+  }
 
   // --- Certificates: helper creates a draft and returns its id.
   let n = 0;

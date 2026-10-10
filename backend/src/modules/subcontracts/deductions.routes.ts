@@ -35,16 +35,25 @@ subcontractDeductionsRouter.post('/advances/:id/approve', authorize('contracts',
   const a = await one('subcontract_advances', pid(req.params.id), req.user!.org_id, 'Advance');
   if (Number(a.created_by) === req.user!.id) throw new AppError(403, 'Segregation of duties: an advance is approved by someone other than its preparer');
   if (a.status !== 'draft') throw new AppError(409, 'Only a draft advance can be approved');
-  const [r] = await query(`update subcontract_advances set status = 'approved', approved_by = $2, approved_at = now() where id = $1 returning *`, [a.id, req.user!.id]);
-  res.json({ success: true, data: r });
+  // Stage 29 / F-33 (migration 078): approval opens the advance payable (a payment request with no GL of its own); the
+  // advance becomes paid only when payments posted against that payable settle it.
+  const client = await getClient();
+  try {
+    await client.query('begin');
+    const s = (await client.query(`select s.vendor_id, s.project_id, s.currency_id from subcontract_advances a join subcontracts s on s.id = a.subcontract_id where a.id = $1 for update of a`, [a.id])).rows[0];
+    const ap = (await client.query(`insert into accounts_payable (org_id, vendor_id, project_id, source_type, source_record_id, amount, currency_id)
+      values ($1,$2,$3,'subcontract_advance',$4,$5,$6) returning *`, [a.org_id, s.vendor_id, s.project_id, a.id, a.amount, s.currency_id])).rows[0];
+    const r = (await client.query(`update subcontract_advances set status = 'approved', approved_by = $2, approved_at = now(), payable_id = $3 where id = $1 and status = 'draft' returning *`, [a.id, req.user!.id, ap.id])).rows[0];
+    if (!r) throw new AppError(409, 'Only a draft advance can be approved');
+    await client.query('commit');
+    res.json({ success: true, data: { ...r, accounts_payable: ap } });
+  } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
 }));
 subcontractDeductionsRouter.post('/advances/:id/paid', authorize('contracts', 'approve'), asyncHandler(async (req, res) => {
-  const b = z.object({ payment_reference: z.string().trim().min(3).max(100) }).parse(req.body);
   const a = await one('subcontract_advances', pid(req.params.id), req.user!.org_id, 'Advance');
-  if (Number(a.created_by) === req.user!.id) throw new AppError(403, 'Segregation of duties: the preparer cannot record the advance as paid');
-  if (a.status !== 'approved') throw new AppError(409, 'Only an approved advance can be recorded as paid');
-  const [r] = await query(`update subcontract_advances set status = 'paid', paid_by = $2, paid_at = now(), payment_reference = $3 where id = $1 returning *`, [a.id, req.user!.id, b.payment_reference]);
-  res.json({ success: true, data: r });
+  throw new AppError(409, a.payable_id
+    ? `An advance is paid through Finance payments against its payable ${a.payable_id}; it is marked paid when that payable is settled`
+    : 'Only an approved advance can be paid, through Finance payments against its payable');
 }));
 
 // --- Back-charges.

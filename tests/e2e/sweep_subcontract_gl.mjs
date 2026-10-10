@@ -25,8 +25,12 @@ try {
   const sc = must(await api('POST', '/subcontracts', admin, { project_id: project, vendor_id: vendor, package_name: `SG pkg ${TAG}`, contract_value: 200000, currency_id: 1, cost_code_id: 2, retention_percent: 10, advance_payment_percent: 10 }), 'sc');
   must(await approve(appr, must(await api('POST', `/subcontracts/${sc.id}/submit-approval`, admin), 'sc submit').approval.id), 'sc approve');
   const adv = must(await api('POST', '/subcontracts/advances', maker, { subcontract_id: sc.id, amount: 20000, recovery_percent: 25, guarantee_ref: `APG-SG-${TAG}` }), 'adv');
-  must(await api('POST', `/subcontracts/advances/${adv.id}/approve`, qs), 'adv approve');
-  must(await api('POST', `/subcontracts/advances/${adv.id}/paid`, qs2, { payment_reference: `PAY-SG-${TAG}` }), 'adv paid');
+  const advAp = must(await api('POST', `/subcontracts/advances/${adv.id}/approve`, qs), 'adv approve').accounts_payable;
+  // F-33 (Stage 29): the advance is paid through Finance against its payable.
+  const bankAcc = must(await api('GET', '/finance/bank-accounts', admin), 'banks').find(b => b.account_no === `ACC-${TAG}`).id;
+  const advPay = must(await api('POST', '/finance/payments', fm1, { payment_type: 'outgoing', party_type: 'vendor', party_id: vendor, related_ap_id: advAp.id, amount: 20000, currency_id: 1, bank_account_id: bankAcc, method: 'transfer', reference_no: `PAY-SG-${TAG}` }), 'adv pay');
+  must(await approve(fin, must(await api('POST', `/finance/payments/${advPay.id}/submit-approval`, fm1), 'adv pay submit').approval.id), 'adv pay approve');
+  must(await api('POST', `/finance/payments/${advPay.id}/post-gl`, fm2), 'adv pay post');
   const bc = must(await api('POST', '/subcontracts/backcharges', maker, { subcontract_id: sc.id, reference: `SGBC-${TAG}`, cause: 'Temporary works removed by main contractor (fixture)', amount: 1000, notified_on: day(-1) }), 'bc');
   must(await api('POST', `/subcontracts/backcharges/${bc.id}/approve`, qs), 'bc approve');
 
@@ -92,6 +96,11 @@ try {
   must(await api('POST', `/finance/payments/${pay.id}/post-gl`, fm2), 'post pay');
   const apRow = must(await api('GET', '/finance/ap', admin), 'ap').find(x => Number(x.id) === Number(fz.accounts_payable.id));
   check('certificate payable settled: paid', apRow?.status === 'paid', apRow?.status);
+  check('no subcontract tax profile: certificate marked no_tax_profile, no input tax', fz.record.tax_treatment === 'no_tax_profile' && fz.record.input_tax_amount === null, `${fz.record.tax_treatment} ${fz.record.input_tax_amount}`);
+  if (OWNER) {
+    const dr = sql(OWNER, `select coalesce(sum(debit),0) from general_ledger where source_table='payments' and source_record_id=${pay.id} and account_id=${acc.ap}`).out.trim();
+    check('F-44: the payment debits the subcontractors payable it clears (12,000), not the generic payables account', dr === '12000.00', dr);
+  }
 
   if (OWNER) {
     const probe = (name, text) => { const r = sql(OWNER, text); check(name, !r.ok, r.out.split('\n').find(l => /ERROR/.test(l)) ?? r.out.slice(0, 120)); };
