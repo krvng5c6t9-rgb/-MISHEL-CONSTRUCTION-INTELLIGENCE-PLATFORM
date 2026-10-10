@@ -160,7 +160,7 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
 
   if (module === 'subcontract_certificate') {
     const cert = (await client.query(`
-      select sc.*, s.cost_code_id, s.currency_id
+      select sc.*, s.cost_code_id, s.currency_id, s.vendor_id, s.org_id as sc_org_id, (sc.net_amount_due > 0) as has_net, (sc.less_retention > 0) as has_retention
       from subcontract_certificates sc
       join subcontracts s on s.id = sc.subcontract_id
       where sc.id = $1 for update
@@ -176,9 +176,18 @@ async function finalizeApprovedRecord(client: PoolClient, module: string, record
         (project_id,cost_code_id,source_module,source_table,source_record_id,transaction_type,amount,currency_id,transaction_date,description)
       values ($1,$2,'subcontract','subcontract_certificates',$3,'actual',$4,$5,current_date,$6)
       returning *
-    `, [cert.project_id, cert.cost_code_id, cert.id, cert.net_amount_due, cert.currency_id, `Actual subcontract cost from certificate ${cert.certificate_no}`])).rows[0];
+    `, [cert.project_id, cert.cost_code_id, cert.id, cert.gross_work_done, cert.currency_id, `Actual subcontract cost (gross) from certificate ${cert.certificate_no}`])).rows[0];
+    // DEC-012 (migration 077): cost at gross; the subcontractor's payable is the net amount due; retention withheld is a
+    // liability held until released. Advance recovery and back-charges are credited in the GL posting of the cost.
+    const payable = cert.has_net ? (await client.query(`
+      insert into accounts_payable (org_id, vendor_id, project_id, source_type, source_record_id, amount, currency_id)
+      values ($1,$2,$3,'subcontract_certificate',$4,$5,$6) returning *
+    `, [cert.sc_org_id, cert.vendor_id, cert.project_id, cert.id, cert.net_amount_due, cert.currency_id])).rows[0] : null;
+    const retention = cert.has_retention ? (await client.query(`
+      insert into subcontract_retentions (org_id, subcontract_id, certificate_id, amount) values ($1,$2,$3,$4) returning *
+    `, [cert.sc_org_id, cert.subcontract_id, cert.id, cert.less_retention])).rows[0] : null;
     const updated = (await client.query(`update subcontract_certificates set status='posted', posted_cost_transaction_id=$2, updated_at=now() where id=$1 returning *`, [recordId, posted.id])).rows[0];
-    return { record: updated, cost_transaction: posted };
+    return { record: updated, cost_transaction: posted, accounts_payable: payable, retention };
   }
 
   if (module === 'ipc_submission') {

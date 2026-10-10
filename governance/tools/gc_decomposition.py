@@ -76,7 +76,7 @@ gc('GC-12', 'Contractor/Subcontractor IPC', [
     ('Less previous certificates', 'QS', 'certificate history', 'this-period amount', 'cumulative - previous; never negative without credit note', 'none', 'L4', 'RUNTIME', 'less previous capped at net certified on earlier approved certificates; negative net refused (defect fixed, CC-049); periodic vs cumulative model stays DEC-012 [sweep_subcontract_deductions]', 'DEC-012'),
     ('QS certification', 'QS lead', 'valuation', 'certified certificate', 'certified != paid', 'SOD15-029', 'L0', 'RUNTIME', 'qs-certify with SoD (CC-020 suite) [wave1_subcontract_ipc]', ''),
     ('Approval per DOA', 'Approver', 'certificate', 'approved certificate', 'DOA class Payment', 'DOA Payment', 'L0', 'RUNTIME', 'submit-approval + SoD (CC-020 suite) [wave1_subcontract_ipc]', ''),
-    ('Post to cost and AP, schedule payment', 'Finance', 'approved certificate', 'actual cost, AP', 'cost posted once; idempotent', 'SOD15-031', 'L4', 'PARTIAL', 'cost posted on approval (basis = net; F-12/DEC-012 OPEN); AP not verified', 'DEC-012'),
+    ('Post to cost and AP, schedule payment', 'Finance', 'approved certificate', 'actual cost, AP', 'cost posted once; idempotent', 'SOD15-031', 'L4', 'RUNTIME', 'DEC-012 (CC-057): cumulative valuation checked, cost posted at gross once, payable at net, retention held as liability and released into its own payable, GL split by rule, payable settled through payments [sweep_subcontract_gl]', 'DEC-012'),
 ])
 gc('GC-13', 'Client IPC / Revenue', [
     ('Prepare valuation from approved progress', 'QS', 'measured quantities, BOQ', 'IPC draft', 'qty <= contract qty unless variation', 'SOD15-029', 'L2', 'RUNTIME', 'IPC create (chain)', 'NDC-012'),

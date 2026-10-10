@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { query } from '../../db/pool.js';
+import { query, getClient, releaseClient } from '../../db/pool.js';
 import { asyncHandler } from '../../middleware/asyncHandler.js';
 import { authorize } from '../../middleware/authorize.js';
 import { AppError } from '../../middleware/errors.js';
@@ -99,6 +99,32 @@ subcontractDeductionsRouter.post('/backcharges/:id/withdraw', authorize('contrac
   if (!['raised', 'approved'].includes(c.status)) throw new AppError(409, 'Only a raised or approved (not applied) back-charge can be withdrawn');
   const [r] = await query(`update subcontract_backcharges set status = 'withdrawn', withdrawn_reason = $2 where id = $1 returning *`, [c.id, b.reason]);
   res.json({ success: true, data: r });
+}));
+
+// --- Retention withheld from subcontractors (DEC-012, migration 077): a liability per certificate, released by a
+// reasoned decision (taking-over / defects certificate reference) into its own payable.
+subcontractDeductionsRouter.get('/retentions', asyncHandler(async (req, res) => {
+  const q = z.object({ subcontract_id: z.coerce.number().int().positive() }).parse(req.query);
+  res.json({ success: true, data: await query(`select * from subcontract_retentions where org_id = $1 and subcontract_id = $2 order by id`, [req.user!.org_id, q.subcontract_id]) });
+}));
+subcontractDeductionsRouter.post('/retentions/:id/release', authorize('contracts', 'approve'), asyncHandler(async (req, res) => {
+  const b = z.object({ reason: z.string().trim().min(10), reference: z.string().trim().min(3).max(100) }).parse(req.body);
+  const client = await getClient();
+  try {
+    await client.query('begin');
+    const r = (await client.query(`select r.*, c.created_by as cert_maker, s.vendor_id, s.project_id, s.currency_id from subcontract_retentions r
+      join subcontract_certificates c on c.id = r.certificate_id join subcontracts s on s.id = r.subcontract_id
+      where r.id = $1 and r.org_id = $2 for update of r`, [pid(req.params.id), req.user!.org_id])).rows[0];
+    if (!r) throw new AppError(404, 'Retention not found');
+    if (r.status !== 'held') throw new AppError(409, 'Retention is already released');
+    if (Number(r.cert_maker) === req.user!.id) throw new AppError(403, 'Segregation of duties: the certificate maker cannot release its retention');
+    const ap = (await client.query(`insert into accounts_payable (org_id, vendor_id, project_id, source_type, source_record_id, amount, currency_id)
+      values ($1,$2,$3,'subcontract_retention',$4,$5,$6) returning *`, [r.org_id, r.vendor_id, r.project_id, r.id, r.amount, r.currency_id])).rows[0];
+    const [u] = (await client.query(`update subcontract_retentions set status = 'released', release_reason = $2, release_reference = $3, released_by = $4,
+      released_at = now(), release_payable_id = $5 where id = $1 returning *`, [r.id, b.reason, b.reference, req.user!.id, ap.id])).rows;
+    await client.query('commit');
+    res.json({ success: true, data: { retention: u, accounts_payable: ap } });
+  } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
 }));
 
 // --- Position (information for the QS preparing the next certificate).

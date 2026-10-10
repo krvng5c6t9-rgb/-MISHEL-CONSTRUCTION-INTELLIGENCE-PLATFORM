@@ -48,7 +48,9 @@ try {
   // Certificate with lines: 2 lines = 20,000 this period; retention 10% = 2,000.
   const cert = await run('maker creates certificate (gross 20,000, retention 2,000)', async () => must(await api('POST', '/subcontracts/certificates', T.maker, { subcontract_id: sc.id, project_id: project, certificate_no: `C1-${TAG}`, period_from: '2026-10-01', period_to: '2026-10-31', gross_work_done: 20000, less_retention: 2000 }), 'cert'));
   await run('add line A 100 x 150', async () => must(await api('POST', `/subcontracts/certificates/${cert.id}/lines`, T.maker, { description: 'Line A', quantity_this_period: 100, cumulative_quantity: 100, unit_rate: 150 }), 'la'));
-  await run('add line B 10 x 500', async () => must(await api('POST', `/subcontracts/certificates/${cert.id}/lines`, T.maker, { description: 'Line B', quantity_this_period: 10, cumulative_quantity: 10, unit_rate: 500 }), 'lb'));
+  // DEC-012 (CC-057, cumulative valuation): certificate C4 (1,000 = 2 x 500 of line B, verified before C1) is part of the
+  // cumulative measure, so line B stands at 12 to date with 10 this period.
+  await run('add line B 10 x 500 (cumulative 12)', async () => must(await api('POST', `/subcontracts/certificates/${cert.id}/lines`, T.maker, { description: 'Line B', quantity_this_period: 10, cumulative_quantity: 12, unit_rate: 500 }), 'lb'));
 
   // Defect probe 2: gross must equal the sum of lines.
   const bad = must(await api('POST', '/subcontracts/certificates', T.maker, { subcontract_id: sc.id, project_id: project, certificate_no: `C2-${TAG}`, period_from: '2026-11-01', period_to: '2026-11-30', gross_work_done: 99999 }), 'bad');

@@ -95,10 +95,25 @@ export async function postCostTransactionToGl(client: PoolClient, costTransactio
       if (!dedRule || dedRule.source_subtype !== 'payroll_deductions') throw new AppError(422, 'No active GL posting rule for payroll deductions (cost_transaction / payroll_deductions)');
     }
   }
-  const main = (await client.query(`select ($1::numeric - $2::numeric)::text as v`, [ct.amount, deductions])).rows[0].v;
+  // DEC-012 (migration 077): a subcontract certificate's gross cost is credited to the payable (net), retention payable,
+  // the advance recovered (asset) and back-charges recovered (cost recovery) - each by its own rule when non-zero.
+  const splits: { amount: string; rule: any; label: string }[] = [];
+  if (ct.source_module === 'subcontract' && ct.source_table === 'subcontract_certificates') {
+    const c = (await client.query(`select less_retention::text r, less_advance_recovery::text a, penalties_deductions::text b,
+      (less_retention > 0) hr, (less_advance_recovery > 0) ha, (penalties_deductions > 0) hb from subcontract_certificates where id = $1`, [ct.source_record_id])).rows[0];
+    for (const [has, amt, subtype, label] of [[c.hr, c.r, 'subcontract_retention', 'Retention payable'], [c.ha, c.a, 'subcontract_advance', 'Subcontract advance recovered'], [c.hb, c.b, 'subcontract_backcharge', 'Back-charges recovered']] as const) {
+      if (!has) continue;
+      const r = await getActiveRule(client, Number(ct.org_id), 'cost_transaction', subtype);
+      if (!r || r.source_subtype !== subtype) throw new AppError(422, `No active GL posting rule for cost_transaction / ${subtype}`);
+      splits.push({ amount: amt, rule: r, label });
+    }
+    deductions = (await client.query(`select (coalesce($1::numeric,0) + coalesce($2::numeric,0) + coalesce($3::numeric,0))::text as v`, [c.hr ? c.r : null, c.ha ? c.a : null, c.hb ? c.b : null])).rows[0].v;
+  }
+  const m = (await client.query(`select ($1::numeric - $2::numeric)::text as v, ($1::numeric - $2::numeric > 0) as positive`, [ct.amount, deductions])).rows[0];
+  const main = m.v;
   const base = { org_id: Number(ct.org_id), project_id: Number(ct.project_id), currency_id: Number(ct.currency_id), transaction_date: ct.transaction_date,
     source_module: 'cost_transaction' as const, source_table: 'cost_transactions', source_record_id: Number(ct.id) };
-  const batch = await insertBalancedGlBatch(client, {
+  const batch = !m.positive && splits.length ? null : await insertBalancedGlBatch(client, {
     ...base,
     debit_account_id: Number(rule.debit_account_id),
     credit_account_id: Number(rule.credit_account_id),
@@ -113,8 +128,14 @@ export async function postCostTransactionToGl(client: PoolClient, costTransactio
     description: `Employee deductions payable from cost transaction ${ct.id}`
   }) : null;
 
+  const splitBatches = [];
+  for (const s of splits) {
+    splitBatches.push(await insertBalancedGlBatch(client, { ...base, debit_account_id: Number(rule.debit_account_id), credit_account_id: Number(s.rule.credit_account_id),
+      amount: s.amount, description: `${s.label} from cost transaction ${ct.id}` }));
+  }
   await client.query(`update cost_transactions set is_posted_to_gl = true where id = $1`, [ct.id]);
-  return deductionsBatch ? { ...batch, deductions_gl: deductionsBatch } : batch;
+  if (splitBatches.length) return { ...(batch ?? {}), split_gl: splitBatches };
+  return deductionsBatch ? { ...(batch ?? {}), deductions_gl: deductionsBatch } : batch;
 }
 
 export async function postApprovedIpcToArAndGl(client: PoolClient, ipcId: number) {

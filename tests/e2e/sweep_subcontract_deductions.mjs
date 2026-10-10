@@ -78,7 +78,8 @@ try {
   await run('subcontractor dispute recorded against the back-charge', async () => must(await api('POST', `/subcontracts/backcharges/${bc1.id}/response`, maker, { response: 'disputed', note: 'Subcontractor letter: debris belonged to others (fixture)' }), 'dispute'));
 
   // --- Less previous and net never negative.
-  await expectVerify('less previous above the net certified on earlier approved certificates refused (30,000 > 23,000)', await cert({ gross_work_done: 20000, less_retention: 2000, less_advance_recovery: 5000, less_previous_paid: 30000 }), /exceeds the net certified/);
+  // DEC-012 (CC-057): cumulative valuation - "less previous" is implicit and must be 0.
+  await expectVerify('a less-previous deduction is refused under cumulative valuation', await cert({ gross_work_done: 20000, less_retention: 2000, less_advance_recovery: 5000, less_previous_paid: 1000 }), /must be 0 under cumulative valuation/);
   const cE = await cert({ gross_work_done: 20000, less_retention: 2000, less_advance_recovery: 5000 });
   check('second certificate verified with recovery 5,000 (outstanding then 5,000)', (await verify(cE)).status === 200);
   await expectVerify('recovery above the outstanding advance refused', await cert({ gross_work_done: 40000, less_advance_recovery: 10000 }), /exceeds the outstanding paid advance|differs from the recovery due 5000/);
