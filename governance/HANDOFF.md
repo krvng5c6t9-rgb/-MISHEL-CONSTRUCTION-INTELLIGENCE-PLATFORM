@@ -3,7 +3,7 @@
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
 - Waves 1–2 are built and runtime-tested (CC-015…CC-024). The RK-003 module sweep has executed variations, QA/HSE, approval rejection paths, HR/payroll and EDMS for the first time (CC-025…CC-029).
-- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…059 runs to verify.
+- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…058 green in CI (runs 37937731989 … 38081597944; the first CC-056 commit 21e7366 was red on the money static check, follow-up 1f4a023 green); CC-059 run 38083461003 to verify.
 
 ## Done (numbers)
 - **Change controls:** CC-001…CC-059 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–079.
