@@ -1,13 +1,13 @@
-# HANDOFF — v0.5.30-stage30 — DATE: 2026-10-10
+# HANDOFF — v0.5.31-stage31 — DATE: 2026-10-10
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
 - Waves 1–2 are built and runtime-tested (CC-015…CC-024). The RK-003 module sweep has executed variations, QA/HSE, approval rejection paths, HR/payroll and EDMS for the first time (CC-025…CC-029).
-- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…058 green in CI (runs 37937731989 … 38081597944; the first CC-056 commit 21e7366 was red on the money static check, follow-up 1f4a023 green); CC-059 run 38083461003 to verify.
+- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…058 green in CI (runs 37937731989 … 38081597944; the first CC-056 commit 21e7366 was red on the money static check, follow-up 1f4a023 green); CC-059 and CC-060 runs to verify.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-059 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–079.
-- **Runtime suites, all from zero (E1):** 42 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,249 checks + shared-guard probe + Golden Case status check, all PASS, RUN sg6 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
+- **Change controls:** CC-001…CC-060 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–080.
+- **Runtime suites, all from zero (E1):** 43 API suites + 2 browser checks (tests/ui, UI_CHECK=1, in CI), 1,278 checks + shared-guard probe + Golden Case status check, all PASS, RUN sg7 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -99,16 +99,16 @@
   - Stage 28 — DEC-012 core: **DONE** (CC-057; F-42 closed).
   - Stage 29 — DEC-012 remainder + DEC-016/017 supplier side: **DONE** (CC-058; F-33 closed; F-44 found and closed — payments now clear the account their payable was credited to).
   - Stage 30 — DEC-009 part 1: **DONE** (CC-059; F-45/F-46 found and closed; known limitation: released retention stays in the retention GL account until collected).
-  - **Stage 31 (NEXT) — DEC-009 part 2: revenue recognition run per contract (transaction price = contract value + approved variations + only second-person-approved estimates of unpriced variations/claims; progress = cost to date / EAC from the latest approved cost snapshot, output method optional per contract with approval; cumulative revenue − previous = period revenue; Dr billings / Cr revenue; contract asset/liability per contract; onerous contract provision in full when EAC > price; prepared by one, approved by another; frozen hashed snapshot; approved periods locked). Needs a GL source for the run (new source_module) — also resolves the retention reclassification limitation.**
-  - Stages 30-31 — DEC-009: IPC as billing + retention receivable; revenue recognition run (cost-to-cost, second-person approval); contract asset/liability.
-  - Stages 32-33 — DEC-015: per-address limit enabled per deployment; TOTP MFA mandatory for admin, finance and DOA approvers.
+  - Stage 31 — DEC-009 part 2: **DONE** (CC-060; revenue run; retention reclassification; F-05 closed; F-47 opened).
+  - **Stage 32 (NEXT) — DEC-015 part 1: TOTP MFA (enrolment with recovery codes, verification at sign-in) mandatory for admin, finance and DOA approver roles; per-address sign-in limit switchable per deployment (TRUST_PROXY); runtime suite.** Optional before it: a Revenue & Contract Position screen (revenue runs, estimates, retention release) - the new DEC-009 flows are API-only today.
+  - Stage 33 — DEC-015 part 2 if needed (MFA UI / admin reset flow).
   - Stage 34 — GC-24 legacy import per DEC-019 methodology (opening TB, in-flight contracts/subcontracts cumulative, reconciliation report).
   - Later candidates: GC-24 legacy import; GC-12 advance recovery/back-charges; snapshot ZIP when the owner asks.
   - Gate order note: wave1_boq_handover now runs BEFORE chain.mjs (it configures contract-signing DOA and signers the chain uses).
   - Then: remaining ABSENT Golden Case steps by business priority; frontend browser verification; performance/DR/pentest preparation.
 - Afterwards: derive next stages from the Owner Execution Directive, constitution, reconciliation/discovery state (incl. NDC-029, G-013).
-- DEC-015 DECIDED (2026-10-09): lockout 5/15/15 adopted; address limit to be enabled per deployment with TRUST_PROXY; MFA mandatory for admin/finance/DOA approvers (Stages 30-31).
-- DEC-009 / DEC-012 / DEC-013 / DEC-014 were DECIDED by the owner on 2026-10-09 (register 09); DEC-012/013/014 are implemented (CC-056…058); DEC-009 is Stages 30-31. (Records correction: this line said "stay OPEN" after the decision.)
+- DEC-015 DECIDED (2026-10-09): lockout 5/15/15 adopted; address limit to be enabled per deployment with TRUST_PROXY; MFA mandatory for admin/finance/DOA approvers (Stage 32).
+- DEC-009 / DEC-012 / DEC-013 / DEC-014 were DECIDED by the owner on 2026-10-09 (register 09); DEC-009/012/013/014 are implemented (CC-056…060; DEC-009 remainder F-47). (Records correction: this line said "stay OPEN" after the decision.)
 
 ## Warnings for next session
 - Postgres in this container stops between sessions. Restart with `pg_ctl` (see CURRENT_STATE).

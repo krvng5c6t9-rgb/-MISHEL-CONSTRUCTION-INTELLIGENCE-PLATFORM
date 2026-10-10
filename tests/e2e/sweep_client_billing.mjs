@@ -73,7 +73,11 @@ try {
   const arList = must(await api('GET', '/finance/ar', admin), 'ar');
   check('receivables list shows the advance request and the released retention (with its IPC)', arList.some(a => Number(a.id) === Number(advAr)) && arList.some(a => Number(a.id) === Number(rel.accounts_receivable.id) && a.ipc_no === `CB1-${TAG}`));
   const r4 = await receipt(rel.accounts_receivable.id, 5000, `CBR4-${TAG}`);
-  if (OWNER) check('GL: collecting released retention credits the retention receivable 5,000', glOf('payments', r4.id, acc.ret, 'credit') === '5000.00', glOf('payments', r4.id, acc.ret, 'credit'));
+  if (OWNER) {
+    // Stage 31 (080): the release reclassifies the retention to receivables; the receipt then clears receivables.
+    check('GL: release reclassifies Dr receivables 5,000 / Cr retention receivable 5,000', glOf('retention_ledger', ret.id, acc.ar, 'debit') === '5000.00' && glOf('retention_ledger', ret.id, acc.ret, 'credit') === '5000.00', `${glOf('retention_ledger', ret.id, acc.ar, 'debit')} / ${glOf('retention_ledger', ret.id, acc.ret, 'credit')}`);
+    check('GL: collecting released retention credits receivables 5,000', glOf('payments', r4.id, acc.ar, 'credit') === '5000.00' && glOf('payments', r4.id, acc.ret, 'credit') === '0', glOf('payments', r4.id, acc.ar, 'credit'));
+  }
 
   const pos = must(await api('GET', `/finance/contracts/${contract}/receivable-position`, fm1), 'position');
   check('position: billed 100,000 (net 75,000), collected 80,000, nothing outstanding, retention 5,000 released',

@@ -12,6 +12,7 @@ import { procurementRouter } from '../modules/procurement/procurement.routes.js'
 import { financeRouter } from '../modules/finance/finance.routes.js';
 import { clientAdvancesRouter } from '../modules/finance/clientAdvances.routes.js';
 import { taxRouter } from '../modules/finance/tax.routes.js';
+import { revenueRouter } from '../modules/finance/revenue.routes.js';
 import { technicalOfficeRouter } from '../modules/technicalOffice/technicalOffice.routes.js';
 import { planningRouter } from '../modules/planning/planning.routes.js';
 import { siteRouter } from '../modules/site/site.routes.js';
@@ -75,6 +76,7 @@ apiRouter.use('/procurement', procurementRouter);
 apiRouter.use('/finance', financeRouter);
 apiRouter.use('/finance', clientAdvancesRouter);
 apiRouter.use('/finance', taxRouter);
+apiRouter.use('/finance', revenueRouter);
 apiRouter.use('/technical-office', technicalOfficeRouter);
 apiRouter.use('/planning', planningRouter);
 apiRouter.use('/site', siteRouter);

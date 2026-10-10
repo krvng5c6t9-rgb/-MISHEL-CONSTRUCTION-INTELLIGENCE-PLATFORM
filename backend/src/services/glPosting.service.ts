@@ -30,7 +30,7 @@ async function insertBalancedGlBatch(client: PoolClient, input: {
   amount: number | string;
   currency_id: number;
   transaction_date: string;
-  source_module: 'cost_transaction' | 'ipc' | 'payment' | 'manual_journal' | 'payroll_overhead';
+  source_module: 'cost_transaction' | 'ipc' | 'payment' | 'manual_journal' | 'payroll_overhead' | 'revenue_recognition' | 'retention_release';
   source_table: string;
   source_record_id: number;
   description: string;
@@ -257,12 +257,12 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
   // it debits the advance asset (the account certificate recoveries credit). Vendor invoices keep the payment rule.
   let debitAccount = Number(rule.debit_account_id);
   let creditAccount = Number(rule.credit_account_id);
-  // DEC-009 (migration 079): a receipt clears the account its receivable was debited to - an advance request carries
-  // no GL of its own, so the receipt credits the client advances liability; released retention credits the retention
-  // receivable. IPC receivables keep the incoming-payment rule.
+  // DEC-009 (migrations 079/080): a receipt clears the account its receivable was debited to - an advance request carries
+  // no GL of its own, so the receipt credits the client advances liability. Released retention is reclassified to
+  // receivables at release (080), so its receipt credits receivables like an IPC receivable.
   if (payment.payment_type === 'incoming' && payment.related_ar_id) {
     const ar = (await client.query(`select source_type from accounts_receivable where id = $1`, [payment.related_ar_id])).rows[0];
-    const subtype = ({ client_advance: 'client_advance', retention_release: 'retention_receivable' } as Record<string, string>)[ar?.source_type];
+    const subtype = ({ client_advance: 'client_advance' } as Record<string, string>)[ar?.source_type];
     if (subtype) {
       const r = await getActiveRule(client, Number(payment.org_id), 'ipc', subtype);
       if (!r || r.source_subtype !== subtype) throw new AppError(422, `No active GL posting rule for ipc / ${subtype} (account cleared by this receipt)`);
@@ -345,4 +345,53 @@ export async function postManualJournalToGl(client: PoolClient, journalEntryId: 
   }
   await client.query(`update manual_journal_entries set status='posted', posted_journal_batch_id=$2, posted_at=now(), updated_at=now() where id=$1`, [entry.id, batchId]);
   return { journal_batch_id: batchId, lines: inserted };
+}
+
+// DEC-009 (migration 080): released client retention becomes an unconditional receivable - Dr receivables (IPC rule
+// debit account) / Cr retention receivable (ipc / retention_receivable rule debit account).
+export async function postRetentionReleaseToGl(client: PoolClient, retentionId: number) {
+  const r = (await client.query(`select r.*, p.currency_id from retention_ledger r join projects p on p.id = r.project_id where r.id = $1 for update of r`, [retentionId])).rows[0];
+  if (!r) throw new AppError(404, 'Retention not found');
+  const ipcRule = await getActiveRule(client, Number(r.org_id), 'ipc', null);
+  const retRule = await getActiveRule(client, Number(r.org_id), 'ipc', 'retention_receivable');
+  if (!ipcRule || !retRule || retRule.source_subtype !== 'retention_receivable') throw new AppError(422, 'No active GL posting rules for ipc and ipc / retention_receivable');
+  const batch = await insertBalancedGlBatch(client, {
+    org_id: Number(r.org_id), project_id: Number(r.project_id),
+    debit_account_id: Number(ipcRule.debit_account_id), credit_account_id: Number(retRule.debit_account_id),
+    amount: String(r.retained_amount), currency_id: Number(r.currency_id), transaction_date: new Date().toISOString().slice(0, 10),
+    source_module: 'retention_release', source_table: 'retention_ledger', source_record_id: Number(r.id),
+    description: `Retention released (${r.release_reference}) reclassified to receivables`
+  });
+  await client.query(`update retention_ledger set release_gl_batch_id = $2 where id = $1`, [r.id, batch.journal_batch_id]);
+  return batch;
+}
+
+// DEC-009 (migration 080): approving a revenue run posts its period movements on the period end - revenue against the
+// billings account (rule revenue_recognition) and the onerous provision movement (rule revenue_recognition /
+// onerous_provision). A negative movement reverses the sides. The database computed every figure at preparation.
+export async function postRevenueRunToGl(client: PoolClient, runId: number) {
+  const run = (await client.query(`select r.*, k.currency_id, to_char(r.period_end, 'YYYY-MM-DD') as period_end_text,
+      abs(period_revenue)::text as rev_abs, (period_revenue > 0) as rev_up, (period_revenue <> 0) as has_rev,
+      abs(period_loss_provision)::text as loss_abs, (period_loss_provision > 0) as loss_up, (period_loss_provision <> 0) as has_loss
+    from revenue_recognition_runs r join contracts k on k.id = r.contract_id where r.id = $1 for update of r`, [runId])).rows[0];
+  if (!run) throw new AppError(404, 'Revenue run not found');
+  if (run.status !== 'prepared') throw new AppError(409, 'Only a prepared revenue run can be approved');
+  const base = { org_id: Number(run.org_id), project_id: Number(run.project_id), currency_id: Number(run.currency_id), transaction_date: run.period_end_text,
+    source_module: 'revenue_recognition' as const, source_table: 'revenue_recognition_runs', source_record_id: Number(run.id) };
+  const batches = [];
+  if (run.has_rev) {
+    const rule = await getActiveRule(client, Number(run.org_id), 'revenue_recognition', null);
+    if (!rule) throw new AppError(422, 'No active GL posting rule for revenue_recognition (Dr contract billings / Cr revenue)');
+    const [d, c] = run.rev_up ? [rule.debit_account_id, rule.credit_account_id] : [rule.credit_account_id, rule.debit_account_id];
+    batches.push(await insertBalancedGlBatch(client, { ...base, debit_account_id: Number(d), credit_account_id: Number(c), amount: run.rev_abs,
+      description: `Revenue recognised ${run.rev_up ? '' : '(reversal) '}for contract ${run.contract_id}, period ending ${run.period_end_text}` }));
+  }
+  if (run.has_loss) {
+    const rule = await getActiveRule(client, Number(run.org_id), 'revenue_recognition', 'onerous_provision');
+    if (!rule || rule.source_subtype !== 'onerous_provision') throw new AppError(422, 'No active GL posting rule for revenue_recognition / onerous_provision');
+    const [d, c] = run.loss_up ? [rule.debit_account_id, rule.credit_account_id] : [rule.credit_account_id, rule.debit_account_id];
+    batches.push(await insertBalancedGlBatch(client, { ...base, debit_account_id: Number(d), credit_account_id: Number(c), amount: run.loss_abs,
+      description: `Onerous contract provision ${run.loss_up ? 'recognised' : 'released'} for contract ${run.contract_id}, period ending ${run.period_end_text}` }));
+  }
+  return batches;
 }

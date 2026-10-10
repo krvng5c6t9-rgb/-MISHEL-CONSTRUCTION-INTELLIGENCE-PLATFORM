@@ -77,7 +77,7 @@ financeRouter.get('/gl-posting-rules', asyncHandler(async (req, res) => {
 financeRouter.post('/gl-posting-rules', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
   const orgId = Number(req.user!.org_id);
   const body = z.object({
-    source_module: z.enum(['cost_transaction','ipc','payment','payroll_overhead']),
+    source_module: z.enum(['cost_transaction','ipc','payment','payroll_overhead','revenue_recognition']),
     source_subtype: z.string().max(30).nullable().optional(),
     debit_account_id: z.number().int().positive(),
     credit_account_id: z.number().int().positive(),

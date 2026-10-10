@@ -4,6 +4,7 @@ import { query, getClient, releaseClient } from '../../db/pool.js';
 import { asyncHandler } from '../../middleware/asyncHandler.js';
 import { authorize } from '../../middleware/authorize.js';
 import { AppError } from '../../middleware/errors.js';
+import { postRetentionReleaseToGl } from '../../services/glPosting.service.js';
 
 // Stage 21 (GC-13 step 3, F-32, migration 070): client advance payments received under the contract and the advance
 // position used when preparing an IPC. Limits and recovery rules are enforced by the database (trg_ipc_deductions).
@@ -73,8 +74,10 @@ clientAdvancesRouter.post('/retentions/:id/release', authorize('finance', 'appro
       values ($1,$2,$3,'retention_release',$4,$5,$6) returning *`, [r.org_id, r.client_id, r.contract_project_id, r.id, r.retained_amount, r.currency_id])).rows[0];
     const [u] = (await client.query(`update retention_ledger set release_status = 'released', release_date = current_date, release_reason = $2, release_reference = $3,
       released_by = $4, released_at = now(), release_receivable_id = $5 where id = $1 returning *`, [r.id, b.reason, b.reference, req.user!.id, ar.id])).rows;
+    // Stage 31 (080): the released retention is reclassified to receivables in the GL in the same transaction.
+    const gl = await postRetentionReleaseToGl(client, Number(r.id));
     await client.query('commit');
-    res.json({ success: true, data: { retention: u, accounts_receivable: ar } });
+    res.json({ success: true, data: { retention: { ...u, release_gl_batch_id: gl.journal_batch_id }, accounts_receivable: ar, gl } });
   } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
 }));
 clientAdvancesRouter.get('/contracts/:id/receivable-position', asyncHandler(async (req, res) => {
