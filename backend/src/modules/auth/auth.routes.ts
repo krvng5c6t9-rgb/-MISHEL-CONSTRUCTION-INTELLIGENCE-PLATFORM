@@ -10,6 +10,7 @@ import { asyncHandler } from '../../middleware/asyncHandler.js';
 import { authenticate } from '../../middleware/authenticate.js';
 import { AppError } from '../../middleware/errors.js';
 import type { AuthPermission } from '../../types/auth.js';
+import { type ChallengePurpose, decryptSecret, encryptSecret, hashRecoveryCode, matchStep, newRecoveryCodes, newSecret, otpauthUri, signChallenge, verifyChallenge } from '../../services/mfa.service.js';
 
 export const authRouter = Router();
 
@@ -94,31 +95,123 @@ authRouter.post('/login', asyncHandler(async (req, res) => {
     await recordLogin(body.org_id, body.email, address, false);
     throw new AppError(401, 'Invalid email or password');
   }
+  // Stage 32 / DEC-015: privileged users (and anyone who enrolled) complete sign-in with a second factor. The password
+  // step then returns only a short-lived challenge, never a session.
+  const mfa = await withDbContext({ orgId: user.org_id, userId: user.id }, async () => (await query<{ required: boolean; enabled: boolean }>(
+    `select user_requires_mfa(id) as required, (mfa_enabled_at is not null) as enabled from users where id = $1`, [user.id]))[0]);
+  if (mfa.enabled || (mfa.required && env.MFA_ENFORCEMENT === 'required')) {
+    const purpose = mfa.enabled ? 'mfa_verify' : 'mfa_enroll';
+    res.json({ success: true, data: { [purpose === 'mfa_verify' ? 'mfa_required' : 'mfa_enrollment_required']: true, challenge_token: signChallenge(user, purpose) } });
+    return;
+  }
   await recordLogin(body.org_id, body.email, address, true);
+  res.json({ success: true, data: await sessionPayload(user) });
+}));
 
+type LoginUser = { id: number; org_id: number; employee_id: number | null; role_id: number; role_name: string; full_name: string; email: string; user_type: string; token_version: number };
+async function sessionPayload(user: LoginUser) {
   const permissions = await withDbContext({ orgId: user.org_id, userId: user.id }, async () => {
     await query('update users set last_login_at = now() where id = $1', [user.id]);
     return permissionsForRole(user.role_id);
   });
-  const token = signToken(user);
-
-  res.json({
-    success: true,
-    data: {
-      token,
-      user: {
-        id: user.id,
-        org_id: user.org_id,
-        employee_id: user.employee_id,
-        role_id: user.role_id,
-        role_name: user.role_name,
-        full_name: user.full_name,
-        email: user.email,
-        user_type: user.user_type,
-        permissions
-      }
+  return {
+    token: signToken(user),
+    user: {
+      id: user.id, org_id: user.org_id, employee_id: user.employee_id, role_id: user.role_id, role_name: user.role_name,
+      full_name: user.full_name, email: user.email, user_type: user.user_type, permissions
     }
+  };
+}
+
+// --- Stage 32 / DEC-015: second factor. Every step re-reads the user (active, same session epoch) under its tenant.
+async function challengeUser(token: string, purpose: ChallengePurpose) {
+  let c: { userId: number; orgId: number; tv: number };
+  try { c = verifyChallenge(token, purpose); } catch { throw new AppError(401, 'Sign-in challenge is invalid or expired; sign in again'); }
+  const [u] = await withDbContext({ orgId: c.orgId, userId: c.userId }, () => query<LoginUser & { mfa_secret_enc: string | null; mfa_enabled_at: string | null; mfa_last_step: string }>(`
+    select u.id, u.org_id, u.employee_id, u.role_id, r.role_name, u.full_name, u.email, u.user_type, u.token_version,
+           u.mfa_secret_enc, u.mfa_enabled_at, u.mfa_last_step
+    from users u join roles r on r.id = u.role_id where u.id = $1 and u.is_active and r.is_active`, [c.userId]));
+  if (!u || Number(u.token_version) !== c.tv) throw new AppError(401, 'Sign-in challenge is invalid or expired; sign in again');
+  return u;
+}
+async function gateOrThrow(orgId: number, email: string, address: string | null) {
+  const [gate] = await query<{ allowed: boolean; retry_after_seconds: number }>(`select * from login_gate($1::bigint,$2::text,$3::text,$4::int,$5::int)`,
+    [orgId, email, address, env.LOGIN_ADDRESS_MAX_FAILURES, env.LOGIN_FAILURE_WINDOW_MINUTES]);
+  if (!gate.allowed) throw new AppError(429, 'Too many failed sign-in attempts. Try again later.');
+}
+const mfaEvent = (u: { id: number; org_id: number }, event: string) =>
+  withDbContext({ orgId: u.org_id, userId: u.id }, () => query(`insert into mfa_events(org_id, user_id, event) values ($1,$2,$3)`, [u.org_id, u.id, event]));
+
+authRouter.post('/mfa/enroll', asyncHandler(async (req, res) => {
+  const b = z.object({ challenge_token: z.string().min(10) }).parse(req.body);
+  const u = await challengeUser(b.challenge_token, 'mfa_enroll');
+  if (u.mfa_enabled_at) throw new AppError(409, 'Multi-factor sign-in is already set up for this user');
+  const secret = newSecret();
+  await withDbContext({ orgId: u.org_id, userId: u.id }, () => query(`update users set mfa_secret_enc = $2, mfa_last_step = 0 where id = $1 and mfa_enabled_at is null`, [u.id, encryptSecret(secret)]));
+  res.json({ success: true, data: { secret, otpauth_uri: otpauthUri(u.email, secret) } });
+}));
+
+authRouter.post('/mfa/enroll/confirm', asyncHandler(async (req, res) => {
+  const b = z.object({ challenge_token: z.string().min(10), code: z.string().trim() }).parse(req.body);
+  const u = await challengeUser(b.challenge_token, 'mfa_enroll');
+  const address = req.ip ?? null;
+  await gateOrThrow(u.org_id, u.email, address);
+  if (u.mfa_enabled_at || !u.mfa_secret_enc) throw new AppError(409, 'Start the set-up first');
+  const step = matchStep(decryptSecret(u.mfa_secret_enc), b.code, Number(u.mfa_last_step));
+  if (step === null) {
+    await recordLogin(u.org_id, u.email, address, false);
+    await mfaEvent(u, 'failed');
+    throw new AppError(401, 'Invalid authentication code');
+  }
+  const codes = newRecoveryCodes();
+  await withDbContext({ orgId: u.org_id, userId: u.id }, async () => {
+  const client = await getClient();
+  try {
+    await client.query('begin');
+    const done = await client.query(`update users set mfa_enabled_at = now(), mfa_last_step = $2 where id = $1 and mfa_enabled_at is null and mfa_last_step < $2`, [u.id, step]);
+    if (!done.rowCount) throw new AppError(409, 'Set-up already completed or code already used');
+    for (const c of codes) await client.query(`insert into mfa_recovery_codes(org_id, user_id, code_sha256) values ($1,$2,$3)`, [u.org_id, u.id, hashRecoveryCode(c)]);
+    await client.query(`insert into mfa_events(org_id, user_id, event) values ($1,$2,'enrolled')`, [u.org_id, u.id]);
+    await client.query('commit');
+  } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
   });
+  await recordLogin(u.org_id, u.email, address, true);
+  res.json({ success: true, data: { ...(await sessionPayload(u)), recovery_codes: codes } });
+}));
+
+authRouter.post('/mfa/verify', asyncHandler(async (req, res) => {
+  const b = z.object({ challenge_token: z.string().min(10), code: z.string().trim().optional(), recovery_code: z.string().trim().optional() })
+    .refine(v => !!v.code !== !!v.recovery_code, { message: 'Provide either code or recovery_code' }).parse(req.body);
+  const u = await challengeUser(b.challenge_token, 'mfa_verify');
+  const address = req.ip ?? null;
+  await gateOrThrow(u.org_id, u.email, address);
+  if (!u.mfa_enabled_at || !u.mfa_secret_enc) throw new AppError(409, 'Multi-factor sign-in is not set up for this user');
+  let ok = false;
+  await withDbContext({ orgId: u.org_id, userId: u.id }, async () => {
+    if (b.code) {
+      const step = matchStep(decryptSecret(u.mfa_secret_enc!), b.code, Number(u.mfa_last_step));
+      // The conditional update makes each code single-use even under concurrent submissions (replay refused).
+      ok = step !== null && !!(await query(`update users set mfa_last_step = $2 where id = $1 and mfa_last_step < $2 returning id`, [u.id, step]))[0];
+    } else {
+      ok = !!(await query(`update mfa_recovery_codes set used_at = now() where user_id = $1 and code_sha256 = $2 and used_at is null and revoked_at is null returning id`,
+        [u.id, hashRecoveryCode(b.recovery_code!)]))[0];
+    }
+    await query(`insert into mfa_events(org_id, user_id, event) values ($1,$2,$3)`, [u.org_id, u.id, ok ? (b.code ? 'verified' : 'recovery_used') : 'failed']);
+  });
+  if (!ok) {
+    await recordLogin(u.org_id, u.email, address, false);
+    throw new AppError(401, b.code ? 'Invalid authentication code' : 'Invalid recovery code');
+  }
+  await recordLogin(u.org_id, u.email, address, true);
+  const [left] = await withDbContext({ orgId: u.org_id, userId: u.id }, () => query<{ n: number }>(`select count(*)::int as n from mfa_recovery_codes where user_id = $1 and used_at is null and revoked_at is null`, [u.id]));
+  res.json({ success: true, data: { ...(await sessionPayload(u)), recovery_codes_remaining: left.n } });
+}));
+
+authRouter.get('/mfa/status', authenticate, asyncHandler(async (req, res) => {
+  const [r] = await query<Record<string, unknown>>(`select (mfa_enabled_at is not null) as enabled, mfa_enabled_at, user_requires_mfa(id) as required,
+      (select count(*)::int from mfa_recovery_codes c where c.user_id = users.id and c.used_at is null and c.revoked_at is null) as recovery_codes_remaining
+    from users where id = $1`, [req.user!.id]);
+  res.json({ success: true, data: { ...r, enforcement: env.MFA_ENFORCEMENT } });
 }));
 
 authRouter.get('/me', authenticate, asyncHandler(async (req, res) => {

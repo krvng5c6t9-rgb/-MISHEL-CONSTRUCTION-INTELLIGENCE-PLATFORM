@@ -23,7 +23,14 @@ const envSchema = z.object({
   // Per-address limit needs the real client address: set TRUST_PROXY to the number of proxy hops in front of the API.
   LOGIN_ADDRESS_MAX_FAILURES: z.coerce.number().int().min(0).default(0),
   TRUST_PROXY: z.coerce.number().int().min(0).default(0),
-  ALLOW_MULTI_TENANT_BOOTSTRAP: z.enum(['true', 'false']).default('false').transform(v => v === 'true')
+  ALLOW_MULTI_TENANT_BOOTSTRAP: z.enum(['true', 'false']).default('false').transform(v => v === 'true'),
+  // Stage 32 / DEC-015: multi-factor sign-in for privileged users (admin, finance post/approve/manage, DOA approvers).
+  // 'required' is the decided policy; 'off' exists only for local test servers and is refused in production.
+  MFA_ENFORCEMENT: z.enum(['required', 'off']).default('required'),
+  MFA_ISSUER: z.string().min(2).max(60).default('MISHEL ERP'),
+  // Key for TOTP secrets at rest. Set it in production (independent of JWT_SECRET, so a JWT key rotation never
+  // locks users out); without it a key derived from JWT_SECRET is used (development only, see server.ts).
+  MFA_ENCRYPTION_KEY: z.string().min(32).optional()
 });
 
 export const env = envSchema.parse(process.env);

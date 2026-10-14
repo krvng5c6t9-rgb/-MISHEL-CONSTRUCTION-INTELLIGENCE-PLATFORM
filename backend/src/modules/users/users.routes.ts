@@ -103,3 +103,22 @@ usersRouter.post('/:id/revoke-sessions', requireSystemRole(), asyncHandler(async
   if (!rows[0]) throw new AppError(404, 'User not found');
   res.json({ success: true, data: { user_id: id, sessions: 'revoked' } });
 }));
+// Stage 32 / DEC-015: lost authenticator - an administrator (never the user themself) clears the second factor with a
+// reason; unused recovery codes are revoked and every session ends, so the user must set up MFA again at next sign-in.
+usersRouter.post('/:id/mfa-reset', requireSystemRole(), asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id <= 0) throw new AppError(400, 'Invalid user id');
+  const b = z.object({ reason: z.string().trim().min(10) }).parse(req.body);
+  if (id === req.user!.id) throw new AppError(403, 'Segregation of duties: another administrator resets your multi-factor sign-in');
+  const client = await getClient();
+  try {
+    await client.query('begin');
+    const u = (await client.query(`update users set mfa_secret_enc = null, mfa_enabled_at = null, mfa_last_step = 0, token_version = token_version + 1, updated_at = now()
+      where id = $1 and org_id = $2 returning id`, [id, req.user!.org_id])).rows[0];
+    if (!u) throw new AppError(404, 'User not found');
+    await client.query(`update mfa_recovery_codes set revoked_at = now() where user_id = $1 and used_at is null and revoked_at is null`, [id]);
+    await client.query(`insert into mfa_events(org_id, user_id, event, actor_id, reason) values ($1,$2,'reset',$3,$4)`, [req.user!.org_id, id, req.user!.id, b.reason]);
+    await client.query('commit');
+  } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
+  res.json({ success: true, data: { user_id: id, mfa: 'reset', sessions: 'revoked' } });
+}));

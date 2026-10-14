@@ -20,6 +20,9 @@ MIGRATION_DATABASE_URL="$OWNER_URL_BASE/$DB$Q" APP_DB_ROLE="$(node -e "console.l
 export DATABASE_URL="$APP_URL_BASE/$DB$Q" PORT="$PORT_" NODE_ENV=development ALLOW_MULTI_TENANT_BOOTSTRAP=true CORS_ORIGIN="http://localhost:$UI_PORT_"
 # G-017 login throttling: TEST FIXTURE values (production values are the owner's security policy, DEC-015).
 export LOGIN_MAX_FAILED_ATTEMPTS=5 LOGIN_FAILURE_WINDOW_MINUTES=15 LOGIN_LOCKOUT_MINUTES=15 LOGIN_ADDRESS_MAX_FAILURES=20 TRUST_PROXY=1
+# Stage 32 / DEC-015: the suites sign in by password, so this server runs with MFA off (TEST ONLY; refused in
+# production). The MFA suite runs at the end against a second server with MFA required (the production setting).
+export MFA_ENFORCEMENT=off
 export JWT_SECRET="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
 export BOOTSTRAP_ADMIN_TOKEN="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
 # F-13: run the API in a non-UTC zone (Egypt-first target) so date-handling defects surface in every run.
@@ -91,3 +94,23 @@ if [ "${UI_CHECK:-0}" = "1" ]; then
   UI_BASE="http://localhost:$UI_PORT_" UI_API="$API_BASE" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/project_controls.ui.mjs" | tee "out/ui/project_controls_ui_$RUN.txt"
   UI_BASE="http://localhost:$UI_PORT_" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/payments.ui.mjs" | tee "out/ui/payments_ui_$RUN.txt"
 fi
+
+# Stage 32 / DEC-015: multi-factor sign-in against a second API server with the production setting MFA_ENFORCEMENT=required
+# (same database). Runs last: it exercises lockout and session revocation on its own users.
+MFA_PORT_=$((PORT_ + 7))
+MFA_UI_PORT_=$((UI_PORT_ + 1))
+(cd "$ROOT/backend" && MFA_ENFORCEMENT=required PORT="$MFA_PORT_" CORS_ORIGIN="http://localhost:$MFA_UI_PORT_" TZ="${API_TZ:-Africa/Cairo}" exec node dist/server.js > "${TMPDIR:-/tmp}/erp_e2e_mfa_server_$RUN.log" 2>&1) &
+MFA_PID=$!
+trap 'kill $SERVER_PID $MFA_PID ${UI_PID:-} 2>/dev/null || true; pkill -f "vite preview --outDir ${UI_DIST:-none}" 2>/dev/null || true' EXIT
+for _ in $(seq 1 30); do curl -sf "http://localhost:$MFA_PORT_/api/health" >/dev/null && break; sleep 0.5; done
+MFA_API_BASE="http://localhost:$MFA_PORT_/api" BACKEND_DIR="$ROOT/backend" OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_mfa.mjs
+if [ "${UI_CHECK:-0}" = "1" ]; then
+  MFA_UI_DIST="${TMPDIR:-/tmp}/erp_ui_mfa_dist_$RUN"
+  (cd "$ROOT/frontend" && VITE_API_BASE_URL="http://localhost:$MFA_PORT_/api" npx vite build --outDir "$MFA_UI_DIST" --emptyOutDir >/dev/null)
+  (cd "$ROOT/frontend" && exec npx vite preview --outDir "$MFA_UI_DIST" --port "$MFA_UI_PORT_" --strictPort > "${TMPDIR:-/tmp}/erp_ui_mfa_preview_$RUN.log" 2>&1) &
+  MFA_UI_PID=$!
+  for _ in $(seq 1 30); do curl -sf "http://localhost:$MFA_UI_PORT_/login" >/dev/null && break; sleep 0.5; done
+  UI_BASE="http://localhost:$MFA_UI_PORT_" MAIN_API="$API_BASE" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/mfa_login.ui.mjs" | tee "out/ui/mfa_login_ui_$RUN.txt"
+  kill $MFA_UI_PID 2>/dev/null || true; pkill -f "vite preview --outDir $MFA_UI_DIST" 2>/dev/null || true
+fi
+kill $MFA_PID 2>/dev/null || true

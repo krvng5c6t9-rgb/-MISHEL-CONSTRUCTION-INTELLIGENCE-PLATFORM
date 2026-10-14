@@ -32,6 +32,11 @@ async function assertRlsEnforced() {
 
 await assertRlsEnforced();
 
+// Stage 32 / DEC-015: production never runs without multi-factor sign-in for privileged users, and keeps the TOTP
+// secrets under their own key.
+if (env.NODE_ENV === 'production' && env.MFA_ENFORCEMENT !== 'required') throw new Error('MFA_ENFORCEMENT must be required in production (DEC-015)');
+if (env.NODE_ENV === 'production' && !env.MFA_ENCRYPTION_KEY) throw new Error('MFA_ENCRYPTION_KEY is required in production');
+
 const server = app.listen(env.PORT, () => {
   console.log(`Construction ERP backend listening on port ${env.PORT}`);
 });
