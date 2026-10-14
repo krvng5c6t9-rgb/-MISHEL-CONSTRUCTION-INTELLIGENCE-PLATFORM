@@ -95,10 +95,11 @@ export function CommercialPayments() {
             {terms?.status === 'draft' && <button onClick={() => run(() => apiPost(`/contract-admin/payment-terms/${terms.id}/confirm`, {}))}>Confirm terms</button>}
           </div>
           <button onClick={() => run(() => apiPost('/finance/client-advances', { contract_id: contractId, amount: Number(ask('Advance amount')), recovery_percent: Number(ask('Recovery % of gross per IPC from the contract (empty if none)')) || undefined, guarantee_ref: ask('Advance payment guarantee reference') || undefined }))}>Record advance</button>
-          <Table rows={advances} cols={[['amount', 'Amount'], ['recovery_percent', 'Recovery %'], ['guarantee_ref', 'Guarantee'], ['status', 'Status'], ['receipt_reference', 'Receipt']]}
+          {/* F-48 (Stage 33): since CC-059 an approved advance is received only through Finance receipts against its receivable. */}
+          <Table rows={advances} cols={[['amount', 'Amount'], ['recovery_percent', 'Recovery %'], ['guarantee_ref', 'Guarantee'], ['status', 'Status'], ['receivable_id', 'Receivable'], ['receipt_reference', 'Receipt']]}
             actions={a => <>
               {a.status === 'draft' && <button onClick={() => run(() => apiPost(`/finance/client-advances/${a.id}/approve`, {}))}>Approve</button>}
-              {a.status === 'approved' && <button onClick={() => run(() => apiPost(`/finance/client-advances/${a.id}/received`, { receipt_reference: ask('Receipt reference') }))}>Received</button>}
+              {a.status === 'approved' && <span className="muted">Collect through Finance receipts against receivable {a.receivable_id}</span>}
             </>} />
         </>}
       </div>
@@ -116,10 +117,11 @@ export function CommercialPayments() {
             <button onClick={() => run(() => apiPost('/subcontracts/advances', { subcontract_id: scId, amount: Number(ask('Advance amount')), recovery_percent: Number(ask('Recovery % of gross per certificate from the subcontract (empty if none)')) || undefined, guarantee_ref: ask('Guarantee reference') || undefined }))}>Record advance</button>
             <button onClick={() => run(() => apiPost('/subcontracts/backcharges', { subcontract_id: scId, reference: ask('Back-charge reference'), cause: ask('Cause (what was done at the subcontractor\'s cost)'), amount: Number(ask('Amount')), notified_on: ask('Date the subcontractor was notified (YYYY-MM-DD, empty if not yet)') || undefined }))}>Raise back-charge</button>
           </div>
-          <div data-section="sc-advances"><Table rows={scAdvances} cols={[['amount', 'Amount'], ['recovery_percent', 'Recovery %'], ['guarantee_ref', 'Guarantee'], ['status', 'Status'], ['payment_reference', 'Payment']]}
+          {/* F-48 (Stage 33): since CC-058 an approved advance is paid only through Finance payments against its payable. */}
+          <div data-section="sc-advances"><Table rows={scAdvances} cols={[['amount', 'Amount'], ['recovery_percent', 'Recovery %'], ['guarantee_ref', 'Guarantee'], ['status', 'Status'], ['payable_id', 'Payable'], ['payment_reference', 'Payment']]}
             actions={a => <>
               {a.status === 'draft' && <button onClick={() => run(() => apiPost(`/subcontracts/advances/${a.id}/approve`, {}))}>Approve</button>}
-              {a.status === 'approved' && <button onClick={() => run(() => apiPost(`/subcontracts/advances/${a.id}/paid`, { payment_reference: ask('Payment reference') }))}>Paid</button>}
+              {a.status === 'approved' && <span className="muted">Pay through Finance payments against payable {a.payable_id}</span>}
             </>} /></div>
           <div data-section="backcharges"><Table rows={backcharges} cols={[['reference', 'Ref'], ['cause', 'Cause'], ['amount', 'Amount'], ['status', 'Status'], ['notified_on', 'Notified'], ['subcontractor_response', 'Response'], ['certificate_id', 'Certificate']]}
             actions={b => <>

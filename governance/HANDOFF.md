@@ -1,13 +1,13 @@
-# HANDOFF — v0.5.32-stage32 — DATE: 2026-10-14
+# HANDOFF — v0.5.33-stage33 — DATE: 2026-10-14
 
 ## Where we are (3 lines)
 - Investigation R01–R14 is done; the 38 Golden Cases are decomposed into 167 steps (R13).
 - Waves 1–2 are built and runtime-tested (CC-015…CC-024). The RK-003 module sweep has executed variations, QA/HSE, approval rejection paths, HR/payroll and EDMS for the first time (CC-025…CC-029).
-- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…058 green in CI (runs 37937731989 … 38081597944; the first CC-056 commit 21e7366 was red on the money static check, follow-up 1f4a023 green); CC-059 green (run 38083461003), CC-060 green (run 38084547164); CC-061 run to verify.
+- Every change is gated in CI on PG 16/17 with the API running in Africa/Cairo. CI green through CC-036 (run 37816911306); CC-037…045 green; CC-046…049 and CC-051/F-39 green; CC-050 red on PG16 (F-39, test timing, fixed); CC-052…058 green in CI (runs 37937731989 … 38081597944; the first CC-056 commit 21e7366 was red on the money static check, follow-up 1f4a023 green); CC-059 green (run 38083461003), CC-060 green (run 38084547164); CC-061 green (run 38589882954, first CI run with the MFA server and browser check); CC-062 run to verify.
 
 ## Done (numbers)
-- **Change controls:** CC-001…CC-061 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–081.
-- **Runtime suites, all from zero (E1):** 44 API suites + 3 browser checks (tests/ui, UI_CHECK=1, in CI), 1,322 checks + shared-guard probe + Golden Case status check, all PASS, RUN sg8 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
+- **Change controls:** CC-001…CC-062 (`DECISION_LEDGER.md`, `registers/10`). Migrations 001–081.
+- **Runtime suites, all from zero (E1):** 44 API suites + 4 browser checks (tests/ui, UI_CHECK=1, in CI), 1,339 checks + shared-guard probe + Golden Case status check, all PASS, RUN sg9 ("700" earlier was a records error, F-19; Stage 1 claims 26, Stage 2 technical office 30, Stage 3 assets 27, Stage 4 inventory 21, Stage 5 NDC-002 29, Stage 6 cost/EAC 19, Stage 7 view isolation 10, Stage 8 sessions 20, Stage 9 time for completion 30, Stage 10 inventory controls 37, Stage 11 login throttling 20, Stage 12 risk register 37, Stage 14 report packs 29, Stage 15 commissioning 37, Stage 16 design impact 28, Stage 17 mobilisation 28; chain 92).
 
   | Suite | Checks | Suite | Checks |
   |---|---|---|---|
@@ -101,8 +101,8 @@
   - Stage 30 — DEC-009 part 1: **DONE** (CC-059; F-45/F-46 found and closed; known limitation: released retention stays in the retention GL account until collected).
   - Stage 31 — DEC-009 part 2: **DONE** (CC-060; revenue run; retention reclassification; F-05 closed; F-47 opened).
   - Stage 32 — DEC-015 / G-018: **DONE** (CC-061; MFA API + sign-in screen + admin reset; gate runs a second API server with MFA required). Deployment note: set `MFA_ENCRYPTION_KEY` (own key, ≥32 chars) and keep `MFA_ENFORCEMENT=required` - the API refuses to start in production otherwise.
-  - **Stage 33 (NEXT) — Revenue & Contract Position screen (DEC-009 flows are API-only): revenue runs (prepare/approve with SoD), price estimates (approve/retire), retention release, contract receivable position; plus an administrator MFA reset action in the Admin screen; browser check.**
-  - Stage 34 — GC-24 legacy import per DEC-019 (opening TB, in-flight contracts/subcontracts cumulative, reconciliation report).
+  - Stage 33 — screens: **DONE** (CC-062; Revenue & Contract Position, Admin MFA state/reset, F-48 closed). Snapshot delivered to the owner before it: MISHEL_ERP_v0.5.32-stage32_131ee74.zip (SHA-256 1a3f4aba…c771).
+  - **Stage 34 (NEXT) — GC-24 legacy import per DEC-019: opening trial balance (second-person approved, reconciled to sub-ledgers), in-flight client contracts and subcontracts at cumulative-to-date values (certified, retention, advances and recoveries, cost to date, EAC, revenue recognised) as opening entries, mandatory reconciliation report before the first period opens. The cut-over date itself stays OI-4 (owner, at go-live).**
   - Stage 34 — GC-24 legacy import per DEC-019 methodology (opening TB, in-flight contracts/subcontracts cumulative, reconciliation report).
   - Later candidates: GC-24 legacy import; GC-12 advance recovery/back-charges; snapshot ZIP when the owner asks.
   - Gate order note: wave1_boq_handover now runs BEFORE chain.mjs (it configures contract-signing DOA and signers the chain uses).

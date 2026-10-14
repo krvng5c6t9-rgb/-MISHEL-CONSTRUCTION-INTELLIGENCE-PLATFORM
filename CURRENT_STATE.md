@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-061
+## Controlled Changes CC-001 → CC-062
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -93,6 +93,7 @@
 | CC-059 | IPC as billing + retention receivable + advance liability; client advance via receipts (F-45); client retention release/collection; contract receivable position (079) |
 | CC-060 | Revenue recognition run (cost-to-cost, estimates, onerous provision, contract asset/liability, SoD posting); retention release GL reclassification (080) |
 | CC-061 | TOTP multi-factor sign-in for privileged users (G-018 closed), recovery codes, admin reset, production refuses MFA off; sign-in screen second step (081) |
+| CC-062 | Revenue & Contract Position screen; Admin MFA state + reset; F-48 dead advance buttons removed (screens only) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -158,8 +159,9 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | project_controls.ui.mjs | 23 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI) |
 | payments.ui.mjs | 16 | Browser: Payments & Certification (certification SoD, advance positions, back-charge SoD) |
 | sweep_mfa.mjs | 34 | DEC-015 MFA (server with MFA required): who must enrol, enrolment, replay, recovery codes, lockout, admin reset, production refusal |
-| mfa_login.ui.mjs | 10 | Browser: sign-in second step - set-up, recovery codes shown once, code sign-in, recovery sign-in |
-| **Total** | **1,322** | 44 API suites + 3 browser checks, all PASS locally (RUN sg8; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
+| mfa_login.ui.mjs | 13 | Browser: sign-in second step - set-up, recovery codes shown once, code sign-in, recovery sign-in, admin reset from the Users screen |
+| revenue.ui.mjs | 14 | Browser: Revenue & Contract Position - runs, backward run refused, estimate SoD/approve/retire, retention release, F-48 |
+| **Total** | **1,339** | 44 API suites + 4 browser checks, all PASS locally (RUN sg9; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

@@ -88,6 +88,35 @@ try {
   await page.getByRole('button', { name: 'Logout' }).waitFor({ timeout: 15000 });
   check('a recovery code signs in when the device is lost', !page.url().includes('/login'), page.url());
   await page.screenshot({ path: `${OUT}/mfa_login_${RUN}.png` });
+  await page.getByRole('button', { name: 'Logout' }).click();
+  await page.waitForURL(/\/login/);
+
+  // --- Administrator resets the user's MFA from the Users screen (the System Admin signs in with MFA too).
+  page.on('dialog', d => d.accept(d.type() === 'prompt' ? 'Phone lost - identity confirmed by HR (UI fixture)' : undefined));
+  await page.goto(`${BASE}/login`);
+  const ins = page.locator('input');
+  await ins.nth(0).fill('1'); await ins.nth(1).fill('admin.a@test.local'); await ins.nth(2).fill('Passw0rd!A');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.locator('[data-section="mfa-enroll"]').waitFor({ timeout: 15000 });
+  const adminSecret = (await page.locator('.mfa-secret').innerText()).replace(/\s+/g, '');
+  await page.locator('input').first().fill(totp(adminSecret));
+  await page.getByRole('button', { name: 'Verify' }).click();
+  await page.locator('[data-section="mfa-recovery-codes"]').waitFor({ timeout: 15000 });
+  await page.getByRole('button', { name: 'حفظتها — متابعة' }).click();
+  await page.getByRole('link', { name: 'Users / Roles / DOA' }).click();
+  const row = page.locator('[data-section="users"] tr', { hasText: u.email });
+  await row.waitFor({ timeout: 15000 });
+  check('the Users screen shows the user MFA as enabled', /Enabled/.test(await row.innerText()), (await row.innerText()).replace(/\s+/g, ' '));
+  await row.getByRole('button', { name: 'Reset MFA' }).click();
+  await page.locator('[data-section="users"] [role="status"]').waitFor({ timeout: 10000 });
+  await page.waitForTimeout(1000);
+  check('administrator resets the user MFA from the screen (reason asked): set-up required again', /Required — not set up/.test(await row.innerText()), (await row.innerText()).replace(/\s+/g, ' '));
+  // The long Users table overlaps the sidebar button at this viewport; dispatch the click to the Logout button itself.
+  await page.getByRole('button', { name: 'Logout' }).dispatchEvent('click');
+  await page.waitForURL(/\/login/);
+  await passwordStep();
+  await page.locator('[data-section="mfa-enroll"]').waitFor({ timeout: 15000 });
+  check('after the reset the user is taken to the set-up again', true);
   check('no browser console errors besides refused codes and permission refusals',consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));
 } catch (e) {
   check('mfa login browser check completed', false, e.message.slice(0, 200));

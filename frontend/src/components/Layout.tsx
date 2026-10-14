@@ -7,6 +7,7 @@ const navItems = [
   { to: '/projects', label: 'Projects', icon: FolderKanban },
   { to: '/project-controls', label: 'Project Controls', icon: ShieldCheck },
   { to: '/payments-certification', label: 'Payments & Certification', icon: Receipt },
+  { to: '/revenue-position', label: 'Revenue & Contract Position', icon: BadgeDollarSign },
   { to: '/users', label: 'Users / Roles / DOA', icon: UsersRound },
   { to: '/crm', label: 'CRM', icon: UsersRound },
   { to: '/tendering', label: 'Tendering', icon: ClipboardCheck },

@@ -23,7 +23,8 @@ usersRouter.get('/', authorize('admin', 'view'), asyncHandler(async (req, res) =
   const orgId = req.user!.org_id;
   const rows = await query(`
     select u.id, u.org_id, u.employee_id, u.role_id, r.role_name,
-           u.full_name, u.email, u.phone, u.user_type, u.is_active, u.last_login_at, u.created_at
+           u.full_name, u.email, u.phone, u.user_type, u.is_active, u.last_login_at, u.created_at,
+           (u.mfa_enabled_at is not null) as mfa_enabled, user_requires_mfa(u.id) as mfa_required
     from users u
     join roles r on r.id = u.role_id
     where u.org_id = $1

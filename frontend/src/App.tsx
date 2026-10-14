@@ -35,6 +35,7 @@ import { Automation } from './pages/Automation';
 import { Knowledge } from './pages/Knowledge';
 import { ProjectControls } from './pages/ProjectControls';
 import { CommercialPayments } from './pages/CommercialPayments';
+import { RevenuePosition } from './pages/RevenuePosition';
 
 export function App() {
   return (
@@ -48,6 +49,7 @@ export function App() {
             <Route path="projects" element={<Projects />} />
             <Route path="project-controls" element={<ProjectControls />} />
             <Route path="payments-certification" element={<CommercialPayments />} />
+            <Route path="revenue-position" element={<RevenuePosition />} />
             <Route path="users" element={<Admin />} />
             <Route path="boq" element={<BOQ />} />
             <Route path="crm" element={<CRM />} />
