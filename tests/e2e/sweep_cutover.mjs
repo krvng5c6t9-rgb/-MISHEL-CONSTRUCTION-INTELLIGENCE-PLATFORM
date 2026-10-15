@@ -108,6 +108,86 @@ try {
   } else check('DB probes (OWNER_PSQL_URL required)', false);
 
   await expectStatus('tenant A cannot read tenant E cut-over plan', () => api('GET', `/finance/cutover-plans/${plan.id}`, ta), 404);
+
+  // ===== Stage 35 / F-49: live engines continue from the opening positions. =====
+  const maker = await user('mkr', 'Subcontract maker', [['contracts', 'view'], ['contracts', 'create']]);
+  const site = await user('site', 'Site verifier', [['contracts', 'view'], ['site', 'approve']]);
+  const ccRole = must(await api('POST', '/roles', E, { role_name: 'Cost control', permissions: ['view', 'manage', 'approve'].map(action => ({ module: 'cost_control', action, scope: 'all' })) }), 'cc role').id;
+  const ccUser = async (key) => { must(await api('POST', '/users', E, { role_id: ccRole, full_name: `${key} E`, email: `${key}.e.${TAG}@test.local`, password: `Passw0rd!${key}` }), key); return login({ email: `${key}.e.${TAG}@test.local`, password: `Passw0rd!${key}`, org_id: org }); };
+  const qs = await ccUser('ccqs'), cm = await ccUser('cccm');
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Client side: advance outstanding and "less previous" start from the opening position.
+  const advPos = must(await api('GET', `/finance/contracts/${contract}/advance-position`, E), 'advance position');
+  check('client advance position includes the opening: received 100,000, recovered 40,000, outstanding 60,000, net certified 530,000',
+    Number(advPos.advances_received) === 100000 && Number(advPos.advance_recovered) === 40000 && Number(advPos.advance_outstanding) === 60000 && Number(advPos.net_certified) === 530000, JSON.stringify(advPos));
+  const ipc = (n, body) => api('POST', '/finance/ipcs', E, { project_id: project, contract_id: contract, ipc_no: `E-IPC${n}-${TAG}`, period_from: first, period_to: today, gross_work_done_this_period: 100000, cumulative_gross_work_done: 700000, less_retention: 5000, ...body });
+  await expectStatus('IPC recovering more than the opening advance outstanding (60,001 > 60,000) is refused', () => ipc(1, { less_advance_recovery: 60001 }), 422);
+  await expectStatus('IPC "less previous" above the net certified before cut-over (530,001 > 530,000) is refused', () => ipc(2, { less_advance_recovery: 10000, less_previous_certified: 530001 }), 422);
+  // Cumulative valuation: gross to date 700,000 (600,000 before cut-over + 100,000), retention 5 % = 35,000, less previous 530,000.
+  await expectStatus('IPC within the opening figures accepted (cumulative 700,000, recovery 10,000, less previous 530,000)', () => ipc(3, { gross_work_done_this_period: 700000, less_retention: 35000, less_advance_recovery: 10000, less_previous_certified: 530000 }), 201);
+  await expectStatus('a new client advance counts the opening advance toward the limit (100,000 + 20,001 > 10% of 1,200,000)', () => api('POST', '/finance/client-advances', E, { contract_id: contract, amount: 20001 }), 422);
+
+  // Subcontract side: the next certificate measures cumulatively from the opening certified gross.
+  const cert = async (no, recovery) => {
+    const c = must(await api('POST', '/subcontracts/certificates', maker.token, { subcontract_id: sc, project_id: project, certificate_no: `E-SC${no}-${TAG}`, period_from: first, period_to: today, gross_work_done: 50000, less_retention: 2500, less_advance_recovery: recovery }), 'cert');
+    must(await api('POST', `/subcontracts/certificates/${c.id}/lines`, maker.token, { description: 'Formwork m2 (fixture)', quantity_this_period: 50, cumulative_quantity: 350, unit_rate: 1000 }), 'line');
+    return api('POST', `/subcontracts/certificates/${c.id}/verify`, site.token);
+  };
+  const v1 = await cert(1, 8001);
+  check('certificate recovering more than the opening advance outstanding (8,001 > 8,000) is refused', v1.status === 422 && /outstanding paid advance 8000/.test(v1.body?.error ?? ''), `HTTP ${v1.status} ${v1.body?.error ?? ''}`);
+  const v2 = await cert(2, 8000);
+  check('next certificate continues from the opening cumulative: previous 300,000, to date 350,000 (lines 350 x 1,000)',
+    v2.status === 200 && Number(v2.body.data.previous_cumulative_gross) === 300000 && Number(v2.body.data.cumulative_gross_to_date) === 350000, `HTTP ${v2.status} ${v2.body?.error ?? JSON.stringify({ p: v2.body?.data?.previous_cumulative_gross, c: v2.body?.data?.cumulative_gross_to_date })}`);
+
+  // Revenue: the first run continues from the revenue recognised before cut-over.
+  const rev = must(await api('POST', '/finance/chart-of-accounts', E, { account_code: '4110', account_name: 'Contract revenue recognised (fixture)', account_type: 'revenue' }), 'rev acct').id;
+  must(await api('POST', '/finance/gl-posting-rules', E, { source_module: 'revenue_recognition', debit_account_id: acc.bill, credit_account_id: rev, notes: 'TEST FIXTURE' }), 'rev rule');
+  const snap = must(await api('POST', '/cost-transactions/snapshots', qs, { project_id: project, cost_code_id: 2, as_of: today, etc_method: 'manual', etc_amount: 450000, etc_basis: 'Remaining works after cut-over (fixture)' }), 'snapshot');
+  must(await api('POST', `/cost-transactions/snapshots/${snap.id}/approve`, cm), 'approve snapshot');
+  const before = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 0)).toISOString().slice(0, 10);
+  const early = await api('POST', '/finance/revenue-runs', E, { contract_id: contract, period_start: before, period_end: today });
+  check('a revenue run starting before the cut-over date is refused', early.status === 422 && /start on or after/.test(early.body?.error ?? ''), `HTTP ${early.status} ${early.body?.error ?? ''}`);
+  const runE = await run('first revenue run after cut-over prepared', async () => must(await api('POST', '/finance/revenue-runs', E, { contract_id: contract, period_start: first, period_end: today }), 'run'));
+  check('run: cost 450,000 (before cut-over) / EAC 900,000 = 0.5; revenue to date 600,000; previous = opening 560,000; period 40,000; billed 600,000 -> position 0',
+    Number(runE.cost_to_date) === 450000 && Number(runE.eac) === 900000 && Number(runE.progress) === 0.5 && Number(runE.cumulative_revenue) === 600000 && Number(runE.previous_revenue) === 560000
+      && Number(runE.period_revenue) === 40000 && Number(runE.billings_to_date) === 600000 && Number(runE.contract_position) === 0,
+    JSON.stringify({ c: runE.cost_to_date, e: runE.eac, g: runE.progress, r: runE.cumulative_revenue, p: runE.previous_revenue, d: runE.period_revenue, b: runE.billings_to_date }));
+  must(await api('POST', `/finance/revenue-runs/${runE.id}/approve`, fin.token), 'approve run');
+  if (OWNER) check('GL: only the period revenue 40,000 is recognised (not the 600,000 to date)', sql(OWNER, `select coalesce(sum(credit),0) from general_ledger where source_module='revenue_recognition' and source_record_id=${runE.id} and account_id=${rev}`).out.trim() === '40000.00');
+
+  // Opening retention release.
+  const held = must(await api('GET', '/finance/opening-retentions', E), 'opening retentions');
+  const cPos = held.find(h => h.kind === 'client'), sPos = held.find(h => h.kind === 'subcontract');
+  check('opening retention listed: client 30,000 and subcontract 15,000 held', Number(cPos?.retention_held) === 30000 && Number(sPos?.retention_held) === 15000, JSON.stringify(held));
+  const rel = (tok, kind, position_id, amount) => api('POST', '/finance/opening-retentions/release', tok, { kind, position_id, amount, reason: 'Taking-over certificate issued for the tower (fixture)', reference: `TOC-E-${TAG}` });
+  const selfRel = await rel(E, 'client', cPos.position_id, 10000);
+  check('the cut-over preparer cannot release the opening retention (SoD)', selfRel.status === 422 && /Segregation of duties/.test(selfRel.body?.error ?? ''), `HTTP ${selfRel.status} ${selfRel.body?.error ?? ''}`);
+  const cr = await run('half the client retention released in part (10,000 of 30,000)', async () => must(await rel(fin.token, 'client', cPos.position_id, 10000), 'client release'));
+  check('client release becomes a receivable of 10,000 for the contract client', cr.accounts_receivable?.source_type === 'opening_retention' && Number(cr.accounts_receivable.amount) === 10000 && Number(cr.accounts_receivable.client_id) === client, JSON.stringify(cr.accounts_receivable));
+  await expectStatus('a release above what remains held is refused (25,000 > 20,000)', () => rel(fin.token, 'client', cPos.position_id, 25000), 422);
+  const sr = must(await rel(fin.token, 'subcontract', sPos.position_id, 15000), 'sub release');
+  check('subcontract release becomes a payable of 15,000 to the subcontractor', sr.accounts_payable?.source_type === 'opening_retention' && Number(sr.accounts_payable.amount) === 15000 && Number(sr.accounts_payable.vendor_id) === vendor, JSON.stringify(sr.accounts_payable));
+  const rp = must(await api('POST', '/finance/payments', E, { payment_type: 'outgoing', party_type: 'vendor', party_id: vendor, related_ap_id: sr.accounts_payable.id, amount: 15000, currency_id: 1, bank_account_id: bank, method: 'transfer', reference_no: `ERP-${TAG}` }), 'ret pay');
+  must(await approve(fin.token, must(await api('POST', `/finance/payments/${rp.id}/submit-approval`, E), 'submit').approval.id), 'approve ret pay');
+  must(await api('POST', `/finance/payments/${rp.id}/post-gl`, E), 'post ret pay');
+  if (OWNER) {
+    const q = (t) => sql(OWNER, t).out.trim();
+    check('GL: client release reclassified Dr receivables 10,000 / Cr retention receivable 10,000',
+      q(`select coalesce(sum(debit) filter (where account_id=${acc.ar}),0) || '|' || coalesce(sum(credit) filter (where account_id=${acc.ret}),0) from general_ledger where source_table='opening_retention_releases' and source_record_id=${cr.release.id}`) === '10000.00|10000.00');
+    check('GL: paying the released subcontract retention debits retention payable 15,000', q(`select coalesce(sum(debit),0) from general_ledger where source_table='payments' and source_record_id=${rp.id} and account_id=${acc.sret}`) === '15000.00');
+    const probe = (name, text) => { const r = sql(OWNER, text); check(name, !r.ok, r.out.split('\n').find(l => /ERROR/.test(l)) ?? r.out.slice(0, 120)); };
+    probe('DB: a retention release is frozen', `update opening_retention_releases set amount = 1 where id = ${cr.release.id}`);
+    probe('DB: retention releases are never deleted', `delete from opening_retention_releases where id = ${cr.release.id}`);
+  }
+  const pos = must(await api('GET', `/finance/contracts/${contract}/receivable-position`, E), 'position');
+  check('contract position continues from cut-over: billed 600,000, retention held 20,000 / released 10,000, advance liability 60,000',
+    Number(pos.billed_gross) === 600000 && Number(pos.retention_held) === 20000 && Number(pos.retention_released) === 10000 && Number(pos.advance_liability) === 60000, JSON.stringify({ b: pos.billed_gross, h: pos.retention_held, r: pos.retention_released, a: pos.advance_liability }));
+  const sPosition = must(await api('GET', `/subcontracts/${sc}/deductions-position`, E), 'sc position');
+  // Certificate 2 left draft (site-verified), so its 8,000 recovery is committed: the opening advance 20,000 - 12,000 - 8,000 = 0.
+  check('subcontract position: opening advance paid 20,000, recovered 12,000 + 8,000, outstanding 0; opening retention unreleased 0',
+    Number(sPosition.advances_paid) === 20000 && Number(sPosition.advance_recovered) === 20000 && Number(sPosition.advance_outstanding) === 0 && Number(sPosition.opening_retention_unreleased) === 0,
+    JSON.stringify({ p: sPosition.advances_paid, c: sPosition.advance_recovered, o: sPosition.advance_outstanding, r: sPosition.opening_retention_unreleased }));
 } catch (e) {
   console.error('SUITE STOPPED:', e.message);
   check('suite completed', false, e.message.slice(0, 200));

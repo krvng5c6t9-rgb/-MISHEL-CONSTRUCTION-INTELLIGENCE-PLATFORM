@@ -275,7 +275,8 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
   }
   if (payment.payment_type === 'outgoing' && payment.related_ap_id) {
     const ap = (await client.query(`select source_type from accounts_payable where id = $1`, [payment.related_ap_id])).rows[0];
-    const subtype = ({ subcontract_certificate: 'subcontract', subcontract_retention: 'subcontract_retention', subcontract_advance: 'subcontract_advance' } as Record<string, string>)[ap?.source_type];
+    // opening_retention (083): released subcontract retention held at cut-over clears the retention payable account.
+    const subtype = ({ subcontract_certificate: 'subcontract', subcontract_retention: 'subcontract_retention', subcontract_advance: 'subcontract_advance', opening_retention: 'subcontract_retention' } as Record<string, string>)[ap?.source_type];
     if (subtype) {
       const r = await getActiveRule(client, Number(payment.org_id), 'cost_transaction', subtype);
       if (!r || r.source_subtype !== subtype) throw new AppError(422, `No active GL posting rule for cost_transaction / ${subtype} (account cleared by this payment)`);
@@ -402,4 +403,26 @@ export async function postRevenueRunToGl(client: PoolClient, runId: number) {
       description: `Onerous contract provision ${run.loss_up ? 'recognised' : 'released'} for contract ${run.contract_id}, period ending ${run.period_end_text}` }));
   }
   return batches;
+}
+
+// Stage 35 / F-49 (migration 083): released opening client retention is reclassified to receivables - Dr receivables
+// (IPC rule debit account) / Cr retention receivable (ipc / retention_receivable rule debit account), on the contract's
+// project, in the contract currency.
+export async function postOpeningRetentionReleaseToGl(client: PoolClient, releaseId: number) {
+  const r = (await client.query(`select r.id, r.org_id, r.amount::text as amount, r.reference, k.project_id, k.currency_id
+    from opening_retention_releases r join cutover_contract_positions p on p.id = r.position_id join contracts k on k.id = p.contract_id
+    where r.id = $1 and r.kind = 'client' for update of r`, [releaseId])).rows[0];
+  if (!r) throw new AppError(404, 'Opening client retention release not found');
+  const ipcRule = await getActiveRule(client, Number(r.org_id), 'ipc', null);
+  const retRule = await getActiveRule(client, Number(r.org_id), 'ipc', 'retention_receivable');
+  if (!ipcRule || !retRule || retRule.source_subtype !== 'retention_receivable') throw new AppError(422, 'No active GL posting rules for ipc and ipc / retention_receivable');
+  const batch = await insertBalancedGlBatch(client, {
+    org_id: Number(r.org_id), project_id: Number(r.project_id),
+    debit_account_id: Number(ipcRule.debit_account_id), credit_account_id: Number(retRule.debit_account_id),
+    amount: r.amount, currency_id: Number(r.currency_id), transaction_date: new Date().toISOString().slice(0, 10),
+    source_module: 'retention_release', source_table: 'opening_retention_releases', source_record_id: Number(r.id),
+    description: `Opening retention released (${r.reference}) reclassified to receivables`
+  });
+  await client.query(`update opening_retention_releases set gl_batch_id = $2 where id = $1`, [r.id, batch.journal_batch_id]);
+  return batch;
 }

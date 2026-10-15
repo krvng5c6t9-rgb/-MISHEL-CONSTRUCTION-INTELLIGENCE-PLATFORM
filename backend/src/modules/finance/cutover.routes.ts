@@ -4,6 +4,7 @@ import { query, getClient, releaseClient } from '../../db/pool.js';
 import { asyncHandler } from '../../middleware/asyncHandler.js';
 import { authorize } from '../../middleware/authorize.js';
 import { AppError } from '../../middleware/errors.js';
+import { postOpeningRetentionReleaseToGl } from '../../services/glPosting.service.js';
 
 // Stage 34 / GC-24 / DEC-019 (migration 082): go-live cut-over. The preparer loads the opening trial balance, opening
 // receivables and payables, and in-flight contract / subcontract positions; the database reconciles every control account
@@ -134,5 +135,50 @@ cutoverRouter.post('/cutover-plans/:id/approve', authorize('finance', 'approve')
     const [u] = (await client.query(`update cutover_plans set status = 'opened', approved_by = $2, approved_at = now(), gl_batch_id = $3 where id = $1 returning *`, [p.id, req.user!.id, batch])).rows;
     await client.query('commit');
     res.json({ success: true, data: { plan: u, gl_batch_id: batch, receivables_created: ar, payables_created: ap } });
+  } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
+}));
+
+// --- Stage 35 / F-49 (migration 083): retention held at cut-over is released in parts against its certificate, by
+// someone other than the cut-over preparer. Client retention becomes a receivable (reclassified in the GL); subcontract
+// retention becomes a payable whose payment clears the retention payable account.
+cutoverRouter.get('/opening-retentions', asyncHandler(async (req, res) => {
+  res.json({ success: true, data: await query(`
+    select 'client' as kind, p.id as position_id, p.contract_id as record_id, k.project_id, p.retention_held,
+           coalesce((select sum(amount) from opening_retention_releases r where r.kind = 'client' and r.position_id = p.id), 0) as released
+    from cutover_contract_positions p join cutover_plans c on c.id = p.plan_id and c.status = 'opened' join contracts k on k.id = p.contract_id
+    where p.org_id = $1 and p.retention_held > 0
+    union all
+    select 'subcontract', sp.id, sp.subcontract_id, s.project_id, sp.retention_held,
+           coalesce((select sum(amount) from opening_retention_releases r where r.kind = 'subcontract' and r.position_id = sp.id), 0)
+    from cutover_subcontract_positions sp join cutover_plans c on c.id = sp.plan_id and c.status = 'opened' join subcontracts s on s.id = sp.subcontract_id
+    where sp.org_id = $1 and sp.retention_held > 0
+    order by 1, 2`, [req.user!.org_id]) });
+}));
+cutoverRouter.get('/opening-retentions/releases', asyncHandler(async (req, res) => {
+  res.json({ success: true, data: await query(`select * from opening_retention_releases where org_id = $1 order by id`, [req.user!.org_id]) });
+}));
+cutoverRouter.post('/opening-retentions/release', authorize('finance', 'approve'), asyncHandler(async (req, res) => {
+  const b = z.object({ kind: z.enum(['client', 'subcontract']), position_id: id, amount: z.number().positive(), reason: z.string().trim().min(10), reference: z.string().trim().min(3).max(100) }).parse(req.body);
+  const client = await getClient();
+  try {
+    await client.query('begin');
+    const r = (await client.query(`insert into opening_retention_releases(org_id, kind, position_id, amount, reason, reference, released_by) values ($1,$2,$3,$4,$5,$6,$7) returning *`,
+      [req.user!.org_id, b.kind, b.position_id, b.amount, b.reason, b.reference, req.user!.id])).rows[0];
+    let item;
+    if (b.kind === 'client') {
+      item = (await client.query(`insert into accounts_receivable(org_id, client_id, project_id, source_type, source_record_id, amount, currency_id)
+        select r.org_id, k.client_id, k.project_id, 'opening_retention', r.id, r.amount, k.currency_id
+        from opening_retention_releases r join cutover_contract_positions p on p.id = r.position_id join contracts k on k.id = p.contract_id where r.id = $1 returning *`, [r.id])).rows[0];
+      await client.query(`update opening_retention_releases set receivable_id = $2 where id = $1`, [r.id, item.id]);
+      await postOpeningRetentionReleaseToGl(client, Number(r.id));
+    } else {
+      item = (await client.query(`insert into accounts_payable(org_id, vendor_id, project_id, source_type, source_record_id, amount, currency_id)
+        select r.org_id, s.vendor_id, s.project_id, 'opening_retention', r.id, r.amount, s.currency_id
+        from opening_retention_releases r join cutover_subcontract_positions p on p.id = r.position_id join subcontracts s on s.id = p.subcontract_id where r.id = $1 returning *`, [r.id])).rows[0];
+      await client.query(`update opening_retention_releases set payable_id = $2 where id = $1`, [r.id, item.id]);
+    }
+    const done = (await client.query(`select * from opening_retention_releases where id = $1`, [r.id])).rows[0];
+    await client.query('commit');
+    res.status(201).json({ success: true, data: { release: done, [b.kind === 'client' ? 'accounts_receivable' : 'accounts_payable']: item } });
   } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
 }));
