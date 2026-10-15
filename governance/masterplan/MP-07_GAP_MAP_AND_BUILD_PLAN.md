@@ -136,5 +136,5 @@ layers; estimate 72–108 stages for R1–R7 (sums checked).
 - Residual (stated): the gap map is at Golden Case level; 82 processes are unassessed until cases and suites cover
   them; stage estimates are E4 and are replaced by actuals per release.
 
-**Status:** reviewed (computed gap map, CI verification, two hostile passes); awaiting owner approval. With MP-07 the
-master plan MP-01…MP-07 is complete as a reviewed draft set for the owner's approval.
+**Status:** reviewed (computed gap map, CI verification, two hostile passes); **approved by the owner (Mishel Thabet Halim), 2026-10-15 — R6, approval register A-001.** With MP-07 the
+master plan MP-01…MP-07 is the approved reference plan; it records what is planned, not what is built (gap map above).

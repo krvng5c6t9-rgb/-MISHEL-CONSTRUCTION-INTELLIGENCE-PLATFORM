@@ -21,7 +21,7 @@ collide ("Board Risk Committee" vs "Capex / Plant Investment Committee"); author
 title states that department tables include project-level staff. Table structure checked by script: every row has
 its header's column count. Residual: role titles and grades follow common Egyptian / Gulf contractor
 practice and must be confirmed against the owner's own company before use as its org chart.
-**Awaiting owner approval.** Company-specific values remain the company's configuration.
+**Approved by the owner (Mishel Thabet Halim), 2026-10-15 — R6, approval register A-001.** Company-specific values remain the company's configuration.
 
 Master Plan part 1 of 7 (OVD-001). Reference organization of a **large multi-project contractor** (buildings,
 infrastructure, MEP, fit-out / interiors, design & build). It is a **template**: each customer company switches units

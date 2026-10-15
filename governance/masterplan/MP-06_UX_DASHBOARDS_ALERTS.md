@@ -190,4 +190,4 @@ workspace user is an MP-01 position or a named generic role; document and proces
 - Residual (stated): performance budgets and usability acceptance criteria are set in the MP-07 test plan; colours,
   thresholds and escalation times are company settings.
 
-**Status:** reviewed (code verification, automated checks, two hostile passes); awaiting owner approval.
+**Status:** reviewed (code verification, automated checks, two hostile passes); **approved by the owner (Mishel Thabet Halim), 2026-10-15 — R6, approval register A-001.**

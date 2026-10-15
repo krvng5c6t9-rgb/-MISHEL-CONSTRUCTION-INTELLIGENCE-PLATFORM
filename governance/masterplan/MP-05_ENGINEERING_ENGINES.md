@@ -146,7 +146,7 @@ as separate programs / services after legal review, or replaced by a permissive 
 - Residual (stated): parity with Primavera / AutoCAD / Revit is a target measured by the acceptance tests in §1 and
   §7, not a claim; no engine capability is to be announced before it passes them.
 
-**Status:** reviewed (code and licence verification + two hostile passes); awaiting owner approval.
+**Status:** reviewed (code and licence verification + two hostile passes); **approved by the owner (Mishel Thabet Halim), 2026-10-15 — R6, approval register A-001.**
 
 ## Sources
 - [Autodesk — Revit Public MCP Server (June 2026)](https://www.autodesk.com/blogs/aec/2026/06/17/revit-public-mcp-server/)

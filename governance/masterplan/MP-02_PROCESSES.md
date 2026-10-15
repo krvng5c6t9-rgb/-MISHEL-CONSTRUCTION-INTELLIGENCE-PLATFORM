@@ -394,4 +394,4 @@ every owner is a position or body in MP-01 v1.3; every GC id is within GC-01…G
 
 - v1.1 (found while reviewing MP-03): manual journal entries had no process although the GL source `manual_journal` exists in the code (migrations 006, 007, 013) — D16.19 added (GC-25).
 
-**Status:** reviewed (two hostile passes + automated checks); awaiting owner approval.
+**Status:** reviewed (two hostile passes + automated checks); **approved by the owner (Mishel Thabet Halim), 2026-10-15 — R6, approval register A-001.**

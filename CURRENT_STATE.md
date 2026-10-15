@@ -100,6 +100,9 @@
 | CC-066 | Bilingual shell: translation framework, Arabic default, navigation / sign-in / MFA in Arabic and English (R1.1) |
 | CC-067 | Page contents in Arabic / English, batch 1: shared table / drop-downs, landing dashboard (stale claims and cross-currency sum removed), Go-live cut-over (R1.2) |
 | CC-068 | Revenue & Contract Position and Payments & Certification in Arabic / English; layout follows the language (navigation on the right in Arabic), wide tables no longer cover the navigation, numbers left-to-right (R1.2) |
+
+**Owner approvals (R6):** A-001 master plan MP-01…MP-07; A-002 Stage 39 (CC-068), both 2026-10-15, signed Mishel Thabet Halim (`governance/registers/11_Approval_Register.csv`).
+
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)

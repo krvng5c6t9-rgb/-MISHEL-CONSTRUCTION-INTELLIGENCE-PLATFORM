@@ -161,4 +161,4 @@ AI-role process covered, none twice.
 - Residual (stated): agent quality cannot be proven before the agents and their evaluation sets exist; the release
   gate (section 5) is the control, and no agent capability is to be announced before it passes.
 
-**Status:** reviewed (automated checks + two hostile passes); awaiting owner approval.
+**Status:** reviewed (automated checks + two hostile passes); **approved by the owner (Mishel Thabet Halim), 2026-10-15 — R6, approval register A-001.**

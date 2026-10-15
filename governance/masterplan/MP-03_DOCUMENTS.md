@@ -351,4 +351,4 @@ retention class is defined; no document has the same position as preparer and ap
   content and formats; the field-by-field template of each document is produced when that document is built, from
   this row, and passes the same review.
 
-**Status:** reviewed (automated checks + two hostile passes); awaiting owner approval.
+**Status:** reviewed (automated checks + two hostile passes); **approved by the owner (Mishel Thabet Halim), 2026-10-15 — R6, approval register A-001.**
