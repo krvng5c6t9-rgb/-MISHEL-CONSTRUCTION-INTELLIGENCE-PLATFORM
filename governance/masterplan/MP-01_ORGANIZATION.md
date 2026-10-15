@@ -12,8 +12,14 @@ v1.2 — OQS-001 pipeline (R1–R5) applied. Hostile-review findings fixed: bond
 subcontracting missing from the value chain; guards had no reporting line; façade / specialist systems and
 geotechnical roles; project engineer and MEP project manager; facility-management unit for the FM project type;
 civil-defence approvals; ambiguous gap formula; template examples could be read as defaults. Counts computed from the
-file: **195 positions / bodies in 16 unit tables + 9 management committees**. Code-status statements re-verified
-against `database/migrations` (E3). Residual: role titles and grades follow common Egyptian / Gulf contractor
+file: **195 positions / bodies in 17 tables (section 3 + 16 department / unit tables) + 9 management committees**.
+Code-status statements re-verified against `database/migrations` (E3).
+v1.3 — second hostile pass on the full text: code status corrected (a department hierarchy, free-text job titles and
+site manpower counts do exist — v1.2 said "org chart does not exist"); table count corrected (17, not 16); chairman
+and board now report to the General Assembly (row added in v1.1); board and management committee names no longer
+collide ("Board Risk Committee" vs "Capex / Plant Investment Committee"); authority notation unified (R/A); section 4
+title states that department tables include project-level staff. Table structure checked by script: every row has
+its header's column count. Residual: role titles and grades follow common Egyptian / Gulf contractor
 practice and must be confirmed against the owner's own company before use as its org chart.
 **Awaiting owner approval.** Company-specific values remain the company's configuration.
 
@@ -24,9 +30,10 @@ and positions on or off, renames them and sets its own grades, salaries, DOA lim
 Legend — Authority: **P** prepares · **R** reviews / recommends · **A** approves within the company's DOA (values are
 company configuration, never defaults) · **I** informed. **AI** = the agent that supports the role (MP-04 defines each
 agent); AI always prepares or checks, never holds A.
-Code status (E3, this repo): `departments`, `roles`, `employees`, `attendance`, `payroll_runs/lines`, users / roles /
-permissions and DOA exist; **positions, approved headcount, org chart, project staffing plan, vacancy / gap alarm and
-role-to-responsibility catalogue do not exist** (to build — MP-07).
+Code status (E3, `database/migrations`): `departments` with a parent hierarchy (`parent_department_id`), `employees`
+with a free-text `job_title`, `attendance`, `payroll_runs/lines`, site daily manpower counts (`diary_manpower`),
+users / roles / permissions and DOA exist; **position catalogue, position-level org chart, approved headcount,
+project staffing plan, vacancy / gap alarm and position-to-authority link do not exist** (to build — MP-07).
 
 ## 1. Value chain (level 0)
 1. Market & opportunity → 2. Prequalification → 3. Tender study & go/no-go → 4. Estimating & pricing → 5. Bid
@@ -51,10 +58,10 @@ facilities · internal audit.
 | General Assembly (shareholders) | — | Appoint board and auditor, approve statements, capital and dividends | Assembly resolutions | A | Assembly pack |
 | Board Secretary / Company Secretary | Chairman | Board and assembly meetings, registers, statutory filings | Minutes, statutory registers | P | Minutes drafting |
 | Nomination & Remuneration Committee | Board | Executive appointments, pay policy, succession | Pay policy, succession plan | A | Pay benchmarking (company data) |
-| Founder / Chairman | Shareholders | Vision, strategy, capital, top appointments | Strategy, board resolutions | A (top DOA tier) | Portfolio & risk briefings |
-| Board of Directors | Shareholders | Oversight, approve budget, major contracts, borrowing | Board minutes, approved budget | A | Board pack preparation |
+| Founder / Chairman | General Assembly | Vision, strategy, capital, top appointments | Strategy, board resolutions | A (top DOA tier) | Portfolio & risk briefings |
+| Board of Directors | General Assembly | Oversight, approve budget, major contracts, borrowing | Board minutes, approved budget | A | Board pack preparation |
 | Audit Committee | Board | Financial reporting, internal audit, external auditor | Committee reports | A (audit plan) | Control-exception digest |
-| Risk / Investment Committee | Board | Major tenders, JV, investments, enterprise risk | Go/no-go decisions on large bids | A | Bid risk scoring |
+| Board Risk Committee | Board | Enterprise risk; tenders, JVs and investments above the board's threshold | Go/no-go decisions on large bids | A | Bid risk scoring |
 | CEO / Managing Director | Board | Run the company, targets, portfolio, key clients | Business plan, KPIs, decisions | A (per DOA) | Executive assistant agent, portfolio dashboard |
 | Executive Office Manager | CEO | CEO agenda, follow-up of decisions, correspondence | Action log, minutes | P | Meeting minutes & action tracking |
 | Executive Assistant / Secretary | CEO | Calendar, letters, filing | Letters, schedules | P | Drafting, translation |
@@ -77,7 +84,9 @@ facilities · internal audit.
 | Sustainability / ESG Manager | CEO / QHSE Dir. | Green building (LEED / local codes), carbon, ESG reporting | ESG report, green submittals | P/R | Carbon and material impact calc |
 | Knowledge Management Officer | Technical Dir. / PMO | Lessons learned, standards library, templates | Knowledge base | P | Search and lessons extraction |
 
-## 4. HQ departments (L2)
+## 4. Departments (L2 HQ, with their project-level staff — L3, matrix per section 8)
+Each department table lists both its HQ positions and the positions it deploys to projects; 4.7 is the project line
+organisation itself; 4.7a / 4.7b are optional business units.
 ### 4.1 Business Development & Marketing
 | Position | Responsibilities | Outputs | Auth. | AI |
 |---|---|---|---|---|
@@ -165,7 +174,7 @@ facilities · internal audit.
 | Position | Responsibilities | Outputs | Auth. | AI |
 |---|---|---|---|---|
 | Project Director | One or several projects, client, results | Project review, escalations | A (project DOA) | Project health briefing |
-| Project Manager | Delivery of scope, time, cost, quality, safety | Monthly report, plans | A/R (project DOA) | Project assistant agent |
+| Project Manager | Delivery of scope, time, cost, quality, safety | Monthly report, plans | R/A (project DOA) | Project assistant agent |
 | Project Engineer / Project Coordinator | PM support: registers, meetings, follow-up of actions | Action logs, minutes | P | Minutes and action tracking |
 | MEP Project Manager | MEP scope on the project: installation, subcontractors, T&C | MEP progress and plans | R | MEP look-ahead |
 | Construction Manager | Site execution across sections | Work plans, look-ahead execution | R | Look-ahead and constraint check |
@@ -225,7 +234,7 @@ facilities · internal audit.
 ### 4.10 Supply Chain — Procurement, Logistics, Stores
 | Position | Responsibilities | Outputs | Auth. | AI |
 |---|---|---|---|---|
-| Procurement Manager | Strategy, tenders to vendors, negotiation | Procurement plan, POs | A/R (procurement DOA) | Quote comparison |
+| Procurement Manager | Strategy, tenders to vendors, negotiation | Procurement plan, POs | R/A (procurement DOA) | Quote comparison |
 | Buyer (local / import) | RFQs, comparisons, POs | Comparisons, POs | P | RFQ drafting, price benchmarking |
 | Vendor Management Officer | Prequalification, evaluation of vendors and subcontractors | Approved vendor list | P/R | Vendor scoring |
 | Expeditor | Delivery follow-up | Expediting log | P | Delay prediction |
@@ -328,7 +337,7 @@ facilities · internal audit.
 | Change Control Board (per project) | PD, PM, Commercial Mgr, Planning, TO Mgr | Accept / price / reject changes; baseline changes | Change requests, impact | Change decisions |
 | Claims & Disputes Committee | CCO, General Counsel, PD, Claims Mgr | Claim strategy, settlement range, arbitration | Claim files | Claim decisions |
 | HSE Committee | QHSE Dir., PMs, HSE Mgrs, workers' reps | HSE targets, serious incident actions | Statistics, investigations | Action plans |
-| Investment / Capex Committee | CEO, CFO, COO, Plant Dir. | Plant purchase vs hire, capex | Utilisation, offers | Capex decisions |
+| Capex / Plant Investment Committee | CEO, CFO, COO, Plant Dir. | Plant purchase vs hire, capex | Utilisation, offers | Capex decisions |
 | Credit & Collections Committee | CFO, CCO, PDs | Overdue receivables escalation | Aging, client history | Collection actions |
 | Recruitment / Headcount Committee | CHRO, COO, CFO | Approve headcount and hires against the gap alarm | Gap report, budget | Approved vacancies |
 | AI Governance Committee | see 4.14 | Agent scopes and releases | Agent register, quality reviews | Agent approvals |
