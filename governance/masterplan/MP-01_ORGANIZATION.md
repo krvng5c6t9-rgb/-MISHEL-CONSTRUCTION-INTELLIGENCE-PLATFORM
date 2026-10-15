@@ -8,6 +8,13 @@ calibration, security and occupational health, subcontract procurement, material
 control, collections, fixed assets, insurance, site accounting, organisation development, performance, HRIS,
 welfare, permits, archive, translation, arbitration, corporate affairs, IT roles, AI governance; plus committees,
 project templates, independence and SoD, position record, department KPIs, group entities and external parties).
+v1.2 — OQS-001 pipeline (R1–R5) applied. Hostile-review findings fixed: bonds / guarantees / insurances and
+subcontracting missing from the value chain; guards had no reporting line; façade / specialist systems and
+geotechnical roles; project engineer and MEP project manager; facility-management unit for the FM project type;
+civil-defence approvals; ambiguous gap formula; template examples could be read as defaults. Counts computed from the
+file: **195 positions / bodies in 16 unit tables + 9 management committees**. Code-status statements re-verified
+against `database/migrations` (E3). Residual: role titles and grades follow common Egyptian / Gulf contractor
+practice and must be confirmed against the owner's own company before use as its org chart.
 **Awaiting owner approval.** Company-specific values remain the company's configuration.
 
 Master Plan part 1 of 7 (OVD-001). Reference organization of a **large multi-project contractor** (buildings,
@@ -23,9 +30,10 @@ role-to-responsibility catalogue do not exist** (to build — MP-07).
 
 ## 1. Value chain (level 0)
 1. Market & opportunity → 2. Prequalification → 3. Tender study & go/no-go → 4. Estimating & pricing → 5. Bid
-submission & negotiation → 6. Award & contract → 7. Mobilisation & project set-up (baseline schedule, budget,
+submission (bid bond) & negotiation → 6. Award, contract, bonds and insurances (performance bond, advance payment
+guarantee, contractor's all-risk and other policies) → 7. Mobilisation & project set-up (baseline schedule, budget,
 pre-construction BOQ, plans, procurement and submittal registers) → 8. Design / design development / shop drawings →
-9. Procurement & logistics → 10. Construction & site execution → 11. Quality, HSE, environment → 12. Progress,
+9. Procurement, subcontracting & logistics → 10. Construction & site execution → 11. Quality, HSE, environment → 12. Progress,
 cost, cash, change and claims control → 13. Billing, collection, payments → 14. Testing, commissioning, handover →
 15. Defects liability / warranty → 16. Final account & close-out → 17. Lessons learned & knowledge.
 Support chain across all: governance & strategy · finance & treasury · HR & payroll · legal · IT & AI · admin &
@@ -139,6 +147,8 @@ facilities · internal audit.
 | As-built Engineer | As-built drawings and models | As-built package | P | Redline to model updates |
 | ELV / BMS / Low-current Engineer | Low current, BMS, security, fire alarm systems | ELV shop drawings | P | Device layout checks |
 | Infrastructure Engineer (roads, utilities, wet works) | Roads, networks, utilities connections | Infra shop drawings, QTO | P | Network routing checks |
+| Façade / Specialist Systems Engineer (curtain wall, cladding, elevators, kitchens) | Specialist subcontractor designs, interfaces, submittals | Coordinated specialist drawings | P/R | Interface checks |
+| Geotechnical Engineer | Soil reports, foundation and excavation interfaces, monitoring | Geotechnical reviews | P/R | Monitoring data alerts |
 
 ### 4.6 Design Studio — Architecture & Interiors
 | Position | Responsibilities | Outputs | Auth. | AI |
@@ -156,6 +166,8 @@ facilities · internal audit.
 |---|---|---|---|---|
 | Project Director | One or several projects, client, results | Project review, escalations | A (project DOA) | Project health briefing |
 | Project Manager | Delivery of scope, time, cost, quality, safety | Monthly report, plans | A/R (project DOA) | Project assistant agent |
+| Project Engineer / Project Coordinator | PM support: registers, meetings, follow-up of actions | Action logs, minutes | P | Minutes and action tracking |
+| MEP Project Manager | MEP scope on the project: installation, subcontractors, T&C | MEP progress and plans | R | MEP look-ahead |
 | Construction Manager | Site execution across sections | Work plans, look-ahead execution | R | Look-ahead and constraint check |
 | Site Manager / Senior Site Engineer | Daily execution of a site or zone | Daily reports, work permits requests | P/R | Daily report drafting from inputs |
 | Site Engineer (Civil / Arch / MEP) | Supervise work, quantities, inspections requests | Inspection requests, daily records | P | Checklist and quantity capture |
@@ -168,7 +180,7 @@ facilities · internal audit.
 | Testing & Commissioning Engineer | T&C plans, records, handover | T&C records | P | Test record checks |
 | Handover & Warranty Manager | Snag lists, handover docs, DLP defects | Handover file, defect register | P/R | O&M manual assembly |
 | Site Logistics Manager | Site layout, cranes, access, deliveries, laydown areas | Site logistics plan | P/R | Layout and crane coverage checks |
-| Authorities & Utilities Liaison | Site permits, utility connections, inspections by authorities | Authority log | P | Deadline tracking |
+| Authorities & Utilities Liaison | Site permits, utility connections, inspections by authorities (incl. civil defence / fire approvals) | Authority log | P | Deadline tracking |
 | Community / Stakeholder Liaison | Neighbours, complaints, community relations | Complaints log | P | Complaint classification |
 | Customer Care Officer (end-user units) | Unit handover to end users, complaints after handover | Customer tickets | P | Ticket triage |
 
@@ -179,6 +191,14 @@ facilities · internal audit.
 | Precast Plant Manager | Precast production and yard | Production records | P/R | Production sequencing |
 | Workshop Manager (steel / carpentry / aluminium) | Fabrication from shop drawings | Fabrication orders, cut lists | P/R | Cut-list optimisation |
 | Production Planner | Plant / workshop loading against site needs | Production schedule | P | Capacity planning |
+
+### 4.7b Facility Management / Maintenance contracts (if the company offers FM)
+| Position | Responsibilities | Outputs | Auth. | AI |
+|---|---|---|---|---|
+| FM Manager | FM contracts, service levels, teams | SLA reports | R/A (FM contract) | SLA breach prediction |
+| Maintenance Engineer (MEP / civil) | Planned and reactive maintenance | Work orders, PPM plans | P | Failure prediction from history |
+| Maintenance Technician | Execute work orders | Job completion records | P | — |
+| FM Helpdesk Operator | Receive and dispatch requests | Tickets | P | Ticket triage |
 
 ### 4.8 Quality (QA/QC)
 | Position | Responsibilities | Outputs | Auth. | AI |
@@ -267,7 +287,7 @@ facilities · internal audit.
 | Messenger / Courier | Documents delivery | Delivery log | P | — |
 | Office Boy / Tea Boy | Office service, hospitality | — | — | — |
 | Cleaner | Office and site cleanliness | — | — | — |
-| Security Guard / Watchman | Access, gate log | Gate log | P | Gate log digitisation |
+| Security Guard / Watchman (reports to Security Manager, 4.9) | Access, gate log | Gate log | P | Gate log digitisation |
 
 ### 4.14 Legal, IT & Digital, Internal Audit
 | Position | Responsibilities | Outputs | Auth. | AI |
@@ -295,7 +315,7 @@ facilities · internal audit.
 - **Approved headcount:** per unit and per project, by position — approved by the company's DOA.
 - **Derived requirement:** project staffing plan from the schedule's resource loading and the project org template
   (by size / type set by the company), plus HQ plan.
-- **Gap = required − filled (incl. pending hires).** Alarm per unit / project / discipline with date needed, grade
+- **Gap = required − (filled + accepted offers not yet joined).** Alarm per unit / project / discipline with date needed, grade
   and the company's salary band; feeds recruitment and the **monthly commitments** view (payroll + subcontract +
   supplier + instalment / facility obligations by month).
 - Over-staffing and idle staff shown the same way.
@@ -316,7 +336,7 @@ facilities · internal audit.
 ## 7. Project organisation templates
 - **Project types:** buildings, infrastructure, MEP-only, fit-out / interiors, design & build, maintenance / FM.
 - **Size bands** (thresholds set by the company, e.g. by value / duration / workforce): small, medium, large, mega.
-- Each template lists **mandatory positions** (e.g. PM, site engineer, QS, QC, HSE, storekeeper, timekeeper from
+- Each template lists **mandatory positions** (illustration only — the company decides; e.g. PM, site engineer, QS, QC, HSE, storekeeper, timekeeper from
   "small"; planner, document controller, TO engineer, commercial manager from "medium"; construction manager, TO
   manager, BIM coordinator, procurement and logistics on site from "large"; directors, interface and stakeholder
   management for "mega") and **ratios** the company sets (e.g. HSE officers per workforce).
