@@ -31,6 +31,7 @@ await call('POST', '/users', adminTok, { role_id: role.id, full_name: `UI Approv
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+await page.addInitScript(() => { try { localStorage.setItem('mishel.lang', 'en'); } catch {} }); // R1.1: these checks run in English
 let phase = 'admin';
 const consoleErrors = [], apiFailures = [], foreignHosts = new Set();
 page.on('console', m => { if (m.type() === 'error' && !/Failed to load resource: the server responded with a status of 403/.test(m.text())) consoleErrors.push(m.text()); });

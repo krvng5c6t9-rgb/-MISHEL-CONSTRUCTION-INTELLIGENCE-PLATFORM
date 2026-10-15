@@ -35,6 +35,7 @@ try {
 
   browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.addInitScript(() => { try { localStorage.setItem('mishel.lang', 'en'); } catch {} }); // R1.1: these checks run in English
   const consoleErrors = [];
   // 401 = refused codes; 403 = dashboard sections a finance-only user may not read (as in the other browser checks).
   page.on('console', m => { if (m.type() === 'error' && !/status of 40[13]/.test(m.text())) consoleErrors.push(m.text()); });
@@ -61,7 +62,7 @@ try {
   await page.locator('[data-section="mfa-recovery-codes"]').waitFor({ timeout: 15000 });
   const codes = await page.locator('.recovery-codes li').allInnerTexts();
   check('ten recovery codes are shown once after the set-up', codes.length === 10 && codes.every(c => /^[0-9a-f]{5}-[0-9a-f]{5}$/.test(c.trim())), codes.length + '');
-  await page.getByRole('button', { name: 'حفظتها — متابعة' }).click();
+  await page.getByRole('button', { name: 'Saved — continue' }).click();
   await page.waitForURL(x => !x.pathname.startsWith('/login'), { timeout: 15000 });
   await page.getByRole('button', { name: 'Logout' }).waitFor({ timeout: 15000 });
   check('after the set-up the user reaches the application', true);
@@ -82,7 +83,7 @@ try {
   // --- Recovery code.
   await passwordStep();
   await page.locator('[data-section="mfa-verify"]').waitFor({ timeout: 15000 });
-  await page.getByRole('button', { name: 'فقدت الجهاز؟ استخدم رمز استرداد' }).click();
+  await page.getByRole('button', { name: 'Lost the device? Use a recovery code' }).click();
   await page.locator('input').first().fill(codes[0].trim());
   await page.getByRole('button', { name: 'Verify' }).click();
   await page.getByRole('button', { name: 'Logout' }).waitFor({ timeout: 15000 });
@@ -102,7 +103,7 @@ try {
   await page.locator('input').first().fill(totp(adminSecret));
   await page.getByRole('button', { name: 'Verify' }).click();
   await page.locator('[data-section="mfa-recovery-codes"]').waitFor({ timeout: 15000 });
-  await page.getByRole('button', { name: 'حفظتها — متابعة' }).click();
+  await page.getByRole('button', { name: 'Saved — continue' }).click();
   await page.getByRole('link', { name: 'Users / Roles / DOA' }).click();
   const row = page.locator('[data-section="users"] tr', { hasText: u.email });
   await row.waitFor({ timeout: 15000 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
+import { I18nProvider } from './lib/i18n';
 // F-28: the Cairo font is bundled with the app (no third-party font host at runtime).
 import '@fontsource/cairo/arabic-500.css';
 import '@fontsource/cairo/arabic-700.css';
@@ -12,6 +13,8 @@ import './styles/global.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <I18nProvider>
+      <App />
+    </I18nProvider>
   </React.StrictMode>
 );

@@ -68,3 +68,6 @@ button:hover { opacity: .9; }
 .muted { opacity:.7; }
 
 tr.row-error td { background: #fdecec; color: #8a1c1c; }
+
+.language-switch { margin: 8px 0 12px; padding: 6px 10px; border: 1px solid var(--grey); border-radius: 6px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+.login-page .language-switch { display: block; margin: 12px auto 0; }

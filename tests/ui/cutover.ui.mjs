@@ -40,6 +40,7 @@ try {
 
   browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  await page.addInitScript(() => { try { localStorage.setItem('mishel.lang', 'en'); } catch {} }); // R1.1: these checks run in English
   const consoleErrors = [], serverErrors = [];
   page.on('console', m => { if (m.type() === 'error' && !/status of 40[39]|status of 422/.test(m.text())) consoleErrors.push(m.text()); });
   page.on('response', r => { if (r.url().includes('/api/') && r.status() >= 500) serverErrors.push(`${r.status()} ${r.url()}`); });

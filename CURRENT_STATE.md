@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-065
+## Controlled Changes CC-001 → CC-066
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -97,6 +97,7 @@
 | CC-063 | GC-24 cut-over: opening TB, receivables/payables, contract/subcontract positions, mandatory reconciliation, SoD approval, opening journal (082) |
 | CC-064 | Engines continue from opening positions (IPC, certificates, advance limits, revenue runs); opening retention release (083) |
 | CC-065 | Go-live cut-over screen: paste + column mapping + row-level dry-run preview, reconciliation, approval, retention release (F-50) |
+| CC-066 | Bilingual shell: translation framework, Arabic default, navigation / sign-in / MFA in Arabic and English (R1.1) |
 Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION_LEDGER.md`.
 
 ## R0 results (fresh database, executed)
@@ -166,7 +167,8 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | mfa_login.ui.mjs | 13 | Browser: sign-in second step - set-up, recovery codes shown once, code sign-in, recovery sign-in, admin reset from the Users screen |
 | revenue.ui.mjs | 14 | Browser: Revenue & Contract Position - runs, backward run refused, estimate SoD/approve/retire, retention release, F-48 |
 | cutover.ui.mjs | 20 | Browser: Go-live cut-over in a fresh tenant - paste with mapping, row errors previewed and nothing saved, difference per control account, preparer refusal, second-person approval |
-| **Total** | **1,410** | 45 API suites + 5 browser checks, all PASS locally (RUN sh5; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
+| i18n.ui.mjs | 15 | Browser: Arabic default RTL, switch to English LTR (sign-in and shell), persistence, 34 navigation items in both languages, dictionary key parity |
+| **Total** | **1,425** | 45 API suites + 6 browser checks, all PASS locally (RUN sh7; 1,410 at RUN sh5 before Stage 37; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

@@ -1,64 +1,67 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { logout } from '../lib/api';
+import { LanguageSwitch, useI18n, type MessageKey } from '../lib/i18n';
 import { Receipt, BarChart3, ClipboardCheck, FolderKanban, Landmark, PackageCheck, ScrollText, DraftingCompass, CalendarDays, HardHat, UsersRound, Wrench, ShieldCheck, ShieldAlert, FolderArchive, FileBarChart, MonitorCheck, Globe2, Bot, Workflow, BookOpenCheck, BadgeDollarSign } from 'lucide-react';
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: BarChart3 },
-  { to: '/projects', label: 'Projects', icon: FolderKanban },
-  { to: '/project-controls', label: 'Project Controls', icon: ShieldCheck },
-  { to: '/payments-certification', label: 'Payments & Certification', icon: Receipt },
-  { to: '/revenue-position', label: 'Revenue & Contract Position', icon: BadgeDollarSign },
-  { to: '/cutover', label: 'Go-live cut-over', icon: BookOpenCheck },
-  { to: '/users', label: 'Users / Roles / DOA', icon: UsersRound },
-  { to: '/crm', label: 'CRM', icon: UsersRound },
-  { to: '/tendering', label: 'Tendering', icon: ClipboardCheck },
-  { to: '/boq', label: 'BOQ', icon: ScrollText },
-  { to: '/contracts', label: 'Contracts', icon: ScrollText },
-  { to: '/claims', label: 'Claims / EOT', icon: ShieldAlert },
-  { to: '/subcontracts', label: 'Subcontracts', icon: HardHat },
-  { to: '/cost-control', label: 'Cost Control', icon: Landmark },
-  { to: '/procurement', label: 'Procurement', icon: PackageCheck },
-  { to: '/inventory', label: 'Inventory', icon: PackageCheck },
-  { to: '/approvals', label: 'Approvals', icon: ClipboardCheck },
-  { to: '/finance', label: 'Finance', icon: Landmark },
-  { to: '/technical-office', label: 'Technical Office', icon: DraftingCompass },
-  { to: '/planning', label: 'Planning', icon: CalendarDays },
-  { to: '/site', label: 'Site Execution', icon: HardHat },
-  { to: '/hr', label: 'HR / Payroll', icon: UsersRound },
-  { to: '/assets', label: 'Assets', icon: Wrench },
-  { to: '/qaqc', label: 'QA/QC', icon: ShieldCheck },
-  { to: '/hse', label: 'HSE', icon: ShieldAlert },
-  { to: '/edms', label: 'EDMS', icon: FolderArchive },
-  { to: '/executive-dashboard', label: 'Executive Dashboard', icon: BarChart3 },
-  { to: '/reports', label: 'Reports', icon: FileBarChart },
-  { to: '/portals', label: 'Portals', icon: Globe2 },
-  { to: '/runtime-validation', label: 'Runtime Validation', icon: MonitorCheck },
-  { to: '/ai-platform', label: 'AI Platform', icon: Bot },
-  { to: '/automation', label: 'Automation / Integrations', icon: Workflow },
-  { to: '/knowledge', label: 'Knowledge / RAG', icon: BookOpenCheck },
-  { to: '/commercial-platform', label: 'Commercial SaaS', icon: BadgeDollarSign }
+  { to: '/', key: 'nav.dashboard', icon: BarChart3 },
+  { to: '/projects', key: 'nav.projects', icon: FolderKanban },
+  { to: '/project-controls', key: 'nav.projectControls', icon: ShieldCheck },
+  { to: '/payments-certification', key: 'nav.payments', icon: Receipt },
+  { to: '/revenue-position', key: 'nav.revenue', icon: BadgeDollarSign },
+  { to: '/cutover', key: 'nav.cutover', icon: BookOpenCheck },
+  { to: '/users', key: 'nav.users', icon: UsersRound },
+  { to: '/crm', key: 'nav.crm', icon: UsersRound },
+  { to: '/tendering', key: 'nav.tendering', icon: ClipboardCheck },
+  { to: '/boq', key: 'nav.boq', icon: ScrollText },
+  { to: '/contracts', key: 'nav.contracts', icon: ScrollText },
+  { to: '/claims', key: 'nav.claims', icon: ShieldAlert },
+  { to: '/subcontracts', key: 'nav.subcontracts', icon: HardHat },
+  { to: '/cost-control', key: 'nav.costControl', icon: Landmark },
+  { to: '/procurement', key: 'nav.procurement', icon: PackageCheck },
+  { to: '/inventory', key: 'nav.inventory', icon: PackageCheck },
+  { to: '/approvals', key: 'nav.approvals', icon: ClipboardCheck },
+  { to: '/finance', key: 'nav.finance', icon: Landmark },
+  { to: '/technical-office', key: 'nav.technicalOffice', icon: DraftingCompass },
+  { to: '/planning', key: 'nav.planning', icon: CalendarDays },
+  { to: '/site', key: 'nav.site', icon: HardHat },
+  { to: '/hr', key: 'nav.hr', icon: UsersRound },
+  { to: '/assets', key: 'nav.assets', icon: Wrench },
+  { to: '/qaqc', key: 'nav.qaqc', icon: ShieldCheck },
+  { to: '/hse', key: 'nav.hse', icon: ShieldAlert },
+  { to: '/edms', key: 'nav.edms', icon: FolderArchive },
+  { to: '/executive-dashboard', key: 'nav.executiveDashboard', icon: BarChart3 },
+  { to: '/reports', key: 'nav.reports', icon: FileBarChart },
+  { to: '/portals', key: 'nav.portals', icon: Globe2 },
+  { to: '/runtime-validation', key: 'nav.runtimeValidation', icon: MonitorCheck },
+  { to: '/ai-platform', key: 'nav.aiPlatform', icon: Bot },
+  { to: '/automation', key: 'nav.automation', icon: Workflow },
+  { to: '/knowledge', key: 'nav.knowledge', icon: BookOpenCheck },
+  { to: '/commercial-platform', key: 'nav.commercialPlatform', icon: BadgeDollarSign }
 ];
 
 export function Layout() {
+  const { t } = useI18n();
   return (
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand-mark">ERP</span>
+          <span className="brand-mark">M</span>
           <div>
-            <strong>Construction ERP</strong>
-            <small>Fit-Out Execution OS</small>
+            <strong>{t('brand.name')}</strong>
+            <small>{t('brand.tagline')}</small>
           </div>
         </div>
+        <LanguageSwitch />
         <nav>
-          {navItems.map(({ to, label, icon: Icon }) => (
+          {navItems.map(({ to, key, icon: Icon }) => (
             <NavLink key={to} to={to} className={({ isActive }: { isActive: boolean }) => `nav-item ${isActive ? 'active' : ''}`}>
               <Icon size={18} />
-              <span>{label}</span>
+              <span>{t(key as MessageKey)}</span>
             </NavLink>
           ))}
         </nav>
-      <button className="logout" onClick={async () => { await logout(); window.location.href = '/login'; }}>Logout</button>
+      <button className="logout" onClick={async () => { await logout(); window.location.href = '/login'; }}>{t('shell.logout')}</button>
       </aside>
       <main className="content">
         <Outlet />

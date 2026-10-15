@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiPost, setToken } from '../lib/api';
+import { LanguageSwitch, useI18n } from '../lib/i18n';
 
 type Session = { token: string; user: { full_name: string; role_name: string } };
 type LoginData = Partial<Session> & { mfa_required?: boolean; mfa_enrollment_required?: boolean; challenge_token?: string };
@@ -9,6 +10,7 @@ type Step = 'password' | 'verify' | 'enroll' | 'codes';
 // Stage 32 / DEC-015: privileged users complete sign-in with an authenticator code (TOTP). The password step returns
 // only a short-lived challenge; first-time users set up their authenticator here and receive one-time recovery codes.
 export function Login() {
+  const { t } = useI18n();
   const [orgId, setOrgId] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,12 +27,12 @@ export function Login() {
   const enter = (token: string) => { setToken(token); window.location.href = '/'; };
   async function guarded(fn: () => Promise<void>) {
     setLoading(true); setError(null);
-    try { await fn(); } catch (err) { setError(err instanceof Error ? err.message : 'Sign-in failed'); } finally { setLoading(false); }
+    try { await fn(); } catch (err) { setError(err instanceof Error ? err.message : t('login.failed')); } finally { setLoading(false); }
   }
 
   const submitPassword = (event: FormEvent) => { event.preventDefault(); void guarded(async () => {
     const parsedOrgId = Number(orgId);
-    if (!Number.isInteger(parsedOrgId) || parsedOrgId <= 0) throw new Error('Organization ID is required');
+    if (!Number.isInteger(parsedOrgId) || parsedOrgId <= 0) throw new Error(t('login.orgRequired'));
     const { data } = await apiPost<{ data: LoginData }>('/auth/login', { email, password, org_id: parsedOrgId });
     if (data.token) return enter(data.token);
     setChallenge(data.challenge_token ?? ''); setPassword('');
@@ -55,11 +57,11 @@ export function Login() {
   if (step === 'codes') return (
     <main className="login-page">
       <section className="login-card" data-section="mfa-recovery-codes">
-        <p className="eyebrow">Construction ERP</p>
-        <h1>رموز الاسترداد</h1>
-        <p>احفظ هذه الرموز في مكان آمن. كل رمز يُستخدم مرة واحدة إذا فقدت جهاز المصادقة، ولن تظهر مرة أخرى.</p>
+        <p className="eyebrow">{t('brand.name')}</p>
+        <h1>{t('mfa.codesTitle')}</h1>
+        <p>{t('mfa.codesIntro')}</p>
         <ol dir="ltr" className="recovery-codes">{recoveryCodes.map(c => <li key={c}><code>{c}</code></li>)}</ol>
-        <button onClick={() => enter(pendingToken)}>حفظتها — متابعة</button>
+        <button onClick={() => enter(pendingToken)}>{t('mfa.codesSaved')}</button>
       </section>
     </main>
   );
@@ -67,23 +69,23 @@ export function Login() {
   if (step === 'verify' || step === 'enroll') return (
     <main className="login-page">
       <form className="login-card" onSubmit={submitCode} data-section={step === 'enroll' ? 'mfa-enroll' : 'mfa-verify'}>
-        <p className="eyebrow">Construction ERP</p>
-        <h1>{step === 'enroll' ? 'إعداد التحقق بخطوتين' : 'التحقق بخطوتين'}</h1>
+        <p className="eyebrow">{t('brand.name')}</p>
+        <h1>{step === 'enroll' ? t('mfa.titleEnroll') : t('mfa.titleVerify')}</h1>
         {step === 'enroll' && enrolment && <>
-          <p>حسابك يتطلب التحقق بخطوتين. أضف الحساب في تطبيق المصادقة (Google Authenticator أو Microsoft Authenticator أو ما يماثلهما) بالمفتاح التالي، ثم أدخل الرمز المكوّن من 6 أرقام.</p>
+          <p>{t('mfa.enrollIntro')}</p>
           <p dir="ltr"><code className="mfa-secret">{enrolment.secret.match(/.{1,4}/g)?.join(' ')}</code></p>
-          <p><a href={enrolment.otpauth_uri}>فتح في تطبيق المصادقة على هذا الجهاز</a></p>
+          <p><a href={enrolment.otpauth_uri}>{t('mfa.openApp')}</a></p>
         </>}
-        {step === 'verify' && <p>{useRecovery ? 'أدخل أحد رموز الاسترداد.' : 'أدخل الرمز المكوّن من 6 أرقام من تطبيق المصادقة.'}</p>}
+        {step === 'verify' && <p>{useRecovery ? t('mfa.enterRecovery') : t('mfa.enterCode')}</p>}
         <label>
-          {useRecovery ? 'Recovery code' : 'Authentication code'}
+          {useRecovery ? t('mfa.recoveryCode') : t('mfa.authCode')}
           <input value={code} onChange={(e: any) => setCode(e.target.value)} inputMode={useRecovery ? 'text' : 'numeric'} autoComplete="one-time-code" required autoFocus />
         </label>
         {error && <div className="error-box">{error}</div>}
-        <button disabled={loading}>{loading ? 'Checking...' : 'Verify'}</button>
+        <button disabled={loading}>{loading ? t('login.checking') : t('mfa.verify')}</button>
         {step === 'verify' && <button type="button" className="link-button" onClick={() => { setUseRecovery(!useRecovery); setCode(''); }}>
-          {useRecovery ? 'استخدام رمز التطبيق' : 'فقدت الجهاز؟ استخدم رمز استرداد'}</button>}
-        <button type="button" className="link-button" onClick={restart}>رجوع</button>
+          {useRecovery ? t('mfa.useApp') : t('mfa.useRecovery')}</button>}
+        <button type="button" className="link-button" onClick={restart}>{t('mfa.back')}</button>
       </form>
     </main>
   );
@@ -91,24 +93,24 @@ export function Login() {
   return (
     <main className="login-page">
       <form className="login-card" onSubmit={submitPassword}>
-        <p className="eyebrow">Construction ERP</p>
-        <h1>تسجيل الدخول</h1>
-        <p>أدخل بيانات المؤسسة والحساب المصرح به.</p>
+        <p className="eyebrow">{t('brand.name')}</p>
+        <h1>{t('login.title')}</h1>
+        <p>{t('login.intro')}</p>
         <label>
-          Organization ID
+          {t('login.orgId')}
           <input value={orgId} onChange={(e: any) => setOrgId(e.target.value)} inputMode="numeric" autoComplete="organization" required />
         </label>
         <label>
-          Email
+          {t('login.email')}
           <input value={email} onChange={(e: any) => setEmail(e.target.value)} type="email" autoComplete="username" required />
         </label>
         <label>
-          Password
+          {t('login.password')}
           <input value={password} onChange={(e: any) => setPassword(e.target.value)} type="password" autoComplete="current-password" required />
         </label>
         {error && <div className="error-box">{error}</div>}
-        <button disabled={loading}>{loading ? 'Checking...' : 'Login'}</button>
-      </form><p><Link to="/setup">First-time company setup</Link></p>
+        <button disabled={loading}>{loading ? t('login.checking') : t('login.submit')}</button>
+      </form><p><Link to="/setup">{t('login.firstSetup')}</Link></p><LanguageSwitch />
     </main>
   );
 }
