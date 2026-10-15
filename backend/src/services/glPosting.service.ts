@@ -268,6 +268,10 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
       if (!r || r.source_subtype !== subtype) throw new AppError(422, `No active GL posting rule for ipc / ${subtype} (account cleared by this receipt)`);
       creditAccount = Number(r.debit_account_id);
     }
+    // Stage 34 (082): an opening receivable clears the control account it was loaded in at cut-over.
+    if (ar?.source_type === 'opening') {
+      creditAccount = Number((await client.query(`select c.gl_account_id from accounts_receivable a join cutover_receivables c on c.id = a.source_record_id where a.id = $1`, [payment.related_ar_id])).rows[0].gl_account_id);
+    }
   }
   if (payment.payment_type === 'outgoing' && payment.related_ap_id) {
     const ap = (await client.query(`select source_type from accounts_payable where id = $1`, [payment.related_ap_id])).rows[0];
@@ -276,6 +280,10 @@ export async function postApprovedPaymentToGl(client: PoolClient, paymentId: num
       const r = await getActiveRule(client, Number(payment.org_id), 'cost_transaction', subtype);
       if (!r || r.source_subtype !== subtype) throw new AppError(422, `No active GL posting rule for cost_transaction / ${subtype} (account cleared by this payment)`);
       debitAccount = Number(r.credit_account_id);
+    }
+    // Stage 34 (082): an opening payable clears the control account it was loaded in at cut-over.
+    if (ap?.source_type === 'opening') {
+      debitAccount = Number((await client.query(`select c.gl_account_id from accounts_payable a join cutover_payables c on c.id = a.source_record_id where a.id = $1`, [payment.related_ap_id])).rows[0].gl_account_id);
     }
   }
   const batch = await insertBalancedGlBatch(client, {

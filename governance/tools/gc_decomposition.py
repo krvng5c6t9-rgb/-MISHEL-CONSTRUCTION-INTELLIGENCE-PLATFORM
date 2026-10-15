@@ -210,9 +210,9 @@ gc('GC-23', 'Create a Specialized AI Skill/Agent', [
     ('Publish, monitor, rollback', 'AI owner', 'approved agent', 'live version', 'cost/quality/latency monitored', 'none', 'L4 monitoring', 'ABSENT', '', 'NDC-009'),
 ])
 gc('GC-24', 'Import Legacy Data', [
-    ('Profile and map source', 'Implementation consultant', 'source files', 'mapping', 'mapping versioned', 'none', 'L2 mapping suggestion', 'ABSENT', '', ''),
-    ('Validate, match master data, preview errors', 'Implementation consultant', 'mapped data', 'error report', 'no import with blocking errors', 'none', 'L2', 'ABSENT', '', ''),
-    ('Controlled import and reconciliation with lineage', 'Data owner', 'validated data', 'imported records + control totals', 'control totals source = target', 'loader != approver', 'L3', 'ABSENT', '', 'NDC-011'),
+    ('Profile and map source', 'Implementation consultant', 'source files', 'mapping', 'mapping versioned', 'none', 'L2 mapping suggestion', 'ABSENT', 'cut-over API takes structured rows (CC-063); no file profiling / column mapping tool yet', ''),
+    ('Validate, match master data, preview errors', 'Implementation consultant', 'mapped data', 'error report', 'no import with blocking errors', 'none', 'L2', 'PARTIAL', 'every opening row checked against master data of the same organisation (client/project/contract, vendor/subcontract, account), positions sanity-checked, each batch all-or-nothing (CC-063) [sweep_cutover]; no file preview / row-level error report', ''),
+    ('Controlled import and reconciliation with lineage', 'Data owner', 'validated data', 'imported records + control totals', 'control totals source = target', 'loader != approver', 'L3', 'RUNTIME', 'DEC-019 cut-over: date on a period start, only before any posting, TB must balance and every control account equal its detail (receivables, payables, retention, advances both sides), report frozen with SHA-256, preparer != approver, opening journal one balanced batch on the cut-over date, opening items keep their source and clear their own control account (CC-063) [sweep_cutover]; live engines do not yet continue from opening positions (F-49)', 'NDC-011'),
 ])
 gc('GC-26', 'Risk-to-Action', [
     ('Identify and assess risk/opportunity', 'Risk owner', 'project data', 'risk register entry', '1-5 probability x impact (score ranks only; bands are company policy); DB-kept assessment history', 'none', 'L1 risk suggestions', 'RUNTIME', 'CC-041 sweep_risks', ''),
