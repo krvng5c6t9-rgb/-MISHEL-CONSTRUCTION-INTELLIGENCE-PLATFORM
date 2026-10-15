@@ -105,7 +105,8 @@
   - Stage 34 — GC-24 / DEC-019 part 1: **DONE** (CC-063; cut-over plan, opening TB and detail, mandatory reconciliation, SoD approval, opening journal; F-49 opened). The cut-over date itself stays OI-4 (owner, at go-live).
   - Stage 35 — F-49: **DONE** (CC-064; engines continue from opening positions; opening retention release).
   - Stage 36 — F-50: **DONE** (CC-065; Go-live cut-over screen: paste + column mapping + row-level dry-run preview, reconciliation differences, SoD approval, opening retention release; GC-24 step 2 RUNTIME, step 1 PARTIAL - saved/versioned mappings and file profiling remain).
-  - **Stage 37 (NEXT) — F-47: revenue recognition output method (surveyed progress / certified value as measure, chosen per contract with justification) and point-in-time contracts; more than one client contract per project; browser check of the revenue screen for the new method.**
+  - **Master plan delivered (awaiting owner approval):** OVD-001 (owner vision), OQS-001 (owner quality standard), COMPETITOR_SCAN_001, governance/masterplan/MP-01…MP-07 (organisation, 210 processes, 220 documents, 37 AI agents, engineering engines, UX / dashboards / 26 alerts, gap map and releases R0–R7). Every part passed automated checks and two hostile reviews.
+  - **NEXT (owner chooses):** R1 stage 1 (translation framework + Arabic labels) per MP-07 §6, or Stage 37 — F-47 revenue output method and point-in-time contracts; one contract per project limitation; browser check of the revenue screen.
   - Stage 34 — GC-24 legacy import per DEC-019 methodology (opening TB, in-flight contracts/subcontracts cumulative, reconciliation report).
   - Later candidates: GC-24 legacy import; GC-12 advance recovery/back-charges; snapshot ZIP when the owner asks.
   - Gate order note: wave1_boq_handover now runs BEFORE chain.mjs (it configures contract-signing DOA and signers the chain uses).
