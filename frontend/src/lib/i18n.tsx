@@ -3,6 +3,9 @@ import * as shell from './messages/shell';
 import * as common from './messages/common';
 import * as dashboard from './messages/dashboard';
 import * as cutover from './messages/cutover';
+import * as values from './messages/values';
+import * as revenue from './messages/revenue';
+import * as payments from './messages/payments';
 
 // R1.1 / R1.2 (MP-06 §1): Arabic-first, fully bilingual interface. Every user-visible string of a translated screen
 // comes from the dictionaries in ./messages (one file per area); the language also sets the document language and
@@ -11,9 +14,9 @@ import * as cutover from './messages/cutover';
 export type Lang = 'ar' | 'en';
 const STORAGE_KEY = 'mishel.lang';
 
-const en = { ...shell.en, ...common.en, ...dashboard.en, ...cutover.en };
+const en = { ...shell.en, ...common.en, ...dashboard.en, ...cutover.en, ...values.en, ...revenue.en, ...payments.en };
 export type MessageKey = keyof typeof en;
-const ar: Record<MessageKey, string> = { ...shell.ar, ...common.ar, ...dashboard.ar, ...cutover.ar };
+const ar: Record<MessageKey, string> = { ...shell.ar, ...common.ar, ...dashboard.ar, ...cutover.ar, ...values.ar, ...revenue.ar, ...payments.ar };
 export type MessageVars = Record<string, string | number>;
 
 export const dictionaries: Record<Lang, Record<MessageKey, string>> = { en, ar };
@@ -32,7 +35,15 @@ export function format(lang: Lang, key: MessageKey, vars?: MessageVars): string 
   return vars ? text.replace(/\{(\w+)\}/g, (m, name: string) => (name in vars ? String(vars[name]) : m)) : text;
 }
 
-type I18n = { lang: Lang; dir: 'rtl' | 'ltr'; t: (key: MessageKey, vars?: MessageVars) => string; setLang: (lang: Lang) => void };
+// A coded value stored in the database (status, kind, basis): 'submitted_to_client' → key 'value.submittedToClient'
+// (messages/values.ts). Empty values show '—'; a code without a key is shown as stored.
+export function formatValue(lang: Lang, v: unknown): string {
+  if (v === null || v === undefined || v === '') return '—';
+  const key = `value.${String(v).replace(/_([a-z])/g, (_m, c: string) => c.toUpperCase())}`;
+  return key in dictionaries.en ? dictionaries[lang][key as MessageKey] : String(v);
+}
+
+type I18n = { lang: Lang; dir: 'rtl' | 'ltr'; t: (key: MessageKey, vars?: MessageVars) => string; tv: (v: unknown) => string; setLang: (lang: Lang) => void };
 const I18nContext = createContext<I18n | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
@@ -47,7 +58,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     setLangState(next);
   }, []);
   const t = useCallback((key: MessageKey, vars?: MessageVars) => format(lang, key, vars), [lang]);
-  const value = useMemo(() => ({ lang, dir, t, setLang }), [lang, dir, t, setLang]);
+  const tv = useCallback((v: unknown) => formatValue(lang, v), [lang]);
+  const value = useMemo(() => ({ lang, dir, t, tv, setLang }), [lang, dir, t, tv, setLang]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 

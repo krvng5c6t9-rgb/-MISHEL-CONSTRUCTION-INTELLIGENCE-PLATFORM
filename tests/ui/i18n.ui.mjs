@@ -82,6 +82,11 @@ try {
     ar.filter(t => !ARABIC.test(t) || LATIN.test(t)).join(' | ') || `${ar.length} items`);
   check('Arabic navigation labels are distinct', new Set(ar).size === ar.length);
   check('logout labelled in Arabic', await page.getByRole('button', { name: 'تسجيل الخروج' }).count() === 1);
+  // Layout follows the language (CC-068): in Arabic the navigation is on the right and the content right-to-left.
+  const side = async () => page.evaluate(() => ({ nav: document.querySelector('aside').getBoundingClientRect().left, main: document.querySelector('main').getBoundingClientRect().left,
+    contentDir: getComputedStyle(document.querySelector('main')).direction, navDir: getComputedStyle(document.querySelector('aside')).direction }));
+  const arSide = await side();
+  check('Arabic layout: navigation on the right, content and navigation right-to-left', arSide.nav > arSide.main && arSide.contentDir === 'rtl' && arSide.navDir === 'rtl', JSON.stringify(arSide));
   // R1.2: the landing dashboard in Arabic; contract value is totalled per currency (never added across currencies).
   const dash = page.locator('main');
   await dash.locator('[data-section="kpis"] .kpi-card').first().waitFor();
@@ -100,6 +105,8 @@ try {
   check('all 34 navigation items in English, in order', JSON.stringify(en) === JSON.stringify(EN_NAV),
     en.filter((t, i) => t !== EN_NAV[i]).join(' | ') || `${en.length} items`);
   check('logout labelled in English', await page.getByRole('button', { name: 'Logout' }).count() === 1);
+  const enSide = await side();
+  check('English layout: navigation on the left, content and navigation left-to-right', enSide.nav < enSide.main && enSide.contentDir === 'ltr' && enSide.navDir === 'ltr', JSON.stringify(enSide));
   await page.getByRole('link', { name: 'Go-live cut-over' }).click(); await page.waitForURL(/\/cutover/);
   check('navigation works after switching language', /\/cutover$/.test(new URL(page.url()).pathname));
   await page.screenshot({ path: `${OUT}/i18n_${RUN}.png`, fullPage: false });

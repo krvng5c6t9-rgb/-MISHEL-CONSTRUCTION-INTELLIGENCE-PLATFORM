@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiGet } from '../lib/api';
+import { Num } from '../components/RecordTable';
 import { dictionaries, useI18n, type MessageKey } from '../lib/i18n';
 
 type ApiResponse<T> = { success: boolean; data: T };
@@ -39,7 +40,7 @@ export function Dashboard() {
       <div className="kpi-grid" data-section="kpis">
         <article className="kpi-card"><small>{t('dashboard.projects')}</small><strong>{projects.length}</strong></article>
         {[...totals].map(([currency, total]) => (
-          <article className="kpi-card" key={currency}><small>{t('dashboard.contractValue', { currency })}</small><strong>{total.toLocaleString()}</strong></article>
+          <article className="kpi-card" key={currency}><small>{t('dashboard.contractValue', { currency })}</small><strong><Num text={total.toLocaleString('en-US')} /></strong></article>
         ))}
       </div>
       <div className="panel" data-section="by-status">

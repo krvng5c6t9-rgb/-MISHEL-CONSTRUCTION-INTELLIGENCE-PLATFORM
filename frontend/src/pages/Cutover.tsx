@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiGet, apiPost, apiDelete } from '../lib/api';
-import { Row, Table, ask, fmt } from '../components/RecordTable';
+import { Num, Row, Table, ask, fmt } from '../components/RecordTable';
 import { dictionaries, useI18n, type MessageKey, type MessageVars } from '../lib/i18n';
 
 // Stage 36 / F-50 (GC-24, DEC-019): go-live cut-over screen. Each section is loaded by pasting rows copied from Excel or a
@@ -227,7 +227,7 @@ export function Cutover() {
       {plan && report && <div className="panel" data-section="reconciliation"><h2>{t('cutover.reconciliation')}</h2>
         <p>{report.clean ? t('cutover.clean') : t('cutover.differences')}</p>
         <div className="table-wrap"><table><thead><tr><th>{t('cutover.colCheck')}</th><th>{t('cutover.colAccount')}</th><th>{t('cutover.colTrialBalance')}</th><th>{t('cutover.colDetail')}</th><th>{t('cutover.colDifference')}</th><th>{t('cutover.colNote')}</th></tr></thead>
-          <tbody>{(report.lines as Row[]).map((l, i) => <tr key={i} className={Number(l.difference) !== 0 ? 'row-error' : ''}><td>{named(CHECKS, l.check)}</td><td>{accountCode(l.account_id)}</td><td>{fmt(l.trial_balance)}</td><td>{fmt(l.detail)}</td><td>{fmt(l.difference)}</td><td>{l.note}</td></tr>)}</tbody></table></div>
+          <tbody>{(report.lines as Row[]).map((l, i) => <tr key={i} className={Number(l.difference) !== 0 ? 'row-error' : ''}><td>{named(CHECKS, l.check)}</td><td>{accountCode(l.account_id)}</td><td><Num v={l.trial_balance} /></td><td><Num v={l.detail} /></td><td><Num v={l.difference} /></td><td>{l.note}</td></tr>)}</tbody></table></div>
       </div>}
 
       {plan && detail && SECTIONS.map(s => <div className="panel" key={s.path} data-section={s.path}><h2>{t(s.title)}</h2>

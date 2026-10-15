@@ -1,7 +1,8 @@
 // Stage 23 (F-38) browser verification of the Payments & Certification screen against the gate's data (same RUN_ID):
 // client certification recorded through the screen (preparer refused, second person records a certified amount below
 // the submitted net with a reason), client advance position, subcontract back-charge raised/noticed with the raiser's
-// approval refused and a second person approving, sections a user may not read named on screen.
+// approval refused and a second person approving, sections a user may not read named on screen; R1.2: the screen
+// checked in Arabic.
 // Run by tests/e2e/run_from_zero.sh when UI_CHECK=1 (CI does).
 import { createHash } from 'node:crypto';
 import { chromium } from 'playwright';
@@ -93,6 +94,22 @@ try {
   await click(bcRow(), 'Approve');
   check('second person approves the noticed back-charge', /approved/.test(await bcRow().innerText()) && !(await alertText()), (await bcRow().innerText()).replace(/\s+/g, ' '));
   await page.screenshot({ path: `${OUT}/ui_payments_subcontract.png`, fullPage: true });
+
+  // --- R1.2: the same screen in Arabic: titles, figures, the back-charge status, unloaded sections named in Arabic,
+  // and no Latin letters in headings, column headings, buttons or field labels (data such as package names aside).
+  await page.getByRole('button', { name: 'Language' }).click(); await settleUi();
+  check('Arabic: page title and subcontract position labels', await page.getByRole('heading', { name: 'المستخلصات والمدفوعات' }).count() === 1
+    && /المدفوع\s*20,000\.00/.test(await section('subcontracts').innerText()) && /خصومات متنازع عليها\s*3,000\.00/.test(await section('subcontracts').innerText()),
+    (await section('subcontracts').innerText()).replace(/\s+/g, ' ').slice(0, 200));
+  check('Arabic: back-charge status shown in Arabic (stored code unchanged)', /معتمد/.test(await bcRow().innerText()) && !/approved/.test(await bcRow().innerText()), (await bcRow().innerText()).replace(/\s+/g, ' '));
+  check('Arabic: sections the user may not read are named in Arabic', /مستخلصات العملاء \(/.test(await section('unloaded').innerText().catch(() => '')), await section('unloaded').innerText().catch(() => ''));
+  const payAr = await page.locator('main').evaluate(m => [...m.querySelectorAll('h1, h2, h3, th, button, label')].map(e => e.matches('label') ? e.firstChild?.textContent ?? '' : e.textContent ?? '')
+    .concat([...m.querySelectorAll('[aria-label]')].map(e => e.getAttribute('aria-label') ?? '')).map(s => s.trim()).filter(Boolean));
+  check('Arabic: no Latin letters in headings, column headings, buttons and field labels', payAr.length > 15 && !payAr.some(s => /[A-Za-z]/.test(s)),
+    payAr.filter(s => /[A-Za-z]/.test(s)).slice(0, 5).join(' | ') || `${payAr.length} texts`);
+  await page.screenshot({ path: `${OUT}/ui_payments_ar.png`, fullPage: true });
+  await page.getByRole('button', { name: 'اللغة' }).click(); await settleUi();
+  check('back to English: same screen in English', await page.getByRole('heading', { name: 'Payments & Certification' }).count() === 1 && /approved/.test(await bcRow().innerText()));
 
   const sod = apiFailures.filter(f => f.status === 403 && f.method === 'POST' && /(client-approve|\/approve)$/.test(f.path));
   const unexpected = apiFailures.filter(f => !sod.includes(f) && !(f.status === 403 && f.method === 'GET'));

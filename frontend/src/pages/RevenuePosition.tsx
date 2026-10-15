@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react';
 import { apiGet, apiPost, apiDelete } from '../lib/api';
-import { Row, Table, ask } from '../components/RecordTable';
+import { Num, Row, Table, ask } from '../components/RecordTable';
+import { useI18n, type MessageKey } from '../lib/i18n';
 
 // Stage 33 (DEC-009 flows were API-only): revenue recognition runs, price estimates, client retention release and the
 // contract receivable position. Every figure of a run is computed by the database; the separation of duties
 // (preparer / approver, estimate author / approver, IPC preparer / retention releaser) is enforced by the API.
+// R1.2: labels from messages/revenue.ts, stored codes (status, kind) through tv(); server messages are shown as sent.
 
 const money = (v: unknown) => (v === null || v === undefined ? '—' : Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 const today = () => new Date().toISOString().slice(0, 10);
+type Missed = [MessageKey, string];
+
+const KPIS: [string, MessageKey][] = [['billed_gross', 'revenue.kpiBilledGross'], ['billed_net', 'revenue.kpiBilledNet'], ['collected', 'revenue.kpiCollected'], ['receivables_outstanding', 'revenue.kpiOutstanding'],
+  ['retention_held', 'revenue.kpiRetentionHeld'], ['retention_released', 'revenue.kpiRetentionReleased'], ['advances_received', 'revenue.kpiAdvancesReceived'], ['advance_recovered', 'revenue.kpiAdvanceRecovered'], ['advance_liability', 'revenue.kpiAdvanceLiability']];
 
 export function RevenuePosition() {
+  const { t, tv } = useI18n();
   const [err, setErr] = useState('');
-  const [unloaded, setUnloaded] = useState<string[]>([]);
+  const [unloaded, setUnloaded] = useState<Missed[]>([]);
   const [contracts, setContracts] = useState<[number, string][]>([]);
   const [contractId, setContractId] = useState(0);
   const [position, setPosition] = useState<Row | null>(null);
@@ -20,73 +27,71 @@ export function RevenuePosition() {
   const [retentions, setRetentions] = useState<Row[]>([]);
 
   async function load() {
-    const missed = new Set<string>();
-    const settle = async <T,>(p: Promise<T>, fallback: T, section: string) => { try { return await p; } catch (x: any) { missed.add(`${section} (${x.message})`); return fallback; } };
+    const missed = new Map<MessageKey, string>();
+    const settle = async <T,>(p: Promise<T>, fallback: T, section: MessageKey) => { try { return await p; } catch (x: any) { missed.set(section, x.message); return fallback; } };
     // Contracts the user may see: the contract register if permitted, otherwise the contracts behind client IPCs.
     const listed = new Map<number, string>();
-    for (const c of (await settle(apiGet<any>('/contracts'), { data: [] }, 'contract register')).data) listed.set(Number(c.id), `${c.project_code} — ${c.project_name} (${c.client_name})`);
-    for (const i of (await settle(apiGet<any>('/finance/ipcs'), { data: [] }, 'client IPCs')).data) if (!listed.has(Number(i.contract_id))) listed.set(Number(i.contract_id), `${i.contract_ref ?? i.contract_id} — ${i.project_name}`);
+    for (const c of (await settle(apiGet<any>('/contracts'), { data: [] }, 'revenue.secContracts')).data) listed.set(Number(c.id), `${c.project_code} — ${c.project_name} (${c.client_name})`);
+    for (const i of (await settle(apiGet<any>('/finance/ipcs'), { data: [] }, 'revenue.secIpcs')).data) if (!listed.has(Number(i.contract_id))) listed.set(Number(i.contract_id), `${i.contract_ref ?? i.contract_id} — ${i.project_name}`);
     setContracts([...listed.entries()]);
     if (contractId) {
-      setPosition((await settle(apiGet<any>(`/finance/contracts/${contractId}/receivable-position`), { data: null }, 'contract position')).data);
-      setRuns((await settle(apiGet<any>(`/finance/revenue-runs?contract_id=${contractId}`), { data: [] }, 'revenue runs')).data.map((r: Row) => ({
+      setPosition((await settle(apiGet<any>(`/finance/contracts/${contractId}/receivable-position`), { data: null }, 'revenue.secPosition')).data);
+      setRuns((await settle(apiGet<any>(`/finance/revenue-runs?contract_id=${contractId}`), { data: [] }, 'revenue.secRuns')).data.map((r: Row) => ({
         ...r, period: `${String(r.period_start).slice(0, 10)} → ${String(r.period_end).slice(0, 10)}`,
         progress_pct: r.progress === null ? null : (Number(r.progress) * 100).toFixed(2) + ' %',
-        position_kind: Number(r.contract_position) > 0 ? 'asset' : Number(r.contract_position) < 0 ? 'liability' : '—' })));
-      setEstimates((await settle(apiGet<any>(`/finance/revenue-estimates?contract_id=${contractId}`), { data: [] }, 'price estimates')).data);
-      setRetentions((await settle(apiGet<any>(`/finance/retentions?contract_id=${contractId}`), { data: [] }, 'retentions')).data);
+        position_kind: Number(r.contract_position) > 0 ? 'asset' : Number(r.contract_position) < 0 ? 'liability' : null })));
+      setEstimates((await settle(apiGet<any>(`/finance/revenue-estimates?contract_id=${contractId}`), { data: [] }, 'revenue.secEstimates')).data);
+      setRetentions((await settle(apiGet<any>(`/finance/retentions?contract_id=${contractId}`), { data: [] }, 'revenue.secRetentions')).data);
     }
-    setUnloaded([...missed]);
+    setUnloaded([...missed.entries()]);
   }
   const run = async (fn: () => Promise<unknown>) => { try { setErr(''); await fn(); await load(); } catch (x: any) { setErr(x.message); } };
   useEffect(() => { load().catch(x => setErr(x.message)); }, [contractId]);
-
-  const kpis: [string, string][] = [['billed_gross', 'Billed (gross)'], ['billed_net', 'Billed (net)'], ['collected', 'Collected'], ['receivables_outstanding', 'Receivables outstanding'],
-    ['retention_held', 'Retention held'], ['retention_released', 'Retention released'], ['advances_received', 'Advances received'], ['advance_recovered', 'Advance recovered'], ['advance_liability', 'Advance liability']];
+  const cols = (c: [string, MessageKey][]): [string, string][] => c.map(([k, h]) => [k, t(h)]);
 
   return (
     <section className="page-stack">
-      <header className="page-header"><div><p className="eyebrow">Finance</p><h1>Revenue &amp; Contract Position</h1>
-        <p>Revenue recognised over time (cost-to-cost, DEC-009), price estimates approved by a second person, client retention release, and what each contract has billed, collected and holds.</p></div></header>
+      <header className="page-header"><div><p className="eyebrow">{t('revenue.eyebrow')}</p><h1>{t('revenue.title')}</h1>
+        <p>{t('revenue.intro')}</p></div></header>
       {err && <div className="notice" role="alert">{err}</div>}
-      {unloaded.length > 0 && <div className="notice muted" data-section="unloaded">Not loaded for this user: {unloaded.join('; ')}</div>}
+      {unloaded.length > 0 && <div className="notice muted" data-section="unloaded">{t('revenue.notLoaded', { list: unloaded.map(([k, m]) => `${t(k)} (${m})`).join('; ') })}</div>}
 
       <div className="panel">
-        <label>Contract <select aria-label="Contract" value={contractId} onChange={e => setContractId(Number(e.target.value))}>
-          <option value={0}>Select a contract</option>{contracts.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
+        <label>{t('revenue.contract')} <select aria-label={t('revenue.contract')} value={contractId} onChange={e => setContractId(Number(e.target.value))}>
+          <option value={0}>{t('revenue.selectContract')}</option>{contracts.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
       </div>
 
       {contractId > 0 && <>
-        <div className="panel" data-section="position"><h2>Contract receivable position</h2>
-          {position && <div className="kpi-grid">{kpis.map(([k, l]) => <div className="kpi" key={k}><span>{l}</span><strong>{money(position[k])}</strong></div>)}</div>}
+        <div className="panel" data-section="position"><h2>{t('revenue.position')}</h2>
+          {position && <div className="kpi-grid">{KPIS.map(([k, l]) => <div className="kpi" key={k}><span>{t(l)}</span><strong><Num text={money(position[k])} /></strong></div>)}</div>}
         </div>
 
-        <div className="panel" data-section="revenue-runs"><h2>Revenue recognition runs</h2>
-          <p className="muted">Prepared by one person, approved and posted by another. Price, progress (cost to date ÷ EAC from approved cost snapshots inside the period), revenue, onerous provision and contract asset/liability are computed by the database and frozen with a hash.</p>
-          <button onClick={() => run(() => apiPost('/finance/revenue-runs', { contract_id: contractId, period_start: ask('Period start (YYYY-MM-DD)'), period_end: ask('Period end (YYYY-MM-DD)') || today() }))}>Prepare run</button>
-          <Table rows={runs} cols={[['period', 'Period'], ['status', 'Status'], ['transaction_price', 'Price'], ['cost_to_date', 'Cost to date'], ['eac', 'EAC'], ['progress_pct', 'Progress'],
-            ['cumulative_revenue', 'Revenue to date'], ['period_revenue', 'Period revenue'], ['loss_provision', 'Onerous provision'], ['billings_to_date', 'Billed'], ['contract_position', 'Position'], ['position_kind', 'Asset / liability']]}
+        <div className="panel" data-section="revenue-runs"><h2>{t('revenue.runs')}</h2>
+          <p className="muted">{t('revenue.runsNote')}</p>
+          <button onClick={() => run(() => apiPost('/finance/revenue-runs', { contract_id: contractId, period_start: ask(t('revenue.askPeriodStart')), period_end: ask(t('revenue.askPeriodEnd')) || today() }))}>{t('revenue.prepareRun')}</button>
+          <Table rows={runs.map(r => ({ ...r, status_label: tv(r.status), position_kind_label: tv(r.position_kind) }))} cols={cols([['period', 'revenue.colPeriod'], ['status_label', 'revenue.colStatus'], ['transaction_price', 'revenue.colPrice'], ['cost_to_date', 'revenue.colCostToDate'], ['eac', 'revenue.colEac'], ['progress_pct', 'revenue.colProgress'],
+            ['cumulative_revenue', 'revenue.colRevenueToDate'], ['period_revenue', 'revenue.colPeriodRevenue'], ['loss_provision', 'revenue.colOnerous'], ['billings_to_date', 'revenue.colBilled'], ['contract_position', 'revenue.colPosition'], ['position_kind_label', 'revenue.colAssetLiability']])}
             actions={r => r.status === 'prepared' ? <>
-              <button onClick={() => run(() => apiPost(`/finance/revenue-runs/${r.id}/approve`, {}))}>Approve &amp; post</button>
-              <button onClick={() => run(() => apiDelete(`/finance/revenue-runs/${r.id}`))}>Discard</button>
+              <button onClick={() => run(() => apiPost(`/finance/revenue-runs/${r.id}/approve`, {}))}>{t('revenue.approvePost')}</button>
+              <button onClick={() => run(() => apiDelete(`/finance/revenue-runs/${r.id}`))}>{t('revenue.discard')}</button>
             </> : null} />
         </div>
 
-        <div className="panel" data-section="price-estimates"><h2>Price estimates (unpriced variations, claims, expected delay damages)</h2>
-          <p className="muted">Included in the transaction price only when approved by a second person, with a written basis that a significant reversal is highly improbable. Delay damages are entered as negative amounts.</p>
-          <button onClick={() => run(() => apiPost('/finance/revenue-estimates', { contract_id: contractId, kind: ask('Kind: unpriced_variation / claim / delay_damages'), amount: Number(ask('Amount (negative for delay damages)')),
-            effective_from: ask('Effective from (YYYY-MM-DD)') || today(), basis: ask('Basis (why a significant reversal is highly improbable)'), evidence_reference: ask('Evidence reference') }))}>Add estimate</button>
-          <Table rows={estimates} cols={[['kind', 'Kind'], ['amount', 'Amount'], ['effective_from', 'From'], ['status', 'Status'], ['basis', 'Basis'], ['evidence_reference', 'Evidence'], ['retired_on', 'Retired on']]}
+        <div className="panel" data-section="price-estimates"><h2>{t('revenue.estimates')}</h2>
+          <p className="muted">{t('revenue.estimatesNote')}</p>
+          <button onClick={() => run(() => apiPost('/finance/revenue-estimates', { contract_id: contractId, kind: ask(t('revenue.askKind')), amount: Number(ask(t('revenue.askAmount'))),
+            effective_from: ask(t('revenue.askEffectiveFrom')) || today(), basis: ask(t('revenue.askBasis')), evidence_reference: ask(t('revenue.askEvidence')) }))}>{t('revenue.addEstimate')}</button>
+          <Table rows={estimates.map(e => ({ ...e, kind_label: tv(e.kind), status_label: tv(e.status) }))} cols={cols([['kind_label', 'revenue.colKind'], ['amount', 'revenue.colAmount'], ['effective_from', 'revenue.colFrom'], ['status_label', 'revenue.colStatus'], ['basis', 'revenue.colBasis'], ['evidence_reference', 'revenue.colEvidence'], ['retired_on', 'revenue.colRetiredOn']])}
             actions={e => <>
-              {e.status === 'draft' && <button onClick={() => run(() => apiPost(`/finance/revenue-estimates/${e.id}/approve`, {}))}>Approve</button>}
-              {e.status === 'approved' && <button onClick={() => run(() => apiPost(`/finance/revenue-estimates/${e.id}/retire`, { retired_on: ask('Retired on (YYYY-MM-DD)') || today(), reason: ask('Reason for retiring the estimate') }))}>Retire</button>}
+              {e.status === 'draft' && <button onClick={() => run(() => apiPost(`/finance/revenue-estimates/${e.id}/approve`, {}))}>{t('revenue.approve')}</button>}
+              {e.status === 'approved' && <button onClick={() => run(() => apiPost(`/finance/revenue-estimates/${e.id}/retire`, { retired_on: ask(t('revenue.askRetiredOn')) || today(), reason: ask(t('revenue.askRetireReason')) }))}>{t('revenue.retire')}</button>}
             </>} />
         </div>
 
-        <div className="panel" data-section="retentions"><h2>Client retention</h2>
-          <p className="muted">Released once against the taking-over or defects certificate, by someone other than the IPC preparer; the release becomes a receivable collected through Finance receipts.</p>
-          <Table rows={retentions} cols={[['ipc_no', 'IPC'], ['retained_amount', 'Amount'], ['release_status', 'Status'], ['release_reference', 'Certificate'], ['release_reason', 'Reason'], ['release_receivable_id', 'Receivable']]}
-            actions={r => r.release_status === 'held' ? <button onClick={() => run(() => apiPost(`/finance/retentions/${r.id}/release`, { reason: ask('Reason for the release'), reference: ask('Taking-over / defects certificate reference') }))}>Release</button> : null} />
+        <div className="panel" data-section="retentions"><h2>{t('revenue.retention')}</h2>
+          <p className="muted">{t('revenue.retentionNote')}</p>
+          <Table rows={retentions.map(r => ({ ...r, release_status_label: tv(r.release_status) }))} cols={cols([['ipc_no', 'revenue.colIpc'], ['retained_amount', 'revenue.colAmount'], ['release_status_label', 'revenue.colStatus'], ['release_reference', 'revenue.colCertificate'], ['release_reason', 'revenue.colReason'], ['release_receivable_id', 'revenue.colReceivable']])}
+            actions={r => r.release_status === 'held' ? <button onClick={() => run(() => apiPost(`/finance/retentions/${r.id}/release`, { reason: ask(t('revenue.askReleaseReason')), reference: ask(t('revenue.askCertificate')) }))}>{t('revenue.release')}</button> : null} />
         </div>
       </>}
     </section>
