@@ -49,6 +49,13 @@ cycle and link of a large construction company, not only what is listed here. St
   The plan must therefore define a first release that is real, tested and honestly described, and a sequence of
   releases for the rest. No feature is to be announced or shown as working before it exists and passes its gate.
 
-## 4. Governance unchanged
+## 4. Competitors named by the owner (to analyse in the master plan)
+cmicglobal.ae (CMiC), hajjaj.pro, madarasystems.com, buildo.solutions, pioneers-solutions.com, bysmart-soft.com.
+These sites cannot be opened from the build environment (DNS blocked). Web search returned facts only for CMiC (one
+database across financials, project controls, field and HR; NEXUS AI with 25+ agents, 2026; P6 / MS Project
+integration; aggregator and vendor sources). No reliable facts were found for the others — no claim about them until
+the owner allows the domains or sends their pages.
+
+## 5. Governance unchanged
 AI is never the sole authority for financial, contractual, engineering or safety decisions; licensed drawings,
 prices, DOA values and company policies come from the owner; no evidence → no claim.
