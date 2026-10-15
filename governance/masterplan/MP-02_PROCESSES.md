@@ -232,6 +232,7 @@ Master Plan part 2 of 7 (OVD-001, OQS-001). Builds on MP-01 (owners are MP-01 po
 | D16.16 | Revenue recognition (over time) | Financial Controller | Period end | Accountant P run → Financial Controller A | Revenue run, contract asset / liability | Run author ≠ approver; onerous provision | D16.15, D23.01 | — | GC-13 |
 | D16.17 | Budget vs actual and consolidation | Financial Controller | Period end | FP&A P → Financial Controller R | Variance, consolidated statements | Inter-company eliminations | D23.01 | Variance narrative | GC-25 |
 | D16.18 | Go-live cut-over (opening balances) | Financial Controller | Go-live | Preparer P load → reconcile → other person A | Opening journal, opening positions | Reconciliation clean, preparer ≠ approver | D16.*, D15.* | Row-level validation | GC-24 |
+| D16.19 | Manual journal entries (accruals, reclassifications, corrections) | Finance Manager / Chief Accountant | Period end / correction | Accountant P with support → Chief Accountant A | Journal voucher | Preparer ≠ approver; balanced; open period only | D16.15 | Anomaly detection | GC-25 |
 
 ## 17. D17 Human resources and payroll
 | ID | Process | Owner | Trigger | Steps | Outputs | Controls | Feeds → | AI | GC |
@@ -360,9 +361,9 @@ version · comments and mentions · bilingual labels · offline capture for site
 
 
 ## 28. Coverage and review record
-**Counts (computed from this file by script):** 209 processes in 25 domains — D01 9 · D02 7 · D03 14 · D04 6 ·
-D05 10 · D06 12 · D07 8 · D08 11 · D09 8 · D10 8 · D11 6 · D12 10 · D13 7 · D14 10 · D15 13 · D16 18 · D17 14 ·
-D18 4 · D19 5 · D20 8 · D21 3 · D22 9 · D23 3 · D24 2 · D25 4; 26 propagation chains (section 26). 127 processes
+**Counts (computed from this file by script):** 210 processes in 25 domains — D01 9 · D02 7 · D03 14 · D04 6 ·
+D05 10 · D06 12 · D07 8 · D08 11 · D09 8 · D10 8 · D11 6 · D12 10 · D13 7 · D14 10 · D15 13 · D16 19 · D17 14 ·
+D18 4 · D19 5 · D20 8 · D21 3 · D22 9 · D23 3 · D24 2 · D25 4; 26 propagation chains (section 26). 128 processes
 map to a Golden Case (37 of the 38 cases used; GC-38 "Enterprise architecture transformation" is a product-engineering
 case, not a company process); 82 have none yet — their code coverage is assessed in MP-07, not claimed here.
 
@@ -390,5 +391,7 @@ every owner is a position or body in MP-01 v1.3; every GC id is within GC-01…G
   each company adapts approval chains through its DOA configuration. Legal obligations named (notifiable incidents,
   licensed-engineer signatures, labour-law procedure) are referenced, not quoted — the applicable texts are an owner /
   legal-advisor input, never invented.
+
+- v1.1 (found while reviewing MP-03): manual journal entries had no process although the GL source `manual_journal` exists in the code (migrations 006, 007, 013) — D16.19 added (GC-25).
 
 **Status:** reviewed (two hostile passes + automated checks); awaiting owner approval.
