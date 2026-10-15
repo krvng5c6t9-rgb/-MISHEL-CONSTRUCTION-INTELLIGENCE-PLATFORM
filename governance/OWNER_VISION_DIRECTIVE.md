@@ -49,6 +49,15 @@ cycle and link of a large construction company, not only what is listed here. St
   The plan must therefore define a first release that is real, tested and honestly described, and a sequence of
   releases for the rest. No feature is to be announced or shown as working before it exists and passes its gate.
 
+## 3a. In-system AI CAD / BIM (owner direction, 2026-10-15)
+The AI is both the engineer and the program: an in-system CAD / BIM engine where the AI produces structured geometry
+(JSON: elements, coordinates, layers, dimensions) that the engine draws, edits, checks and exports (DXF / DWG / IFC /
+PDF), alongside driving Revit / AutoCAD where the client has them. Candidates named by the owner (from a Gemini
+answer, unverified): CADAM and CADCraft (open-source text-to-CAD), Fabric.js and Konva.js (2D canvas); commercial
+references Finch 3D, BricsCAD AI, SWAPP, Maket.ai, Augmenta (benchmarks, not components). Every library's licence
+and maturity is checked before use; GPL code is not copied into the sold product (separate service or reference
+only).
+
 ## 4. Competitors named by the owner (to analyse in the master plan)
 cmicglobal.ae (CMiC), hajjaj.pro, madarasystems.com, buildo.solutions, pioneers-solutions.com, bysmart-soft.com.
 These sites cannot be opened from the build environment (DNS blocked). Web search returned facts only for CMiC (one
