@@ -1,10 +1,14 @@
+import { useI18n } from '../lib/i18n';
+
 // Shared by the control screens: a plain table of API rows with optional per-row actions, and prompt helpers.
+// Column headings and prompt labels are passed in already translated by the calling screen.
 export type Row = Record<string, any>;
 export const ask = (label: string) => window.prompt(label)?.trim() ?? '';
 export const fmt = (v: unknown) => (v === null || v === undefined || v === '' ? '—' : String(v));
 
 export function Table({ rows, cols, actions }: { rows: Row[]; cols: [string, string][]; actions?: (r: Row) => JSX.Element | null }) {
-  if (!rows.length) return <p className="muted">Nothing recorded yet.</p>;
+  const { t } = useI18n();
+  if (!rows.length) return <p className="muted">{t('table.empty')}</p>;
   return (
     <div className="table-wrap">
       <table>

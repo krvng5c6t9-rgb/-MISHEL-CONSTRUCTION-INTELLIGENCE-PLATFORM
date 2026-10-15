@@ -67,6 +67,25 @@ try {
   await click(section('plan'), 'Create plan', first);
   check('cut-over plan created from the screen as draft', await status() === 'draft', await alert());
 
+  // --- R1.2: the same draft screen in Arabic. Arabic column names are mapped automatically, the row checks are shown in
+  // Arabic, and no heading, column heading, button or field label shows Latin letters. Then back to English.
+  await page.getByRole('button', { name: 'Language' }).click(); await settle();
+  check('Arabic: page title and plan status translated (status attribute unchanged)', await page.getByRole('heading', { name: 'الانتقال للتشغيل' }).count() === 1
+    && await section('plan').locator('[data-status="draft"]').innerText() === 'مسودة');
+  await paste('tb-lines', ['الحساب\tمدين\tدائن\tبيان', '9999\t5\t0\tحساب غير معروف', '1010\t1\t0\tالبنك'].join('\n'));
+  const arMapped = await section('tb-lines').getByLabel('العمود الخاص بـ مدين').inputValue();
+  check('Arabic: Arabic column names mapped automatically', arMapped === '1', `debit column ${arMapped}`);
+  await click(section('tb-lines'), 'معاينة الصفوف (2)');
+  const arPv = await previewText('tb-lines');
+  check('Arabic: row check shown in Arabic (unknown account)', /الحساب "9999" غير موجود/.test(arPv) && /عدد الصفوف التي بها أخطاء: 1 /.test(arPv), arPv.replace(/\s+/g, ' ').slice(0, 300));
+  const arTexts = await page.locator('main').evaluate(m => [...m.querySelectorAll('h1, h2, th, button, label')].map(e => e.matches('label') ? e.firstChild?.textContent ?? '' : e.textContent ?? '')
+    .concat([...m.querySelectorAll('[aria-label]')].map(e => e.getAttribute('aria-label') ?? '')).map(s => s.trim()).filter(Boolean));
+  const latin = arTexts.filter(s => /[A-Za-z]/.test(s.replace(/\b(Excel|CSV)\b/g, ''))); // product names only
+  check('Arabic: no Latin letters in headings, column headings, buttons and field labels', arTexts.length > 20 && latin.length === 0, latin.slice(0, 5).join(' | ') || `${arTexts.length} texts`);
+  await paste('tb-lines', '');
+  await page.getByRole('button', { name: 'اللغة' }).click(); await settle();
+  check('back to English: same screen in English', await page.getByRole('heading', { name: 'Go-live cut-over' }).count() === 1 && await section('plan').locator('[data-status="draft"]').innerText() === 'draft');
+
   // --- Opening trial balance pasted as copied from Excel (tab-separated), with two bad rows.
   const tbBad = ['Account code\tDebit\tCredit\tNote', '1010\t100000\t0\tBank (fixture)', '1200\t30000\t0\tReceivables (fixture)', '9999\t5\t0\tUnknown account', '3000\t7\t7\tBoth sides', '3000\t0\t130000\tEquity (fixture)'].join('\n');
   await paste('tb-lines', tbBad);
@@ -112,6 +131,17 @@ try {
   const opened = (await call('GET', '/finance/cutover-plans', F)).find(p => p.id === plan.id);
   check('opening journal posted on the cut-over date', Boolean(opened?.gl_batch_id) && String(opened?.status) === 'opened', JSON.stringify({ status: opened?.status, gl_batch_id: opened?.gl_batch_id }));
   await page.screenshot({ path: `${OUT}/cutover_${RUN}.png`, fullPage: true });
+
+  // --- R1.2: the opened plan in Arabic: status, reconciliation checks, section tables and the retention panel.
+  await page.getByRole('button', { name: 'Language' }).click(); await settle();
+  check('Arabic: opened plan status and reconciliation checks translated', await section('plan').locator('[data-status="opened"]').innerText() === 'مفتوحة للتشغيل'
+    && /العملاء \(المدينون\)/.test(await section('reconciliation').innerText()) && /توازن ميزان المراجعة/.test(await section('reconciliation').innerText()));
+  check('Arabic: section and retention panels translated', await page.getByRole('heading', { name: 'ميزان المراجعة الافتتاحي' }).count() === 1
+    && await page.getByRole('heading', { name: 'المحتجزات الافتتاحية' }).count() === 1 && /لا توجد سجلات بعد/.test(await section('opening-retention').innerText()));
+  const arOpened = await page.locator('main').evaluate(m => [...m.querySelectorAll('h1, h2, th, button')].map(e => (e.textContent ?? '').trim()).filter(Boolean));
+  check('Arabic: no Latin letters in headings, column headings and buttons of the opened plan', arOpened.length > 20 && !arOpened.some(s => /[A-Za-z]/.test(s)),
+    arOpened.filter(s => /[A-Za-z]/.test(s)).slice(0, 5).join(' | ') || `${arOpened.length} texts`);
+  await page.screenshot({ path: `${OUT}/cutover_ar_${RUN}.png`, fullPage: true });
   check('no 5xx from the API', serverErrors.length === 0, serverErrors.join(' | '));
   check('no browser console errors besides refused actions', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));
 } catch (e) {

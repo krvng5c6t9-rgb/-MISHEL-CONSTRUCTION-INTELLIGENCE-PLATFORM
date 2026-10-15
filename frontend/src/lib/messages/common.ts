@@ -1,0 +1,53 @@
+// R1.2 messages shared by every screen: the record table and the reference drop-downs. Arabic must have exactly the
+// English keys. {name} marks a value filled in by t(key, { name }).
+export const en = {
+  'table.empty': 'Nothing recorded yet.',
+  'ref.select': 'Select {kind}',
+  'ref.contract': 'Contract #{id}',
+  'ref.revision': 'Rev {rev}',
+  'ref.projects': 'projects',
+  'ref.clients': 'clients',
+  'ref.vendors': 'vendors',
+  'ref.currencies': 'currencies',
+  'ref.users': 'users',
+  'ref.costCodes': 'costCodes',
+  'ref.contracts': 'contracts',
+  'ref.subcontracts': 'subcontracts',
+  'ref.documents': 'documents',
+  'ref.activities': 'activities',
+  'ref.warehouses': 'warehouses',
+  'ref.inventoryItems': 'inventoryItems',
+  'projectStatus.lead': 'Lead',
+  'projectStatus.tender': 'Tender',
+  'projectStatus.awarded': 'Awarded',
+  'projectStatus.execution': 'Execution',
+  'projectStatus.closeout': 'Close-out',
+  'projectStatus.closed': 'Closed',
+  'projectStatus.cancelled': 'Cancelled'
+} as const;
+
+export const ar: Record<keyof typeof en, string> = {
+  'table.empty': 'لا توجد سجلات بعد.',
+  'ref.select': 'اختر {kind}',
+  'ref.contract': 'عقد رقم {id}',
+  'ref.revision': 'إصدار {rev}',
+  'ref.projects': 'المشروع',
+  'ref.clients': 'العميل',
+  'ref.vendors': 'المورد',
+  'ref.currencies': 'العملة',
+  'ref.users': 'المستخدم',
+  'ref.costCodes': 'بند التكلفة',
+  'ref.contracts': 'العقد',
+  'ref.subcontracts': 'عقد الباطن',
+  'ref.documents': 'المستند',
+  'ref.activities': 'النشاط',
+  'ref.warehouses': 'المخزن',
+  'ref.inventoryItems': 'الصنف',
+  'projectStatus.lead': 'فرصة',
+  'projectStatus.tender': 'مرحلة العطاء',
+  'projectStatus.awarded': 'تمت الترسية',
+  'projectStatus.execution': 'قيد التنفيذ',
+  'projectStatus.closeout': 'الإقفال',
+  'projectStatus.closed': 'مغلق',
+  'projectStatus.cancelled': 'ملغى'
+};

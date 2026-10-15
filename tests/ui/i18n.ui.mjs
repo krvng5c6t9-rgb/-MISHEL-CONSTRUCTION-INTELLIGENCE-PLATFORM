@@ -1,9 +1,10 @@
 // R1.1 (MP-06 §1) browser verification of the bilingual shell: Arabic is the default with right-to-left direction;
 // the language switch changes language and direction on the sign-in screen and in the application shell, persists
-// across reloads, and every one of the 34 navigation items is translated in both languages. Also checks that the
-// Arabic and English dictionaries in frontend/src/lib/i18n.tsx have exactly the same keys.
+// across reloads, every one of the 34 navigation items is translated in both languages, and the landing dashboard is in
+// Arabic (R1.2). Also checks that the
+// Arabic and English dictionaries in frontend/src/lib/messages/*.ts have the same keys and placeholders.
 // Run by tests/e2e/run_from_zero.sh when UI_CHECK=1 (CI does).
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const BASE = process.env.UI_BASE ?? 'http://localhost:4173';
@@ -18,14 +19,32 @@ const EN_NAV = ['Dashboard', 'Projects', 'Project Controls', 'Payments & Certifi
   'Executive Dashboard', 'Reports', 'Portals', 'Runtime Validation', 'AI Platform', 'Automation / Integrations', 'Knowledge / RAG', 'Commercial SaaS'];
 const ARABIC = /[؀-ۿ]/, LATIN = /[A-Za-z]/;
 
-// Static: both dictionaries have the same keys, no duplicates.
-const src = readFileSync(new URL('../../frontend/src/lib/i18n.tsx', import.meta.url), 'utf8');
-const block = (start, end) => src.slice(src.indexOf(start), src.indexOf(end, src.indexOf(start)));
-const keys = (b) => [...b.matchAll(/^\s*'([a-zA-Z]+\.[a-zA-Z]+)':/gm)].map(m => m[1]);
-const enKeys = keys(block('const en = {', '} as const;')), arKeys = keys(block('const ar: Record<MessageKey, string> = {', '};'));
-const dup = (a) => a.filter((k, i) => a.indexOf(k) !== i);
-check('dictionaries: same keys in Arabic and English, no duplicates', enKeys.length > 0 && enKeys.length === arKeys.length
-  && enKeys.every(k => arKeys.includes(k)) && !dup(enKeys).length && !dup(arKeys).length, `en ${enKeys.length}, ar ${arKeys.length}`);
+// Static: in every dictionary file the Arabic and English keys are the same, each key has the same {placeholders} in both
+// languages, and no key is defined twice or in two files (frontend/src/lib/messages/*.ts, merged by i18n.tsx).
+const dir = new URL('../../frontend/src/lib/messages/', import.meta.url);
+const files = readdirSync(dir).filter(f => f.endsWith('.ts'));
+const parse = (b) => [...b.matchAll(/^\s*'([a-zA-Z]+\.[a-zA-Z]+)': '((?:[^'\\]|\\.)*)',?$/gm)].map(m => [m[1], m[2]]);
+const allKeys = [], issues = [];
+for (const f of files) {
+  const src = readFileSync(new URL(f, dir), 'utf8');
+  const enStart = src.indexOf('export const en = {'), arStart = src.indexOf('export const ar: Record<keyof typeof en, string> = {');
+  const enSrc = src.slice(enStart, src.indexOf('} as const;', enStart)), arSrc = src.slice(arStart, src.indexOf('\n};', arStart));
+  const en = parse(enSrc), ar = new Map(parse(arSrc));
+  const entries = (b) => (b.match(/^\s*'/gm) ?? []).length;   // every entry line must be parsed
+  if (entries(enSrc) !== en.length || entries(arSrc) !== ar.size) issues.push(`${f}: unparsed entry lines`);
+  const holes = (s) => [...s.matchAll(/\{(\w+)\}/g)].map(m => m[1]).sort().join(',');
+  if (enStart < 0 || arStart < 0 || !en.length) issues.push(`${f}: dictionaries not found`);
+  if (en.length !== ar.size) issues.push(`${f}: en ${en.length} keys, ar ${ar.size}`);
+  for (const [k, v] of en) {
+    if (!ar.has(k)) issues.push(`${f}: ${k} missing in Arabic`);
+    else if (holes(v) !== holes(ar.get(k))) issues.push(`${f}: ${k} placeholders differ`);
+    else if (!/[؀-ۿ]/.test(ar.get(k)) && !/^[A-Za-z0-9 ]+$/.test(ar.get(k))) issues.push(`${f}: ${k} Arabic text has no Arabic letters`);
+    allKeys.push(k);
+  }
+}
+const dup = allKeys.filter((k, i) => allKeys.indexOf(k) !== i);
+check('dictionaries: same keys and placeholders in Arabic and English, no key defined twice', files.length >= 4 && !issues.length && !dup.length,
+  issues.concat(dup.map(k => `duplicate ${k}`)).slice(0, 5).join(' | ') || `${files.length} files, ${allKeys.length} keys`);
 
 let browser;
 try {
@@ -63,6 +82,16 @@ try {
     ar.filter(t => !ARABIC.test(t) || LATIN.test(t)).join(' | ') || `${ar.length} items`);
   check('Arabic navigation labels are distinct', new Set(ar).size === ar.length);
   check('logout labelled in Arabic', await page.getByRole('button', { name: 'تسجيل الخروج' }).count() === 1);
+  // R1.2: the landing dashboard in Arabic; contract value is totalled per currency (never added across currencies).
+  const dash = page.locator('main');
+  await dash.locator('[data-section="kpis"] .kpi-card').first().waitFor();
+  const kpis = await dash.locator('[data-section="kpis"] small').allInnerTexts();
+  check('landing dashboard in Arabic (title, KPI labels, by-status panel)', await page.getByRole('heading', { name: 'لوحة التحكم' }).count() === 1
+    && await page.getByRole('heading', { name: 'المشروعات حسب الحالة' }).count() === 1 && kpis[0] === 'المشروعات'
+    && kpis.slice(1).every(s => /^قيمة العقود الحالية \([A-Z]{3}\)$/.test(s)), kpis.join(' | '));
+  const statusCells = await dash.locator('[data-section="by-status"] td:first-child').allInnerTexts();
+  check('project statuses shown in Arabic', statusCells.length > 0 && statusCells.every(s => ARABIC.test(s) && !LATIN.test(s)), statusCells.join(' | '));
+  check('one contract-value figure per currency', new Set(kpis.slice(1)).size === kpis.length - 1 && kpis.length >= 2, kpis.join(' | '));
 
   await page.getByRole('button', { name: 'اللغة' }).click(); await page.waitForTimeout(400);
   h = await html();
