@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { query, getClient, releaseClient } from '../../db/pool.js';
 import { asyncHandler } from '../../middleware/asyncHandler.js';
 import { authorize } from '../../middleware/authorize.js';
-import { AppError } from '../../middleware/errors.js';
+import { AppError, mapPgError } from '../../middleware/errors.js';
 import { postOpeningRetentionReleaseToGl } from '../../services/glPosting.service.js';
 
 // Stage 34 / GC-24 / DEC-019 (migration 082): go-live cut-over. The preparer loads the opening trial balance, opening
@@ -53,20 +53,45 @@ cutoverRouter.get('/cutover-plans/:id', asyncHandler(async (req, res) => {
   res.json({ success: true, data: { plan: p, ...detail } });
 }));
 for (const [path, s] of Object.entries(sections)) {
+  // Stage 36 / F-50: every row is validated (shape, then the database under a savepoint) and reported individually, so a
+  // preview (?dry_run=1, always rolled back) shows exactly what the load would accept; a real load is still all-or-nothing.
   cutoverRouter.post(`/cutover-plans/:id/${path}`, authorize('finance', 'manage'), asyncHandler(async (req, res) => {
-    const rows = z.array(s.schema).min(1).max(5000).parse(req.body?.rows);
+    const raw = z.array(z.unknown()).min(1).max(5000).parse(req.body?.rows);
+    const dryRun = req.query.dry_run === '1';
     const p = await plan(pid(req.params.id), req.user!.org_id);
     const client = await getClient();
     try {
       await client.query('begin');
-      const out = [];
-      for (const r of rows as Record<string, unknown>[]) {
-        const vals = s.cols.map(c => r[c] ?? null);
-        out.push((await client.query(`insert into ${s.table}(org_id, plan_id, ${s.cols.join(', ')}) values ($1, $2, ${s.cols.map((_, i) => `$${i + 3}`).join(', ')}) returning *`,
-          [p.org_id, p.id, ...vals])).rows[0]);
+      const results: { row: number; ok: boolean; error?: string; data?: unknown }[] = [];
+      for (const [i, item] of raw.entries()) {
+        const parsed = s.schema.safeParse(item);
+        if (!parsed.success) {
+          results.push({ row: i + 1, ok: false, error: parsed.error.issues.map(x => `${x.path.join('.') || 'row'}: ${x.message}`).join('; ') });
+          continue;
+        }
+        const r = parsed.data as Record<string, unknown>;
+        await client.query('savepoint row_check');
+        try {
+          const ins = await client.query(`insert into ${s.table}(org_id, plan_id, ${s.cols.join(', ')}) values ($1, $2, ${s.cols.map((_, j) => `$${j + 3}`).join(', ')}) returning *`,
+            [p.org_id, p.id, ...s.cols.map(c => r[c] ?? null)]);
+          await client.query('release savepoint row_check');
+          results.push({ row: i + 1, ok: true, data: ins.rows[0] });
+        } catch (e: any) {
+          await client.query('rollback to savepoint row_check');
+          const mapped = typeof e?.code === 'string' ? mapPgError(e.code, e) : null;
+          if (!mapped) throw e;
+          results.push({ row: i + 1, ok: false, error: mapped.message });
+        }
+      }
+      const failed = results.filter(x => !x.ok).length;
+      if (dryRun || failed) {
+        await client.query('rollback');
+        res.status(dryRun ? 200 : 422).json({ success: !failed, ...(failed && !dryRun ? { error: `${failed} of ${results.length} rows refused; nothing was loaded` } : {}),
+          data: { dry_run: dryRun, rows: results.map(({ data: _d, ...x }) => x), accepted: results.length - failed, refused: failed } });
+        return;
       }
       await client.query('commit');
-      res.status(201).json({ success: true, data: out });
+      res.status(201).json({ success: true, data: results.map(x => x.data) });
     } catch (e) { await client.query('rollback'); throw e; } finally { await releaseClient(client); }
   }));
   cutoverRouter.delete(`/cutover-plans/:id/${path}/:rowId`, authorize('finance', 'manage'), asyncHandler(async (req, res) => {

@@ -46,7 +46,7 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   res.status(500).json({ success: false, error: 'Internal server error', ref });
 };
 
-function mapPgError(code: string, err: { message?: string; constraint?: string }) {
+export function mapPgError(code: string, err: { message?: string; constraint?: string }) {
   switch (code) {
     // Business rules raised by triggers/functions (RAISE EXCEPTION): authored messages, safe to show.
     case 'P0001': return { status: 422, message: err.message ?? 'Business rule violation' };

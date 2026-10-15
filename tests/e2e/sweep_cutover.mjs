@@ -61,6 +61,12 @@ try {
   const tb = [['bank', 500000, 0], ['ar', 120000, 0], ['ret', 30000, 0], ['sadv', 8000, 0], ['ap', 0, 40000], ['sap', 0, 25000], ['sret', 0, 15000], ['cadv', 0, 60000], ['eq', 0, 518000]];
   await run('opening trial balance loaded (9 lines)', async () => must(await load('tb-lines', tb.map(([a, debit, credit]) => ({ account_id: acc[a], debit, credit, note: `Opening ${a} (fixture)` }))), 'tb'));
   await expectStatus('a trial balance line with both debit and credit is refused', () => load('tb-lines', [{ account_id: acc.bank, debit: 1, credit: 1 }]), 422);
+  const dry = await api('POST', `/finance/cutover-plans/${plan.id}/tb-lines?dry_run=1`, E, { rows: [{ account_id: acc.bank, debit: 5, credit: 0 }, { account_id: acc.bank, debit: 1, credit: 1 }, { debit: 'x' }] });
+  const after = must(await api('GET', `/finance/cutover-plans/${plan.id}`, E), 'plan detail')['tb-lines'].length;
+  check('dry run checks every row (1 accepted, 2 refused with their reasons) and saves nothing', dry.status === 200 && dry.body?.data?.accepted === 1 && dry.body?.data?.refused === 2
+    && dry.body.data.rows[1].ok === false && /check constraint/.test(dry.body.data.rows[1].error) && after === 9, `HTTP ${dry.status} ${JSON.stringify(dry.body?.data ?? dry.body).slice(0, 200)} lines ${after}`);
+  const partial = await api('POST', `/finance/cutover-plans/${plan.id}/tb-lines`, E, { rows: [{ account_id: acc.bank, debit: 5, credit: 0 }, { account_id: acc.bank, debit: 1, credit: 1 }] });
+  check('a load with any refused row loads nothing', partial.status === 422 && /1 of 2 rows refused/.test(partial.body?.error ?? '') && must(await api('GET', `/finance/cutover-plans/${plan.id}`, E), 'detail')['tb-lines'].length === 9, `HTTP ${partial.status} ${partial.body?.error ?? ''}`);
   must(await load('receivables', [{ client_id: client, project_id: project, contract_id: contract, reference: `INV-OLD-17-${TAG}`, amount: 70000, due_date: last, gl_account_id: acc.ar }]), 'rec 1');
   must(await load('payables', [{ vendor_id: supplier, project_id: project, reference: `SUP-OLD-9-${TAG}`, amount: 40000, gl_account_id: acc.ap },
     { vendor_id: vendor, project_id: project, subcontract_id: sc, reference: `SUB-CERT-6-${TAG}`, amount: 25000, gl_account_id: acc.sap }]), 'payables');
