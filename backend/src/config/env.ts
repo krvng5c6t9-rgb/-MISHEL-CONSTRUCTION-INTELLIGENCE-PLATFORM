@@ -27,7 +27,7 @@ const envSchema = z.object({
   // Stage 32 / DEC-015: multi-factor sign-in for privileged users (admin, finance post/approve/manage, DOA approvers).
   // 'required' is the decided policy; 'off' exists only for local test servers and is refused in production.
   MFA_ENFORCEMENT: z.enum(['required', 'off']).default('required'),
-  MFA_ISSUER: z.string().min(2).max(60).default('MISHEL ERP'),
+  MFA_ISSUER: z.string().min(2).max(60).default('MARC'),
   // Key for TOTP secrets at rest. Set it in production (independent of JWT_SECRET, so a JWT key rotation never
   // locks users out); without it a key derived from JWT_SECRET is used (development only, see server.ts).
   MFA_ENCRYPTION_KEY: z.string().min(32).optional()

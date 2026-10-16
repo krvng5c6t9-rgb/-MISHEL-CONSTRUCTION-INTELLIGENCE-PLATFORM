@@ -48,6 +48,7 @@ try {
   // --- Enrolment.
   const en = await run('enrolment returns a secret and an authenticator URI', async () => { const r = await mfa('POST', '/auth/mfa/enroll', null, { challenge_token: f1.data.challenge_token }); if (!r.ok) throw new Error(JSON.stringify(r.body)); return r.data; });
   check('authenticator URI is a standard otpauth TOTP URI (SHA1, 6 digits, 30 s)', /^otpauth:\/\/totp\/.+secret=[A-Z2-7]+.*digits=6&period=30/.test(en.otpauth_uri), en.otpauth_uri);
+  check('authenticator entry is labelled with the brand MARC (default issuer, DEC-020)', /^otpauth:\/\/totp\/MARC%3A[^?]+\?.*&issuer=MARC&/.test(en.otpauth_uri), en.otpauth_uri.replace(/secret=[A-Z2-7]+/, 'secret=…'));
   await expectStatus('a wrong code does not complete the set-up', () => mfa('POST', '/auth/mfa/enroll/confirm', null, { challenge_token: f1.data.challenge_token, code: totp(en.secret, 5) }), 401);
   const done = await run('the code from the authenticator completes the set-up', async () => { const r = await mfa('POST', '/auth/mfa/enroll/confirm', null, { challenge_token: f1.data.challenge_token, code: totp(en.secret) }); if (!r.ok) throw new Error(JSON.stringify(r.body)); return r.data; });
   check('set-up returns a session and ten one-time recovery codes', !!done.token && Array.isArray(done.recovery_codes) && done.recovery_codes.length === 10, String(done.recovery_codes?.length));

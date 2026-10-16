@@ -1,7 +1,8 @@
 // R1.1 shell, navigation, sign-in and two-step verification messages. Arabic must have exactly the English keys.
+// Brand MARC (owner decision DEC-020): written in Latin letters in both languages, as a brand; the descriptor is translated.
 export const en = {
-  'brand.name': 'MISHEL',
-  'brand.tagline': 'Construction Enterprise OS',
+  'brand.name': 'MARC',
+  'brand.tagline': 'Integrated Construction Enterprise System',
   'shell.logout': 'Logout',
   'shell.switchLanguage': 'العربية',
   'shell.languageLabel': 'Language',
@@ -67,8 +68,8 @@ export const en = {
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
-  'brand.name': 'ميشيل',
-  'brand.tagline': 'منظومة إدارة شركات المقاولات',
+  'brand.name': 'MARC',
+  'brand.tagline': 'المنظومة المتكاملة لشركات المقاولات',
   'shell.logout': 'تسجيل الخروج',
   'shell.switchLanguage': 'English',
   'shell.languageLabel': 'اللغة',

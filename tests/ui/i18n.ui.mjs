@@ -82,6 +82,11 @@ try {
     ar.filter(t => !ARABIC.test(t) || LATIN.test(t)).join(' | ') || `${ar.length} items`);
   check('Arabic navigation labels are distinct', new Set(ar).size === ar.length);
   check('logout labelled in Arabic', await page.getByRole('button', { name: 'تسجيل الخروج' }).count() === 1);
+  // Brand MARC (owner decision DEC-020): Latin letters in both languages; the descriptor follows the language.
+  const brand = async () => page.evaluate(() => ({ name: document.querySelector('.brand strong')?.textContent, tagline: document.querySelector('.brand small')?.textContent, title: document.title }));
+  const arBrand = await brand();
+  check('brand in Arabic: MARC with the Arabic descriptor, page title likewise', arBrand.name === 'MARC' && arBrand.tagline === 'المنظومة المتكاملة لشركات المقاولات'
+    && arBrand.title === 'MARC — المنظومة المتكاملة لشركات المقاولات', JSON.stringify(arBrand));
   // Layout follows the language (CC-068): in Arabic the navigation is on the right and the content right-to-left.
   const side = async () => page.evaluate(() => ({ nav: document.querySelector('aside').getBoundingClientRect().left, main: document.querySelector('main').getBoundingClientRect().left,
     contentDir: getComputedStyle(document.querySelector('main')).direction, navDir: getComputedStyle(document.querySelector('aside')).direction }));
@@ -105,6 +110,9 @@ try {
   check('all 34 navigation items in English, in order', JSON.stringify(en) === JSON.stringify(EN_NAV),
     en.filter((t, i) => t !== EN_NAV[i]).join(' | ') || `${en.length} items`);
   check('logout labelled in English', await page.getByRole('button', { name: 'Logout' }).count() === 1);
+  const enBrand = await brand();
+  check('brand in English: MARC with the English descriptor, page title likewise', enBrand.name === 'MARC' && enBrand.tagline === 'Integrated Construction Enterprise System'
+    && enBrand.title === 'MARC — Integrated Construction Enterprise System', JSON.stringify(enBrand));
   const enSide = await side();
   check('English layout: navigation on the left, content and navigation left-to-right', enSide.nav < enSide.main && enSide.contentDir === 'ltr' && enSide.navDir === 'ltr', JSON.stringify(enSide));
   await page.getByRole('link', { name: 'Go-live cut-over' }).click(); await page.waitForURL(/\/cutover/);

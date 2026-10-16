@@ -70,6 +70,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = dir;
+    document.title = `${format(lang, 'brand.name')} — ${format(lang, 'brand.tagline')}`;
   }, [lang, dir]);
   const setLang = useCallback((next: Lang) => {
     try { window.localStorage.setItem(STORAGE_KEY, next); } catch { /* not persisted; still switches */ }
