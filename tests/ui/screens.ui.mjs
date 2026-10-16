@@ -1,8 +1,9 @@
-// R1.2 batch 4 (CC-071) browser verification of the commercial screens in both languages: Projects, CRM, Tendering,
-// BOQ, Contracts, Claims, Subcontracts. For each screen and language: the title, the document direction, no Latin
+// R1.2 batches 4-5 (CC-071, CC-072) browser verification of translated screens in both languages: Projects, CRM, Tendering,
+// BOQ, Contracts, Claims, Subcontracts, Cost Control, Approvals, Inventory, Procurement, Finance. For each screen and language: the title, the document direction, no Latin
 // letters in the Arabic headings / column headings / buttons / field labels / placeholders / coded drop-down options,
 // content within its column, no console errors and no 5xx. CRM end to end in Arabic: client, lead with a source and a
-// project type (refused by the API before CC-071 because both were free text) and a site-visit activity.
+// project type (refused by the API before CC-071 because both were free text) and a site-visit activity; Finance in Arabic:
+// a manual journal with a reason category (refused before CC-072) and labelled General Ledger columns.
 // Run by tests/e2e/run_from_zero.sh when UI_CHECK=1 (CI does).
 import { createHash } from 'node:crypto';
 import { chromium } from 'playwright';
@@ -21,7 +22,12 @@ const SCREENS = [
   ['/boq', 'BOQ & Rate Build-up', 'المقايسات وتحليل الأسعار'],
   ['/contracts', 'Contracts & Variations', 'العقود وأوامر التغيير'],
   ['/claims', 'Claims & EOT', 'المطالبات ومد المدة'],
-  ['/subcontracts', 'Subcontracts', 'مقاولو الباطن']
+  ['/subcontracts', 'Subcontracts', 'مقاولو الباطن'],
+  ['/cost-control', 'Cost Control', 'ضبط التكاليف'],
+  ['/approvals', 'Approvals', 'الاعتمادات'],
+  ['/inventory', 'Inventory & Warehouses', 'المخازن والمستودعات'],
+  ['/procurement', 'Procurement Control', 'ضبط المشتريات'],
+  ['/finance', 'Finance / GL / IPC / Payments', 'المالية / الأستاذ العام / المستخلصات / المدفوعات']
 ];
 
 let browser;
@@ -86,6 +92,26 @@ try {
       await activity.getByRole('button', { name: 'حفظ النشاط', exact: true }).click(); await page.waitForTimeout(1200);
       check('ar: CRM site-visit activity recorded', !(await alert()), await alert());
       await page.screenshot({ path: `${OUT}/screens_crm_ar_${RUN}.png`, fullPage: true });
+
+      // Finance in Arabic (CC-072): a manual journal is created from the screen with a chosen reason category (the
+      // screen used to send a category the API always refused); the General Ledger table has labelled debit AND credit.
+      await page.goto(`${BASE}/finance`); await page.waitForTimeout(1500);
+      const journal = page.locator('[data-section="journal"]');
+      const jDesc = `UI journal ${TAG}`;
+      await journal.getByPlaceholder('البيان').fill(jDesc);
+      await journal.getByLabel('فئة السبب').selectOption('reclassification');
+      await journal.getByLabel('الحساب المدين').selectOption({ index: 1 });
+      await journal.getByLabel('الحساب الدائن').selectOption({ index: 2 });
+      await journal.getByPlaceholder('المبلغ').fill('1');
+      await journal.getByLabel('العملة').selectOption({ index: 1 });
+      await journal.getByRole('button', { name: 'إنشاء القيد', exact: true }).click(); await page.waitForTimeout(1500);
+      const jStatus = (await page.locator('[role="status"]').count()) ? (await page.locator('[role="status"]').innerText()).trim() : '';
+      const jRow = page.locator('[data-section="table-fin.journals"] tbody tr', { hasText: jDesc });
+      check('ar: Finance manual journal created from the screen with its reason category (was refused before CC-072)', jStatus === 'تم إنشاء القيد' && await jRow.count() === 1 && /إعادة تبويب/.test(await jRow.innerText()),
+        (await alert()) || jStatus || '(no message)');
+      const glHead = (await page.locator('[data-section="table-fin.gl"] thead th').allInnerTexts()).map(s => s.trim());
+      check('ar: General Ledger table shows labelled debit and credit columns', glHead.includes('مدين') && glHead.includes('دائن') && !glHead.some(h => /_/.test(h)), glHead.join(' | '));
+      await page.screenshot({ path: `${OUT}/screens_finance_ar_${RUN}.png`, fullPage: true });
     }
     check(`${lang}: no 5xx from the API`, serverErrors.length === 0, serverErrors.slice(0, 3).join(' | '));
     check(`${lang}: no browser console errors`, consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));

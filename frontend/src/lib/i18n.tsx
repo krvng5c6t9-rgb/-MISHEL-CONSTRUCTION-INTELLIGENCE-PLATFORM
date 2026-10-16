@@ -15,6 +15,11 @@ import * as boq from './messages/boq';
 import * as contracts from './messages/contracts';
 import * as claims from './messages/claims';
 import * as subcontracts from './messages/subcontracts';
+import * as costControl from './messages/costControl';
+import * as approvals from './messages/approvals';
+import * as inventory from './messages/inventory';
+import * as procurement from './messages/procurement';
+import * as finance from './messages/finance';
 
 // R1.1 / R1.2 (MP-06 §1): Arabic-first, fully bilingual interface. Every user-visible string of a translated screen
 // comes from the dictionaries in ./messages (one file per area); the language also sets the document language and
@@ -24,10 +29,12 @@ export type Lang = 'ar' | 'en';
 const STORAGE_KEY = 'mishel.lang';
 
 const en = { ...shell.en, ...common.en, ...dashboard.en, ...cutover.en, ...values.en, ...revenue.en, ...payments.en, ...admin.en, ...projectControls.en,
-  ...projectsMsg.en, ...crm.en, ...tendering.en, ...boq.en, ...contracts.en, ...claims.en, ...subcontracts.en };
+  ...projectsMsg.en, ...crm.en, ...tendering.en, ...boq.en, ...contracts.en, ...claims.en, ...subcontracts.en,
+  ...costControl.en, ...approvals.en, ...inventory.en, ...procurement.en, ...finance.en };
 export type MessageKey = keyof typeof en;
 const ar: Record<MessageKey, string> = { ...shell.ar, ...common.ar, ...dashboard.ar, ...cutover.ar, ...values.ar, ...revenue.ar, ...payments.ar, ...admin.ar, ...projectControls.ar,
-  ...projectsMsg.ar, ...crm.ar, ...tendering.ar, ...boq.ar, ...contracts.ar, ...claims.ar, ...subcontracts.ar };
+  ...projectsMsg.ar, ...crm.ar, ...tendering.ar, ...boq.ar, ...contracts.ar, ...claims.ar, ...subcontracts.ar,
+  ...costControl.ar, ...approvals.ar, ...inventory.ar, ...procurement.ar, ...finance.ar };
 export type MessageVars = Record<string, string | number>;
 
 export const dictionaries: Record<Lang, Record<MessageKey, string>> = { en, ar };
