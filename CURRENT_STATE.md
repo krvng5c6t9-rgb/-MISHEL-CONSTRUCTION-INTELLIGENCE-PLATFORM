@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-069
+## Controlled Changes CC-001 → CC-070
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -101,6 +101,7 @@
 | CC-067 | Page contents in Arabic / English, batch 1: shared table / drop-downs, landing dashboard (stale claims and cross-currency sum removed), Go-live cut-over (R1.2) |
 | CC-068 | Revenue & Contract Position and Payments & Certification in Arabic / English; layout follows the language (navigation on the right in Arabic), wide tables no longer cover the navigation, numbers left-to-right (R1.2) |
 | CC-069 | Project Controls and Users / Roles / Permissions / DOA in Arabic / English; notices isolate English server messages (R1.2) |
+| CC-070 | CI red on CC-069 (static check read English Admin labels now in the dictionary): check fixed, local static script mirrors CI |
 
 **Owner approvals (R6):** A-001 master plan MP-01…MP-07; A-002 Stage 39 (CC-068), both 2026-10-15, signed Mishel Thabet Halim (`governance/registers/11_Approval_Register.csv`).
 

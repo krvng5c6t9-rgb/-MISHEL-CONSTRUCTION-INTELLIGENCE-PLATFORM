@@ -9,6 +9,9 @@ const roles=read('backend/src/modules/roles/roles.routes.ts');
 const app=read('frontend/src/App.tsx');
 const setup=read('frontend/src/pages/Setup.tsx');
 const admin=read('frontend/src/pages/Admin.tsx');
+// R1.2 (CC-070): screen labels live in the dictionary; the screen must use the key and the English label must be unchanged.
+const adminMsgs=read('frontend/src/lib/messages/admin.ts');
+const label=(key,text)=>admin.includes(`t('${key}')`)&&adminMsgs.includes(`'${key}': '${text}'`);
 ok('JWT org_id is validated',auth.includes('Invalid token organization'));
 ok('Authenticated user is loaded under signed tenant RLS context',auth.includes('withDbContext({ userId, orgId: tokenOrgId }'));
 ok('User lookup re-validates org_id',auth.includes('u.id = $1 and u.org_id = $2'));
@@ -20,9 +23,9 @@ ok('Bootstrap can create/reuse an organization without SQL',authRoutes.includes(
 ok('Bootstrap switches RLS tenant after organization resolution',authRoutes.includes("set_config('app.org_id'"));
 ok('First-run setup page is routed',app.includes('path="setup"') && app.includes("./pages/Setup"));
 ok('First-run setup posts bootstrap token',setup.includes('apiBootstrapAdmin') && setup.includes('bootstrap_token'));
-ok('Admin UI can create roles',admin.includes('Create Role') && admin.includes("apiPost('/roles'"));
-ok('Admin UI can manage role permissions',admin.includes('Save Role Permissions') && admin.includes('apiPut(`/roles/${selectedRole}/permissions`'));
+ok('Admin UI can create roles',label('admin.createRole','Create Role') && admin.includes("apiPost('/roles'"));
+ok('Admin UI can manage role permissions',label('admin.savePermissions','Save Role Permissions') && admin.includes('apiPut(`/roles/${selectedRole}/permissions`'));
 // CC-017: confirmation is a separate step by a different user (draft -> confirm), no combined save-and-confirm.
-ok('Admin UI can edit and confirm DOA',admin.includes('Save draft') && admin.includes('/confirm`') && admin.includes('/approvals/configuration/doa/') && !admin.includes('confirm:true'));
+ok('Admin UI can edit and confirm DOA',label('admin.saveDraft','Save draft') && admin.includes('/confirm`') && admin.includes('/approvals/configuration/doa/') && !admin.includes('confirm:true'));
 if(failures.length){console.error(`REV20 REDTEAM FAIL — ${failures.length} failure(s)`);process.exit(1)}
 console.log(`REV20 REDTEAM PASS — ${passed}/${passed}`);
