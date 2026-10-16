@@ -29,7 +29,7 @@ export function ReferenceSelect({ kind, value, onChange, placeholder, projectId,
   const [data, setData] = useState<any>({}); const [error, setError] = useState('');
   useEffect(() => { loadRefs().then(setData).catch(e => setError(e.message)); }, []);
   const rows = useMemo(() => { const a = data[kind] || []; return projectId ? a.filter((x: any) => x.project_id == null || String(x.project_id) === String(projectId)) : a; }, [data, kind, projectId]);
-  return <select value={value ?? ''} onChange={e => onChange(e.target.value)} title={error || placeholder}>
+  return <select value={value ?? ''} onChange={e => onChange(e.target.value)} title={error || placeholder} aria-label={placeholder || t('ref.select', { kind: t(`ref.${kind}` as MessageKey) })}>
     {allowEmpty && <option value="">{error || placeholder || t('ref.select', { kind: t(`ref.${kind}` as MessageKey) })}</option>}
     {rows.map((x: any) => <option key={x.id} value={x.id}>{label(kind, x, t)}</option>)}
   </select>;

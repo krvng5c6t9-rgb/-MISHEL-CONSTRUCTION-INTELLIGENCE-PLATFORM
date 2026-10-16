@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { uiHas } from './lib/ui-label.mjs';
 const must=[
  // CC-003: placeholder DOA rows are deactivated (DELETE violated FKs from approval history and was a no-op under RLS).
  ['migration 020','database/migrations/020_redteam_closure.sql','UPDATE delegation_of_authority SET is_active=false'],
@@ -12,7 +13,7 @@ const must=[
  ['Subcontract workflow UI','frontend/src/pages/Subcontracts.tsx','QS Certify'],
  ['Inventory transfer UI','frontend/src/pages/Inventory.tsx','Warehouse Transfer'],
 ];
-let bad=0;for(const [name,file,needle] of must){const ok=fs.existsSync(file)&&fs.readFileSync(file,'utf8').includes(needle);console.log(`${ok?'PASS':'FAIL'} ${name}`);if(!ok)bad++;}
+let bad=0;for(const [name,file,needle] of must){const src=fs.existsSync(file)?fs.readFileSync(file,'utf8'):null;const ok=src!==null&&(file.startsWith('frontend/src/pages/')?uiHas(src,needle):src.includes(needle));console.log(`${ok?'PASS':'FAIL'} ${name}`);if(!ok)bad++;}
 const junk=[];function walk(d){for(const x of fs.readdirSync(d,{withFileTypes:true})){const p=`${d}/${x.name}`;if(x.isDirectory()){if(x.name!=='node_modules')walk(p)}else if(/\.(tmp|bak)$/.test(x.name)||x.name.endsWith('~'))junk.push(p)}}walk('.');console.log(junk.length?'FAIL junk files '+junk.join(', '):'PASS no temp/bak artifacts');if(junk.length)bad++;
 
 

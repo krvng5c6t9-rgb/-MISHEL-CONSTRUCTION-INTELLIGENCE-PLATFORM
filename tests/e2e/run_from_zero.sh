@@ -97,6 +97,7 @@ if [ "${UI_CHECK:-0}" = "1" ]; then
   UI_BASE="http://localhost:$UI_PORT_" UI_API="$API_BASE" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/revenue.ui.mjs" | tee "out/ui/revenue_ui_$RUN.txt"
   UI_BASE="http://localhost:$UI_PORT_" UI_API="$API_BASE" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/cutover.ui.mjs" | tee "out/ui/cutover_ui_$RUN.txt"
   UI_BASE="http://localhost:$UI_PORT_" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/i18n.ui.mjs" | tee "out/ui/i18n_ui_$RUN.txt"
+  UI_BASE="http://localhost:$UI_PORT_" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/screens.ui.mjs" | tee "out/ui/screens_ui_$RUN.txt"
 fi
 
 # Stage 32 / DEC-015: multi-factor sign-in against a second API server with the production setting MFA_ENFORCEMENT=required
