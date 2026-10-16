@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiGet, apiPost } from '../lib/api';
-import { Num, Row, Table, ask, fmt } from '../components/RecordTable';
+import { NotLoaded, Num, Row, Table, ask, fmt } from '../components/RecordTable';
 import { useI18n, type MessageKey } from '../lib/i18n';
 
 // Stage 23 (F-38): client IPC certification / dispute / resubmission, client advance positions, and subcontract
@@ -78,7 +78,7 @@ export function CommercialPayments() {
       <header className="page-header"><div><p className="eyebrow">{t('payments.eyebrow')}</p><h1>{t('payments.title')}</h1>
         <p>{t('payments.intro')}</p></div></header>
       {err && <div className="notice" role="alert">{err}</div>}
-      {unloaded.length > 0 && <div className="notice muted" data-section="unloaded">{t('payments.notLoaded', { list: unloaded.map(([k, m]) => `${t(k)} (${m})`).join('; ') })}</div>}
+      {unloaded.length > 0 && <div className="notice muted" data-section="unloaded"><NotLoaded text={t('payments.notLoaded', { list: '' })} items={unloaded.map(([k, m]): [string, string] => [t(k), m])} /></div>}
 
       <div className="panel" data-section="ipcs"><h2>{t('payments.ipcs')}</h2>
         <Table rows={withStatus(ipcs)} cols={cols([['ipc_no', 'payments.colIpc'], ['project_name', 'payments.colProject'], ['contract_ref', 'payments.colContract'], ['status_label', 'payments.colStatus'], ['net_amount_due', 'payments.colSubmittedNet'],

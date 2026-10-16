@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiGet, apiPost, apiDelete } from '../lib/api';
-import { Num, Row, Table, ask } from '../components/RecordTable';
+import { NotLoaded, Num, Row, Table, ask } from '../components/RecordTable';
 import { useI18n, type MessageKey } from '../lib/i18n';
 
 // Stage 33 (DEC-009 flows were API-only): revenue recognition runs, price estimates, client retention release and the
@@ -54,7 +54,7 @@ export function RevenuePosition() {
       <header className="page-header"><div><p className="eyebrow">{t('revenue.eyebrow')}</p><h1>{t('revenue.title')}</h1>
         <p>{t('revenue.intro')}</p></div></header>
       {err && <div className="notice" role="alert">{err}</div>}
-      {unloaded.length > 0 && <div className="notice muted" data-section="unloaded">{t('revenue.notLoaded', { list: unloaded.map(([k, m]) => `${t(k)} (${m})`).join('; ') })}</div>}
+      {unloaded.length > 0 && <div className="notice muted" data-section="unloaded"><NotLoaded text={t('revenue.notLoaded', { list: '' })} items={unloaded.map(([k, m]): [string, string] => [t(k), m])} /></div>}
 
       <div className="panel">
         <label>{t('revenue.contract')} <select aria-label={t('revenue.contract')} value={contractId} onChange={e => setContractId(Number(e.target.value))}>

@@ -26,3 +26,9 @@ export function Table({ rows, cols, actions }: { rows: Row[]; cols: [string, str
     </div>
   );
 }
+
+// Sections a user may not read, named on screen: "<text><section> (<server message>); …". The server message is isolated
+// (<bdi>) so an English message keeps its own order inside an Arabic sentence (CC-069).
+export function NotLoaded({ text, items }: { text: string; items: [string, string][] }) {
+  return <>{text}{items.map(([name, msg], i) => <span key={name}>{i ? '; ' : ''}{name} (<bdi>{msg}</bdi>)</span>)}</>;
+}

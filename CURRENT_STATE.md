@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-068
+## Controlled Changes CC-001 → CC-069
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -100,6 +100,7 @@
 | CC-066 | Bilingual shell: translation framework, Arabic default, navigation / sign-in / MFA in Arabic and English (R1.1) |
 | CC-067 | Page contents in Arabic / English, batch 1: shared table / drop-downs, landing dashboard (stale claims and cross-currency sum removed), Go-live cut-over (R1.2) |
 | CC-068 | Revenue & Contract Position and Payments & Certification in Arabic / English; layout follows the language (navigation on the right in Arabic), wide tables no longer cover the navigation, numbers left-to-right (R1.2) |
+| CC-069 | Project Controls and Users / Roles / Permissions / DOA in Arabic / English; notices isolate English server messages (R1.2) |
 
 **Owner approvals (R6):** A-001 master plan MP-01…MP-07; A-002 Stage 39 (CC-068), both 2026-10-15, signed Mishel Thabet Halim (`governance/registers/11_Approval_Register.csv`).
 
@@ -165,15 +166,15 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | sweep_revenue_recognition.mjs | 28 | DEC-009 revenue run: price estimates, cost-to-cost progress, reversal, onerous provision, contract asset/liability, SoD, hash |
 | probe_shared_guards.py | 119 tables | G-015 shared-trigger runtime probe (gate step) |
 | gc_status_check.py | 167 steps | F-25 Golden Case statuses agree with gate suites (gate step) |
-| project_controls.ui.mjs | 23 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI) |
+| project_controls.ui.mjs | 29 | Browser: Project Controls browsing + decision flows by two people (UI_CHECK=1, in CI); the screen in Arabic with server messages isolated |
 | payments.ui.mjs | 21 | Browser: Payments & Certification (certification SoD, advance positions, back-charge SoD); the screen in Arabic |
 | sweep_cutover.mjs | 51 | GC-24 / DEC-019 cut-over in a fresh tenant: plan rules, opening TB and detail, reconciliation refusing differences, SoD approval, opening journal, opening payable paid; engines continuing from opening positions, opening retention release |
 | sweep_mfa.mjs | 34 | DEC-015 MFA (server with MFA required): who must enrol, enrolment, replay, recovery codes, lockout, admin reset, production refusal |
-| mfa_login.ui.mjs | 13 | Browser: sign-in second step - set-up, recovery codes shown once, code sign-in, recovery sign-in, admin reset from the Users screen |
+| mfa_login.ui.mjs | 18 | Browser: sign-in second step - set-up, recovery codes shown once, code sign-in, recovery sign-in, admin reset from the Users screen; Users / Roles / DOA screen in Arabic |
 | revenue.ui.mjs | 24 | Browser: Revenue & Contract Position - runs, backward run refused, estimate SoD/approve/retire, retention release, F-48; the contract in Arabic, negative amounts and periods left-to-right, content within its column and KPI figure size in both languages |
 | cutover.ui.mjs | 28 | Browser: Go-live cut-over in a fresh tenant - paste with mapping, row errors previewed and nothing saved, difference per control account, preparer refusal, second-person approval; the draft and opened screens in Arabic (Arabic column names, Arabic row errors, no Latin labels) |
 | i18n.ui.mjs | 20 | Browser: Arabic default RTL, switch to English LTR (sign-in and shell), persistence, 34 navigation items in both languages, landing dashboard in Arabic, key and placeholder parity across all message files; navigation side and direction in each language |
-| **Total** | **1,453** | 45 API suites + 6 browser checks, all PASS locally (RUN sh15; 1,436 at RUN sh9 before Stage 39; 1,425 at RUN sh7 before Stage 38; 1,410 at RUN sh5 before Stage 37; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
+| **Total** | **1,464** | 45 API suites + 6 browser checks, all PASS locally (RUN sh18; 1,453 at RUN sh15 before Stage 40; 1,436 at RUN sh9 before Stage 39; 1,425 at RUN sh7 before Stage 38; 1,410 at RUN sh5 before Stage 37; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

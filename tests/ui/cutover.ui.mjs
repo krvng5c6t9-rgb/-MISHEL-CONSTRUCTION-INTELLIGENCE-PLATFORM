@@ -124,7 +124,7 @@ try {
   await click(section('plan'), 'Approve & post opening journal');
   check('the preparer approving is refused on screen (SoD)', /Segregation of duties/.test(await alert()), await alert());
 
-  await page.getByRole('button', { name: 'Logout' }).dispatchEvent('click'); await page.waitForURL(/\/login/);
+  await page.getByRole('button', { name: 'Logout' }).click(); await page.waitForURL(/\/login/); // a real click since CC-068 (no overlap)
   await signIn(`fin.f.${TAG}@test.local`, 'Passw0rd!fin');
   await click(section('plan'), 'Approve & post opening journal');
   check('a second person approves; the plan opens', await status() === 'opened', await alert());

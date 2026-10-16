@@ -112,8 +112,27 @@ try {
   await page.locator('[data-section="users"] [role="status"]').waitFor({ timeout: 10000 });
   await page.waitForTimeout(1000);
   check('administrator resets the user MFA from the screen (reason asked): set-up required again', /Required — not set up/.test(await row.innerText()), (await row.innerText()).replace(/\s+/g, ' '));
-  // The long Users table overlaps the sidebar button at this viewport; dispatch the click to the Logout button itself.
-  await page.getByRole('button', { name: 'Logout' }).dispatchEvent('click');
+  // R1.2: the Users / Roles / DOA screen in Arabic, with a role's permission matrix open.
+  await page.getByRole('button', { name: 'Language' }).click(); await page.waitForTimeout(500);
+  check('Arabic: title and the reset user shown as MFA required in Arabic', await page.getByRole('heading', { name: 'المستخدمون والأدوار والصلاحيات وصلاحيات الاعتماد', level: 1 }).count() === 1
+    && /مطلوب — لم يُعَد بعد/.test(await row.innerText()) && /داخلي/.test(await row.innerText()), (await row.innerText()).replace(/\s+/g, ' '));
+  check('Arabic: the reset confirmation follows the language switch', /^أُعيد ضبط التحقق بخطوتين للمستخدم .+: أُنهيت جلساته/.test((await page.locator('[data-section="users"] [role="status"]').innerText()).trim()),
+    await page.locator('[data-section="users"] [role="status"]').innerText());
+  const roleSelect = page.getByLabel('اختر الدور المراد إدارته');
+  await roleSelect.selectOption({ index: 1 }); await page.waitForTimeout(1000);
+  const matrixHead = (await page.locator('[data-section="roles"] thead th').allInnerTexts()).map(s => s.trim());
+  check('Arabic: permission matrix with Arabic module and action names', matrixHead.length === 9 && matrixHead.includes('عرض') && matrixHead.includes('ترحيل')
+    && (await page.locator('[data-section="roles"] tbody td').first().innerText()).trim() === 'الإدارة', matrixHead.join(' | '));
+  const doaModules = await page.locator('[data-section="doa"] tbody tr td:first-child').allInnerTexts();
+  check('Arabic: DOA rules list their modules in Arabic', doaModules.length > 0 && doaModules.some(s => /أمر الشراء|فاتورة المورد|الدفع/.test(s)), doaModules.slice(0, 4).join(' | '));
+  const adminAr = await page.locator('main').evaluate(m => [...m.querySelectorAll('h1, h2, th, button, label')].map(e => e.matches('label') ? e.firstChild?.textContent ?? '' : e.textContent ?? '')
+    .concat([...m.querySelectorAll('[aria-label], input[placeholder]')].map(e => e.getAttribute('aria-label') ?? e.getAttribute('placeholder') ?? '')).map(s => s.trim()).filter(Boolean));
+  check('Arabic: no Latin letters in headings, column headings, buttons, field labels and placeholders', adminAr.length > 50 && !adminAr.some(s => /[A-Za-z]/.test(s)),
+    adminAr.filter(s => /[A-Za-z]/.test(s)).slice(0, 5).join(' | ') || `${adminAr.length} texts`);
+  await page.screenshot({ path: `${OUT}/ui_admin_ar.png`, fullPage: true });
+  await page.getByRole('button', { name: 'اللغة' }).click(); await page.waitForTimeout(500);
+  // CC-068 removed the overlap that made the long Users table cover the sidebar; the Logout button is clicked normally.
+  await page.getByRole('button', { name: 'Logout' }).click();
   await page.waitForURL(/\/login/);
   await passwordStep();
   await page.locator('[data-section="mfa-enroll"]').waitFor({ timeout: 15000 });

@@ -6,6 +6,8 @@ import * as cutover from './messages/cutover';
 import * as values from './messages/values';
 import * as revenue from './messages/revenue';
 import * as payments from './messages/payments';
+import * as admin from './messages/admin';
+import * as projectControls from './messages/projectControls';
 
 // R1.1 / R1.2 (MP-06 §1): Arabic-first, fully bilingual interface. Every user-visible string of a translated screen
 // comes from the dictionaries in ./messages (one file per area); the language also sets the document language and
@@ -14,9 +16,9 @@ import * as payments from './messages/payments';
 export type Lang = 'ar' | 'en';
 const STORAGE_KEY = 'mishel.lang';
 
-const en = { ...shell.en, ...common.en, ...dashboard.en, ...cutover.en, ...values.en, ...revenue.en, ...payments.en };
+const en = { ...shell.en, ...common.en, ...dashboard.en, ...cutover.en, ...values.en, ...revenue.en, ...payments.en, ...admin.en, ...projectControls.en };
 export type MessageKey = keyof typeof en;
-const ar: Record<MessageKey, string> = { ...shell.ar, ...common.ar, ...dashboard.ar, ...cutover.ar, ...values.ar, ...revenue.ar, ...payments.ar };
+const ar: Record<MessageKey, string> = { ...shell.ar, ...common.ar, ...dashboard.ar, ...cutover.ar, ...values.ar, ...revenue.ar, ...payments.ar, ...admin.ar, ...projectControls.ar };
 export type MessageVars = Record<string, string | number>;
 
 export const dictionaries: Record<Lang, Record<MessageKey, string>> = { en, ar };

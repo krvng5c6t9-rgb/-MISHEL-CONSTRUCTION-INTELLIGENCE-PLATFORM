@@ -153,6 +153,23 @@ try {
   check('second person approves the pack on screen', /approved/.test(await section('pack-detail').innerText()) && !(await alertText()), await alertText());
   await page.screenshot({ path: `${OUT}/ui_approver_decisions.png`, fullPage: true });
 
+  // --- R1.2: the same screen in Arabic: title, the approved pack, unloaded sections named in Arabic, and no Latin
+  // letters in headings, column headings, buttons or field labels (record data such as drawing numbers aside).
+  await page.getByRole('button', { name: 'Language' }).click(); await settleUi();
+  check('Arabic: page title and approved pack heading', await page.getByRole('heading', { name: 'ضبط المشروعات', level: 1 }).count() === 1
+    && /^الحزمة \d+ — معتمد$/.test((await section('pack-detail').locator('h3').innerText()).trim()), await section('pack-detail').locator('h3').innerText());
+  check('Arabic: pack verification shown as yes / no', /البصمة سليمة:\s*(نعم|لا)\s·\sتغيرت البيانات بعد التجميد:\s*(نعم|لا)/.test(await section('pack-detail').innerText()), (await section('pack-detail').innerText()).split('\n').slice(0, 2).join(' | '));
+  check('Arabic: sections the approver may not read are named in Arabic', /العقود \(/.test(await section('unloaded').innerText().catch(() => '')), await section('unloaded').innerText().catch(() => ''));
+  const isolated = await section('unloaded').locator('bdi').allInnerTexts();
+  check('Arabic: each English server message in that notice is isolated so its brackets stay in order', isolated.length >= 2 && isolated.every(s => /^Missing permission: [a-z_]+\.view$/.test(s)), isolated.join(' | '));
+  const pcAr = await page.locator('main').evaluate(m => [...m.querySelectorAll('h1, h2, [data-section="pack-detail"] h3, th, button, label')].map(e => e.matches('label') ? e.firstChild?.textContent ?? '' : e.textContent ?? '')
+    .concat([...m.querySelectorAll('[aria-label]')].map(e => e.getAttribute('aria-label') ?? '')).map(s => s.trim()).filter(Boolean));
+  check('Arabic: no Latin letters in headings, column headings, buttons and field labels', pcAr.length > 20 && !pcAr.some(s => /[A-Za-z]/.test(s)),
+    pcAr.filter(s => /[A-Za-z]/.test(s)).slice(0, 5).join(' | ') || `${pcAr.length} texts`);
+  await page.screenshot({ path: `${OUT}/ui_project_controls_ar.png`, fullPage: true });
+  await page.getByRole('button', { name: 'اللغة' }).click(); await settleUi();
+  check('back to English: same screen in English', await page.getByRole('heading', { name: 'Project Controls', level: 1 }).count() === 1 && /approved/.test(await section('pack-detail').innerText()));
+
   // --- Hygiene.
   const sod = apiFailures.filter(f => f.phase === 'admin' && f.status === 403 && f.method === 'POST' && /\/(decision|close)$/.test(f.path));
   const unexpected = apiFailures.filter(f => !sod.includes(f) && !(f.phase === 'approver' && f.status === 403 && f.method === 'GET'));
