@@ -1,3 +1,4 @@
+import { localDate } from '../lib/date';
 import { useEffect, useState } from 'react';
 import { apiGet, apiPost, apiDelete } from '../lib/api';
 import { NotLoaded, Num, Row, Table, ask } from '../components/RecordTable';
@@ -9,7 +10,7 @@ import { useI18n, type MessageKey } from '../lib/i18n';
 // R1.2: labels from messages/revenue.ts, stored codes (status, kind) through tv(); server messages are shown as sent.
 
 const money = (v: unknown) => (v === null || v === undefined ? '—' : Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-const today = () => new Date().toISOString().slice(0, 10);
+const today = () => localDate();
 type Missed = [MessageKey, string];
 
 const KPIS: [string, MessageKey][] = [['billed_gross', 'revenue.kpiBilledGross'], ['billed_net', 'revenue.kpiBilledNet'], ['collected', 'revenue.kpiCollected'], ['receivables_outstanding', 'revenue.kpiOutstanding'],

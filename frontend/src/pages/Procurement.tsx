@@ -1,3 +1,4 @@
+import { localDate } from '../lib/date';
 import { useEffect, useState } from 'react';
 import { apiGet, apiPost } from '../lib/api';
 import { useI18n, type MessageKey } from '../lib/i18n';
@@ -16,7 +17,7 @@ export function Procurement(){
  const[q,setQ]=useState<any>({rfq_id:'',vendor_id:'',quotation_ref:'',total_amount:'',currency_id:''});
  const[p,setP]=useState<any>({project_id:'',vendor_id:'',mr_id:'',cost_code_id:'',po_ref:'',currency_id:'',item_description:'',unit_of_measure:'ea',quantity:1,unit_rate:0});
  const[g,setG]=useState<any>({po_id:'',project_id:'',warehouse_id:'',grn_no:'',po_line_id:'',inventory_item_id:'',quantity_received:1,quantity_accepted:1,quantity_rejected:0});
- const[i,setI]=useState<any>({vendor_id:'',project_id:'',po_id:'',invoice_no:'',invoice_date:new Date().toISOString().slice(0,10),amount:'',tax_amount:0,currency_id:'',matched_grn_id:''});
+ const[i,setI]=useState<any>({vendor_id:'',project_id:'',po_id:'',invoice_no:'',invoice_date:localDate(),amount:'',tax_amount:0,currency_id:'',matched_grn_id:''});
  async function load(){const[a,b,c,d,e,f]=await Promise.all([apiGet<Api<Any[]>>('/procurement/purchase-orders'),apiGet<Api<Any[]>>('/procurement/vendor-invoices'),apiGet<Api<Any[]>>('/procurement/material-requisitions'),apiGet<Api<Any[]>>('/procurement/rfqs'),apiGet<Api<Any[]>>('/procurement/grns'),apiGet<Api<any>>('/procurement/reference-data')]);setPo(a.data);setVi(b.data);setMr(c.data);setRfq(d.data);setGrns(e.data);setRefs(f.data)}
  useEffect(()=>{load().catch(e=>setMsg({text:e.message}))},[]); async function run(fn:()=>Promise<any>,ok:MessageKey){try{setMsg(null);await fn();await load();setMsg({key:ok})}catch(e:any){setMsg({text:e.message})}}
  async function makeMr(){await run(()=>apiPost('/procurement/material-requisitions',{project_id:n(m.project_id),mr_no:m.mr_no,required_date:m.required_date||null,lines:[{item_description:m.item_description,unit_of_measure:m.unit_of_measure,quantity:n(m.quantity)}]}),'proc.mrCreated')}

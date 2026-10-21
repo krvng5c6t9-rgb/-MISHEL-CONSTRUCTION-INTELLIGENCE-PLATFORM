@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { uiHas } from './lib/ui-label.mjs';
 const checks=[]; const ok=(name,cond)=>{checks.push([name,!!cond]); console.log(`${cond?'PASS':'FAIL'} - ${name}`)};
 const sql=fs.readFileSync('database/migrations/030_edms_versioning_transmittal_hardening.sql','utf8');
 const api=fs.readFileSync('backend/src/modules/edms/edms.routes.ts','utf8');
@@ -13,7 +14,7 @@ ok('document create writes version in transaction',/BEGIN/.test(api)&&/insert in
 ok('document maker checker',/Maker cannot approve\/reject own document/.test(api));
 ok('transmittal maker checker',/Maker cannot issue own transmittal/.test(api));
 ok('empty transmittal blocked',/Cannot issue an empty transmittal/.test(api));
-ok('EDMS UI document workflow',/Create Document/.test(ui)&&/New Version/.test(ui)&&/Approve/.test(ui));
-ok('EDMS UI transmittal workflow',/Create Draft/.test(ui)&&/Add Current Version/.test(ui)&&/Issue/.test(ui));
+ok('EDMS UI document workflow',uiHas(ui,'Create Document')&&uiHas(ui,'New Version')&&uiHas(ui,'Approve'));
+ok('EDMS UI transmittal workflow',uiHas(ui,'Create Draft')&&uiHas(ui,'Add Current Version')&&uiHas(ui,'Issue'));
 if(checks.some(x=>!x[1])) process.exit(1);
 console.log(`REV18 RED-TEAM GATE PASS (${checks.length}/${checks.length})`);

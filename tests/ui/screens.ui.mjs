@@ -1,11 +1,13 @@
-// R1.2 batches 4-5 (CC-071, CC-072) browser verification of translated screens in both languages: Projects, CRM, Tendering,
-// BOQ, Contracts, Claims, Subcontracts, Cost Control, Approvals, Inventory, Procurement, Finance. For each screen and language: the title, the document direction, no Latin
-// letters in the Arabic headings / column headings / buttons / field labels / placeholders / coded drop-down options,
-// content within its column, no console errors and no 5xx. CRM end to end in Arabic: client, lead with a source and a
-// project type (refused by the API before CC-071 because both were free text) and a site-visit activity; Finance in Arabic:
-// a manual journal with a reason category (refused before CC-072) and labelled General Ledger columns.
+// R1.2 batches 4-6 (CC-071, CC-072, CC-074) browser verification of translated screens in both languages: Projects, CRM,
+// Tendering, BOQ, Contracts, Claims, Subcontracts, Cost Control, Approvals, Inventory, Procurement, Finance, Technical Office,
+// Planning, Site Execution, QA/QC, HSE, EDMS, HR, Assets. For each screen and language: the title, the document direction, no
+// Latin letters in the Arabic headings / column headings / buttons / field labels / placeholders / coded drop-down options,
+// content within its column, no console errors and no 5xx. In Arabic, end to end: CRM client / lead / site-visit activity
+// (CC-071); Finance manual journal and labelled ledger columns (CC-072); Technical Office RFI flagged for cost impact,
+// Planning refusal shown and contractual milestone, HR employee tile = employees returned (CC-074).
 // Run by tests/e2e/run_from_zero.sh when UI_CHECK=1 (CI does).
 import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const BASE = process.env.UI_BASE ?? 'http://localhost:4173';
@@ -14,6 +16,11 @@ const TAG = /^[A-Za-z0-9]{1,8}$/.test(RUN) ? RUN : createHash('sha256').update(R
 const OUT = process.env.OUT_DIR ?? '.';
 const results = [];
 const check = (name, ok, detail = '') => { results.push({ name, ok, detail }); console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? ' :: ' + detail : ''}`); };
+
+// CC-074: no screen takes "today" from the UTC date (a day early after midnight in Cairo); they use lib/date localDate().
+const PAGES = new URL('../../frontend/src/pages/', import.meta.url);
+const utcDated = readdirSync(PAGES).filter(f => /toISOString\(\)\.slice\(0, ?10\)/.test(readFileSync(new URL(f, PAGES), 'utf8')));
+check('screens take today from the local date, not the UTC date', utcDated.length === 0, utcDated.join(', ') || 'none');
 
 const SCREENS = [
   ['/projects', 'Projects', 'المشروعات'],
@@ -27,7 +34,15 @@ const SCREENS = [
   ['/approvals', 'Approvals', 'الاعتمادات'],
   ['/inventory', 'Inventory & Warehouses', 'المخازن والمستودعات'],
   ['/procurement', 'Procurement Control', 'ضبط المشتريات'],
-  ['/finance', 'Finance / GL / IPC / Payments', 'المالية / الأستاذ العام / المستخلصات / المدفوعات']
+  ['/finance', 'Finance / GL / IPC / Payments', 'المالية / الأستاذ العام / المستخلصات / المدفوعات'],
+  ['/technical-office', 'Technical Office Control', 'ضبط المكتب الفني'],
+  ['/planning', 'Planning & Scheduling', 'التخطيط والجدولة'],
+  ['/site', 'Site Execution', 'تنفيذ الموقع'],
+  ['/qaqc', 'Quality Control', 'ضبط الجودة'],
+  ['/hse', 'HSE Control', 'ضبط السلامة والصحة المهنية'],
+  ['/edms', 'Controlled Documents & Transmittals', 'الوثائق المضبوطة وخطابات التحويل'],
+  ['/hr', 'HR / Payroll', 'الموارد البشرية / المرتبات'],
+  ['/assets', 'Assets / Equipment', 'الأصول / المعدات']
 ];
 
 let browser;
@@ -38,7 +53,7 @@ try {
     await ctx.addInitScript((l) => { try { localStorage.setItem('mishel.lang', l); } catch {} }, lang);
     const page = await ctx.newPage();
     const consoleErrors = [], serverErrors = [];
-    page.on('console', m => { if (m.type() === 'error' && !/status of 40[34]|status of 422/.test(m.text())) consoleErrors.push(m.text()); });
+    page.on('console', m => { if (m.type() === 'error' && !/status of 40[349]|status of 422/.test(m.text())) consoleErrors.push(m.text()); });
     page.on('response', r => { if (r.url().includes('/api/') && r.status() >= 500) serverErrors.push(`${r.status()} ${r.url()}`); });
     await page.goto(`${BASE}/login`);
     const inputs = page.locator('input');
@@ -112,6 +127,58 @@ try {
       const glHead = (await page.locator('[data-section="table-fin.gl"] thead th').allInnerTexts()).map(s => s.trim());
       check('ar: General Ledger table shows labelled debit and credit columns', glHead.includes('مدين') && glHead.includes('دائن') && !glHead.some(h => /_/.test(h)), glHead.join(' | '));
       await page.screenshot({ path: `${OUT}/screens_finance_ar_${RUN}.png`, fullPage: true });
+
+      // Technical Office in Arabic (CC-074): an RFI flagged for cost impact from the screen (the screen always sent
+      // false before, so the contract-event control on closing never applied).
+      await page.goto(`${BASE}/technical-office`); await page.waitForTimeout(1200);
+      const rfiSec = page.locator('[data-section="rfis"]');
+      const rfiNo = `RFI-${TAG}`;
+      await rfiSec.getByLabel('المشروع').selectOption({ index: 1 });
+      await rfiSec.getByPlaceholder('رقم طلب الاستيضاح').fill(rfiNo);
+      await rfiSec.getByPlaceholder('الموضوع').fill('UI fixture subject');
+      await rfiSec.getByPlaceholder('السؤال').fill('UI fixture question');
+      await rfiSec.getByLabel('أثر على التكلفة').check();
+      await rfiSec.getByRole('button', { name: 'إنشاء', exact: true }).click(); await page.waitForTimeout(1200);
+      const rfiRow = rfiSec.locator('tbody tr', { hasText: rfiNo });
+      check('ar: Technical Office RFI flagged for cost impact from the screen (was always sent unflagged before CC-074)', !(await alert()) && await rfiRow.count() === 1 && /أثر على التكلفة/.test(await rfiRow.innerText()) && /مفتوح/.test(await rfiRow.innerText()),
+        (await alert()) || (await rfiRow.innerText().catch(() => '(no row)')).replace(/\s+/g, ' '));
+
+      // Planning in Arabic (CC-074): a refused action is shown (it failed silently before); a contractual milestone
+      // with its planned date is recorded from the screen (the screen could not set either).
+      await page.goto(`${BASE}/planning`); await page.waitForTimeout(1200);
+      await page.locator('[data-section="scope"]').getByLabel('المشروع').selectOption({ index: 1 });
+      await page.getByRole('button', { name: 'تحميل المشروع', exact: true }).click(); await page.waitForTimeout(1000);
+      const act = page.locator('[data-section="activities"]');
+      const addAct = async () => { await act.getByPlaceholder('كود النشاط').fill(`A-${TAG}`); await act.getByPlaceholder('اسم النشاط').fill(`UI activity ${TAG}`); await act.getByRole('button', { name: 'إضافة نشاط', exact: true }).click(); await page.waitForTimeout(1200); };
+      await addAct();
+      const firstOk = !(await alert()) && await act.locator('tbody tr', { hasText: `A-${TAG}` }).count() === 1;
+      await addAct();
+      check('ar: Planning shows the refusal of a duplicate activity code (failed silently before CC-074)', firstOk && !!(await alert()) && await act.locator('tbody tr', { hasText: `A-${TAG}` }).count() === 1, (await alert()) || '(no message)');
+      const ms = page.locator('[data-section="milestones"]');
+      await ms.getByPlaceholder('اسم المَعلَم').fill(`UI milestone ${TAG}`);
+      await ms.getByLabel('التاريخ المخطط').fill('2027-03-31');
+      await ms.getByLabel('تعاقدي').check();
+      await ms.getByRole('button', { name: 'إضافة مَعلَم', exact: true }).click(); await page.waitForTimeout(1200);
+      const msRow = ms.locator('tbody tr', { hasText: `UI milestone ${TAG}` });
+      const msText = (await msRow.innerText().catch(() => '')).replace(/\s+/g, ' ');
+      check('ar: Planning contractual milestone with planned date recorded from the screen', await msRow.count() === 1 && /2027-03-31/.test(msText) && /نعم/.test(msText), (await alert()) || msText || '(no row)');
+      await page.screenshot({ path: `${OUT}/screens_planning_ar_${RUN}.png`, fullPage: true });
+
+      // HR (CC-074): the tile counts every employee the API returned (it counted at most the first 8).
+      // More than 8 employees are made first (through the API the screen uses) so the check can tell a cap from a count.
+      let empResp = page.waitForResponse(r => r.url().includes('/api/hr/employees') && r.request().method() === 'GET');
+      await page.goto(`${BASE}/hr`);
+      const first = await empResp;
+      const token = await page.evaluate(() => localStorage.getItem('construction_erp_token'));
+      for (let i = (await first.json()).data.length; i <= 9; i++) {
+        await page.request.post(first.url(), { headers: { Authorization: `Bearer ${token}` }, data: { employee_code: `E${TAG}${i}`, full_name: `UI Employee ${TAG} ${i}` } });
+      }
+      empResp = page.waitForResponse(r => r.url().includes('/api/hr/employees') && r.request().method() === 'GET');
+      await page.reload();
+      const apiCount = await empResp.then(async r => r.ok() ? (await r.json()).data.length : -1);
+      await page.waitForTimeout(1200);
+      const tile = (await page.locator('.metric-card').first().locator('strong').innerText()).trim();
+      check('ar: HR employee tile equals the number of employees returned (was capped at 8)', apiCount > 8 && tile === String(apiCount), `tile ${tile}, API ${apiCount}`);
     }
     check(`${lang}: no 5xx from the API`, serverErrors.length === 0, serverErrors.slice(0, 3).join(' | '));
     check(`${lang}: no browser console errors`, consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));

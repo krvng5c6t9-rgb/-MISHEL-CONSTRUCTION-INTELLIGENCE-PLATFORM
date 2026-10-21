@@ -1,9 +1,11 @@
 import fs from 'node:fs';
+import { uiHas } from './lib/ui-label.mjs';
 
 const checks = [];
 const read = p => fs.readFileSync(p,'utf8');
 const has = (name, file, patterns) => {
-  const s=read(file); const missing=patterns.filter(p=>!s.includes(p));
+  // R1.2 (CC-074): screen labels may come from the dictionaries; API paths are still read from the screen source.
+  const s=read(file); const missing=patterns.filter(p=>!(file.startsWith('frontend/src/pages/')?uiHas(s,p):s.includes(p)));
   checks.push({name,ok:missing.length===0,missing});
 };
 

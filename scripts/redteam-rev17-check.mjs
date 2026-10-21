@@ -1,7 +1,8 @@
 import fs from 'node:fs';
+import { uiHas } from './lib/ui-label.mjs';
 const read=p=>fs.readFileSync(p,'utf8'); const checks=[]; const ok=(n,c)=>checks.push([n,!!c]);
 const routes=read('backend/src/modules/planning/planning.routes.ts'); const page=read('frontend/src/pages/Planning.tsx'); const mig=read('database/migrations/029_planning_cpm_operational_hardening.sql');
-ok('Planning UI is operational, not read-only', page.includes('Add Activity') && page.includes('Add Relationship') && page.includes('Add Milestone') && page.includes('Progress'));
+ok('Planning UI is operational, not read-only', uiHas(page,'Add Activity') && uiHas(page,'Add Relationship') && uiHas(page,'Add Milestone') && uiHas(page,'Progress'));
 ok('Baseline current selection is transactional', routes.includes("patch('/baselines/:id/current'") && routes.includes("select id, project_id from schedule_baselines where id=$1 for update"));
 ok('Activity CRUD includes update/delete', routes.includes("patch('/activities/:id'") && routes.includes("delete('/activities/:id'"));
 ok('Activity delete blocks referenced schedules', routes.includes('Activity has progress or schedule relationships'));

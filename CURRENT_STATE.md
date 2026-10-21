@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-073
+## Controlled Changes CC-001 → CC-074
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -105,6 +105,7 @@
 | CC-071 | Commercial screens (Projects, CRM, Tendering, BOQ, Contracts, Claims, Subcontracts) in Arabic / English; CRM lead creation from the screen fixed (R1.2) |
 | CC-072 | Cost Control, Approvals, Inventory, Procurement, Finance in Arabic / English; Finance manual journal creation and ledger columns fixed, cost totals per currency, approval errors shown (R1.2) |
 | CC-073 | Brand MARC with descriptor «المنظومة المتكاملة لشركات المقاولات» / Integrated Construction Enterprise System (owner decision DEC-020 / A-003); tab title and MFA issuer follow |
+| CC-074 | Technical Office, Planning, Site Execution, QA/QC, HSE, EDMS, HR, Assets in Arabic / English; RFI impact flags, Planning refusals shown, tiles count every row, local date instead of UTC date (R1.2) |
 
 **Owner approvals (R6):** A-001 master plan MP-01…MP-07; A-002 Stage 39 (CC-068), both 2026-10-15, signed Mishel Thabet Halim (`governance/registers/11_Approval_Register.csv`).
 
@@ -178,8 +179,8 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | revenue.ui.mjs | 24 | Browser: Revenue & Contract Position - runs, backward run refused, estimate SoD/approve/retire, retention release, F-48; the contract in Arabic, negative amounts and periods left-to-right, content within its column and KPI figure size in both languages |
 | cutover.ui.mjs | 28 | Browser: Go-live cut-over in a fresh tenant - paste with mapping, row errors previewed and nothing saved, difference per control account, preparer refusal, second-person approval; the draft and opened screens in Arabic (Arabic column names, Arabic row errors, no Latin labels) |
 | i18n.ui.mjs | 22 | Browser: Arabic default RTL, switch to English LTR (sign-in and shell), persistence, 34 navigation items in both languages, landing dashboard in Arabic, key and placeholder parity across all message files; navigation side and direction in each language |
-| screens.ui.mjs | 69 | Browser: 12 screens in both languages (title, direction, no Latin Arabic labels, content within column, no console errors / 5xx); CRM client, lead and activity and a Finance manual journal created from the Arabic screens; labelled ledger columns |
-| **Total** | **1,536** | 45 API suites + 7 browser checks, all PASS locally (RUN sh21; 1,533 at RUN sh20 before Stage 43; 1,506 at RUN sh19 before Stage 42; 1,464 at RUN sh18 before Stage 41; 1,453 at RUN sh15 before Stage 40; 1,436 at RUN sh9 before Stage 39; 1,425 at RUN sh7 before Stage 38; 1,410 at RUN sh5 before Stage 37; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
+| screens.ui.mjs | 114 | Browser: 20 screens in both languages (title, direction, no Latin Arabic labels, content within column, no console errors / 5xx); CRM client, lead and activity and a Finance manual journal created from the Arabic screens; labelled ledger columns; RFI flagged for cost impact, Planning refusal shown, contractual milestone, HR tile count; no screen uses the UTC date |
+| **Total** | **1,581** | 45 API suites + 7 browser checks, all PASS locally (RUN sh23; 1,536 at RUN sh21 before Stage 44; 1,533 at RUN sh20 before Stage 43; 1,506 at RUN sh19 before Stage 42; 1,464 at RUN sh18 before Stage 41; 1,453 at RUN sh15 before Stage 40; 1,436 at RUN sh9 before Stage 39; 1,425 at RUN sh7 before Stage 38; 1,410 at RUN sh5 before Stage 37; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

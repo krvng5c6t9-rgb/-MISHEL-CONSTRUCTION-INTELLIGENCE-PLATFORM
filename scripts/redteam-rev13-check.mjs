@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { uiHas } from './lib/ui-label.mjs';
 const read=p=>fs.readFileSync(p,'utf8');
 const route=read('backend/src/modules/technicalOffice/technicalOffice.routes.ts');
 const mig=read('database/migrations/025_technical_office_workflow_hardening.sql');
@@ -13,9 +14,9 @@ const checks=[
  ['DB cross-tenant document guard',mig.includes('Referenced document must belong to the same organization')],
  ['DB drawing SoD',mig.includes('drawing issuer cannot review own drawing')],
  ['DB method statement SoD',mig.includes('method statement maker/submitter cannot approve own statement')],
- ['UI drawing actions',ui.includes('Approve w/comments')&&ui.includes('Supersede')],
- ['UI submittal actions',ui.includes('Start Review')&&ui.includes('Resubmit required')],
- ['UI RFI actions',ui.includes('Respond')&&ui.includes('Close')],
- ['UI method statement actions',ui.includes('Create Draft')&&ui.includes('Submit')],
+ ['UI drawing actions',uiHas(ui,'Approve w/comments')&&uiHas(ui,'Supersede')],
+ ['UI submittal actions',uiHas(ui,'Start Review')&&uiHas(ui,'Resubmit required')],
+ ['UI RFI actions',uiHas(ui,'Respond')&&uiHas(ui,'Close')],
+ ['UI method statement actions',uiHas(ui,'Create Draft')&&uiHas(ui,'Submit')],
 ];
 let fail=0;for(const [name,ok] of checks){console.log(`${ok?'PASS':'FAIL'} - ${name}`);if(!ok)fail++;}if(fail)process.exit(1);console.log(`REV13 technical-office hostile checks PASS (${checks.length}/${checks.length})`);
