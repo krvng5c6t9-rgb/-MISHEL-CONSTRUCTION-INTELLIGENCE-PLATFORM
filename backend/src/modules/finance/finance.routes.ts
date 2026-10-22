@@ -100,16 +100,38 @@ financeRouter.get('/gl', asyncHandler(async (req, res) => {
   const rows = await query(`
     select gl.id, gl.org_id, gl.project_id, p.project_name, coa.account_code, coa.account_name,
            gl.transaction_date, gl.debit, gl.credit, cur.code as currency_code,
+           gl.fx_rate_to_base, gl.debit_base, gl.credit_base, bc.code as base_currency_code,
            gl.source_module, gl.source_table, gl.source_record_id, gl.journal_batch_id, gl.description
     from general_ledger gl
     join chart_of_accounts coa on coa.id = gl.account_id
     join currencies cur on cur.id = gl.currency_id
+    join organizations o on o.id = gl.org_id
+    left join currencies bc on bc.id = o.base_currency_id
     left join projects p on p.id = gl.project_id
     where gl.org_id = $1
     order by gl.transaction_date desc, gl.id desc
     limit 500
   `, [orgId]);
   res.json({ success: true, data: rows });
+}));
+
+// CC-077 / DEC-021: trial balance in the base currency (each line at the rate frozen when it was written), as of a date.
+financeRouter.get('/trial-balance', asyncHandler(async (req, res) => {
+  const orgId = Number(req.user!.org_id);
+  const asOf = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().parse(req.query.as_of);
+  const rows = await query(`
+    select coa.account_code, coa.account_name, coa.account_type,
+           sum(gl.debit_base)::numeric(18,2) as debit, sum(gl.credit_base)::numeric(18,2) as credit,
+           (sum(gl.debit_base) - sum(gl.credit_base))::numeric(18,2) as balance
+    from general_ledger gl join chart_of_accounts coa on coa.id = gl.account_id
+    where gl.org_id = $1 and ($2::date is null or gl.transaction_date <= $2::date)
+    group by coa.account_code, coa.account_name, coa.account_type
+    order by coa.account_code
+  `, [orgId, asOf ?? null]);
+  const [t] = await query<any>(`select bc.code as base_currency_code from organizations o left join currencies bc on bc.id = o.base_currency_id where o.id = $1`, [orgId]);
+  const debit = rows.reduce((a: number, r: any) => a + Math.round(Number(r.debit) * 100), 0) / 100;
+  const credit = rows.reduce((a: number, r: any) => a + Math.round(Number(r.credit) * 100), 0) / 100;
+  res.json({ success: true, data: rows, meta: { base_currency_code: t?.base_currency_code ?? null, as_of: asOf ?? null, total_debit: debit.toFixed(2), total_credit: credit.toFixed(2) } });
 }));
 
 financeRouter.post('/cost-transactions/:id/post-gl', authorize('finance', 'post'), asyncHandler(async (req, res) => {

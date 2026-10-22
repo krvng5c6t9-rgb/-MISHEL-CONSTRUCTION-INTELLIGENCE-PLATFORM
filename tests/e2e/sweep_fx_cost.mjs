@@ -2,7 +2,8 @@
 // cost transaction freezes the latest register rate dated on or before its date and stores its amount in the project
 // currency and in the base currency; with no rate it is refused; a later rate never changes it; a reversal uses the
 // original's rates; cost reports add project-currency amounts only. All data, including the USD currency and its rates,
-// are TEST FIXTURES (not market rates).
+// are TEST FIXTURES (not market rates). CC-077 adds the GL: lines in the base currency at the frozen rate, a balanced
+// foreign-currency batch to the piastre, and the trial balance in the base currency.
 import { ADMIN, TAG, api, must, run, check, expectStatus, login, sql, finish } from './harness.mjs';
 
 const OWNER = process.env.OWNER_PSQL_URL;
@@ -17,7 +18,7 @@ try {
     must(await api('POST', '/users', admin, { role_id, full_name: `FX ${key}`, email: u.email, password: u.password }), `user ${key}`);
     return login(u);
   };
-  const all = await mkRole('FX All', [['assets', 'view'], ['assets', 'create'], ['assets', 'edit'], ['assets', 'approve'], ['finance', 'view'], ['finance', 'create'], ['finance', 'manage'], ['approvals', 'view'], ['approvals', 'approve'], ['hr', 'view'], ['hr', 'create'], ['reports', 'view'], ['cost_control', 'view']]);
+  const all = await mkRole('FX All', [['assets', 'view'], ['assets', 'create'], ['assets', 'edit'], ['assets', 'approve'], ['finance', 'view'], ['finance', 'create'], ['finance', 'manage'], ['finance', 'post'], ['approvals', 'view'], ['approvals', 'approve'], ['hr', 'view'], ['hr', 'create'], ['reports', 'view'], ['cost_control', 'view']]);
   // The approver holds the role of the active equipment-usage DOA rule (one may already exist; rules cannot overlap).
   let rule = must(await api('GET', '/approvals/configuration/doa', admin), 'doa').find(d => d.module === 'equipment_usage' && d.is_active && d.is_confirmed);
   if (!rule) {
@@ -60,6 +61,31 @@ try {
   const cs = must(await api('GET', `/reports/cost-summary?project_id=${project}`, admin), 'cost summary');
   const row = cs.find(r => Number(r.cost_code_id) === 2);
   check('cost summary actual = 3,880 + 2,000 = 5,880.00 (EGP), never 120', Number(row?.actual) === 5880, JSON.stringify(row?.actual));
+
+  // CC-077 / DEC-021 part 2a: the GL posting of the USD cost carries the cost transaction's frozen rate.
+  if (!must(await api('GET', '/finance/gl-posting-rules', admin), 'rules').some(r => r.source_module === 'cost_transaction' && r.source_subtype === 'equipment' && r.is_active !== false)) {
+    const coa = async (code, name, type) => must(await api('POST', '/finance/chart-of-accounts', admin, { account_code: `${code}-${TAG}`, account_name: name, account_type: type }), 'coa').id;
+    must(await api('POST', '/finance/gl-posting-rules', admin, { source_module: 'cost_transaction', source_subtype: 'equipment', debit_account_id: await coa('FX5300', 'Plant cost (fixture)', 'expense'), credit_account_id: await coa('FX2300', 'Plant payable (fixture)', 'liability'), notes: 'TEST FIXTURE' }), 'equipment rule');
+  }
+  await run('USD cost posted to the GL', async () => must(await api('POST', `/finance/cost-transactions/${c1[0]}/post-gl`, P.c), 'post gl'));
+  const gl = one(`select count(*), sum(debit), sum(credit), sum(debit_base), sum(credit_base), min(fx_rate_to_base)::numeric(20,4), max(fx_rate_to_base)::numeric(20,4) from general_ledger where source_module = 'cost_transaction' and source_record_id = ${c1[0]}`).split('|');
+  check('GL lines of the USD cost: 80.00 USD each side, 3,880.00 EGP each side, at the cost rate 48.5', gl[0] === '2' && gl[1] === '80.00' && gl[2] === '80.00' && gl[3] === '3880.00' && gl[4] === '3880.00' && gl[5] === '48.5000' && gl[6] === '48.5000', gl.join('|'));
+  // Rounding within a batch: three USD lines (0.01 + 0.01 = 0.02) at 48.5. Converting each line alone gives debits
+  // 0.49 + 0.49 = 0.98 against a credit of 0.97; the running-total allocation gives 0.49 + 0.48 = 0.97. The deferred
+  // balance checks are run (SET CONSTRAINTS ALL IMMEDIATE) and the transaction is rolled back.
+  const acct = one(`select id from chart_of_accounts where org_id = ${ADMIN.org_id} and is_active order by id limit 1`);
+  const round = one(`begin;
+    alter table general_ledger disable trigger trg_validate_gl_insert;
+    create temp table b on commit drop as select nextval('gl_journal_batch_seq') as id;
+    insert into general_ledger(org_id, project_id, account_id, transaction_date, debit, credit, currency_id, source_module, source_table, source_record_id, journal_batch_id, description)
+      select ${ADMIN.org_id}, ${project}, ${acct}, '${day(-2)}'::date, x.d, x.c, ${usd}, 'manual_journal', 'manual_journal_entries', 0, b.id, 'rounding probe (fixture)'
+        from b, (values (1, 0.01, 0), (2, 0.01, 0), (3, 0, 0.02)) x(n, d, c) order by x.n;
+    set constraints all immediate;
+    select 'lines', string_agg(g.debit_base::text || '/' || g.credit_base::text, ' ' order by g.id), sum(g.debit_base), sum(g.credit_base) from general_ledger g, b where g.journal_batch_id = b.id;
+    rollback;`).split('\n').find(l => l.startsWith('lines|'))?.split('|') ?? [];
+  check('a foreign-currency batch stays balanced in EGP to the piastre (0.49 + 0.48 = 0.97, not 0.98)', round[1] === '0.49/0.00 0.48/0.00 0.00/0.97' && round[2] === '0.97' && round[3] === '0.97', round.join('|'));
+  const tb = await api('GET', '/finance/trial-balance', admin);
+  check('trial balance in the base currency (EGP) balances', tb.status === 200 && tb.body?.meta?.base_currency_code === 'EGP' && tb.body.meta.total_debit === tb.body.meta.total_credit && Number(tb.body.meta.total_debit) > 0, JSON.stringify(tb.body?.meta ?? tb.body));
 
   // Reversal and a project in another currency: the rate rule in isolation (the manual-adjustment approval trigger is
   // switched off inside a transaction that is rolled back - nothing remains).
