@@ -116,7 +116,7 @@ reportsRouter.get('/weekly-executive', asyncHandler(async (req, res) => {
            (select count(*)::int from pa where pa.project_id = p.id) as pending_approvals,
            (select count(*)::int from ncrs n where n.project_id = p.id and n.status <> 'closed') as open_ncrs,
            (select count(*)::int from punch_lists pl where pl.project_id = p.id and pl.status <> 'closed') as open_snags,
-           (select count(*)::int from incidents i where i.project_id = p.id and i.severity in ('major','fatal')) as major_hse_incidents
+           (select count(*)::int from incidents i where i.project_id = p.id and i.severity in ('major','fatality')) as major_hse_incidents
     from projects p
     left join lateral (select * from evm_snapshots ev where ev.project_id=p.id order by ev.snapshot_date desc limit 1) e on true
     where p.org_id=$1 ${projectPredicate}

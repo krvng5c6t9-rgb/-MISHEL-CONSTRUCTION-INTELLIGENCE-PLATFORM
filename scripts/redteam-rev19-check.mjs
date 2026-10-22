@@ -1,3 +1,4 @@
+import { uiHas } from './lib/ui-label.mjs';
 import fs from 'node:fs';
 
 const portals = fs.readFileSync('backend/src/modules/portals/portals.routes.ts','utf8');
@@ -18,8 +19,8 @@ check('Portal reference data is tenant-scoped', /reference-data[\s\S]*where org_
 check('Vendor-wide NULL grant uniqueness is hardened', /CREATE UNIQUE INDEX IF NOT EXISTS uq_subcontractor_portal_vendor_wide_access[\s\S]*WHERE subcontract_id IS NULL/i.test(mig));
 check('DB trigger enforces grantor tenant', /grantor_org[\s\S]*Portal grantor belongs to another organization/.test(mig));
 check('DB trigger enforces project-client ownership', /p_client[\s\S]*client does not own the selected project/i.test(mig));
-check('Portal UI supports client grant', /Grant Client Portal Access/.test(ui) && /apiPost\('\/portals\/client-access'/.test(ui));
-check('Portal UI supports subcontractor grant', /Grant Subcontractor Portal Access/.test(ui) && /apiPost\('\/portals\/subcontractor-access'/.test(ui));
+check('Portal UI supports client grant', uiHas(ui,'Grant Client Portal Access') && /apiPost\('\/portals\/client-access'/.test(ui));
+check('Portal UI supports subcontractor grant', uiHas(ui,'Grant Subcontractor Portal Access') && /apiPost\('\/portals\/subcontractor-access'/.test(ui));
 check('Portal UI supports activate/deactivate', /apiPatch\(`\/portals\/client-access\/\$\{row.id\}\/status`/.test(ui) && /apiPatch\(`\/portals\/subcontractor-access\/\$\{row.id\}\/status`/.test(ui));
 check('Subcontractor dashboard avoids join-multiplication financial sum', /left join lateral[\s\S]*sum\(sc.net_amount_due\)/.test(portals) && !/sum\(distinct sc\.net_amount_due\)/.test(portals));
 

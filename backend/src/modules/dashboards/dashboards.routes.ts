@@ -22,11 +22,12 @@ dashboardsRouter.get('/executive', asyncHandler(async (req, res) => {
 
   const [portfolio, approvals, financial, quality, hse, schedule] = await Promise.all([
     query(`
-      select p.id, p.project_code, p.project_name, p.status, p.current_contract_value,
+      select p.id, p.project_code, p.project_name, p.status, p.current_contract_value, pc.code as currency_code,
              coalesce(v.percent_billed,0) as percent_billed,
              v.cost_performance_index, v.schedule_performance_index, v.snapshot_date
       from projects p
       left join v_portfolio_summary v on v.project_id = p.id
+      left join currencies pc on pc.id = p.currency_id
       where p.org_id = $1${filter.clause}
       order by p.project_name
     `, params),
@@ -37,28 +38,30 @@ dashboardsRouter.get('/executive', asyncHandler(async (req, res) => {
       group by status
       order by status
     `, [req.user!.org_id]),
+    // CC-075: one row per project and currency - committed / actual cost and open AR / AP were summed per project
+    // across currencies (cost transactions, receivables and payables each carry their own currency).
     query(`
-      select p.id as project_id, p.project_name,
-             coalesce(ct.committed,0) as committed,
-             coalesce(ct.actual,0) as actual,
-             coalesce(ar.ar_open,0) as ar_open,
-             coalesce(ap.ap_open,0) as ap_open
+      select p.id as project_id, p.project_code, p.project_name, cur.code as currency_code,
+             sum(x.committed) as committed,
+             sum(x.actual) as actual,
+             sum(x.ar_open) as ar_open,
+             sum(x.ap_open) as ap_open
       from projects p
-      left join lateral (
-        select coalesce(sum(amount) filter (where transaction_type='committed'),0) as committed,
-               coalesce(sum(amount) filter (where transaction_type='actual'),0) as actual
-        from cost_transactions where project_id=p.id
-      ) ct on true
-      left join lateral (
-        select coalesce(sum(amount) filter (where status <> 'paid'),0) as ar_open
-        from accounts_receivable where project_id=p.id
-      ) ar on true
-      left join lateral (
-        select coalesce(sum(amount) filter (where status <> 'paid'),0) as ap_open
-        from accounts_payable where project_id=p.id
-      ) ap on true
+      join (
+        select project_id, currency_id,
+               case when transaction_type='committed' then amount else 0 end as committed,
+               case when transaction_type='actual' then amount else 0 end as actual,
+               0::numeric as ar_open, 0::numeric as ap_open
+        from cost_transactions
+        union all
+        select project_id, currency_id, 0, 0, case when status <> 'paid' then amount else 0 end, 0 from accounts_receivable
+        union all
+        select project_id, currency_id, 0, 0, 0, case when status <> 'paid' then amount else 0 end from accounts_payable
+      ) x on x.project_id = p.id
+      join currencies cur on cur.id = x.currency_id
       where p.org_id = $1${filter.clause}
-      order by p.project_name
+      group by p.id, p.project_code, p.project_name, cur.code
+      order by p.project_name, cur.code
     `, params),
     query(`
       select p.id as project_id, p.project_name,

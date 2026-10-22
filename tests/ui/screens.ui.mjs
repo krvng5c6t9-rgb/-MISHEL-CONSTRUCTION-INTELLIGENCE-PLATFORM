@@ -1,10 +1,12 @@
-// R1.2 batches 4-6 (CC-071, CC-072, CC-074) browser verification of translated screens in both languages: Projects, CRM,
-// Tendering, BOQ, Contracts, Claims, Subcontracts, Cost Control, Approvals, Inventory, Procurement, Finance, Technical Office,
-// Planning, Site Execution, QA/QC, HSE, EDMS, HR, Assets. For each screen and language: the title, the document direction, no
+// R1.2 batches 4-7 (CC-071, CC-072, CC-074, CC-075) browser verification of translated screens in both languages: Projects,
+// CRM, Tendering, BOQ, Contracts, Claims, Subcontracts, Cost Control, Approvals, Inventory, Procurement, Finance, Technical
+// Office, Planning, Site Execution, QA/QC, HSE, EDMS, HR, Assets, Executive Dashboard, Reports, Runtime Validation, Portals,
+// AI Platform, Automation, Knowledge, Commercial SaaS. For each screen and language: the title, the document direction, no
 // Latin letters in the Arabic headings / column headings / buttons / field labels / placeholders / coded drop-down options,
-// content within its column, no console errors and no 5xx. In Arabic, end to end: CRM client / lead / site-visit activity
-// (CC-071); Finance manual journal and labelled ledger columns (CC-072); Technical Office RFI flagged for cost impact,
-// Planning refusal shown and contractual milestone, HR employee tile = employees returned (CC-074).
+// no raw JSON dump or database field name as a column heading, content within its column, no console errors and no 5xx.
+// In Arabic, end to end: CRM client / lead / site-visit activity (CC-071); Finance manual journal and labelled ledger
+// columns (CC-072); Technical Office RFI flagged for cost impact, Planning refusal shown and contractual milestone, HR
+// employee tile = employees returned (CC-074); executive cost tiles per currency, Portals notice in Arabic (CC-075).
 // Run by tests/e2e/run_from_zero.sh when UI_CHECK=1 (CI does).
 import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -42,7 +44,15 @@ const SCREENS = [
   ['/hse', 'HSE Control', 'ضبط السلامة والصحة المهنية'],
   ['/edms', 'Controlled Documents & Transmittals', 'الوثائق المضبوطة وخطابات التحويل'],
   ['/hr', 'HR / Payroll', 'الموارد البشرية / المرتبات'],
-  ['/assets', 'Assets / Equipment', 'الأصول / المعدات']
+  ['/assets', 'Assets / Equipment', 'الأصول / المعدات'],
+  ['/executive-dashboard', 'Executive Dashboard', 'لوحة الإدارة العليا'],
+  ['/reports', 'Reports Center', 'مركز التقارير'],
+  ['/runtime-validation', 'Runtime Validation', 'التحقق من جاهزية التشغيل', 3],
+  ['/portals', 'Client / Subcontractor Portals', 'بوابات العملاء ومقاولي الباطن'],
+  ['/ai-platform', 'AI Platform Control Center', 'مركز التحكم في منصة الذكاء الاصطناعي'],
+  ['/automation', 'Automation & Integration Hub', 'مركز الأتمتة والربط', 4],
+  ['/knowledge', 'Enterprise Knowledge & RAG', 'معرفة المؤسسة والاسترجاع المعزز', 3],
+  ['/commercial-platform', 'Commercial SaaS Control Center', 'مركز التحكم التجاري للمنصة', 5]
 ];
 
 let browser;
@@ -61,7 +71,8 @@ try {
     await page.getByRole('button', { name: lang === 'ar' ? 'دخول' : 'Login', exact: true }).click();
     await page.waitForURL(x => !x.pathname.startsWith('/login'), { timeout: 15000 });
 
-    for (const [path, en, ar] of SCREENS) {
+    // The 4th field, where given, is the fewest labelled texts a screen with no records yet shows (default 8).
+    for (const [path, en, ar, minTexts = 8] of SCREENS) {
       await page.goto(`${BASE}${path}`); await page.waitForTimeout(1200);
       const title = lang === 'ar' ? ar : en;
       const state = await page.evaluate(() => {
@@ -72,13 +83,15 @@ try {
           .map(s => s.trim()).filter(Boolean);
         const spill = [...m.querySelectorAll('*')].filter(e => !e.closest('.table-wrap')).map(e => e.getBoundingClientRect())
           .filter(b => b.width && (b.left < mb.left - 1 || b.right > mb.right + 1)).length;
-        return { h1: m.querySelector('h1')?.textContent?.trim(), dir: document.documentElement.dir, texts, spill, page: document.documentElement.scrollWidth - innerWidth };
+        const raw = m.querySelectorAll('pre').length + [...m.querySelectorAll('th')].filter(e => /_/.test(e.textContent ?? '')).length;
+        return { h1: m.querySelector('h1')?.textContent?.trim(), dir: document.documentElement.dir, texts, spill, raw, page: document.documentElement.scrollWidth - innerWidth };
       });
       check(`${lang}: ${path} title and direction`, state.h1 === title && state.dir === (lang === 'ar' ? 'rtl' : 'ltr'), `${state.h1} / ${state.dir}`);
       if (lang === 'ar') {
         const latin = state.texts.filter(s => /[A-Za-z]/.test(s));
-        check(`ar: ${path} no Latin letters in labels, placeholders and coded options`, state.texts.length >= 8 && latin.length === 0, latin.slice(0, 5).join(' | ') || `${state.texts.length} texts`);
+        check(`ar: ${path} no Latin letters in labels, placeholders and coded options`, state.texts.length >= minTexts && latin.length === 0, latin.slice(0, 5).join(' | ') || `${state.texts.length} texts`);
       }
+      check(`${lang}: ${path} no raw JSON or database field names shown (CC-075)`, state.raw === 0, `${state.raw}`);
       check(`${lang}: ${path} content stays in its column`, state.spill === 0 && state.page <= 0, JSON.stringify({ spill: state.spill, page: state.page }));
     }
 
@@ -178,6 +191,16 @@ try {
       const apiCount = await empResp.then(async r => r.ok() ? (await r.json()).data.length : -1);
       await page.waitForTimeout(1200);
       const tile = (await page.locator('.metric-card').first().locator('strong').innerText()).trim();
+      // Executive Dashboard (CC-075): cost tiles are per currency (they added currencies together) and the financial
+      // table names its currency.
+      await page.goto(`${BASE}/executive-dashboard`); await page.waitForTimeout(1500);
+      const exKpis = (await page.locator('[data-section="kpis"] small').allInnerTexts()).map(s => s.trim());
+      const exCur = (await page.locator('[data-section="financial"] tbody tr td:nth-child(2)').allInnerTexts()).map(s => s.trim());
+      check('ar: executive cost tiles are per currency and the financial table names the currency', exKpis.some(s => /^التكلفة الملتزم بها \([A-Z]{3}\)$/.test(s)) && exKpis.some(s => /^التكلفة الفعلية \([A-Z]{3}\)$/.test(s)) && exCur.length > 0 && exCur.every(s => /^[A-Z]{3}$/.test(s)), `${exKpis.join(' | ')} / ${[...new Set(exCur)].join(',')}`);
+      // Portals (CC-075): a validation notice follows the language (it was a fixed English sentence).
+      await page.goto(`${BASE}/portals`); await page.waitForTimeout(1200);
+      await page.locator('[data-section="grant-client"]').getByRole('button', { name: 'حفظ الصلاحية', exact: true }).click(); await page.waitForTimeout(300);
+      check('ar: Portals validation notice in Arabic', (await alert()) === 'مستخدم بوابة العميل والعميل والمشروع مطلوبون.', await alert());
       check('ar: HR employee tile equals the number of employees returned (was capped at 8)', apiCount > 8 && tile === String(apiCount), `tile ${tile}, API ${apiCount}`);
     }
     check(`${lang}: no 5xx from the API`, serverErrors.length === 0, serverErrors.slice(0, 3).join(' | '));

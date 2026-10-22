@@ -28,6 +28,14 @@ import * as hse from './messages/hse';
 import * as edms from './messages/edms';
 import * as hr from './messages/hr';
 import * as assets from './messages/assets';
+import * as executive from './messages/executive';
+import * as reports from './messages/reports';
+import * as runtime from './messages/runtime';
+import * as portals from './messages/portals';
+import * as aiPlatform from './messages/aiPlatform';
+import * as automation from './messages/automation';
+import * as knowledge from './messages/knowledge';
+import * as commercialPlatform from './messages/commercialPlatform';
 
 // R1.1 / R1.2 (MP-06 §1): Arabic-first, fully bilingual interface. Every user-visible string of a translated screen
 // comes from the dictionaries in ./messages (one file per area); the language also sets the document language and
@@ -39,12 +47,14 @@ const STORAGE_KEY = 'mishel.lang';
 const en = { ...shell.en, ...common.en, ...dashboard.en, ...cutover.en, ...values.en, ...revenue.en, ...payments.en, ...admin.en, ...projectControls.en,
   ...projectsMsg.en, ...crm.en, ...tendering.en, ...boq.en, ...contracts.en, ...claims.en, ...subcontracts.en,
   ...costControl.en, ...approvals.en, ...inventory.en, ...procurement.en, ...finance.en,
-  ...technicalOffice.en, ...planning.en, ...site.en, ...qaqc.en, ...hse.en, ...edms.en, ...hr.en, ...assets.en };
+  ...technicalOffice.en, ...planning.en, ...site.en, ...qaqc.en, ...hse.en, ...edms.en, ...hr.en, ...assets.en,
+  ...executive.en, ...reports.en, ...runtime.en, ...portals.en, ...aiPlatform.en, ...automation.en, ...knowledge.en, ...commercialPlatform.en };
 export type MessageKey = keyof typeof en;
 const ar: Record<MessageKey, string> = { ...shell.ar, ...common.ar, ...dashboard.ar, ...cutover.ar, ...values.ar, ...revenue.ar, ...payments.ar, ...admin.ar, ...projectControls.ar,
   ...projectsMsg.ar, ...crm.ar, ...tendering.ar, ...boq.ar, ...contracts.ar, ...claims.ar, ...subcontracts.ar,
   ...costControl.ar, ...approvals.ar, ...inventory.ar, ...procurement.ar, ...finance.ar,
-  ...technicalOffice.ar, ...planning.ar, ...site.ar, ...qaqc.ar, ...hse.ar, ...edms.ar, ...hr.ar, ...assets.ar };
+  ...technicalOffice.ar, ...planning.ar, ...site.ar, ...qaqc.ar, ...hse.ar, ...edms.ar, ...hr.ar, ...assets.ar,
+  ...executive.ar, ...reports.ar, ...runtime.ar, ...portals.ar, ...aiPlatform.ar, ...automation.ar, ...knowledge.ar, ...commercialPlatform.ar };
 export type MessageVars = Record<string, string | number>;
 
 export const dictionaries: Record<Lang, Record<MessageKey, string>> = { en, ar };

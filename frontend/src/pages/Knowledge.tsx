@@ -1,4 +1,27 @@
 import { useEffect,useState } from 'react';
 import { api } from '../lib/api';
-export function Knowledge(){const [summary,setSummary]=useState<any>(null);const [tab,setTab]=useState('sources');const [rows,setRows]=useState<any[]>([]);const [error,setError]=useState('');async function load(){try{setError('');setSummary((await api.get('/knowledge/summary')).data);setRows((await api.get(`/knowledge/${tab}`)).data||[]);}catch(e:any){setError(e?.message||'Failed to load knowledge');}}useEffect(()=>{load();},[tab]);return <div className="page"><div className="page-header"><div><h1>Enterprise Knowledge & RAG</h1><p>Controlled sources, revisions, authority hierarchy, chunks, grounded queries and citations.</p></div></div>{error&&<div className="alert error">{error}</div>}<div className="metric-grid"><div className="metric-card"><small>Sources</small><strong>{summary?.sources??0}</strong></div><div className="metric-card"><small>Current</small><strong>{summary?.current_sources??0}</strong></div><div className="metric-card"><small>Chunks</small><strong>{summary?.chunks??0}</strong></div><div className="metric-card"><small>Queries</small><strong>{summary?.queries??0}</strong></div><div className="metric-card"><small>Grounded</small><strong>{summary?.grounded_queries??0}</strong></div></div><div className="tabs"><button className={tab==='sources'?'active':''} onClick={()=>setTab('sources')}>sources</button><button className={tab==='queries'?'active':''} onClick={()=>setTab('queries')}>queries</button></div><Table rows={rows}/></div>}
-function Table({rows}:{rows:any[]}){const keys=rows[0]?Object.keys(rows[0]).slice(0,9):[];return <div className="panel"><div className="table-wrap"><table><thead><tr>{keys.map(k=><th key={k}>{k}</th>)}</tr></thead><tbody>{rows.map((r,i)=><tr key={r.id??i}>{keys.map(k=><td key={k}>{typeof r[k]==='object'?JSON.stringify(r[k]):String(r[k]??'')}</td>)}</tr>)}</tbody></table>{!rows.length&&<p className="muted">No records yet.</p>}</div></div>}
+import { useI18n, type MessageKey } from '../lib/i18n';
+import { Num, Table } from '../components/RecordTable';
+
+// R1.2: labels from messages/knowledge.ts; source types, statuses and yes / no through tv(). CC-075: each tab has
+// defined, labelled columns (the screen showed the first 9 raw API fields under their database names).
+type Col=[string,MessageKey];
+const TABS:[string,MessageKey][]=[['sources','kn.tabSources'],['queries','kn.tabQueries']];
+const COLS:Record<string,Col[]>={
+ sources:[['source_key','kn.colKey'],['title','kn.colTitle'],['source_type','kn.colType'],['authority_level','kn.colAuthority'],['revision','kn.colRevision'],['status','kn.colStatus'],['effective_date','kn.colEffective']],
+ queries:[['created_at','kn.colAsked'],['query_text','kn.colQuestion'],['model_key','kn.colModel'],['grounded','kn.colGrounded']]
+};
+const CODED=['source_type','status','grounded'];
+export function Knowledge(){
+ const { t, tv } = useI18n();
+ const [summary,setSummary]=useState<any>(null);const [tab,setTab]=useState('sources');const [rows,setRows]=useState<any[]>([]);const [error,setError]=useState('');const [failed,setFailed]=useState(false);
+ async function load(){try{setError('');setFailed(false);setSummary((await api.get('/knowledge/summary')).data);setRows((await api.get(`/knowledge/${tab}`)).data||[]);}catch(e:any){if(e?.message)setError(e.message);else setFailed(true);}}
+ useEffect(()=>{load();},[tab]);
+ const view=rows.map(r=>{const v:any={...r};for(const k of CODED)if(k in r&&r[k]!=null)v[k]=tv(r[k]);return v;});
+ return <section className="page-stack"><header className="page-header"><div><h1>{t('kn.title')}</h1><p>{t('kn.intro')}</p></div></header>
+ {(error||failed)&&<div className="notice" role="alert">{failed?t('kn.loadFailed'):<bdi>{error}</bdi>}</div>}
+ <div className="metric-grid" data-section="kpis"><div className="metric-card"><small>{t('kn.sources')}</small><strong><Num v={summary?.sources??0}/></strong></div><div className="metric-card"><small>{t('kn.current')}</small><strong><Num v={summary?.current_sources??0}/></strong></div><div className="metric-card"><small>{t('kn.chunks')}</small><strong><Num v={summary?.chunks??0}/></strong></div><div className="metric-card"><small>{t('kn.queries')}</small><strong><Num v={summary?.queries??0}/></strong></div><div className="metric-card"><small>{t('kn.grounded')}</small><strong><Num v={summary?.grounded_queries??0}/></strong></div></div>
+ <div className="tabs" role="tablist">{TABS.map(([k,label])=><button key={k} role="tab" aria-selected={tab===k} className={tab===k?'active':''} onClick={()=>setTab(k)}>{t(label)}</button>)}</div>
+ <div className="panel" data-section="records">{view.length?<Table rows={view} cols={COLS[tab].map(([k,h])=>[k,t(h)] as [string,string])}/>:<p className="muted">{t('kn.noRecords')}</p>}</div>
+ </section>
+}

@@ -45,6 +45,20 @@ try {
   await expectStatus('incident reporter cannot close it (SoD)', () => api('PATCH', `/hse/incidents/${inc.id}/close`, T.h1, { corrective_actions: 'gloves' }), 409);
   await run('independent HSE closes incident', async () => must(await api('PATCH', `/hse/incidents/${inc.id}/close`, T.h2, { corrective_actions: 'Cut-resistant gloves issued (fixture)' }), 'iclose'));
 
+  // --- CC-075: a fatality is a serious incident in every report (the weekly executive report and the frozen report
+  // pack counted severity 'fatal', which incidents never store, so fatalities were left out).
+  for (const severity of ['major', 'fatality']) must(await api('POST', '/hse/incidents', T.h1, { project_id: project, severity, incident_date: day(-1), description: `${severity} incident (fixture)` }), `inc ${severity}`);
+  const weekly = must(await api('GET', `/reports/weekly-executive?project_id=${project}`, admin), 'weekly');
+  check('weekly executive report counts the major incident and the fatality as serious', Number(weekly[0]?.major_hse_incidents) === 2, JSON.stringify(weekly[0]?.major_hse_incidents));
+  const hm = must(await api('GET', `/hse/metrics?project_id=${project}`, admin), 'hse metrics');
+  check('HSE metrics agree (major + fatality)', Number(hm.serious_incidents) >= 2, JSON.stringify(hm.serious_incidents));
+  const pk = must(await api('POST', '/reports/packs', admin, { project_id: project, period_type: 'weekly', period_start: day(-2), period_end: day(-1) }), 'pack');
+  const pkFull = must(await api('GET', `/reports/packs/${pk.id}`, admin), 'pack read');
+  check('frozen report pack counts the major incident and the fatality (migration 084)', Number(pkFull.payload?.hse?.major_or_fatal_in_period) === 2, JSON.stringify(pkFull.payload?.hse));
+  const exec = must(await api('GET', '/dashboards/executive', admin), 'executive');
+  const keys = (exec.financial ?? []).map(r => `${r.project_id}|${r.currency_code}`);
+  check('executive dashboard financials are one row per project and currency (never summed across currencies)', Array.isArray(exec.financial) && exec.financial.length > 0 && exec.financial.every(r => /^[A-Z]{3}$/.test(r.currency_code ?? '')) && new Set(keys).size === keys.length, JSON.stringify(exec.financial?.slice(0, 2)));
+
   const tb = await login(ADMIN_B);
   await expectStatus('tenant B cannot record result on tenant A inspection', () => api('PATCH', `/qaqc/inspections/${insp.id}/status`, tb, { status: 'failed' }), 404);
   await expectStatus('tenant B cannot approve tenant A permit', () => api('POST', `/hse/permits/${p2.id}/approve`, tb), 409);

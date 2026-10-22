@@ -21,9 +21,11 @@ has('HSE controlled PTW API','backend/src/modules/hse/hse.routes.ts',[
 has('QAQC independent NCR closure','backend/src/modules/qaqc/qaqc.routes.ts',[
   "root_cause: z.string().min(1)","raised_by<>$4","count(distinct ic.id)","count(distinct n.id)"
 ]);
+// CC-075: the financial block is one union of cost, receivable and payable rows grouped per project and currency (no
+// join between the three sources, so no fan-out; amounts in different currencies are never added together).
 has('Executive dashboard avoids multiplicative financial joins','backend/src/modules/dashboards/dashboards.routes.ts',[
-  'left join lateral (','from cost_transactions where project_id=p.id','from accounts_receivable where project_id=p.id','from accounts_payable where project_id=p.id',
-  'count(distinct ic.id)','count(distinct i.id)',"fatality"
+  'from cost_transactions\n','union all','from accounts_receivable','from accounts_payable','join currencies cur on cur.id = x.currency_id',
+  'group by p.id, p.project_code, p.project_name, cur.code','count(distinct ic.id)','count(distinct i.id)',"fatality"
 ]);
 has('HSE UI operational workflow','frontend/src/pages/HSE.tsx',["Request PTW","/approve","/activate","Close Investigation"]);
 has('QAQC UI operational workflow','frontend/src/pages/QAQC.tsx',['Raise NCR','Independent Close','Create Inspection']);
