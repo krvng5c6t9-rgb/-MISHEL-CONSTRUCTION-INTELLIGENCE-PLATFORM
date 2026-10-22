@@ -67,7 +67,7 @@ costTransactionsRouter.post('/snapshots/:id/approve', authorize('cost_control', 
 costTransactionsRouter.get('/snapshots/:id/reconcile', asyncHandler(async (req, res) => {
   const s = (await query<any>(`select * from cost_forecast_snapshots where id=$1 and org_id=$2`, [posId(req.params.id), req.user!.org_id]))[0];
   if (!s) throw new AppError(404, 'Snapshot not found');
-  const [now] = await query<any>(`select coalesce(sum(amount) filter (where transaction_type='committed'),0)::numeric(18,2) as committed, coalesce(sum(amount) filter (where transaction_type='actual'),0)::numeric(18,2) as actual,
+  const [now] = await query<any>(`select coalesce(sum(project_amount) filter (where transaction_type='committed'),0)::numeric(18,2) as committed, coalesce(sum(project_amount) filter (where transaction_type='actual'),0)::numeric(18,2) as actual,
       cost_accrual_as_of($1,$2,$3::date) as accrual from cost_transactions where project_id=$1 and cost_code_id=$2 and transaction_date <= $3::date`, [s.project_id, s.cost_code_id, s.as_of]);
   const [diff] = await query<any>(`select ($1::numeric-$2::numeric)::numeric(18,2) as committed, ($3::numeric-$4::numeric)::numeric(18,2) as actual, ($5::numeric-$6::numeric)::numeric(18,2) as accrual, ($1::numeric<>$2::numeric or $3::numeric<>$4::numeric or $5::numeric<>$6::numeric) as unexplained`, [now.committed, s.committed, now.actual, s.actual, now.accrual, s.accrual]);
   const late = await query(`select id, transaction_type, amount, transaction_date, created_at, source_module from cost_transactions where project_id=$1 and cost_code_id=$2 and transaction_date <= $3::date and created_at > $4::timestamptz order by id`, [s.project_id, s.cost_code_id, s.as_of, s.created_at]);

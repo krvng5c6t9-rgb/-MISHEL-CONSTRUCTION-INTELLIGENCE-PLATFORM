@@ -529,8 +529,8 @@ financeRouter.get('/cash-flow', asyncHandler(async (req, res) => {
     select p.id as project_id, p.project_name,
            coalesce((select sum(ar.amount) from accounts_receivable ar where ar.project_id=p.id and ar.status <> 'paid'),0) as open_receivables,
            coalesce((select sum(ap.amount) from accounts_payable ap where ap.project_id=p.id and ap.status <> 'paid'),0) as open_payables,
-           coalesce((select sum(ct.amount) from cost_transactions ct where ct.project_id=p.id and ct.transaction_type='committed'),0) as committed_cost,
-           coalesce((select sum(ct.amount) from cost_transactions ct where ct.project_id=p.id and ct.transaction_type='actual'),0) as actual_cost
+           coalesce((select sum(ct.project_amount) from cost_transactions ct where ct.project_id=p.id and ct.transaction_type='committed'),0) as committed_cost,
+           coalesce((select sum(ct.project_amount) from cost_transactions ct where ct.project_id=p.id and ct.transaction_type='actual'),0) as actual_cost
     from projects p
     where p.org_id = $1
     order by p.id
@@ -542,9 +542,9 @@ financeRouter.get('/cost-summary', asyncHandler(async (req, res) => {
   const orgId = Number(req.user!.org_id);
   const rows = await query(`
     select p.project_name, ct.project_id, ct.cost_code_id, cc.code, cc.description,
-           sum(case when ct.transaction_type = 'committed' then ct.amount else 0 end) as committed_cost,
-           sum(case when ct.transaction_type = 'actual' then ct.amount else 0 end) as actual_cost,
-           sum(case when ct.transaction_type = 'forecast' then ct.amount else 0 end) as forecast_cost,
+           sum(case when ct.transaction_type = 'committed' then ct.project_amount else 0 end) as committed_cost,
+           sum(case when ct.transaction_type = 'actual' then ct.project_amount else 0 end) as actual_cost,
+           sum(case when ct.transaction_type = 'forecast' then ct.project_amount else 0 end) as forecast_cost,
            bool_or(ct.is_posted_to_gl) as has_gl_posted_rows
     from cost_transactions ct
     join projects p on p.id = ct.project_id
