@@ -34,7 +34,7 @@ financeRouter.get('/reference-data', asyncHandler(async (req, res) => {
 financeRouter.get('/chart-of-accounts', asyncHandler(async (req, res) => {
   const orgId = Number(req.user!.org_id);
   const rows = await query(`
-    select id, account_code, account_name, account_type, parent_account_id, is_active
+    select id, account_code, account_name, account_type, parent_account_id, is_active, fx_revalue
     from chart_of_accounts
     where org_id = $1
     order by account_code

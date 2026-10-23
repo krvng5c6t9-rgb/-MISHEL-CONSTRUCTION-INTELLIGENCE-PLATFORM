@@ -1,3 +1,5 @@
+import { translateServerMessage } from './serverMessages';
+
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000/api';
 const TOKEN_KEY = 'construction_erp_token';
 
@@ -31,7 +33,9 @@ async function request<T = any>(path: string, init: RequestInit = {}): Promise<T
   const response = await fetch(`${API_BASE_URL}${path}`, { ...init, headers });
   const payload = await response.json().catch(() => null);
   if (!response.ok) {
-    throw new Error(payload?.error ?? `API request failed: ${response.status} ${response.statusText}`);
+    // CC-079: the server message in the user's language (validation errors name their fields).
+    const fields = Array.isArray(payload?.details) ? payload.details.map((d: any) => d?.path).filter(Boolean) : [];
+    throw new Error(translateServerMessage(payload?.error ?? `API request failed: ${response.status} ${response.statusText}`, fields));
   }
   return payload as T;
 }
@@ -66,7 +70,7 @@ export async function apiBootstrapAdmin(body: unknown, bootstrapToken: string): 
     body: JSON.stringify(body)
   });
   const payload = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(payload?.error ?? `Bootstrap failed: ${response.status} ${response.statusText}`);
+  if (!response.ok) throw new Error(translateServerMessage(payload?.error ?? `Bootstrap failed: ${response.status} ${response.statusText}`));
   return payload;
 }
 

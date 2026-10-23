@@ -1,6 +1,6 @@
 // R1.1 (MP-06 §1) browser verification of the bilingual shell: Arabic is the default with right-to-left direction;
 // the language switch changes language and direction on the sign-in screen and in the application shell, persists
-// across reloads, every one of the 34 navigation items is translated in both languages, and the landing dashboard is in
+// across reloads, every one of the 35 navigation items is translated in both languages, and the landing dashboard is in
 // Arabic (R1.2). Also checks that the
 // Arabic and English dictionaries in frontend/src/lib/messages/*.ts have the same keys and placeholders.
 // Run by tests/e2e/run_from_zero.sh when UI_CHECK=1 (CI does).
@@ -15,7 +15,7 @@ const check = (name, ok, detail = '') => { results.push({ name, ok, detail }); c
 
 const EN_NAV = ['Dashboard', 'Projects', 'Project Controls', 'Payments & Certification', 'Revenue & Contract Position', 'Go-live cut-over',
   'Users / Roles / DOA', 'CRM', 'Tendering', 'BOQ', 'Contracts', 'Claims / EOT', 'Subcontracts', 'Cost Control', 'Procurement', 'Inventory',
-  'Approvals', 'Finance', 'Technical Office', 'Planning', 'Site Execution', 'HR / Payroll', 'Assets', 'QA/QC', 'HSE', 'EDMS',
+  'Approvals', 'Finance', 'Exchange Rates', 'Technical Office', 'Planning', 'Site Execution', 'HR / Payroll', 'Assets', 'QA/QC', 'HSE', 'EDMS',
   'Executive Dashboard', 'Reports', 'Portals', 'Runtime Validation', 'AI Platform', 'Automation / Integrations', 'Knowledge / RAG', 'Commercial SaaS'];
 const ARABIC = /[؀-ۿ]/, LATIN = /[A-Za-z]/;
 
@@ -78,7 +78,7 @@ try {
   h = await html();
   const ar = await navTexts();
   check('application shell in Arabic after sign-in (rtl)', h.lang === 'ar' && h.dir === 'rtl', JSON.stringify(h));
-  check('all 34 navigation items translated to Arabic (Arabic text, no Latin letters)', ar.length === 34 && ar.every(t => ARABIC.test(t) && !LATIN.test(t)),
+  check('all 35 navigation items translated to Arabic (Arabic text, no Latin letters)', ar.length === 35 && ar.every(t => ARABIC.test(t) && !LATIN.test(t)),
     ar.filter(t => !ARABIC.test(t) || LATIN.test(t)).join(' | ') || `${ar.length} items`);
   check('Arabic navigation labels are distinct', new Set(ar).size === ar.length);
   check('logout labelled in Arabic', await page.getByRole('button', { name: 'تسجيل الخروج' }).count() === 1);
@@ -107,7 +107,7 @@ try {
   h = await html();
   const en = await navTexts();
   check('switching in the shell turns it to English (ltr)', h.lang === 'en' && h.dir === 'ltr', JSON.stringify(h));
-  check('all 34 navigation items in English, in order', JSON.stringify(en) === JSON.stringify(EN_NAV),
+  check('all 35 navigation items in English, in order', JSON.stringify(en) === JSON.stringify(EN_NAV),
     en.filter((t, i) => t !== EN_NAV[i]).join(' | ') || `${en.length} items`);
   check('logout labelled in English', await page.getByRole('button', { name: 'Logout' }).count() === 1);
   const enBrand = await brand();

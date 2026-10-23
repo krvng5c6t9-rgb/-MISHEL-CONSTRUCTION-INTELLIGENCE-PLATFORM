@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-078
+## Controlled Changes CC-001 → CC-079
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -110,6 +110,7 @@
 | CC-076 | DEC-021 part 1: cost in one currency at the exchange rate of its date (rate frozen per transaction, refused without a rate; migration 085) |
 | CC-077 | DEC-021 part 2a: general ledger in the base currency (rate frozen per line, exact batch balance without a rounding account), trial balance (migration 086) |
 | CC-078 | DEC-022: period-end exchange revaluation (cumulative, settlement residues included) against the company's gain / loss accounts; maximum rate age (migration 087) |
+| CC-079 | Set-up screen and server messages in Arabic (general and common families; F-55 for the rest); Exchange Rates & Revaluation screen (R1.2) |
 
 **Owner approvals (R6):** A-001 master plan MP-01…MP-07; A-002 Stage 39 (CC-068), both 2026-10-15, signed Mishel Thabet Halim (`governance/registers/11_Approval_Register.csv`).
 
@@ -184,8 +185,8 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | revenue.ui.mjs | 24 | Browser: Revenue & Contract Position - runs, backward run refused, estimate SoD/approve/retire, retention release, F-48; the contract in Arabic, negative amounts and periods left-to-right, content within its column and KPI figure size in both languages |
 | cutover.ui.mjs | 28 | Browser: Go-live cut-over in a fresh tenant - paste with mapping, row errors previewed and nothing saved, difference per control account, preparer refusal, second-person approval; the draft and opened screens in Arabic (Arabic column names, Arabic row errors, no Latin labels) |
 | i18n.ui.mjs | 22 | Browser: Arabic default RTL, switch to English LTR (sign-in and shell), persistence, 34 navigation items in both languages, landing dashboard in Arabic, key and placeholder parity across all message files; navigation side and direction in each language |
-| screens.ui.mjs | 212 | Browser: 28 screens in both languages (title, direction, no Latin Arabic labels, content within column, no console errors / 5xx); CRM client, lead and activity and a Finance manual journal created from the Arabic screens; labelled ledger columns; RFI flagged for cost impact, Planning refusal shown, contractual milestone, HR tile count; no screen uses the UTC date; no raw JSON / database field names; executive tiles per currency; Portals notice in Arabic |
-| **Total** | **1,707** | 46 API suites + 7 browser checks, all PASS locally (RUN sh35; 1,696 at RUN sh34 before Stage 48; 1,692 at RUN sh29 before Stage 47; 1,683 at RUN sh25 before Stage 46; 1,581 at RUN sh23 before Stage 45; 1,536 at RUN sh21 before Stage 44; 1,533 at RUN sh20 before Stage 43; 1,506 at RUN sh19 before Stage 42; 1,464 at RUN sh18 before Stage 41; 1,453 at RUN sh15 before Stage 40; 1,436 at RUN sh9 before Stage 39; 1,425 at RUN sh7 before Stage 38; 1,410 at RUN sh5 before Stage 37; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
+| screens.ui.mjs | 229 | Browser: 30 screens in both languages (title, direction, no Latin Arabic labels, content within column, no console errors / 5xx); CRM client, lead and activity and a Finance manual journal created from the Arabic screens; labelled ledger columns; RFI flagged for cost impact, Planning refusal shown, contractual milestone, HR tile count; no screen uses the UTC date; no raw JSON / database field names; executive tiles per currency; Portals notice in Arabic; database and validation refusals arrive in Arabic; exchange register |
+| **Total** | **1,724** | 46 API suites + 7 browser checks, all PASS locally (RUN sh40; 1,707 at RUN sh35 before Stage 49; 1,696 at RUN sh34 before Stage 48; 1,692 at RUN sh29 before Stage 47; 1,683 at RUN sh25 before Stage 46; 1,581 at RUN sh23 before Stage 45; 1,536 at RUN sh21 before Stage 44; 1,533 at RUN sh20 before Stage 43; 1,506 at RUN sh19 before Stage 42; 1,464 at RUN sh18 before Stage 41; 1,453 at RUN sh15 before Stage 40; 1,436 at RUN sh9 before Stage 39; 1,425 at RUN sh7 before Stage 38; 1,410 at RUN sh5 before Stage 37; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).

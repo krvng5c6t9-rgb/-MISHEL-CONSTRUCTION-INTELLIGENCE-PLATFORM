@@ -9,6 +9,7 @@ import { Procurement } from './pages/Procurement';
 import { Approvals } from './pages/Approvals';
 import { CostControl } from './pages/CostControl';
 import { Finance } from './pages/Finance';
+import { Exchange } from './pages/Exchange';
 import { TechnicalOffice } from './pages/TechnicalOffice';
 import { Planning } from './pages/Planning';
 import { SiteExecution } from './pages/SiteExecution';
@@ -64,6 +65,7 @@ export function App() {
             <Route path="procurement" element={<Procurement />} />
             <Route path="approvals" element={<Approvals />} />
             <Route path="finance" element={<Finance />} />
+            <Route path="exchange" element={<Exchange />} />
             <Route path="technical-office" element={<TechnicalOffice />} />
             <Route path="planning" element={<Planning />} />
             <Route path="site" element={<SiteExecution />} />

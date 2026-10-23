@@ -22,6 +22,7 @@ const navItems = [
   { to: '/inventory', key: 'nav.inventory', icon: PackageCheck },
   { to: '/approvals', key: 'nav.approvals', icon: ClipboardCheck },
   { to: '/finance', key: 'nav.finance', icon: Landmark },
+  { to: '/exchange', key: 'nav.exchange', icon: Landmark },
   { to: '/technical-office', key: 'nav.technicalOffice', icon: DraftingCompass },
   { to: '/planning', key: 'nav.planning', icon: CalendarDays },
   { to: '/site', key: 'nav.site', icon: HardHat },

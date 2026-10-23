@@ -300,7 +300,8 @@ export const en = {
   'value.archived': 'archived',
   'value.annual': 'annual',
   'value.trial': 'trial',
-  'value.pastDue': 'past_due'
+  'value.pastDue': 'past_due',
+  'value.posting': 'posting'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -601,5 +602,6 @@ export const ar: Record<keyof typeof en, string> = {
   'value.archived': 'مؤرشف',
   'value.annual': 'سنوي',
   'value.trial': 'تجريبي',
-  'value.pastDue': 'متأخر السداد'
+  'value.pastDue': 'متأخر السداد',
+  'value.posting': 'قيد الترحيل'
 };

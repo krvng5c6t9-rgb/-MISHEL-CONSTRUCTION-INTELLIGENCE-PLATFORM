@@ -52,7 +52,9 @@ const SCREENS = [
   ['/ai-platform', 'AI Platform Control Center', 'مركز التحكم في منصة الذكاء الاصطناعي'],
   ['/automation', 'Automation & Integration Hub', 'مركز الأتمتة والربط', 4],
   ['/knowledge', 'Enterprise Knowledge & RAG', 'معرفة المؤسسة والاسترجاع المعزز', 3],
-  ['/commercial-platform', 'Commercial SaaS Control Center', 'مركز التحكم التجاري للمنصة', 5]
+  ['/commercial-platform', 'Commercial SaaS Control Center', 'مركز التحكم التجاري للمنصة', 5],
+  ['/exchange', 'Exchange Rates & Revaluation', 'أسعار الصرف وإعادة التقييم'],
+  ['/setup', 'Initialize Construction ERP', 'تهيئة النظام']
 ];
 
 let browser;
@@ -63,7 +65,7 @@ try {
     await ctx.addInitScript((l) => { try { localStorage.setItem('mishel.lang', l); } catch {} }, lang);
     const page = await ctx.newPage();
     const consoleErrors = [], serverErrors = [];
-    page.on('console', m => { if (m.type() === 'error' && !/status of 40[349]|status of 422/.test(m.text())) consoleErrors.push(m.text()); });
+    page.on('console', m => { if (m.type() === 'error' && !/status of 40[0349]|status of 422/.test(m.text())) consoleErrors.push(m.text()); });
     page.on('response', r => { if (r.url().includes('/api/') && r.status() >= 500) serverErrors.push(`${r.status()} ${r.url()}`); });
     await page.goto(`${BASE}/login`);
     const inputs = page.locator('input');
@@ -77,7 +79,8 @@ try {
       const title = lang === 'ar' ? ar : en;
       const state = await page.evaluate(() => {
         const m = document.querySelector('main'), mb = m.getBoundingClientRect();
-        const texts = [...m.querySelectorAll('h1, h2, h3, th, button, label')].map(e => e.matches('label') ? e.firstChild?.textContent ?? '' : e.textContent ?? '')
+        // Text marked as another language (the language switch names the other language: lang="en") is not an Arabic label.
+        const texts = [...m.querySelectorAll('h1, h2, h3, th, button, label')].filter(e => !e.closest('[lang="en"]')).map(e => e.matches('label') ? e.firstChild?.textContent ?? '' : e.textContent ?? '')
           .concat([...m.querySelectorAll('[aria-label], [placeholder]')].map(e => e.getAttribute('aria-label') ?? e.getAttribute('placeholder') ?? ''))
           .concat([...m.querySelectorAll('select option')].filter(o => /^[a-z_]+$/.test(o.value)).map(o => o.textContent ?? ''))
           .map(s => s.trim()).filter(Boolean);
@@ -167,6 +170,7 @@ try {
       const firstOk = !(await alert()) && await act.locator('tbody tr', { hasText: `A-${TAG}` }).count() === 1;
       await addAct();
       check('ar: Planning shows the refusal of a duplicate activity code (failed silently before CC-074)', firstOk && !!(await alert()) && await act.locator('tbody tr', { hasText: `A-${TAG}` }).count() === 1, (await alert()) || '(no message)');
+      check('ar: that server refusal arrives in Arabic (CC-079)', /^خطأ: قيمة مكررة: يوجد سجل بالبيانات نفسها \(uq_schedule_activity_ext_per_project\)$/.test((await alert()).trim()), await alert());
       const ms = page.locator('[data-section="milestones"]');
       await ms.getByPlaceholder('اسم المَعلَم').fill(`UI milestone ${TAG}`);
       await ms.getByLabel('التاريخ المخطط').fill('2027-03-31');
@@ -197,6 +201,14 @@ try {
       const exKpis = (await page.locator('[data-section="kpis"] small').allInnerTexts()).map(s => s.trim());
       const exCur = (await page.locator('[data-section="financial"] tbody tr td:nth-child(2)').allInnerTexts()).map(s => s.trim());
       check('ar: executive cost tiles are per currency and the financial table names the currency', exKpis.some(s => /^التكلفة الملتزم بها \([A-Z]{3}\)$/.test(s)) && exKpis.some(s => /^التكلفة الفعلية \([A-Z]{3}\)$/.test(s)) && exCur.length > 0 && exCur.every(s => /^[A-Z]{3}$/.test(s)), `${exKpis.join(' | ')} / ${[...new Set(exCur)].join(',')}`);
+      // Exchange screen (CC-079): an incomplete settings form is refused by the server; the validation message arrives in
+      // Arabic and names the missing fields; the register and the monetary accounts are shown.
+      await page.goto(`${BASE}/exchange`); await page.waitForTimeout(1500);
+      const fxSet = page.locator('[data-section="settings"]');
+      await fxSet.getByLabel('حساب أرباح فروق العملة (إيرادات)').selectOption('');
+      await fxSet.getByRole('button', { name: 'حفظ الإعدادات', exact: true }).click(); await page.waitForTimeout(800);
+      check('ar: exchange settings refusal arrives in Arabic and names the fields (CC-079)', /^بيانات غير صالحة أو ناقصة في: .*fx_gain_account_id/.test(await alert()), await alert());
+      check('ar: exchange-rate register lists the recorded rates', (await page.locator('[data-section="rates"] tbody tr').count()) >= 2, String(await page.locator('[data-section="rates"] tbody tr').count()));
       // Portals (CC-075): a validation notice follows the language (it was a fixed English sentence).
       await page.goto(`${BASE}/portals`); await page.waitForTimeout(1200);
       await page.locator('[data-section="grant-client"]').getByRole('button', { name: 'حفظ الصلاحية', exact: true }).click(); await page.waitForTimeout(300);
