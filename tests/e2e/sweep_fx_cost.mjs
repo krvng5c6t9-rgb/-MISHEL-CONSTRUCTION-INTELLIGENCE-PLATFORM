@@ -87,6 +87,32 @@ try {
   const tb = await api('GET', '/finance/trial-balance', admin);
   check('trial balance in the base currency (EGP) balances', tb.status === 200 && tb.body?.meta?.base_currency_code === 'EGP' && tb.body.meta.total_debit === tb.body.meta.total_credit && Number(tb.body.meta.total_debit) > 0, JSON.stringify(tb.body?.meta ?? tb.body));
 
+  // CC-078 / DEC-022: period-end revaluation of monetary items, the company's gain / loss accounts, maximum rate age.
+  await expectStatus('revaluation refused until the exchange gain and loss accounts are set', () => api('POST', '/finance/fx-revaluations', P.c, { period_end: day(0) }), 422);
+  const coaX = async (code, name, type) => must(await api('POST', '/finance/chart-of-accounts', admin, { account_code: `${code}-${TAG}`, account_name: name, account_type: type }), 'coa').id;
+  const gain = await coaX('FX7100', 'Exchange gains (fixture)', 'revenue'), loss = await coaX('FX8100', 'Exchange losses (fixture)', 'expense');
+  await expectStatus('a gain account that is not a revenue account is refused', () => api('PATCH', '/finance/fx-settings', P.c, { fx_gain_account_id: loss, fx_loss_account_id: loss, fx_max_rate_age_days: 7 }), 422);
+  must(await api('PATCH', '/finance/fx-settings', P.c, { fx_gain_account_id: gain, fx_loss_account_id: loss, fx_max_rate_age_days: 7 }), 'fx settings');
+  const payable = Number(must(await api('GET', '/finance/gl-posting-rules', admin), 'rules').find(r => r.source_module === 'cost_transaction' && r.source_subtype === 'equipment').credit_account_id);
+  await expectStatus('an expense account cannot be marked as a monetary item', () => api('PATCH', `/finance/chart-of-accounts/${loss}/fx-revalue`, P.c, { fx_revalue: true }), 422);
+  must(await api('PATCH', `/finance/chart-of-accounts/${payable}/fx-revalue`, P.c, { fx_revalue: true }), 'mark payable');
+  // Maximum rate age: with 0 days, yesterday's rate cannot close today.
+  must(await api('PATCH', '/finance/fx-settings', P.c, { fx_gain_account_id: gain, fx_loss_account_id: loss, fx_max_rate_age_days: 0 }), 'age 0');
+  await expectStatus('a closing rate older than the maximum rate age is refused', () => api('POST', '/finance/fx-revaluations', P.c, { period_end: day(0) }), 422);
+  must(await api('PATCH', '/finance/fx-settings', P.c, { fx_gain_account_id: gain, fx_loss_account_id: loss, fx_max_rate_age_days: 7 }), 'age 7');
+  // The plant payable holds 80 USD recorded at 48.5 = 3,880 EGP; at the closing rate 50 it is 4,000: a loss of 120.
+  const rv = await run('period-end revaluation posted', async () => must(await api('POST', '/finance/fx-revaluations', P.c, { period_end: day(0) }), 'revaluation'));
+  const ln = (rv.lines ?? []).find(l => Number(l.account_id) === payable && Number(l.currency_id) === usd);
+  check('payable revalued: -80.00 USD x 50 = -4,000.00 EGP from -3,880.00 - exchange loss 120.00', ln?.foreign_balance === '-80.00' && Number(ln?.closing_rate) === 50 && ln?.base_before === '-3880.00' && ln?.base_target === '-4000.00' && ln?.adjustment === '-120.00', JSON.stringify(ln));
+  const rvGl = one(`select string_agg(account_id::text || ':' || debit_base::text || '/' || credit_base::text, ' ' order by debit desc), min(currency_id) from general_ledger where source_module = 'fx_revaluation' and source_record_id = ${rv.id} and journal_batch_id = ${ln?.gl_batch_id ?? 0}`).split('|');
+  check('GL: Dr exchange loss 120.00 / Cr plant payable 120.00, in the base currency (EGP)', rvGl[0] === `${loss}:120.00/0.00 ${payable}:0.00/120.00` && rvGl[1] === '1', rvGl.join('|'));
+  const after = one(`select sum(debit_base - credit_base) from general_ledger where account_id = ${payable} and (currency_id = ${usd} or fx_revalued_currency_id = ${usd})`);
+  check('after revaluation the payable is carried at the closing rate (-4,000.00)', after === '-4000.00', after);
+  await expectStatus('a second revaluation for the same period end is refused', () => api('POST', '/finance/fx-revaluations', P.c, { period_end: day(0) }), 409);
+  await expectStatus('a revaluation dated before the last one is refused', () => api('POST', '/finance/fx-revaluations', P.c, { period_end: day(-1) }), 409);
+  const tb2 = await api('GET', '/finance/trial-balance', admin);
+  check('trial balance still balances after the revaluation', tb2.status === 200 && tb2.body.meta.total_debit === tb2.body.meta.total_credit, JSON.stringify(tb2.body?.meta));
+
   // Reversal and a project in another currency: the rate rule in isolation (the manual-adjustment approval trigger is
   // switched off inside a transaction that is rolled back - nothing remains).
   const usdProject = must(await api('POST', '/projects', admin, { project_code: `FXU-${TAG}`, project_name: `FX USD ${TAG}`, currency_id: usd }), 'usd project').id;

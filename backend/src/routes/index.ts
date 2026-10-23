@@ -10,6 +10,7 @@ import { costTransactionsRouter } from '../modules/costTransactions/costTransact
 import { approvalsRouter } from '../modules/approvals/approvals.routes.js';
 import { procurementRouter } from '../modules/procurement/procurement.routes.js';
 import { financeRouter } from '../modules/finance/finance.routes.js';
+import { fxRouter } from '../modules/finance/fx.routes.js';
 import { clientAdvancesRouter } from '../modules/finance/clientAdvances.routes.js';
 import { taxRouter } from '../modules/finance/tax.routes.js';
 import { revenueRouter } from '../modules/finance/revenue.routes.js';
@@ -75,6 +76,7 @@ apiRouter.use('/cost-transactions', costTransactionsRouter);
 apiRouter.use('/approvals', approvalsRouter);
 apiRouter.use('/procurement', procurementRouter);
 apiRouter.use('/finance', financeRouter);
+apiRouter.use('/finance', fxRouter);
 apiRouter.use('/finance', clientAdvancesRouter);
 apiRouter.use('/finance', taxRouter);
 apiRouter.use('/finance', revenueRouter);
