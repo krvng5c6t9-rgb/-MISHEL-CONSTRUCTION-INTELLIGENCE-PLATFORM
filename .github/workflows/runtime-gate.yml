@@ -9,7 +9,8 @@ on:
 
 jobs:
   runtime-gate:
-    runs-on: ubuntu-latest
+    # Pinned (CC-080): ubuntu-latest moved to 26.04, which Playwright 1.56 cannot install Chromium on (run 39884551840).
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     strategy:
       fail-fast: false
