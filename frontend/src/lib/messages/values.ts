@@ -301,7 +301,12 @@ export const en = {
   'value.annual': 'annual',
   'value.trial': 'trial',
   'value.pastDue': 'past_due',
-  'value.posting': 'posting'
+  'value.posting': 'posting',
+  'value.aiPlatform': 'ai_platform',
+  'value.automation': 'automation',
+  'value.knowledge': 'knowledge',
+  'value.commercialPlatform': 'commercial_platform',
+  'value.system': 'system'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -603,5 +608,10 @@ export const ar: Record<keyof typeof en, string> = {
   'value.annual': 'سنوي',
   'value.trial': 'تجريبي',
   'value.pastDue': 'متأخر السداد',
-  'value.posting': 'قيد الترحيل'
+  'value.posting': 'قيد الترحيل',
+  'value.aiPlatform': 'منصة الذكاء الاصطناعي',
+  'value.automation': 'الأتمتة والتكاملات',
+  'value.knowledge': 'قاعدة المعرفة',
+  'value.commercialPlatform': 'الاشتراكات التجارية',
+  'value.system': 'النظام'
 };

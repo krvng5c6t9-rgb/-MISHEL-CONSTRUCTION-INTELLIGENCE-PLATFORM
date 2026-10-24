@@ -1,6 +1,7 @@
 // R1.1 (MP-06 §1) browser verification of the bilingual shell: Arabic is the default with right-to-left direction;
 // the language switch changes language and direction on the sign-in screen and in the application shell, persists
-// across reloads, every one of the 35 navigation items is translated in both languages, and the landing dashboard is in
+// across reloads, every one of the 35 navigation items is translated in both languages and shown in its group (R1.3) only to users with
+// view rights on it, and the landing dashboard is in
 // Arabic (R1.2). Also checks that the
 // Arabic and English dictionaries in frontend/src/lib/messages/*.ts have the same keys and placeholders.
 // Run by tests/e2e/run_from_zero.sh when UI_CHECK=1 (CI does).
@@ -13,10 +14,14 @@ const OUT = process.env.OUT_DIR ?? '.';
 const results = [];
 const check = (name, ok, detail = '') => { results.push({ name, ok, detail }); console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? ' :: ' + detail : ''}`); };
 
-const EN_NAV = ['Dashboard', 'Projects', 'Project Controls', 'Payments & Certification', 'Revenue & Contract Position', 'Go-live cut-over',
-  'Users / Roles / DOA', 'CRM', 'Tendering', 'BOQ', 'Contracts', 'Claims / EOT', 'Subcontracts', 'Cost Control', 'Procurement', 'Inventory',
-  'Approvals', 'Finance', 'Exchange Rates', 'Technical Office', 'Planning', 'Site Execution', 'HR / Payroll', 'Assets', 'QA/QC', 'HSE', 'EDMS',
-  'Executive Dashboard', 'Reports', 'Portals', 'Runtime Validation', 'AI Platform', 'Automation / Integrations', 'Knowledge / RAG', 'Commercial SaaS'];
+// R1.3 (CC-081): grouped navigation (MP-06 §3), in group order.
+const EN_NAV = ['Dashboard', 'Approvals', 'Executive Dashboard', 'CRM', 'Tendering', 'BOQ', 'Contracts', 'Claims / EOT', 'Subcontracts',
+  'Payments & Certification', 'Projects', 'Project Controls', 'Planning', 'Cost Control', 'Reports', 'Technical Office', 'EDMS', 'Site Execution',
+  'QA/QC', 'HSE', 'Procurement', 'Inventory', 'Assets', 'Finance', 'Exchange Rates', 'Revenue & Contract Position', 'Go-live cut-over', 'HR / Payroll',
+  'Users / Roles / DOA', 'Portals', 'Runtime Validation', 'AI Platform', 'Automation / Integrations', 'Knowledge / RAG', 'Commercial SaaS'];
+const EN_GROUPS = ['Home, tasks and approvals', 'Business development and tendering', 'Contracts and commercial', 'Projects and planning',
+  'Engineering and technical office', 'Site execution', 'Quality and HSE', 'Supply chain, stores and plant', 'Finance and tax', 'People and administration',
+  'System, data and AI'];
 const ARABIC = /[؀-ۿ]/, LATIN = /[A-Za-z]/;
 
 // Static: in every dictionary file the Arabic and English keys are the same, each key has the same {placeholders} in both
@@ -66,6 +71,19 @@ for (const mod of TRANSLATED_MODULES) {
 check('server messages: every fixed refusal of the translated API modules has an Arabic translation (F-55)', exactKeys.size > 50 && !untranslated.length,
   untranslated.slice(0, 5).join(' | ') || `${TRANSLATED_MODULES.join(', ')}; ${exactKeys.size} exact entries`);
 
+const backendSrc = new URL('../../backend/src/', import.meta.url);
+const walk = (u) => readdirSync(u, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(new URL(e.name + '/', u)) : e.name.endsWith('.ts') ? [readFileSync(new URL(e.name, u), 'utf8')] : []);
+const enforced = new Set(walk(backendSrc).flatMap(src => [...src.matchAll(/authorize\('([a-z_]+)'/g)].map(m => m[1])));
+const listOf = (src, re) => new Set([...(src.match(re)?.[1] ?? '').matchAll(/'([a-z_]+)'/g)].map(m => m[1]));
+const grantable = listOf(readFileSync(new URL('../../frontend/src/pages/Admin.tsx', import.meta.url), 'utf8'), /const MODULES=\[([^\]]+)\]/);
+const bootstrap = listOf(readFileSync(new URL('modules/auth/auth.routes.ts', backendSrc), 'utf8'), /const modules = \[([^\]]+)\]/);
+const navPerms = new Set([...readFileSync(new URL('../../frontend/src/components/Layout.tsx', import.meta.url), 'utf8').matchAll(/perms: \[([^\]]+)\]/g)].flatMap(m => [...m[1].matchAll(/'([a-z_]+)'/g)].map(x => x[1])));
+const diff = (a, b) => [...a].filter(x => !b.has(x));
+check('permissions: every module the API enforces can be granted on the Roles screen and is given to the first administrator (F-57)', enforced.size >= 28
+  && !diff(enforced, grantable).length && !diff(enforced, bootstrap).length && !diff(grantable, enforced).length,
+  `not grantable: ${diff(enforced, grantable).join(',') || '-'}; not given: ${diff(enforced, bootstrap).join(',') || '-'}; unknown: ${diff(grantable, enforced).join(',') || '-'}`);
+check('navigation: every item is guarded by a permission module the API enforces', navPerms.size > 20 && !diff(navPerms, enforced).length, diff(navPerms, enforced).join(',') || `${navPerms.size} modules`);
+
 let browser;
 try {
   browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
@@ -101,6 +119,9 @@ try {
   check('all 35 navigation items translated to Arabic (Arabic text, no Latin letters)', ar.length === 35 && ar.every(t => ARABIC.test(t) && !LATIN.test(t)),
     ar.filter(t => !ARABIC.test(t) || LATIN.test(t)).join(' | ') || `${ar.length} items`);
   check('Arabic navigation labels are distinct', new Set(ar).size === ar.length);
+  const groupTexts = async () => (await page.locator('nav .nav-group-toggle').allInnerTexts()).map(s => s.trim());
+  const arGroups = await groupTexts();
+  check('navigation in 11 groups with Arabic headings (R1.3)', arGroups.length === 11 && arGroups.every(g => ARABIC.test(g) && !LATIN.test(g)) && new Set(arGroups).size === 11, arGroups.join(' | '));
   check('logout labelled in Arabic', await page.getByRole('button', { name: 'تسجيل الخروج' }).count() === 1);
   // Brand MARC (owner decision DEC-020): Latin letters in both languages; the descriptor follows the language.
   const brand = async () => page.evaluate(() => ({ name: document.querySelector('.brand strong')?.textContent, tagline: document.querySelector('.brand small')?.textContent, title: document.title }));
@@ -137,6 +158,36 @@ try {
   check('English layout: navigation on the left, content and navigation left-to-right', enSide.nav < enSide.main && enSide.contentDir === 'ltr' && enSide.navDir === 'ltr', JSON.stringify(enSide));
   await page.getByRole('link', { name: 'Go-live cut-over' }).click(); await page.waitForURL(/\/cutover/);
   check('navigation works after switching language', /\/cutover$/.test(new URL(page.url()).pathname));
+  check('11 navigation groups in English, in order (R1.3)', JSON.stringify(await groupTexts()) === JSON.stringify(EN_GROUPS), (await groupTexts()).join(' | '));
+  // A group folds and unfolds; the group holding the current screen stays open.
+  const bd = page.getByRole('button', { name: 'Business development and tendering' });
+  await bd.click(); await page.waitForTimeout(200);
+  const folded = await bd.getAttribute('aria-expanded') === 'false' && !(await page.getByRole('link', { name: 'CRM' }).isVisible());
+  await bd.click(); await page.waitForTimeout(200);
+  const unfolded = await bd.getAttribute('aria-expanded') === 'true' && await page.getByRole('link', { name: 'CRM' }).isVisible();
+  const fin = page.getByRole('button', { name: 'Finance and tax' });
+  await fin.click(); await page.waitForTimeout(200);
+  check('a navigation group folds and unfolds; the group of the current screen stays open', folded && unfolded && await fin.getAttribute('aria-expanded') === 'true'
+    && await page.getByRole('link', { name: 'Go-live cut-over' }).isVisible(), `folded ${folded}, unfolded ${unfolded}`);
+  await fin.click();
+  // Only what the user may see: a user with view rights on CRM and Finance only gets the home dashboard and those screens.
+  const token = await page.evaluate(() => localStorage.getItem('construction_erp_token'));
+  const meUrl = await page.evaluate(() => performance.getEntriesByType('resource').map(e => e.name).find(n => n.endsWith('/auth/me')));
+  const apiBase = meUrl.replace(/\/auth\/me$/, '');
+  const post = async (path, data) => (await page.request.post(`${apiBase}${path}`, { headers: { Authorization: `Bearer ${token}` }, data })).json();
+  const role = await post('/roles', { role_name: `Nav CRM finance ${RUN}`, permissions: [['crm', 'view'], ['finance', 'view']].map(([module, action]) => ({ module, action, scope: 'all' })) });
+  const email = `nav.${RUN.toLowerCase().replace(/[^a-z0-9]/g, '')}@test.local`;
+  await post('/users', { role_id: role.data?.id, full_name: 'Nav limited user', email, password: 'Passw0rd!Nav' });
+  await page.getByRole('button', { name: 'Logout' }).click(); await page.waitForURL(/\/login/);
+  const li = page.locator('input');
+  await li.nth(0).fill('1'); await li.nth(1).fill(email); await li.nth(2).fill('Passw0rd!Nav');
+  await page.getByRole('button', { name: 'Login', exact: true }).click();
+  await page.waitForURL(x => !x.pathname.startsWith('/login'), { timeout: 15000 }); await page.waitForTimeout(1000);
+  const limited = await navTexts();
+  check('a user with CRM and Finance view rights sees only the home dashboard and those screens, in their groups (R1.3)',
+    JSON.stringify(limited) === JSON.stringify(['Dashboard', 'CRM', 'Payments & Certification', 'Finance', 'Exchange Rates', 'Revenue & Contract Position', 'Go-live cut-over'])
+    && JSON.stringify(await groupTexts()) === JSON.stringify(['Home, tasks and approvals', 'Business development and tendering', 'Contracts and commercial', 'Finance and tax']),
+    `${limited.join(' | ')} || ${(await groupTexts()).join(' | ')}`);
   await page.screenshot({ path: `${OUT}/i18n_${RUN}.png`, fullPage: false });
   check('no browser console errors', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));
 } catch (e) {

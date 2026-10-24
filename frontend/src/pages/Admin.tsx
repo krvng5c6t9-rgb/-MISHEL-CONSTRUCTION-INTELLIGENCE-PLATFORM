@@ -4,7 +4,8 @@ import {useI18n} from '../lib/i18n';
 
 // R1.2: labels from messages/admin.ts; permission modules, actions, scopes, user types and DOA modules are stored codes
 // shown through tv() (messages/values.ts); server messages are shown as sent.
-const MODULES=['admin','projects','boq','crm','tendering','contracts','procurement','finance','cost_control','approvals','technical_office','planning','site','hr','assets','qaqc','hse','edms','dashboards','reports','portals','notifications','vendors'];
+// CC-081 (F-57): every permission module the API enforces can be granted here (ai_platform, automation, knowledge, commercial_platform and system were missing).
+const MODULES=['admin','projects','boq','crm','tendering','contracts','procurement','finance','cost_control','approvals','technical_office','planning','site','hr','assets','qaqc','hse','edms','dashboards','reports','portals','notifications','vendors','ai_platform','automation','knowledge','commercial_platform','system'];
 const ACTIONS=['view','create','edit','approve','delete','export','manage','post'];
 const SCOPES=['own','department','all'] as const;
 

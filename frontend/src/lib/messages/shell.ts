@@ -65,7 +65,19 @@ export const en = {
   'mfa.back': 'Back',
   'mfa.codesTitle': 'Recovery codes',
   'mfa.codesIntro': 'Keep these codes somewhere safe. Each code works once if you lose your authenticator device, and they will not be shown again.',
-  'mfa.codesSaved': 'Saved — continue'
+  'mfa.codesSaved': 'Saved — continue',
+  'nav.groupHome': 'Home, tasks and approvals',
+  'nav.groupBusiness': 'Business development and tendering',
+  'nav.groupCommercial': 'Contracts and commercial',
+  'nav.groupProjects': 'Projects and planning',
+  'nav.groupEngineering': 'Engineering and technical office',
+  'nav.groupSite': 'Site execution',
+  'nav.groupQuality': 'Quality and HSE',
+  'nav.groupSupply': 'Supply chain, stores and plant',
+  'nav.groupFinance': 'Finance and tax',
+  'nav.groupPeople': 'People and administration',
+  'nav.groupSystem': 'System, data and AI',
+  'nav.menu': 'Main menu'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -133,5 +145,17 @@ export const ar: Record<keyof typeof en, string> = {
   'mfa.back': 'رجوع',
   'mfa.codesTitle': 'رموز الاسترداد',
   'mfa.codesIntro': 'احفظ هذه الرموز في مكان آمن. كل رمز يُستخدم مرة واحدة إذا فقدت جهاز المصادقة، ولن تظهر مرة أخرى.',
-  'mfa.codesSaved': 'حفظتها — متابعة'
+  'mfa.codesSaved': 'حفظتها — متابعة',
+  'nav.groupHome': 'الرئيسية والمهام والاعتمادات',
+  'nav.groupBusiness': 'تطوير الأعمال والعطاءات',
+  'nav.groupCommercial': 'العقود والشؤون التجارية',
+  'nav.groupProjects': 'المشروعات والتخطيط',
+  'nav.groupEngineering': 'الهندسة والمكتب الفني',
+  'nav.groupSite': 'التنفيذ بالموقع',
+  'nav.groupQuality': 'الجودة والسلامة',
+  'nav.groupSupply': 'المشتريات والمخازن والمعدات',
+  'nav.groupFinance': 'المالية والضرائب',
+  'nav.groupPeople': 'الموارد البشرية والإدارة',
+  'nav.groupSystem': 'النظام والبيانات والذكاء الاصطناعي',
+  'nav.menu': 'القائمة الرئيسية'
 };

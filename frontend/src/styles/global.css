@@ -8,6 +8,13 @@ body { margin: 0; font-family: Cairo, system-ui, sans-serif; background: #f5f6f8
 .brand small { display: block; opacity: .75; }
 .nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin: 6px 0; border-radius: 12px; color: #fff; text-decoration: none; }
 .nav-item.active, .nav-item:hover { background: rgba(201,169,97,.18); color: var(--gold); }
+.nav-group { margin: 10px 0 4px; }
+.nav-group-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 14px; background: transparent; border: 0; border-radius: 10px; color: var(--gold); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; text-align: start; }
+.nav-group-toggle:hover, .nav-group-toggle:focus-visible { background: rgba(255,255,255,.08); }
+.nav-group-toggle svg { flex: none; transition: transform .15s; transform: rotate(-90deg); }
+[dir="rtl"] .nav-group-toggle svg { transform: rotate(90deg); }
+.nav-group-toggle svg.open { transform: none; }
+.nav-group .nav-item { margin: 2px 0; padding: 10px 14px; }
 .content { padding: 32px; min-width: 0; }
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
 h1 { margin: 0; font-size: 30px; } .eyebrow { margin: 0; color: var(--blue); font-weight: 800; }
