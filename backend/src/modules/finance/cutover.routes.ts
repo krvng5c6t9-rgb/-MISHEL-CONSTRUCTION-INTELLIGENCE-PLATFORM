@@ -46,6 +46,21 @@ cutoverRouter.post('/cutover-plans', authorize('finance', 'manage'), asyncHandle
 cutoverRouter.get('/cutover-plans', asyncHandler(async (req, res) => {
   res.json({ success: true, data: await query(`select * from cutover_plans where org_id = $1 order by id desc`, [req.user!.org_id]) });
 }));
+// F-51 (CC-080): the names the cut-over screen needs to show and to match pasted rows (accounts, clients, projects,
+// contracts, vendors, subcontracts), under the cut-over's own permission; before, the screen read each module's list and
+// showed #id when the user could not read that module.
+cutoverRouter.get('/cutover-lookups', asyncHandler(async (req, res) => {
+  const org = [req.user!.org_id];
+  const [accounts, clients, projects, contracts, vendors, subcontracts] = await Promise.all([
+    query(`select id, account_code, account_name from chart_of_accounts where org_id = $1 order by account_code`, org),
+    query(`select id, client_name from clients where org_id = $1 order by client_name`, org),
+    query(`select id, project_code, project_name from projects where org_id = $1 order by project_code`, org),
+    query(`select c.id, c.project_id, p.project_code from contracts c join projects p on p.id = c.project_id where c.org_id = $1 order by c.id`, org),
+    query(`select id, vendor_name from vendors_subcontractors where org_id = $1 order by vendor_name`, org),
+    query(`select id, project_id, package_name from subcontracts where org_id = $1 order by id`, org)
+  ]);
+  res.json({ success: true, data: { accounts, clients, projects, contracts, vendors, subcontracts } });
+}));
 cutoverRouter.get('/cutover-plans/:id', asyncHandler(async (req, res) => {
   const p = await plan(pid(req.params.id), req.user!.org_id);
   const detail: Record<string, unknown> = {};

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiGet } from '../lib/api';
 import { useI18n, type MessageKey } from '../lib/i18n';
+import { loadReferenceData, onReferenceDataChange } from '../lib/referenceData';
 
 type Kind = 'projects' | 'clients' | 'vendors' | 'currencies' | 'users' | 'costCodes' | 'contracts' | 'subcontracts' | 'documents' | 'activities' | 'warehouses' | 'inventoryItems';
 type Props = { kind: Kind; value: any; onChange: (value: string) => void; placeholder?: string; projectId?: any; allowEmpty?: boolean };
 type T = (key: MessageKey, vars?: Record<string, string | number>) => string;
-let cache: any = null; let pending: Promise<any> | null = null;
-async function loadRefs() { if (cache) return cache; if (!pending) pending = apiGet<any>('/reference-data').then(r => (cache = r.data)); return pending; }
+const loadRefs = () => loadReferenceData(() => apiGet<any>('/reference-data').then(r => r.data));
 function label(kind: Kind, x: any, t: T) {
   switch (kind) {
     case 'projects': return `${x.project_code} — ${x.project_name}`;
@@ -27,7 +27,14 @@ function label(kind: Kind, x: any, t: T) {
 export function ReferenceSelect({ kind, value, onChange, placeholder, projectId, allowEmpty = true }: Props) {
   const { t } = useI18n();
   const [data, setData] = useState<any>({}); const [error, setError] = useState('');
-  useEffect(() => { loadRefs().then(setData).catch(e => setError(e.message)); }, []);
+  // F-52: reloads when a change or a new session marks the lists stale (lib/referenceData).
+  useEffect(() => {
+    let live = true;
+    const load = () => loadRefs().then(d => { if (live) { setData(d); setError(''); } }).catch(e => { if (live) setError(e.message); });
+    load();
+    const off = onReferenceDataChange(load);
+    return () => { live = false; off(); };
+  }, []);
   const rows = useMemo(() => { const a = data[kind] || []; return projectId ? a.filter((x: any) => x.project_id == null || String(x.project_id) === String(projectId)) : a; }, [data, kind, projectId]);
   return <select value={value ?? ''} onChange={e => onChange(e.target.value)} title={error || placeholder} aria-label={placeholder || t('ref.select', { kind: t(`ref.${kind}` as MessageKey) })}>
     {allowEmpty && <option value="">{error || placeholder || t('ref.select', { kind: t(`ref.${kind}` as MessageKey) })}</option>}

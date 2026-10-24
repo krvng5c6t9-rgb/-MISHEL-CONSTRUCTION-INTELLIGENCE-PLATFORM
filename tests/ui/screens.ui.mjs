@@ -181,6 +181,20 @@ try {
       check('ar: Planning contractual milestone with planned date recorded from the screen', await msRow.count() === 1 && /2027-03-31/.test(msText) && /نعم/.test(msText), (await alert()) || msText || '(no row)');
       await page.screenshot({ path: `${OUT}/screens_planning_ar_${RUN}.png`, fullPage: true });
 
+      // EDMS (F-52, CC-080): a document created on the screen is offered at once in the transmittal's document drop-down
+      // (the drop-down lists were loaded once per browser page and only a reload showed new records).
+      await page.goto(`${BASE}/edms`); await page.waitForTimeout(1200);
+      const docSec = page.locator('[data-section="documents"]'), docNo = `D-${TAG}`;
+      const docOption = () => page.locator('[data-section="transmittals"]').getByLabel('الوثيقة', { exact: true }).locator('option', { hasText: docNo }).count();
+      const before = await docOption();
+      await docSec.getByLabel('المشروع').selectOption({ index: 1 });
+      await docSec.getByPlaceholder('رقم الوثيقة').fill(docNo);
+      await docSec.getByPlaceholder('اسم الملف').fill(`ui-${TAG}.pdf`);
+      await docSec.getByPlaceholder('مسار التخزين').fill(`ui/${TAG}.pdf`);
+      await docSec.getByRole('button', { name: 'إنشاء وثيقة', exact: true }).click(); await page.waitForTimeout(1500);
+      check('ar: EDMS document created on the screen is selectable in the transmittal drop-down without a reload (F-52)', before === 0 && !(await alert())
+        && await docSec.locator('tbody tr', { hasText: docNo }).count() === 1 && await docOption() === 1, (await alert()) || `before ${before}, after ${await docOption()}`);
+
       // HR (CC-074): the tile counts every employee the API returned (it counted at most the first 8).
       // More than 8 employees are made first (through the API the screen uses) so the check can tell a cap from a count.
       let empResp = page.waitForResponse(r => r.url().includes('/api/hr/employees') && r.request().method() === 'GET');

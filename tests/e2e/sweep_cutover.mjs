@@ -57,6 +57,20 @@ try {
   check('an organisation that already has postings cannot import opening balances', orgA.status === 422 && /before any GL posting/.test(orgA.body?.error ?? ''), `HTTP ${orgA.status} ${orgA.body?.error ?? ''}`);
   const load = (path, rows) => api('POST', `/finance/cutover-plans/${plan.id}/${path}`, E, { rows });
 
+  // --- F-51 (CC-080): the cut-over screen's names come from one lookup under the finance permission, so a finance user
+  // who may not read clients / projects / subcontracts still sees names (not #id); the lookup is the organisation's only.
+  const noClients = await api('GET', '/clients', fin.token);
+  const lk = await api('GET', '/finance/cutover-lookups', fin.token), d = lk.body?.data ?? {};
+  check('F-51: a finance-only user gets client, project, contract, vendor, subcontract and account names for the cut-over',
+    noClients.status === 403 && lk.status === 200 && d.clients?.some(x => x.id === client && x.client_name === `E Client ${TAG}`)
+    && d.projects?.some(x => x.id === project && x.project_code === `E1-${TAG}`) && d.contracts?.some(x => x.id === contract && x.project_code === `E1-${TAG}`)
+    && d.vendors?.some(x => x.id === vendor) && d.subcontracts?.some(x => x.id === sc && x.package_name === `E pkg ${TAG}`) && d.accounts?.some(x => x.id === acc.ar && x.account_code === '1200'),
+    `clients HTTP ${noClients.status}, lookups HTTP ${lk.status}`);
+  const lkA = (await api('GET', '/finance/cutover-lookups', ta)).body?.data ?? {};
+  check('F-51: the cut-over lookup of another organisation does not include this one\'s records', Array.isArray(lkA.clients) && !lkA.clients.some(x => x.id === client) && !lkA.projects.some(x => x.id === project));
+  const noFin = await user('nofin', 'No finance', [['projects', 'view']]);
+  await expectStatus('F-51: the cut-over lookup needs the finance permission', () => api('GET', '/finance/cutover-lookups', noFin.token), 403);
+
   // --- Opening trial balance (debits 658,000 = credits 658,000) and detail.
   const tb = [['bank', 500000, 0], ['ar', 120000, 0], ['ret', 30000, 0], ['sadv', 8000, 0], ['ap', 0, 40000], ['sap', 0, 25000], ['sret', 0, 15000], ['cadv', 0, 60000], ['eq', 0, 518000]];
   await run('opening trial balance loaded (9 lines)', async () => must(await load('tb-lines', tb.map(([a, debit, credit]) => ({ account_id: acc[a], debit, credit, note: `Opening ${a} (fixture)` }))), 'tb'));

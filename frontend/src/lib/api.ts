@@ -1,4 +1,5 @@
 import { translateServerMessage } from './serverMessages';
+import { invalidateReferenceData } from './referenceData';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000/api';
 const TOKEN_KEY = 'construction_erp_token';
@@ -9,10 +10,12 @@ export function getToken() {
 
 export function setToken(token: string) {
   localStorage.setItem(TOKEN_KEY, token);
+  invalidateReferenceData();
 }
 
 export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
+  invalidateReferenceData();
 }
 
 // G-013: revoke the session server-side (best effort) before dropping the local token.
@@ -37,6 +40,8 @@ async function request<T = any>(path: string, init: RequestInit = {}): Promise<T
     const fields = Array.isArray(payload?.details) ? payload.details.map((d: any) => d?.path).filter(Boolean) : [];
     throw new Error(translateServerMessage(payload?.error ?? `API request failed: ${response.status} ${response.statusText}`, fields));
   }
+  // F-52: a change may have created or changed a record the drop-downs list.
+  if ((init.method ?? 'GET') !== 'GET') invalidateReferenceData();
   return payload as T;
 }
 

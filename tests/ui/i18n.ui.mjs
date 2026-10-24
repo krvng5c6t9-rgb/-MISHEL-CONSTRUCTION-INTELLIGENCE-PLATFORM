@@ -46,6 +46,26 @@ const dup = allKeys.filter((k, i) => allKeys.indexOf(k) !== i);
 check('dictionaries: same keys and placeholders in Arabic and English, no key defined twice', files.length >= 4 && !issues.length && !dup.length,
   issues.concat(dup.map(k => `duplicate ${k}`)).slice(0, 5).join(' | ') || `${files.length} files, ${allKeys.length} keys`);
 
+// F-55 (CC-080): every fixed refusal text of a translated API module has an exact Arabic entry in lib/serverMessages.ts
+// (the "… not found" and "Invalid … id" families are translated by pattern); a new message in that module fails here
+// until it is translated. Messages built from values must have a pattern for their fixed words.
+const TRANSLATED_MODULES = ['finance'];
+const sm = readFileSync(new URL('../../frontend/src/lib/serverMessages.ts', import.meta.url), 'utf8');
+const exactKeys = new Set([...sm.slice(sm.indexOf('const EXACT'), sm.indexOf('};', sm.indexOf('const EXACT'))).matchAll(/^\s*'((?:[^'\\]|\\.)*)': '/gm)].map(m => m[1]));
+const untranslated = [];
+for (const mod of TRANSLATED_MODULES) {
+  const mdir = new URL(`../../backend/src/modules/${mod}/`, import.meta.url);
+  for (const f of readdirSync(mdir).filter(x => x.endsWith('.ts'))) {
+    const src = readFileSync(new URL(f, mdir), 'utf8');
+    for (const m of src.matchAll(/AppError\(\d+, ?'((?:[^'\\]|\\.)*)'/g)) {
+      if (!exactKeys.has(m[1]) && !/ not found( in current organization| or inactive)?$/.test(m[1]) && !/^Invalid( [a-z ]+)? id$/i.test(m[1])) untranslated.push(`${f}: ${m[1]}`);
+    }
+    for (const m of src.matchAll(/AppError\(\d+, ?`([^`$]+)\$\{/g)) if (!sm.includes(`[/^${m[1].replace(/[.]/g, '\\.')}`)) untranslated.push(`${f}: ${m[1]}…`);
+  }
+}
+check('server messages: every fixed refusal of the translated API modules has an Arabic translation (F-55)', exactKeys.size > 50 && !untranslated.length,
+  untranslated.slice(0, 5).join(' | ') || `${TRANSLATED_MODULES.join(', ')}; ${exactKeys.size} exact entries`);
+
 let browser;
 try {
   browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });

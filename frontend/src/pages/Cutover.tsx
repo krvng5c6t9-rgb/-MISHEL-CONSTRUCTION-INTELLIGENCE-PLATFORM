@@ -178,8 +178,8 @@ export function Cutover() {
     const list = (await apiGet<any>('/finance/cutover-plans')).data as Row[];
     setPlans(list);
     const live = list.find(p => p.status !== 'cancelled');
-    const opt = async (path: string) => { try { const d = (await apiGet<any>(path)).data; return Array.isArray(d) ? d : (d?.projects ?? d?.items ?? []); } catch { return []; } };
-    setLookups({ accounts: await opt('/finance/chart-of-accounts'), clients: await opt('/clients'), projects: await opt('/projects'), contracts: await opt('/contracts'), vendors: await opt('/vendors'), subcontracts: await opt('/subcontracts') });
+    // F-51: one lookup under the cut-over's permission (names shown and pasted names matched); a failure is shown, not swallowed.
+    setLookups((await apiGet<any>('/finance/cutover-lookups')).data as Lookups);
     if (live) {
       setDetail((await apiGet<any>(`/finance/cutover-plans/${live.id}`)).data);
       setReport(live.status === 'draft' ? (await apiGet<any>(`/finance/cutover-plans/${live.id}/reconciliation`)).data : live.reconciliation);

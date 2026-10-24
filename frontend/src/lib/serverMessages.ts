@@ -49,8 +49,45 @@ const EXACT: Record<string, string> = {
   'Set the exchange gain and loss accounts first (exchange settings)': 'حدِّد حسابَي أرباح وخسائر فروق العملة أولًا (إعدادات العملة)',
   'The exchange gain account must be an active revenue account of the organization': 'حساب أرباح فروق العملة يجب أن يكون حساب إيرادات فعّالًا للشركة',
   'The exchange loss account must be an active expense account of the organization': 'حساب خسائر فروق العملة يجب أن يكون حساب مصروفات فعّالًا للشركة',
-  'Only asset and liability accounts are monetary items that can be revalued': 'حسابات الأصول والالتزامات فقط بنود نقدية يُعاد تقييمها'
+  'Only asset and liability accounts are monetary items that can be revalued': 'حسابات الأصول والالتزامات فقط بنود نقدية يُعاد تقييمها',
+  // F-55 batch 1 (CC-080): the finance module's own refusals (finance, cut-over, exchange routes).
+  'A reason is required to reopen a closed period': 'يلزم ذكر سبب لإعادة فتح فترة مقفلة',
+  'Missing permission: finance.approve (reopening a closed period)': 'لا تملك صلاحية «اعتماد» على «المالية» (إعادة فتح فترة مقفلة)',
+  'IPC must be submitted_to_client before client approval': 'يجب أن يكون المستخلص مُقدَّمًا للعميل قبل تسجيل اعتماد العميل',
+  'Only draft IPCs can be submitted': 'لا يُقدَّم إلا مستخلص في حالة مسودة',
+  'Only a disputed IPC can be resubmitted': 'لا يُعاد تقديم إلا مستخلص متنازع عليه',
+  'Only an IPC submitted to the client can be recorded as disputed': 'لا يُسجَّل نزاع إلا على مستخلص مُقدَّم للعميل',
+  'Manual journal approval is handled by the central Approval Workflow': 'يُعتمد القيد اليدوي من خلال دورة الاعتمادات المركزية',
+  'Manual journal must be draft before submission': 'يجب أن يكون القيد اليدوي مسودة قبل تقديمه',
+  'Manual journal must be balanced and greater than zero before approval': 'يجب أن يكون القيد اليدوي متوازنًا وأكبر من صفر قبل الاعتماد',
+  'Manual journal must contain exactly one currency before approval': 'يجب أن يكون القيد اليدوي بعملة واحدة فقط قبل الاعتماد',
+  'Manual journal must use exactly one currency; FX conversion journals require explicit converted lines in one posting currency': 'يجب أن يكون القيد اليدوي بعملة واحدة فقط؛ قيود تحويل العملة تُسجَّل بسطور محوَّلة صراحةً بعملة ترحيل واحدة',
+  'Payment must be draft before approval submission': 'يجب أن تكون الدفعة مسودة قبل تقديمها للاعتماد',
+  'Only a draft client advance can be approved': 'لا تُعتمد إلا دفعة مقدمة من العميل في حالة مسودة',
+  'Only a draft price estimate can be approved': 'لا يُعتمد إلا تقدير سعر في حالة مسودة',
+  'Only an approved price estimate can be retired': 'لا يُسحب إلا تقدير سعر معتمد',
+  'Only a prepared revenue run can be approved': 'لا تُعتمد إلا دورة إيراد في حالة مُعَدّة',
+  'Only a draft plan can be cancelled': 'لا تُلغى إلا خطة في حالة مسودة',
+  'Only a reconciled plan can be approved': 'لا تُعتمد إلا خطة مطابَقة',
+  'Only a reconciled plan can be reopened for correction': 'لا يُعاد فتح خطة للتصحيح إلا إذا كانت مطابَقة',
+  'The opening balances changed since they were reconciled; reconcile again': 'تغيّرت الأرصدة الافتتاحية بعد مطابقتها؛ أعد المطابقة',
+  'Tax code is already confirmed': 'كود الضريبة مؤكَّد بالفعل',
+  'Tax profile is already confirmed': 'الملف الضريبي مؤكَّد بالفعل',
+  'The e-invoice reference is already recorded': 'مرجع الفاتورة الإلكترونية مُسجَّل بالفعل',
+  'Segregation of duties: a client advance is approved by someone other than its preparer': 'فصل المهام: يعتمد الدفعة المقدمة من العميل شخصٌ غير من أعدّها',
+  'Segregation of duties: a price estimate is approved by someone other than its preparer': 'فصل المهام: يعتمد تقدير السعر شخصٌ غير من أعدّه',
+  'Segregation of duties: a tax code is confirmed by someone other than its author': 'فصل المهام: يؤكد كود الضريبة شخصٌ غير من أنشأه',
+  'Segregation of duties: a tax profile is confirmed by someone other than its author': 'فصل المهام: يؤكد الملف الضريبي شخصٌ غير من أنشأه',
+  'Segregation of duties: the IPC preparer cannot record the client certification': 'فصل المهام: مُعِدّ المستخلص لا يسجّل اعتماد العميل له',
+  'Segregation of duties: the IPC preparer cannot release its retention': 'فصل المهام: مُعِدّ المستخلص لا يُفرج عن محتجزه',
+  'Segregation of duties: the preparer cannot approve the opening balances': 'فصل المهام: مُعِدّ الأرصدة الافتتاحية لا يعتمدها',
+  'Segregation of duties: the preparer cannot approve the revenue run': 'فصل المهام: مُعِدّ دورة الإيراد لا يعتمدها',
+  'Segregation of duties: the user who closed a period cannot reopen it': 'فصل المهام: من أقفل الفترة لا يعيد فتحها'
 };
+
+// Status words inside finance messages, worded for the record they describe (the shared value words are not all apt).
+const PLAN_STATUS: Record<string, string> = { draft: 'مسودة', reconciled: 'مطابَقة', opened: 'مفتوحة للتشغيل', cancelled: 'ملغاة' };
+const PERIOD_STATUS: Record<string, string> = { open: 'مفتوحة', soft_closed: 'مقفلة مبدئيًا', closed: 'مقفلة' };
 
 // Record names in "… not found" messages.
 const NOUN: Record<string, string> = {
@@ -77,6 +114,9 @@ const PATTERNS: [RegExp, (m: RegExpMatchArray) => string][] = [
   [/^No exchange rate for (?:the project currency )?([A-Z]{3}) on or before (\d{4}-\d{2}-\d{2}) - record it in the exchange-rate register first$/, m => `لا يوجد سعر صرف لـ ${m[1]} بتاريخ ${m[2]} أو قبله؛ سجّله في سجل أسعار الصرف أولًا`],
   [/^No exchange rate for ([A-Z]{3}) on or before (\d{4}-\d{2}-\d{2}) - record the closing rate first$/, m => `لا يوجد سعر صرف لـ ${m[1]} بتاريخ ${m[2]} أو قبله؛ سجّل سعر الإقفال أولًا`],
   [/^The latest exchange rate for ([A-Z]{3}) is dated (\d{4}-\d{2}-\d{2}), more than (\d+) days before (\d{4}-\d{2}-\d{2}) - record a current rate first$/, m => `آخر سعر صرف لـ ${m[1]} بتاريخ ${m[2]}، أي أقدم من ${m[3]} يوم قبل ${m[4]}؛ سجّل سعرًا حديثًا أولًا`],
+  [/^Cut-over plan is ([a-z_]+)$/, m => `خطة الانتقال ${PLAN_STATUS[m[1]] ?? m[1]}`],
+  [/^Fiscal period is already ([a-z_]+)$/, m => `الفترة المالية ${PERIOD_STATUS[m[1]] ?? m[1]} بالفعل`],
+  [/^Manual journal lines are not balanced\. Difference: (-?[\d.]+)$/, m => `سطور القيد اليدوي غير متوازنة. الفرق: ${m[1]}`],
   [/^An exchange revaluation already exists for (\d{4}-\d{2}-\d{2}); revaluations follow one another in date order$/, m => `توجد إعادة تقييم للعملة بتاريخ ${m[1]}؛ تتوالى إعادات التقييم بترتيب التاريخ`]
 ];
 
