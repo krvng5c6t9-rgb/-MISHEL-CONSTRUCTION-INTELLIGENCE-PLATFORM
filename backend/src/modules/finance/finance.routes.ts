@@ -23,7 +23,7 @@ financeRouter.get('/reference-data', asyncHandler(async (req, res) => {
     query(`select id,project_code,project_name,currency_id from projects order by project_code`),
     query(`select id,client_name from clients where is_active=true order by client_name`),
     query(`select id,vendor_name from vendors_subcontractors where is_active=true order by vendor_name`),
-    query(`select id,code,name from currencies where is_active=true order by code`),
+    query(`select c.id,c.code,c.name from currencies c where c.is_active=true and currency_enabled($1,c.id) order by c.code`,[req.user!.org_id]),
     query(`select id,account_code,account_name,account_type from chart_of_accounts where org_id=$1 and is_active=true order by account_code`,[orgId]),
     query(`select id,bank_name,account_no,currency_id from bank_accounts where org_id=$1 and is_active=true order by bank_name`,[orgId]),
     query(`select id,project_id,client_id,contract_value,currency_id,contract_status from contracts where org_id=$1 order by id desc`,[orgId])
@@ -100,7 +100,7 @@ financeRouter.get('/gl', asyncHandler(async (req, res) => {
   const rows = await query(`
     select gl.id, gl.org_id, gl.project_id, p.project_name, coa.account_code, coa.account_name,
            gl.transaction_date, gl.debit, gl.credit, cur.code as currency_code,
-           gl.fx_rate_to_base, gl.debit_base, gl.credit_base, bc.code as base_currency_code,
+           gl.fx_rate_to_base, gl.fx_rate_side, gl.debit_base, gl.credit_base, bc.code as base_currency_code,
            gl.source_module, gl.source_table, gl.source_record_id, gl.journal_batch_id, gl.description
     from general_ledger gl
     join chart_of_accounts coa on coa.id = gl.account_id
@@ -448,6 +448,8 @@ financeRouter.post('/manual-journals', authorize('finance', 'manage'), asyncHand
     entry_date: z.string().optional(),
     description: z.string().min(3),
     reason_category: z.enum(['reclassification','accrual','correction','write_off','other']),
+    // DEC-023: a journal in a foreign currency states the side of the rate it converts at (none is assumed).
+    fx_side: z.enum(['buy','sell']).nullable().optional(),
     lines: z.array(z.object({
       account_id: z.number().int().positive(),
       debit: z.number().nonnegative().default(0),
@@ -471,12 +473,15 @@ financeRouter.post('/manual-journals', authorize('finance', 'manage'), asyncHand
       from jsonb_array_elements($1::jsonb) x
     `, [JSON.stringify(body.lines)]);
     if (Number(currencyCheck.rows[0]?.currency_count ?? 0) !== 1) throw new AppError(422, 'Manual journal must use exactly one currency; FX conversion journals require explicit converted lines in one posting currency');
+    const base = (await client.query(`select base_currency_id from organizations where id = $1`, [orgId])).rows[0]?.base_currency_id;
+    const foreign = Number(body.lines[0].currency_id) !== Number(base);
+    if (foreign && !body.fx_side) throw new AppError(422, 'A manual journal in a foreign currency must state the exchange-rate side (buy or sell)');
     const entry = await client.query(`
       insert into manual_journal_entries
-        (org_id, project_id, entry_date, description, reason_category, requested_by)
-      values ($1,$2,coalesce($3::date,current_date),$4,$5,$6)
+        (org_id, project_id, entry_date, description, reason_category, requested_by, fx_side)
+      values ($1,$2,coalesce($3::date,current_date),$4,$5,$6,$7)
       returning *
-    `, [orgId, body.project_id ?? null, body.entry_date ?? null, body.description, body.reason_category, userId]);
+    `, [orgId, body.project_id ?? null, body.entry_date ?? null, body.description, body.reason_category, userId, foreign ? body.fx_side : null]);
     for (const line of body.lines) {
       await client.query(`
         insert into manual_journal_entry_lines
@@ -604,5 +609,7 @@ financeRouter.post('/fiscal-periods/:id/status',authorize('finance','manage'),as
     where id=$1 returning *`,[id,b.status,req.user!.id,reopening,b.reason??null]);
   res.json({success:true,data:r});
 }));
-financeRouter.get('/exchange-rates',asyncHandler(async(_req,res)=>res.json({success:true,data:await query(`select e.*,c.code currency_code from exchange_rates e join currencies c on c.id=e.currency_id order by rate_date desc,c.code limit 500`)})));
-financeRouter.post('/exchange-rates',authorize('finance','manage'),asyncHandler(async(req,res)=>{const b=z.object({currency_id:z.number().int().positive(),rate_date:z.string(),rate_to_base:z.number().positive(),source:z.string().max(100).optional().nullable()}).parse(req.body);const [r]=await query(`insert into exchange_rates(org_id,currency_id,rate_date,rate_to_base,source) values($1,$2,$3,$4,$5) on conflict(org_id,currency_id,rate_date) do update set rate_to_base=excluded.rate_to_base,source=excluded.source returning *`,[req.user!.org_id,b.currency_id,b.rate_date,b.rate_to_base,b.source??null]);res.status(201).json({success:true,data:r});}));
+financeRouter.get('/exchange-rates',asyncHandler(async(req,res)=>res.json({success:true,data:await query(`select e.*,c.code currency_code from exchange_rates e join currencies c on c.id=e.currency_id where e.org_id=$1 order by rate_date desc,c.code limit 500`,[req.user!.org_id])})));
+// DEC-023 (migration 089): the Central Bank of Egypt buy and sell rates of the date (sell >= buy), or one figure that
+// serves as both sides; amounts received convert at the buy rate, amounts paid at the sell rate.
+financeRouter.post('/exchange-rates',authorize('finance','manage'),asyncHandler(async(req,res)=>{const b=z.object({currency_id:z.number().int().positive(),rate_date:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),rate_to_base:z.number().positive().optional(),buy_rate:z.number().positive().optional(),sell_rate:z.number().positive().optional(),source:z.string().max(100).optional().nullable()}).parse(req.body);const pair=b.buy_rate!==undefined||b.sell_rate!==undefined;if(pair&&(b.buy_rate===undefined||b.sell_rate===undefined||b.rate_to_base!==undefined))throw new AppError(422,'Give both the buy and the sell rate, or one rate for both sides');if(!pair&&b.rate_to_base===undefined)throw new AppError(422,'Give the buy and the sell rate, or one rate for both sides');const buy=pair?b.buy_rate:b.rate_to_base,sell=pair?b.sell_rate:b.rate_to_base;const [r]=await query(`insert into exchange_rates(org_id,currency_id,rate_date,buy_rate,sell_rate,source) values($1,$2,$3,$4,$5,$6) on conflict(org_id,currency_id,rate_date) do update set buy_rate=excluded.buy_rate,sell_rate=excluded.sell_rate,source=excluded.source returning *`,[req.user!.org_id,b.currency_id,b.rate_date,buy,sell,b.source??null]);res.status(201).json({success:true,data:r});}));

@@ -306,7 +306,9 @@ export const en = {
   'value.automation': 'automation',
   'value.knowledge': 'knowledge',
   'value.commercialPlatform': 'commercial_platform',
-  'value.system': 'system'
+  'value.system': 'system',
+  'value.buy': 'buy',
+  'value.sell': 'sell'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -613,5 +615,7 @@ export const ar: Record<keyof typeof en, string> = {
   'value.automation': 'الأتمتة والتكاملات',
   'value.knowledge': 'قاعدة المعرفة',
   'value.commercialPlatform': 'الاشتراكات التجارية',
-  'value.system': 'النظام'
+  'value.system': 'النظام',
+  'value.buy': 'شراء',
+  'value.sell': 'بيع'
 };

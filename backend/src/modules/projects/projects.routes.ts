@@ -39,10 +39,10 @@ projectsRouter.get('/', asyncHandler(async (_req, res) => {
   res.json({ success: true, data: rows });
 }));
 
-projectsRouter.get('/reference-data/options', asyncHandler(async (_req, res) => {
+projectsRouter.get('/reference-data/options', asyncHandler(async (req, res) => {
   const [clients, currencies] = await Promise.all([
     query(`select id, client_name from clients where is_active=true order by client_name`),
-    query(`select id, code, name from currencies where is_active=true order by code`)
+    query(`select c.id,c.code,c.name from currencies c where c.is_active=true and currency_enabled($1,c.id) order by c.code`, [req.user!.org_id])
   ]);
   res.json({ success: true, data: { clients, currencies } });
 }));

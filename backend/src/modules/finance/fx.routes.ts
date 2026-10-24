@@ -31,6 +31,34 @@ fxRouter.patch('/fx-settings', authorize('finance', 'manage'), asyncHandler(asyn
   res.json({ success: true, data: s });
 }));
 
+// DEC-024 (migration 088): the ISO 4217 list with the company's enabled currencies. Enabling and disabling are the
+// company's own choice (finance manage); the database refuses a currency with more than 2 decimal places, disabling the
+// base currency, and disabling a currency the company has records in.
+const currencyId = (v: string) => z.coerce.number().int().positive().parse(v);
+fxRouter.get('/currencies', asyncHandler(async (req, res) => {
+  res.json({ success: true, data: await query(`
+    select c.id, c.code, c.name, c.minor_units, c.iso_list_date, (c.id = o.base_currency_id) as is_base,
+           (c.id = o.base_currency_id or oc.id is not null) as enabled, oc.enabled_at, u.full_name as enabled_by_name
+      from currencies c cross join (select base_currency_id from organizations where id = $1) o
+      left join org_currencies oc on oc.org_id = $1 and oc.currency_id = c.id
+      left join users u on u.id = oc.enabled_by
+     where c.is_active order by c.code`, [req.user!.org_id]) });
+}));
+fxRouter.post('/currencies/:id/enable', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
+  const id = currencyId(req.params.id);
+  const [r] = await query(`insert into org_currencies(org_id, currency_id, enabled_by) values ($1, $2, $3)
+    on conflict (org_id, currency_id) do nothing returning *`, [req.user!.org_id, id, req.user!.id]);
+  res.status(r ? 201 : 200).json({ success: true, data: r ?? (await query(`select * from org_currencies where org_id = $1 and currency_id = $2`, [req.user!.org_id, id]))[0] ?? null });
+}));
+fxRouter.delete('/currencies/:id/enable', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
+  const id = currencyId(req.params.id);
+  const [o] = await query<any>(`select base_currency_id from organizations where id = $1`, [req.user!.org_id]);
+  if (Number(o?.base_currency_id) === id) throw new AppError(422, 'The base currency cannot be disabled');
+  const rows = await query(`delete from org_currencies where org_id = $1 and currency_id = $2 returning *`, [req.user!.org_id, id]);
+  if (!rows.length) throw new AppError(404, 'Currency is not enabled for this company');
+  res.json({ success: true, data: rows[0] });
+}));
+
 fxRouter.patch('/chart-of-accounts/:id/fx-revalue', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
   const id = z.coerce.number().int().positive().parse(req.params.id);
   const b = z.object({ fx_revalue: z.boolean() }).parse(req.body);
@@ -60,7 +88,7 @@ fxRouter.post('/fx-revaluations', authorize('finance', 'post'), asyncHandler(asy
     if (later) throw new AppError(409, `An exchange revaluation already exists for ${String(later.period_end).slice(0, 10)}; revaluations follow one another in date order`);
     const run = (await client.query(`insert into fx_revaluations(org_id, period_end, created_by) values ($1, $2, $3) returning *`, [orgId, period_end, req.user!.id])).rows[0];
     const bal = (await client.query(`
-      select g.account_id, x.cur_id as currency_id,
+      select g.account_id, x.cur_id as currency_id, min(a.account_type) as account_type,
              sum(case when g.currency_id = x.cur_id then g.debit - g.credit else 0 end)::numeric(18,2) as foreign_balance,
              sum(g.debit_base - g.credit_base)::numeric(18,2) as base_before
         from general_ledger g
@@ -71,7 +99,9 @@ fxRouter.post('/fx-revaluations', authorize('finance', 'post'), asyncHandler(asy
        order by g.account_id, x.cur_id`, [orgId, period_end, o.base_currency_id])).rows;
     const lines = [];
     for (const b of bal) {
-      const r = (await client.query(`select rate, rate_date from fx_rate_to_base($1, $2, $3::date)`, [orgId, b.currency_id, period_end])).rows[0];
+      // DEC-023: monetary assets at the closing buy rate, liabilities at the closing sell rate.
+      const side = b.account_type === 'asset' ? 'buy' : 'sell';
+      const r = (await client.query(`select rate, rate_date from fx_rate_to_base($1, $2, $3::date, $4)`, [orgId, b.currency_id, period_end, side])).rows[0];
       if (r?.rate == null) {
         const c = (await client.query(`select code from currencies where id = $1`, [b.currency_id])).rows[0];
         throw new AppError(422, `No exchange rate for ${c?.code} on or before ${period_end} - record the closing rate first`);
@@ -91,8 +121,8 @@ fxRouter.post('/fx-revaluations', authorize('finance', 'post'), asyncHandler(asy
             [orgId, account, period_end, debit, credit, o.base_currency_id, run.id, batch, `Exchange revaluation ${period_end}`, revalued]);
         }
       }
-      const line = (await client.query(`insert into fx_revaluation_lines(org_id, revaluation_id, account_id, currency_id, foreign_balance, closing_rate, rate_date, base_before, base_target, adjustment, gl_batch_id)
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) returning *`, [orgId, run.id, b.account_id, b.currency_id, b.foreign_balance, r.rate, r.rate_date, b.base_before, v.target, v.adj, batch])).rows[0];
+      const line = (await client.query(`insert into fx_revaluation_lines(org_id, revaluation_id, account_id, currency_id, foreign_balance, closing_rate, rate_date, base_before, base_target, adjustment, gl_batch_id, rate_side)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) returning *`, [orgId, run.id, b.account_id, b.currency_id, b.foreign_balance, r.rate, r.rate_date, b.base_before, v.target, v.adj, batch, side])).rows[0];
       lines.push(line);
     }
     const posted = (await client.query(`update fx_revaluations set status = 'posted', posted_at = now() where id = $1 returning *`, [run.id])).rows[0];

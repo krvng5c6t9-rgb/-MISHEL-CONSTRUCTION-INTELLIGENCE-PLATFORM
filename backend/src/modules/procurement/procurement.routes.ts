@@ -84,12 +84,12 @@ const invoiceSchema = z.object({
   due_date: z.string().optional().nullable()
 });
 
-procurementRouter.get('/reference-data', authorize('procurement', 'view'), asyncHandler(async (_req, res) => {
+procurementRouter.get('/reference-data', authorize('procurement', 'view'), asyncHandler(async (req, res) => {
   const [projects, vendors, costCodes, currencies, warehouses, items] = await Promise.all([
     query(`select id,project_code,project_name,currency_id from projects where status not in ('closed','cancelled') order by project_code`),
     query(`select id,vendor_name,vendor_type from vendors_subcontractors where is_active=true and is_blacklisted=false order by vendor_name`),
     query(`select id,project_id,code,description from cost_codes where is_active=true order by code`),
-    query(`select id,code,name from currencies where is_active=true order by code`),
+    query(`select c.id,c.code,c.name from currencies c where c.is_active=true and currency_enabled($1,c.id) order by c.code`,[req.user!.org_id]),
     query(`select id,project_id,code,name from warehouses where is_active=true order by code`),
     query(`select id,item_code,description,unit_of_measure from inventory_items where is_active=true order by item_code`)
   ]);

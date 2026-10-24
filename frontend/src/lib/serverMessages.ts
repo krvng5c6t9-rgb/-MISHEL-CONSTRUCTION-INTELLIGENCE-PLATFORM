@@ -82,7 +82,16 @@ const EXACT: Record<string, string> = {
   'Segregation of duties: the IPC preparer cannot release its retention': 'فصل المهام: مُعِدّ المستخلص لا يُفرج عن محتجزه',
   'Segregation of duties: the preparer cannot approve the opening balances': 'فصل المهام: مُعِدّ الأرصدة الافتتاحية لا يعتمدها',
   'Segregation of duties: the preparer cannot approve the revenue run': 'فصل المهام: مُعِدّ دورة الإيراد لا يعتمدها',
-  'Segregation of duties: the user who closed a period cannot reopen it': 'فصل المهام: من أقفل الفترة لا يعيد فتحها'
+  'Segregation of duties: the user who closed a period cannot reopen it': 'فصل المهام: من أقفل الفترة لا يعيد فتحها',
+  // CC-082: currencies (DEC-024) and the buy / sell rate (DEC-023).
+  'Give both the buy and the sell rate, or one rate for both sides': 'أدخل سعرَي الشراء والبيع معًا، أو سعرًا واحدًا للجهتين',
+  'Give the buy and the sell rate, or one rate for both sides': 'أدخل سعرَي الشراء والبيع، أو سعرًا واحدًا للجهتين',
+  'A manual journal in a foreign currency must state the exchange-rate side (buy or sell)': 'القيد اليدوي بعملة أجنبية يجب أن يحدد جهة السعر (شراء أو بيع)',
+  'The base currency cannot be disabled': 'لا يمكن إلغاء تفعيل العملة الأساسية',
+  'Currency is not enabled for this company': 'العملة غير مفعّلة لهذه الشركة',
+  'An enabled currency is not changed; disable it and enable another': 'لا تُعدَّل عملة مفعّلة؛ ألغِ تفعيلها وفعِّل غيرها',
+  'The exchange-rate side must be buy or sell': 'جهة السعر يجب أن تكون شراء أو بيع',
+  'Value violates check constraint exchange_rates_sides_check': 'سعر البيع يجب ألا يقل عن سعر الشراء، وكلاهما أكبر من صفر'
 };
 
 // Status words inside finance messages, worded for the record they describe (the shared value words are not all apt).
@@ -99,7 +108,7 @@ const NOUN: Record<string, string> = {
   Drawing: 'الرسم', Document: 'الوثيقة', Inspection: 'الفحص', NCR: 'تقرير عدم المطابقة', Incident: 'الحادث', Permit: 'تصريح العمل',
   Employee: 'الموظف', Equipment: 'المعدة', Asset: 'المعدة', Account: 'الحساب', 'Report pack': 'حزمة التقرير', Snapshot: 'اللقطة',
   Budget: 'الموازنة', Approval: 'الاعتماد', 'Manual journal entry': 'القيد اليدوي', 'Cost transaction': 'حركة التكلفة',
-  'Payroll run': 'دورة المرتبات', Activity: 'النشاط', Baseline: 'الخط الأساسي', Milestone: 'المَعلَم', Notice: 'الإخطار'
+  'Payroll run': 'دورة المرتبات', Activity: 'النشاط', Baseline: 'الخط الأساسي', Milestone: 'المَعلَم', Notice: 'الإخطار', Currency: 'العملة'
 };
 
 const PATTERNS: [RegExp, (m: RegExpMatchArray) => string][] = [
@@ -117,6 +126,11 @@ const PATTERNS: [RegExp, (m: RegExpMatchArray) => string][] = [
   [/^Cut-over plan is ([a-z_]+)$/, m => `خطة الانتقال ${PLAN_STATUS[m[1]] ?? m[1]}`],
   [/^Fiscal period is already ([a-z_]+)$/, m => `الفترة المالية ${PERIOD_STATUS[m[1]] ?? m[1]} بالفعل`],
   [/^Manual journal lines are not balanced\. Difference: (-?[\d.]+)$/, m => `سطور القيد اليدوي غير متوازنة. الفرق: ${m[1]}`],
+  [/^Currency ([A-Z]{3}) is not enabled for this company - enable it in the exchange settings first$/, m => `العملة ${m[1]} غير مفعّلة لهذه الشركة؛ فعِّلها أولًا من إعدادات العملات`],
+  [/^Currency ([A-Z]{3}) has (\d) decimal places; amounts are kept to 2 decimal places, so it cannot be enabled yet$/, m => `العملة ${m[1]} لها ${m[2]} أرقام عشرية، والمبالغ تُحفظ برقمين عشريين؛ لذلك لا يمكن تفعيلها حاليًا`],
+  [/^The base currency ([A-Z]{3}) cannot be disabled$/, m => `لا يمكن إلغاء تفعيل العملة الأساسية ${m[1]}`],
+  [/^Currency ([A-Z]{3}) is used by records of this company \(([a-z_]+)\) and cannot be disabled$/, m => `العملة ${m[1]} عليها سجلات لهذه الشركة (${m[2]})؛ لا يمكن إلغاء تفعيلها`],
+  [/^The exchange-rate side \(buy or sell\) of this ([A-Z]{3}) entry is not known - a manual journal in a foreign currency must state it$/, m => `جهة السعر (شراء أو بيع) لهذا القيد بعملة ${m[1]} غير معروفة؛ القيد اليدوي بعملة أجنبية يجب أن يحددها`],
   [/^An exchange revaluation already exists for (\d{4}-\d{2}-\d{2}); revaluations follow one another in date order$/, m => `توجد إعادة تقييم للعملة بتاريخ ${m[1]}؛ تتوالى إعادات التقييم بترتيب التاريخ`]
 ];
 

@@ -248,7 +248,8 @@ authRouter.post('/bootstrap-admin', asyncHandler(async (req, res) => {
     } else {
       const cfg = body.organization!;
       const currency = (await client.query(
-        'select id from currencies where code=$1 and is_active=true limit 1',
+        // DEC-024 / F-59: amounts are kept to 2 decimal places, so a currency with more cannot be the base currency.
+        'select id from currencies where code=$1 and is_active=true and coalesce(minor_units,2)<=2 limit 1',
         [cfg.base_currency_code]
       )).rows[0];
       if (!currency) throw new AppError(422, `Base currency ${cfg.base_currency_code} is not configured`);

@@ -15,7 +15,8 @@ referenceDataRouter.get('/',asyncHandler(async(req,res)=>{
   query(`select id,project_code,project_name,status,currency_id from projects where org_id=$1 order by project_code`,[orgId]),
   query(`select id,client_name from clients where org_id=$1 and is_active=true order by client_name`,[orgId]),
   query(`select id,vendor_name,vendor_type from vendors_subcontractors where org_id=$1 and is_active=true order by vendor_name`,[orgId]),
-  query(`select id,code,name from currencies where is_active=true order by code`),
+  // DEC-024: the currencies the company has enabled (its base currency always).
+  query(`select c.id,c.code,c.name from currencies c where c.is_active=true and currency_enabled($1,c.id) order by c.code`,[orgId]),
   query(`select id,full_name,email from users where org_id=$1 and is_active=true and user_type='internal' order by full_name`,[orgId]),
   query(`select id,project_id,code,description from cost_codes where org_id=$1 and is_active=true order by code`,[orgId]),
   query(`select id,project_id,client_id,contract_value,currency_id,contract_status from contracts where org_id=$1 order by id desc`,[orgId]),

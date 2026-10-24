@@ -223,6 +223,13 @@ try {
       await fxSet.getByRole('button', { name: 'حفظ الإعدادات', exact: true }).click(); await page.waitForTimeout(800);
       check('ar: exchange settings refusal arrives in Arabic and names the fields (CC-079)', /^بيانات غير صالحة أو ناقصة في: .*fx_gain_account_id/.test(await alert()), await alert());
       check('ar: exchange-rate register lists the recorded rates', (await page.locator('[data-section="rates"] tbody tr').count()) >= 2, String(await page.locator('[data-section="rates"] tbody tr').count()));
+      // CC-082 (DEC-024 / DEC-023): the company's currencies (base always), the ISO list to enable from, buy and sell columns.
+      const curRows = (await page.locator('[data-section="currencies"] tbody tr').allInnerTexts()).map(x => x.replace(/\s+/g, ' '));
+      const toEnable = await page.locator('[data-section="currencies"]').getByLabel('العملة المراد تفعيلها').locator('option').count();
+      const rateHeads = (await page.locator('[data-section="rates"] thead th').allInnerTexts()).map(x => x.trim());
+      check('ar: currencies used by the company (EGP base, USD enabled) and the ISO list to enable from; register shows buy and sell',
+        curRows.some(r => /^EGP .*العملة الأساسية/.test(r)) && curRows.some(r => /^USD /.test(r)) && toEnable > 100 && rateHeads.includes('شراء') && rateHeads.includes('بيع'),
+        `${curRows.join(' | ')} || options ${toEnable} || ${rateHeads.join(',')}`);
       // Portals (CC-075): a validation notice follows the language (it was a fixed English sentence).
       await page.goto(`${BASE}/portals`); await page.waitForTimeout(1200);
       await page.locator('[data-section="grant-client"]').getByRole('button', { name: 'حفظ الصلاحية', exact: true }).click(); await page.waitForTimeout(300);

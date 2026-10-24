@@ -94,7 +94,11 @@ export const en = {
   'fin.colPeriod': 'Period',
   'fin.colStart': 'Start',
   'fin.colEnd': 'End',
-  'fin.colRate': 'Rate to base'
+  'fin.colRate': 'Rate to base',
+  'fin.fxSide': 'Rate side (foreign currency only)',
+  'fin.colBuy': 'Buy',
+  'fin.colSell': 'Sell',
+  'fin.colSide': 'Side'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -189,5 +193,9 @@ export const ar: Record<keyof typeof en, string> = {
   'fin.colPeriod': 'الفترة',
   'fin.colStart': 'البداية',
   'fin.colEnd': 'النهاية',
-  'fin.colRate': 'السعر مقابل الأساسية'
+  'fin.colRate': 'السعر مقابل الأساسية',
+  'fin.fxSide': 'جهة السعر (للعملة الأجنبية فقط)',
+  'fin.colBuy': 'شراء',
+  'fin.colSell': 'بيع',
+  'fin.colSide': 'جهة السعر'
 };
