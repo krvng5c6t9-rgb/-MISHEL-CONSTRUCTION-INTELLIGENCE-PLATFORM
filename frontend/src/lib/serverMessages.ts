@@ -97,7 +97,11 @@ const EXACT: Record<string, string> = {
   'Set the threshold of this alert before switching it on': 'حدِّد حدّ هذا التنبيه قبل تشغيله',
   'Choose the recipient roles of this alert before switching it on': 'اختر الأدوار التي يصلها هذا التنبيه قبل تشغيله',
   'This alert goes to the approvers of the current step; it takes no recipient roles': 'هذا التنبيه يصل إلى معتمدي الخطوة الحالية؛ لا تُحدَّد له أدوار',
-  'Recipient roles must be roles of this company': 'الأدوار المستلمة يجب أن تكون من أدوار هذه الشركة'
+  'Recipient roles must be roles of this company': 'الأدوار المستلمة يجب أن تكون من أدوار هذه الشركة',
+  // CC-085: printed documents.
+  'PDF output is not available on this server (no Chromium); use the print view': 'إخراج ملفات للطباعة غير متاح على هذا الخادم؛ استخدم عرض الطباعة',
+  'Document export entries are permanent': 'سجلات تصدير المستندات دائمة ولا تُعدَّل',
+  'Only the hash of the produced file is added to a document export entry': 'لا يُضاف إلى سجل التصدير إلا بصمة الملف المُنتَج'
 };
 
 // Status words inside finance messages, worded for the record they describe (the shared value words are not all apt).
@@ -114,7 +118,7 @@ const NOUN: Record<string, string> = {
   Drawing: 'الرسم', Document: 'الوثيقة', Inspection: 'الفحص', NCR: 'تقرير عدم المطابقة', Incident: 'الحادث', Permit: 'تصريح العمل',
   Employee: 'الموظف', Equipment: 'المعدة', Asset: 'المعدة', Account: 'الحساب', 'Report pack': 'حزمة التقرير', Snapshot: 'اللقطة',
   Budget: 'الموازنة', Approval: 'الاعتماد', 'Manual journal entry': 'القيد اليدوي', 'Cost transaction': 'حركة التكلفة',
-  'Payroll run': 'دورة المرتبات', Activity: 'النشاط', Baseline: 'الخط الأساسي', Milestone: 'المَعلَم', Notice: 'الإخطار', Currency: 'العملة', Notification: 'الإشعار', Alert: 'التنبيه'
+  'Payroll run': 'دورة المرتبات', Activity: 'النشاط', Baseline: 'الخط الأساسي', Milestone: 'المَعلَم', Notice: 'الإخطار', Currency: 'العملة', Notification: 'الإشعار', Alert: 'التنبيه', 'Document type': 'نوع المستند', Export: 'سجل التصدير'
 };
 
 const PATTERNS: [RegExp, (m: RegExpMatchArray) => string][] = [

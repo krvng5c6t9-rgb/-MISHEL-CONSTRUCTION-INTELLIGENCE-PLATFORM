@@ -54,7 +54,7 @@ check('dictionaries: same keys and placeholders in Arabic and English, no key de
 // F-55 (CC-080): every fixed refusal text of a translated API module has an exact Arabic entry in lib/serverMessages.ts
 // (the "… not found" and "Invalid … id" families are translated by pattern); a new message in that module fails here
 // until it is translated. Messages built from values must have a pattern for their fixed words.
-const TRANSLATED_MODULES = ['finance', 'notifications'];
+const TRANSLATED_MODULES = ['finance', 'notifications', 'documents'];
 const sm = readFileSync(new URL('../../frontend/src/lib/serverMessages.ts', import.meta.url), 'utf8');
 const exactKeys = new Set([...sm.slice(sm.indexOf('const EXACT'), sm.indexOf('};', sm.indexOf('const EXACT'))).matchAll(/^\s*'((?:[^'\\]|\\.)*)': '/gm)].map(m => m[1]));
 const untranslated = [];

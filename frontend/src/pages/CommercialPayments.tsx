@@ -1,6 +1,7 @@
 import { localDate } from '../lib/date';
 import { useEffect, useState } from 'react';
 import { apiGet, apiPost } from '../lib/api';
+import { openDocument } from '../lib/documents';
 import { NotLoaded, Num, Row, Table, ask, fmt } from '../components/RecordTable';
 import { useI18n, type MessageKey } from '../lib/i18n';
 
@@ -20,7 +21,7 @@ function Position({ data, labels }: { data: Row | null; labels: [string, Message
 }
 
 export function CommercialPayments() {
-  const { t, tv } = useI18n();
+  const { t, tv, lang } = useI18n();
   const [err, setErr] = useState('');
   const [unloaded, setUnloaded] = useState<Missed[]>([]);
   const [ipcs, setIpcs] = useState<Row[]>([]);
@@ -85,6 +86,7 @@ export function CommercialPayments() {
         <Table rows={withStatus(ipcs)} cols={cols([['ipc_no', 'payments.colIpc'], ['project_name', 'payments.colProject'], ['contract_ref', 'payments.colContract'], ['status_label', 'payments.colStatus'], ['net_amount_due', 'payments.colSubmittedNet'],
           ['client_certified_amount', 'payments.colCertified'], ['certification_difference', 'payments.colDifference'], ['client_reference', 'payments.colClientRef'], ['dispute_reason', 'payments.colDispute']])}
           actions={i => <>
+            <button onClick={() => openDocument('ipc', Number(i.id), lang).catch((x: any) => setErr(x.message))}>{t('doc.printPdf')}</button>
             {i.status === 'submitted_to_client' && <button onClick={() => certify(i)}>{t('payments.recordCertification')}</button>}
             {i.status === 'submitted_to_client' && <button onClick={() => run(() => apiPost(`/finance/ipcs/${i.id}/client-dispute`, { reason: ask(t('payments.askDisputeReason')) }))}>{t('payments.dispute')}</button>}
             {i.status === 'disputed' && <button onClick={() => run(() => apiPost(`/finance/ipcs/${i.id}/resubmit-to-client`, { note: ask(t('payments.askResubmitNote')) }))}>{t('payments.resubmit')}</button>}

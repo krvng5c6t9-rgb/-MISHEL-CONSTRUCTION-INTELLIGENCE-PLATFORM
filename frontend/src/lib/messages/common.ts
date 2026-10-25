@@ -23,7 +23,8 @@ export const en = {
   'projectStatus.execution': 'Execution',
   'projectStatus.closeout': 'Close-out',
   'projectStatus.closed': 'Closed',
-  'projectStatus.cancelled': 'Cancelled'
+  'projectStatus.cancelled': 'Cancelled',
+  'doc.printPdf': 'Print / PDF'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -49,5 +50,6 @@ export const ar: Record<keyof typeof en, string> = {
   'projectStatus.execution': 'قيد التنفيذ',
   'projectStatus.closeout': 'الإقفال',
   'projectStatus.closed': 'مغلق',
-  'projectStatus.cancelled': 'ملغى'
+  'projectStatus.cancelled': 'ملغى',
+  'doc.printPdf': 'طباعة / حفظ'
 };

@@ -8,7 +8,7 @@
 | Snapshot date | 2026-10-05 (UTC) |
 | Node / npm tested | v22.22.0 / 10.9.4 |
 | PostgreSQL tested | 16.14 locally; 16.15 and 17.11 in CI on every push (runtime-gate). First PG17 verification: CI run 37272015775, commit 60db79c. CI green through the v0.5.0-sweep handoff commit 8feec80 (run 37285108612; earlier: CC-018 run 37278655900 fixed the red CC-017 run 37278199131) |
-| Migrations | 83 (`database/migrations/001…083`), all applied from an empty DB |
+| Migrations | 92 (`database/migrations/001…092`), all applied from an empty DB (records correction: this row said 83) |
 | Baseline source | `MISHEL_COMMERCIAL_PRODUCT_V0_2_ACTUAL_MERGE.zip` (SHA-256 verified vs Drive manifest), imported unmodified in commit `8351acc` |
 
 ## Repository map
@@ -29,7 +29,7 @@
 - `governance/baseline_pack/`: the 56-file MISHEL Complete Pack (M01–M11, D01–D20, registers): mandatory input baseline, not a ceiling
 - Root `*_EVIDENCE.md`, `FINAL_HANDOVER_*`, `REDTEAM_*`: inherited v0.2 documentation. **Not trusted as evidence** (see F-09)
 
-## Controlled Changes CC-001 → CC-079
+## Controlled Changes CC-001 → CC-085
 | CC | Summary |
 |---|---|
 | CC-001 | Lockfiles generated (reproducible `npm ci`) |
@@ -116,6 +116,7 @@
 | CC-082 | DEC-024 ISO 4217 currency list enabled per company (migration 088); DEC-023 CBE buy / sell rates by direction of the amount, revaluation assets at buy / liabilities at sell (migration 089) |
 | CC-083 | R1.4 first batch: alert engine (8 alerts, company settings, nothing assumed) and notification centre; F-60 legacy approval trigger replaced (migration 090) |
 | CC-084 | R1.4 second batch: AL-06, 07, 18, 20, 22, 23 (migration 091); F-62 AI run status update fixed; F-63 alert test probe corrected |
+| CC-085 | R1.5 first part: IPC and subcontractor certificate as print view / PDF (ar / en), DRAFT watermark, permanent export log with SHA-256 (migration 092); F-64 open |
 
 **Owner approvals (R6):** A-001 master plan MP-01…MP-07; A-002 Stage 39 (CC-068), both 2026-10-15; A-003 brand MARC (2026-10-16); A-004 DEC-021 single currency at the transaction-date rate (2026-10-22); A-005 DEC-023 / DEC-024 rate side and currency list (2026-10-24); signed Mishel Thabet Halim (`governance/registers/11_Approval_Register.csv`).
 
@@ -186,13 +187,14 @@ Full Decision/Evidence/Alternatives/Reason/Impact/Rollback: `governance/DECISION
 | payments.ui.mjs | 21 | Browser: Payments & Certification (certification SoD, advance positions, back-charge SoD); the screen in Arabic |
 | sweep_cutover.mjs | 54 | GC-24 / DEC-019 cut-over in a fresh tenant: plan rules, opening TB and detail, reconciliation refusing differences, SoD approval, opening journal, opening payable paid; engines continuing from opening positions, opening retention release |
 | sweep_alerts.mjs | 36 | second batch (permit expiry, EAC over budget, AI run waiting, agent suspended, superseded revision in a draft transmittal, DLP end; roles named only) and R1.4 alert engine: catalogue and settings validation (threshold / roles required, other company's roles refused, permission), AL-01 to the approver only (not the maker, not an initiating approver, once), AL-02 overdue, AL-15 / AL-14 receivables and payables (finance view required, window respected), AL-11 / AL-12 / AL-03 / AL-25 (window, switch-on time, roles named only), read state, own records only, other company, switched off, audit |
+| sweep_documents.mjs | 26 | R1.5 printed documents: IPC print view in Arabic (right to left, number, net amount as the database text grouped, approver from the workflow), DRAFT watermark on a draft and not on a final IPC, export number printed, SHA-256 header and export entry equal to the returned bytes, draft flag, PDF in English, list of exports, subcontract certificate final / draft, refusals (no finance.view, no contracts.view, list and verification without permission, other company, unknown type, unknown language, no entry on refusal), entries cannot be deleted or changed in the database |
 | sweep_mfa.mjs | 35 | DEC-015 MFA (server with MFA required): who must enrol, enrolment, replay, recovery codes, lockout, admin reset, production refusal |
 | mfa_login.ui.mjs | 18 | Browser: sign-in second step - set-up, recovery codes shown once, code sign-in, recovery sign-in, admin reset from the Users screen; Users / Roles / DOA screen in Arabic |
 | revenue.ui.mjs | 24 | Browser: Revenue & Contract Position - runs, backward run refused, estimate SoD/approve/retire, retention release, F-48; the contract in Arabic, negative amounts and periods left-to-right, content within its column and KPI figure size in both languages |
 | cutover.ui.mjs | 28 | Browser: Go-live cut-over in a fresh tenant - paste with mapping, row errors previewed and nothing saved, difference per control account, preparer refusal, second-person approval; the draft and opened screens in Arabic (Arabic column names, Arabic row errors, no Latin labels) |
 | i18n.ui.mjs | 29 | Browser: Arabic default RTL, switch to English LTR (sign-in and shell), persistence, 36 navigation items in 11 groups in both languages, shown by view permission (limited user), groups folding, landing dashboard in Arabic, key and placeholder parity across all message files; navigation side and direction in each language |
 | screens.ui.mjs | 239 | Browser: 30 screens in both languages (title, direction, no Latin Arabic labels, content within column, no console errors / 5xx); CRM client, lead and activity and a Finance manual journal created from the Arabic screens; labelled ledger columns; RFI flagged for cost impact, Planning refusal shown, contractual milestone, HR tile count; no screen uses the UTC date; no raw JSON / database field names; executive tiles per currency; Portals notice in Arabic; database and validation refusals arrive in Arabic; exchange register |
-| **Total** | **1,804** | 47 API suites + 7 browser checks, all PASS locally (RUN sh53; 1,797 at RUN sh49 before Stage 54; 1,760 at RUN sh46 before Stage 53; 1,735 at RUN sh43 before Stage 52; 1,729 at RUN sh41 before Stage 51; 1,724 at RUN sh40 before Stage 50; 1,707 at RUN sh35 before Stage 49; 1,696 at RUN sh34 before Stage 48; 1,692 at RUN sh29 before Stage 47; 1,683 at RUN sh25 before Stage 46; 1,581 at RUN sh23 before Stage 45; 1,536 at RUN sh21 before Stage 44; 1,533 at RUN sh20 before Stage 43; 1,506 at RUN sh19 before Stage 42; 1,464 at RUN sh18 before Stage 41; 1,453 at RUN sh15 before Stage 40; 1,436 at RUN sh9 before Stage 39; 1,425 at RUN sh7 before Stage 38; 1,410 at RUN sh5 before Stage 37; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
+| **Total** | **1,830** | 48 API suites + 7 browser checks, all PASS locally (RUN sh55; 1,804 at RUN sh53 before Stage 55; 1,797 at RUN sh49 before Stage 54; 1,760 at RUN sh46 before Stage 53; 1,735 at RUN sh43 before Stage 52; 1,729 at RUN sh41 before Stage 51; 1,724 at RUN sh40 before Stage 50; 1,707 at RUN sh35 before Stage 49; 1,696 at RUN sh34 before Stage 48; 1,692 at RUN sh29 before Stage 47; 1,683 at RUN sh25 before Stage 46; 1,581 at RUN sh23 before Stage 45; 1,536 at RUN sh21 before Stage 44; 1,533 at RUN sh20 before Stage 43; 1,506 at RUN sh19 before Stage 42; 1,464 at RUN sh18 before Stage 41; 1,453 at RUN sh15 before Stage 40; 1,436 at RUN sh9 before Stage 39; 1,425 at RUN sh7 before Stage 38; 1,410 at RUN sh5 before Stage 37; 1,388 at RUN sh3 before Stage 36; chain row corrected 92→99 (94 before this stage, a stale count); earlier "700" was a records error, F-19) |
 
 ## Investigation status (R01–R14: `governance/reconciliation/`, `governance/decomposition/`, `governance/market/`)
 - R01: the 4,602 STEP17 requirements are a platform-contract scaffold (67% structural, 20% fields, 13% governance; 0 for take-off/EVM/CPM/RFI/cash flow/delay analysis).
