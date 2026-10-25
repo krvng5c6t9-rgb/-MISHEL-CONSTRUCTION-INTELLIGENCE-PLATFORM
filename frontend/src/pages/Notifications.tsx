@@ -9,9 +9,12 @@ import { Num } from '../components/RecordTable';
 // CC-083 have only their stored (English) text, shown isolated.
 type Notice = { key: MessageKey; vars?: Record<string, string | number> } | null;
 const TEXT: Record<string, MessageKey> = { 'AL-01': 'alert.approvalPending', 'AL-02': 'alert.approvalOverdue', 'AL-03': 'alert.timeBar', 'AL-11': 'alert.ncrOpen',
-  'AL-12': 'alert.incident', 'AL-14': 'alert.paymentDue', 'AL-15': 'alert.receivableOverdue' };
+  'AL-12': 'alert.incident', 'AL-14': 'alert.paymentDue', 'AL-15': 'alert.receivableOverdue',
+  'AL-06': 'alert.permitExpiry', 'AL-07': 'alert.eacBreach', 'AL-18': 'alert.aiReview', 'AL-20': 'alert.agentSuspended', 'AL-22': 'alert.supersededInUse', 'AL-23': 'alert.dlpEnd' };
+const PERMIT: Record<string, MessageKey> = { hot_work: 'hse.optHotWork', confined_space: 'hse.optConfinedSpace', height: 'hse.optHeight', other: 'hse.optOther' };
 const NAME: Record<string, MessageKey> = { 'AL-01': 'alert.nameApprovalPending', 'AL-02': 'alert.nameApprovalOverdue', 'AL-03': 'alert.nameTimeBar', 'AL-11': 'alert.nameNcrOpen',
-  'AL-12': 'alert.nameIncident', 'AL-14': 'alert.namePaymentDue', 'AL-15': 'alert.nameReceivableOverdue', 'AL-25': 'alert.nameResponseOverdue' };
+  'AL-12': 'alert.nameIncident', 'AL-14': 'alert.namePaymentDue', 'AL-15': 'alert.nameReceivableOverdue', 'AL-25': 'alert.nameResponseOverdue',
+  'AL-06': 'alert.namePermitExpiry', 'AL-07': 'alert.nameEacBreach', 'AL-18': 'alert.nameAiReview', 'AL-20': 'alert.nameAgentSuspended', 'AL-22': 'alert.nameSupersededInUse', 'AL-23': 'alert.nameDlpEnd' };
 const day = (v: unknown) => (v ? String(v).slice(0, 10) : '—');
 
 export function Notifications() {
@@ -39,7 +42,9 @@ export function Notifications() {
     const key = TEXT[n.alert_code];
     if (!key) return <bdi>{n.message}</bdi>;
     return <>{t(key, { module: tv(p.module), record: p.record ?? '', hours: p.hours ?? '', deadline: day(p.deadline), title: p.title ?? '', no: p.no ?? '', days: p.days ?? '',
-      severity: tv(p.severity), date: day(p.date), due: day(p.due), amount: p.amount ?? '', currency: p.currency ?? '', party: p.party ?? '' })}</>;
+      severity: tv(p.severity), date: day(p.date ?? p.dlp_end), due: day(p.due), amount: p.amount ?? '', currency: p.currency ?? '', party: p.party ?? '',
+      type: PERMIT[p.type] ? t(PERMIT[p.type]) : tv(p.type), expiry: day(p.expiry), eac: p.eac ?? '', budget: p.budget ?? '', percent: p.percent ?? '', project: p.project ?? '', code: p.code ?? '',
+      run: p.run ?? '', agent: p.agent ?? '', transmittal: p.transmittal ?? '', document: p.document ?? '', certificate: p.certificate ?? '' })}</>;
   };
   const save = (code: string) => {
     const e = edit[code], r = rules!.find(x => x.alert_code === code);
@@ -81,7 +86,7 @@ export function Notifications() {
         {rules.map(r => { const e = edit[r.alert_code] ?? { enabled: false, threshold: '', roles: [] }; const name = t(NAME[r.alert_code]); return <tr key={r.alert_code} data-alert={r.alert_code}>
           <td><bdi>{r.alert_code}</bdi></td><td id={`al-${r.alert_code}`}>{name}</td>
           <td><input type="checkbox" aria-label={`${name} — ${t('ntf.colEnabled')}`} checked={e.enabled} onChange={x => set(r.alert_code, { enabled: x.target.checked })} /></td>
-          <td>{r.threshold_unit ? <><input type="number" min="0" max="3650" aria-label={`${name} — ${t('ntf.colThreshold')}`} value={e.threshold} onChange={x => set(r.alert_code, { threshold: x.target.value })} /> {t(r.threshold_unit === 'hours' ? 'ntf.unitHours' : 'ntf.unitDays')}</> : t('ntf.noThreshold')}</td>
+          <td>{r.threshold_unit ? <><input type="number" min="0" max="3650" aria-label={`${name} — ${t('ntf.colThreshold')}`} value={e.threshold} onChange={x => set(r.alert_code, { threshold: x.target.value })} /> {t(r.threshold_unit === 'hours' ? 'ntf.unitHours' : r.threshold_unit === 'percent' ? 'ntf.unitPercent' : 'ntf.unitDays')}</> : t('ntf.noThreshold')}</td>
           <td>{r.needs_roles ? <select multiple aria-label={`${name} — ${t('ntf.colRoles')}`} value={e.roles} onChange={x => set(r.alert_code, { roles: Array.from(x.target.selectedOptions).map(o => o.value) })}>
             {roles.map(ro => <option key={ro.id} value={String(ro.id)}>{ro.role_name}</option>)}</select> : t('ntf.approvers')}</td>
           <td>{r.active ? t('ntf.yes') : t('ntf.no')}</td>

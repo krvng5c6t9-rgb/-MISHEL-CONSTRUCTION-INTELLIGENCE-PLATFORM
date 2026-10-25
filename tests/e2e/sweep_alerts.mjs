@@ -28,8 +28,8 @@ try {
 
   // --- Settings: the catalogue, validation, permissions.
   const rules = must(await api('GET', '/notifications/alert-rules', admin), 'rules');
-  check('alert catalogue of the first batch: AL-01, 02, 03, 11, 12, 14, 15, 25; only AL-01 active before the company sets anything',
-    rules.map(r => r.alert_code).join(',') === 'AL-01,AL-02,AL-03,AL-11,AL-12,AL-14,AL-15,AL-25' && rules.filter(r => r.active).map(r => r.alert_code).join(',') === 'AL-01',
+  check('alert catalogue (CC-083 + CC-084): AL-01, 02, 03, 06, 07, 11, 12, 14, 15, 18, 20, 22, 23, 25; only AL-01 active before the company sets anything',
+    rules.map(r => r.alert_code).join(',') === 'AL-01,AL-02,AL-03,AL-06,AL-07,AL-11,AL-12,AL-14,AL-15,AL-18,AL-20,AL-22,AL-23,AL-25' && rules.filter(r => r.active).map(r => r.alert_code).join(',') === 'AL-01',
     rules.map(r => `${r.alert_code}:${r.active}`).join(' '));
   const collect = await mkRole('AL Collections', [['finance', 'view']]);
   const noFin = await mkRole('AL No finance', [['projects', 'view']]);
@@ -68,12 +68,18 @@ try {
   await evaluate();
   check('AL-01: evaluating again does not repeat the notification', forApproval(await mine(approver), 'AL-01').length === 1);
   // The initiator is never told about their own approval even when holding the approver role (probe rolled back).
+  await mkUser('alap2', Number(mjRule.approver_role_id));
   const self = one(`begin;
     insert into approval_instances(org_id, module, record_id, amount, currency_id, current_step, status, initiated_by)
       values (${ADMIN.org_id}, 'manual_journal_entry', 0, 10, 1, ${mjRule.approval_level}, 'pending', ${approver.id});
-    select 'n', evaluate_alerts(${ADMIN.org_id}), (select count(*) from notifications where user_id = ${approver.id} and record_id = currval('approval_instances_id_seq') and record_table = 'approval_instances');
+    select evaluate_alerts(${ADMIN.org_id});
+    select 'n', (select count(*) from notifications where record_id = currval('approval_instances_id_seq') and record_table = 'approval_instances' and user_id <> ${approver.id}),
+      (select count(*) from notifications where user_id = ${approver.id} and record_id = currval('approval_instances_id_seq') and record_table = 'approval_instances');
     rollback;`).split('\n').find(l => l.startsWith('n|'))?.split('|') ?? [];
-  check('AL-01: an approver who initiated the approval is not told about it', self[2] === '0', self.join('|'));
+  // The count runs in a later statement: a statement does not see rows written by a function it calls (one snapshot).
+  // Control: the other active users of the approver role are told, so the probe does see what the evaluation wrote.
+  const peers = Number(one(`select count(*) from users where org_id = ${ADMIN.org_id} and role_id = ${mjRule.approver_role_id} and is_active and user_type = 'internal' and id <> ${approver.id}`));
+  check('AL-01: an approver who initiated the approval is not told about it (the other approvers are)', self[2] === '0' && peers > 0 && Number(self[1]) === peers, `${self.join('|')}, other approvers ${peers}`);
   must(await api('PUT', '/notifications/alert-rules/AL-02', admin, { enabled: true, threshold: 0 }), 'al-02 on');
   await evaluate();
   const a2 = forApproval(await mine(approver), 'AL-02');
@@ -126,6 +132,55 @@ try {
   check('AL-03: an open contract notice due within the company\'s window is alerted', !!notice && has('AL-03', notice), `notice ${notice || 'none in the data'}, window ${left} days`);
   check('AL-25: an open RFI past its response date is alerted', !!rfi && has('AL-25', rfi), `rfi ${rfi || 'none in the data'}`);
   check('alerts reach only the roles named: the collections role gets no quality, HSE or contract alerts', !(await mine(U.col)).some(n => ['AL-03', 'AL-11', 'AL-12', 'AL-25'].includes(n.alert_code)));
+
+  // --- CC-084 second batch: AL-06, AL-07, AL-18, AL-20, AL-22, AL-23 (recipients: an operations role).
+  const ops = await mkRole('AL Ops', [['hse', 'view'], ['hse', 'create'], ['edms', 'view'], ['edms', 'create'], ['edms', 'edit'], ['ai_platform', 'view'], ['cost_control', 'view'], ['site', 'view']]);
+  U.ops = await mkUser('alops', ops);
+  const soon = one(`select (current_date + 3)::text`), later = one(`select (current_date + 30)::text`);
+  const pSoon = must(await api('POST', '/hse/permits', U.ops.token, { project_id: project, permit_type: 'hot_work', expiry_date: soon }), 'permit soon');
+  const pLater = must(await api('POST', '/hse/permits', U.ops.token, { project_id: project, permit_type: 'height', expiry_date: later }), 'permit later');
+  for (const p of [pSoon, pLater]) must(await api('POST', `/hse/permits/${p.id}/approve`, admin), 'permit approve');
+  must(await api('PUT', '/notifications/alert-rules/AL-06', admin, { enabled: true, threshold: 7, recipient_role_ids: [ops] }), 'al-06 on');
+  const agent = must(await api('POST', '/ai-platform/agents', admin, { agent_key: `al-agent-${TAG}`, name: `Alert test agent ${TAG}`, purpose: 'TEST FIXTURE' }), 'agent');
+  must(await api('PATCH', `/ai-platform/agents/${agent.id}`, admin, { status: 'suspended' }), 'agent suspend');
+  const run1 = must(await api('POST', '/ai-platform/runs', admin, { agent_id: agent.id, input_payload: { fixture: true } }), 'run');
+  must(await api('PATCH', `/ai-platform/runs/${run1.id}/status`, admin, { status: 'waiting_approval' }), 'run waiting');
+  const run2 = must(await api('POST', '/ai-platform/runs', admin, { agent_id: agent.id, input_payload: { fixture: true } }), 'run 2');
+  must(await api('PUT', '/notifications/alert-rules/AL-18', admin, { enabled: true, recipient_role_ids: [ops] }), 'al-18 on');
+  must(await api('PUT', '/notifications/alert-rules/AL-20', admin, { enabled: true, recipient_role_ids: [ops] }), 'al-20 on');
+  const doc = must(await api('POST', '/edms/documents', U.ops.token, { project_id: project, doc_number: `ALDOC${TAG}`, file_name: 'rev-a.pdf', storage_key: `al/${TAG}/a.pdf`, revision: 'A' }), 'doc');
+  const v1 = must(await api('GET', `/edms/documents/${doc.id}/versions`, U.ops.token), 'versions').find(v => v.is_current);
+  must(await api('POST', `/edms/documents/${doc.id}/versions`, U.ops.token, { file_name: 'rev-b.pdf', storage_key: `al/${TAG}/b.pdf`, revision: 'B' }), 'version B');
+  const tr = must(await api('POST', '/edms/transmittals', U.ops.token, { project_id: project, transmittal_no: `AL-T-${TAG}`, purpose: 'for_information' }), 'transmittal');
+  const oldLine = await api('POST', `/edms/transmittals/${tr.id}/lines`, U.ops.token, { document_id: doc.id, document_version_id: v1.id });
+  must(await api('PUT', '/notifications/alert-rules/AL-22', admin, { enabled: true, recipient_role_ids: [ops] }), 'al-22 on');
+  const [cert, dlpLeft] = (one(`select id, dlp_end_date - current_date from handover_certificates where org_id = ${ADMIN.org_id} and dlp_end_date >= current_date order by id limit 1`) || '|').split('|');
+  if (cert) must(await api('PUT', '/notifications/alert-rules/AL-23', admin, { enabled: true, threshold: Math.max(0, Number(dlpLeft) - 1), recipient_role_ids: [ops] }), 'al-23 short');
+  await evaluate();
+  const shortHas = cert ? (await mine(U.ops)).some(n => n.alert_code === 'AL-23' && String(n.record_id) === cert) : true;
+  if (cert) must(await api('PUT', '/notifications/alert-rules/AL-23', admin, { enabled: true, threshold: Number(dlpLeft), recipient_role_ids: [ops] }), 'al-23 on');
+  must(await api('PUT', '/notifications/alert-rules/AL-07', admin, { enabled: true, threshold: 10, recipient_role_ids: [ops] }), 'al-07 on');
+  await evaluate();
+  const o = await mine(U.ops);
+  const got = (code, id) => o.some(n => n.alert_code === code && String(n.record_id) === String(id));
+  check('AL-06: an approved work permit expiring within the company\'s days (7) is alerted with its type; one expiring in 30 days is not',
+    got('AL-06', pSoon.id) && !got('AL-06', pLater.id) && o.find(n => n.alert_code === 'AL-06' && String(n.record_id) === String(pSoon.id))?.params?.type === 'hot_work');
+  check('AL-18: an AI run waiting for human approval is alerted; a queued run is not', got('AL-18', run1.id) && !got('AL-18', run2.id));
+  check('AL-20: a suspended AI agent is alerted', got('AL-20', agent.id));
+  check('AL-22: a draft transmittal holding a superseded document version is alerted', oldLine.status === 201 && o.some(n => n.alert_code === 'AL-22' && n.params?.transmittal === `AL-T-${TAG}`),
+    `line HTTP ${oldLine.status}`);
+  check('AL-23: a defects liability period ending within the company\'s days is alerted, not one ending after them', !!cert && !shortHas && got('AL-23', cert), `certificate ${cert || 'none in the data'}, ends in ${dlpLeft} days`);
+  check('second-batch alerts reach only the role named (the QA role gets none of them)', !(await mine(U.qa)).some(n => ['AL-06', 'AL-18', 'AL-20', 'AL-22', 'AL-23'].includes(n.alert_code)));
+  // AL-07 on approved cost forecasts (probes rolled back): EAC 120 on a budget of 100 breaches a 10 % threshold; 105 does not.
+  const eacProbe = (etc) => one(`begin;
+    alter table cost_forecast_snapshots disable trigger user;
+    insert into cost_forecast_snapshots(org_id, project_id, cost_code_id, as_of, budget, committed, actual, accrual, etc_method, etc_amount, etc_basis, prepared_by, approved_by, approved_at)
+      values (${ADMIN.org_id}, ${project}, (select id from cost_codes where org_id = ${ADMIN.org_id} order by id limit 1), current_date + 1, 100, 0, 0, 0, 'manual', ${etc}, 'Alert test forecast (fixture)', ${maker.id}, ${approver.id}, now());
+    select evaluate_alerts(${ADMIN.org_id});
+    select 'eac', 0, (select count(*) from notifications where user_id = ${U.ops.id} and alert_code = 'AL-07' and record_id = currval('cost_forecast_snapshots_id_seq'));
+    rollback;`).split('\n').find(l => l.startsWith('eac|'))?.split('|') ?? [];
+  const e1 = eacProbe(120), e2 = eacProbe(105);
+  check('AL-07: the latest approved forecast with EAC more than the company\'s percentage (10) over budget is alerted; 5 % over is not', e1[2] === '1' && e2[2] === '0', `${e1.join('|')} / ${e2.join('|')}`);
 
   // --- Read state, own records only, other company.
   const cnt = async (u) => must(await api('GET', '/notifications/count', u.token), 'count').unread;

@@ -49,7 +49,20 @@ export const en = {
   'alert.paymentDue': 'Payment due {due}: {amount} {currency} to {party}',
   'alert.receivableOverdue': 'Receivable overdue since {due}: {amount} {currency} from {party}',
   'alert.rfiOverdue': 'RFI {no} without response since {due}',
-  'alert.submittalOverdue': 'Submittal {no} without response since {due}'
+  'alert.submittalOverdue': 'Submittal {no} without response since {due}',
+  'ntf.unitPercent': '% over budget',
+  'alert.namePermitExpiry': 'Work permit expiring',
+  'alert.nameEacBreach': 'EAC above budget',
+  'alert.nameAiReview': 'AI draft awaiting review',
+  'alert.nameAgentSuspended': 'AI agent suspended',
+  'alert.nameSupersededInUse': 'Superseded revision in a draft transmittal',
+  'alert.nameDlpEnd': 'Defects liability period ending',
+  'alert.permitExpiry': 'Work permit ({type}) expires on {expiry}',
+  'alert.eacBreach': 'EAC {eac} exceeds budget {budget} by more than {percent}% ({project} / {code})',
+  'alert.aiReview': 'AI run #{run} ({agent}) awaits human review',
+  'alert.agentSuspended': 'AI agent {agent} is suspended',
+  'alert.supersededInUse': 'Draft transmittal {transmittal} holds a superseded revision of {document}',
+  'alert.dlpEnd': 'Defects liability period of {certificate} ends on {date}'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -101,5 +114,18 @@ export const ar: Record<keyof typeof en, string> = {
   'alert.paymentDue': 'دفعة مستحقة في {due}: {amount} {currency} إلى {party}',
   'alert.receivableOverdue': 'مستحقات متأخرة منذ {due}: {amount} {currency} من {party}',
   'alert.rfiOverdue': 'طلب الاستيضاح {no} بلا رد منذ {due}',
-  'alert.submittalOverdue': 'طلب الاعتماد الفني {no} بلا رد منذ {due}'
+  'alert.submittalOverdue': 'طلب الاعتماد الفني {no} بلا رد منذ {due}',
+  'ntf.unitPercent': '٪ فوق الموازنة',
+  'alert.namePermitExpiry': 'تصريح عمل قارب على الانتهاء',
+  'alert.nameEacBreach': 'التكلفة المتوقعة فوق الموازنة',
+  'alert.nameAiReview': 'مسودة ذكاء اصطناعي بانتظار المراجعة',
+  'alert.nameAgentSuspended': 'إيقاف وكيل ذكاء اصطناعي',
+  'alert.nameSupersededInUse': 'إصدار مُستبدَل في خطاب تحويل مسودة',
+  'alert.nameDlpEnd': 'قرب انتهاء فترة ضمان العيوب',
+  'alert.permitExpiry': 'تصريح العمل ({type}) ينتهي في {expiry}',
+  'alert.eacBreach': 'التكلفة المتوقعة عند الإتمام {eac} تتجاوز الموازنة {budget} بأكثر من {percent}٪ ({project} / {code})',
+  'alert.aiReview': 'تشغيل الذكاء الاصطناعي رقم {run} ({agent}) بانتظار مراجعة بشرية',
+  'alert.agentSuspended': 'تم إيقاف وكيل الذكاء الاصطناعي {agent}',
+  'alert.supersededInUse': 'خطاب التحويل المسودة {transmittal} يحتوي إصدارًا مُستبدَلًا من {document}',
+  'alert.dlpEnd': 'فترة ضمان العيوب لشهادة {certificate} تنتهي في {date}'
 };
