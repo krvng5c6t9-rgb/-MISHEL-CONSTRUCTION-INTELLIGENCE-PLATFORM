@@ -9,6 +9,10 @@ body { margin: 0; font-family: Cairo, system-ui, sans-serif; background: #f5f6f8
 .nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin: 6px 0; border-radius: 12px; color: #fff; text-decoration: none; }
 .nav-item.active, .nav-item:hover { background: rgba(201,169,97,.18); color: var(--gold); }
 .nav-group { margin: 10px 0 4px; }
+.bell { display: inline-flex; align-items: center; gap: 6px; margin: 12px 0 4px; padding: 6px 10px; border-radius: 10px; color: var(--gold); text-decoration: none; }
+.bell:hover, .bell:focus-visible { background: rgba(255,255,255,.08); }
+.bell-count { min-width: 22px; padding: 1px 7px; border-radius: 999px; background: var(--orange); color: #fff; font-size: 12px; font-weight: 800; text-align: center; }
+tr.unread td { font-weight: 700; }
 .nav-group-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 14px; background: transparent; border: 0; border-radius: 10px; color: var(--gold); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; text-align: start; }
 .nav-group-toggle:hover, .nav-group-toggle:focus-visible { background: rgba(255,255,255,.08); }
 .nav-group-toggle svg { flex: none; transition: transform .15s; transform: rotate(-90deg); }

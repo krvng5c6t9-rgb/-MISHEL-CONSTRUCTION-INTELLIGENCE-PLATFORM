@@ -54,6 +54,7 @@ const SCREENS = [
   ['/knowledge', 'Enterprise Knowledge & RAG', 'معرفة المؤسسة والاسترجاع المعزز', 3],
   ['/commercial-platform', 'Commercial SaaS Control Center', 'مركز التحكم التجاري للمنصة', 5],
   ['/exchange', 'Exchange Rates & Revaluation', 'أسعار الصرف وإعادة التقييم'],
+  ['/notifications', 'Notifications', 'الإشعارات'],
   ['/setup', 'Initialize Construction ERP', 'تهيئة النظام']
 ];
 
@@ -230,6 +231,18 @@ try {
       check('ar: currencies used by the company (EGP base, USD enabled) and the ISO list to enable from; register shows buy and sell',
         curRows.some(r => /^EGP .*العملة الأساسية/.test(r)) && curRows.some(r => /^USD /.test(r)) && toEnable > 100 && rateHeads.includes('شراء') && rateHeads.includes('بيع'),
         `${curRows.join(' | ')} || options ${toEnable} || ${rateHeads.join(',')}`);
+      // CC-083 (R1.4): the notification centre in Arabic - the bell names the unread count, the alert settings list the
+      // first batch, and switching on an alert without its threshold is refused in Arabic.
+      await page.goto(`${BASE}/notifications`); await page.waitForTimeout(1500);
+      const bell = await page.locator('a.bell').getAttribute('aria-label');
+      const alertRows = await page.locator('[data-section="alert-settings"] tbody tr').count();
+      const al03 = page.locator('[data-section="alert-settings"] tr[data-alert="AL-03"]');
+      await al03.getByLabel('اقتراب موعد إخطار تعاقدي — مُشغَّل').check();
+      // Whatever an earlier suite left set, an empty threshold with the alert on is refused.
+      await al03.getByLabel('اقتراب موعد إخطار تعاقدي — الحد').fill('');
+      await al03.getByRole('button', { name: 'حفظ', exact: true }).click(); await page.waitForTimeout(800);
+      check('ar: notification centre - bell with the unread count, 8 alerts in the settings, threshold refusal in Arabic',
+        /^الإشعارات \(\d+ غير مقروءة\)$/.test(bell ?? '') && alertRows === 8 && /حدِّد حدّ هذا التنبيه قبل تشغيله/.test(await alert()), `${bell} || ${alertRows} || ${await alert()}`);
       // Portals (CC-075): a validation notice follows the language (it was a fixed English sentence).
       await page.goto(`${BASE}/portals`); await page.waitForTimeout(1200);
       await page.locator('[data-section="grant-client"]').getByRole('button', { name: 'حفظ الصلاحية', exact: true }).click(); await page.waitForTimeout(300);

@@ -1,6 +1,6 @@
 // R1.1 (MP-06 §1) browser verification of the bilingual shell: Arabic is the default with right-to-left direction;
 // the language switch changes language and direction on the sign-in screen and in the application shell, persists
-// across reloads, every one of the 35 navigation items is translated in both languages and shown in its group (R1.3) only to users with
+// across reloads, every one of the 36 navigation items is translated in both languages and shown in its group (R1.3) only to users with
 // view rights on it, and the landing dashboard is in
 // Arabic (R1.2). Also checks that the
 // Arabic and English dictionaries in frontend/src/lib/messages/*.ts have the same keys and placeholders.
@@ -15,7 +15,7 @@ const results = [];
 const check = (name, ok, detail = '') => { results.push({ name, ok, detail }); console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? ' :: ' + detail : ''}`); };
 
 // R1.3 (CC-081): grouped navigation (MP-06 §3), in group order.
-const EN_NAV = ['Dashboard', 'Approvals', 'Executive Dashboard', 'CRM', 'Tendering', 'BOQ', 'Contracts', 'Claims / EOT', 'Subcontracts',
+const EN_NAV = ['Dashboard', 'Notifications', 'Approvals', 'Executive Dashboard', 'CRM', 'Tendering', 'BOQ', 'Contracts', 'Claims / EOT', 'Subcontracts',
   'Payments & Certification', 'Projects', 'Project Controls', 'Planning', 'Cost Control', 'Reports', 'Technical Office', 'EDMS', 'Site Execution',
   'QA/QC', 'HSE', 'Procurement', 'Inventory', 'Assets', 'Finance', 'Exchange Rates', 'Revenue & Contract Position', 'Go-live cut-over', 'HR / Payroll',
   'Users / Roles / DOA', 'Portals', 'Runtime Validation', 'AI Platform', 'Automation / Integrations', 'Knowledge / RAG', 'Commercial SaaS'];
@@ -54,7 +54,7 @@ check('dictionaries: same keys and placeholders in Arabic and English, no key de
 // F-55 (CC-080): every fixed refusal text of a translated API module has an exact Arabic entry in lib/serverMessages.ts
 // (the "… not found" and "Invalid … id" families are translated by pattern); a new message in that module fails here
 // until it is translated. Messages built from values must have a pattern for their fixed words.
-const TRANSLATED_MODULES = ['finance'];
+const TRANSLATED_MODULES = ['finance', 'notifications'];
 const sm = readFileSync(new URL('../../frontend/src/lib/serverMessages.ts', import.meta.url), 'utf8');
 const exactKeys = new Set([...sm.slice(sm.indexOf('const EXACT'), sm.indexOf('};', sm.indexOf('const EXACT'))).matchAll(/^\s*'((?:[^'\\]|\\.)*)': '/gm)].map(m => m[1]));
 const untranslated = [];
@@ -116,7 +116,7 @@ try {
   h = await html();
   const ar = await navTexts();
   check('application shell in Arabic after sign-in (rtl)', h.lang === 'ar' && h.dir === 'rtl', JSON.stringify(h));
-  check('all 35 navigation items translated to Arabic (Arabic text, no Latin letters)', ar.length === 35 && ar.every(t => ARABIC.test(t) && !LATIN.test(t)),
+  check('all 36 navigation items translated to Arabic (Arabic text, no Latin letters)', ar.length === 36 && ar.every(t => ARABIC.test(t) && !LATIN.test(t)),
     ar.filter(t => !ARABIC.test(t) || LATIN.test(t)).join(' | ') || `${ar.length} items`);
   check('Arabic navigation labels are distinct', new Set(ar).size === ar.length);
   const groupTexts = async () => (await page.locator('nav .nav-group-toggle').allInnerTexts()).map(s => s.trim());
@@ -148,7 +148,7 @@ try {
   h = await html();
   const en = await navTexts();
   check('switching in the shell turns it to English (ltr)', h.lang === 'en' && h.dir === 'ltr', JSON.stringify(h));
-  check('all 35 navigation items in English, in order', JSON.stringify(en) === JSON.stringify(EN_NAV),
+  check('all 36 navigation items in English, in order', JSON.stringify(en) === JSON.stringify(EN_NAV),
     en.filter((t, i) => t !== EN_NAV[i]).join(' | ') || `${en.length} items`);
   check('logout labelled in English', await page.getByRole('button', { name: 'Logout' }).count() === 1);
   const enBrand = await brand();
@@ -185,7 +185,7 @@ try {
   await page.waitForURL(x => !x.pathname.startsWith('/login'), { timeout: 15000 }); await page.waitForTimeout(1000);
   const limited = await navTexts();
   check('a user with CRM and Finance view rights sees only the home dashboard and those screens, in their groups (R1.3)',
-    JSON.stringify(limited) === JSON.stringify(['Dashboard', 'CRM', 'Payments & Certification', 'Finance', 'Exchange Rates', 'Revenue & Contract Position', 'Go-live cut-over'])
+    JSON.stringify(limited) === JSON.stringify(['Dashboard', 'Notifications', 'CRM', 'Payments & Certification', 'Finance', 'Exchange Rates', 'Revenue & Contract Position', 'Go-live cut-over'])
     && JSON.stringify(await groupTexts()) === JSON.stringify(['Home, tasks and approvals', 'Business development and tendering', 'Contracts and commercial', 'Finance and tax']),
     `${limited.join(' | ')} || ${(await groupTexts()).join(' | ')}`);
   await page.screenshot({ path: `${OUT}/i18n_${RUN}.png`, fullPage: false });

@@ -91,7 +91,13 @@ const EXACT: Record<string, string> = {
   'Currency is not enabled for this company': 'العملة غير مفعّلة لهذه الشركة',
   'An enabled currency is not changed; disable it and enable another': 'لا تُعدَّل عملة مفعّلة؛ ألغِ تفعيلها وفعِّل غيرها',
   'The exchange-rate side must be buy or sell': 'جهة السعر يجب أن تكون شراء أو بيع',
-  'Value violates check constraint exchange_rates_sides_check': 'سعر البيع يجب ألا يقل عن سعر الشراء، وكلاهما أكبر من صفر'
+  'Value violates check constraint exchange_rates_sides_check': 'سعر البيع يجب ألا يقل عن سعر الشراء، وكلاهما أكبر من صفر',
+  // CC-083: alert settings (notifications module).
+  'This alert has no threshold': 'هذا التنبيه ليس له حدّ',
+  'Set the threshold of this alert before switching it on': 'حدِّد حدّ هذا التنبيه قبل تشغيله',
+  'Choose the recipient roles of this alert before switching it on': 'اختر الأدوار التي يصلها هذا التنبيه قبل تشغيله',
+  'This alert goes to the approvers of the current step; it takes no recipient roles': 'هذا التنبيه يصل إلى معتمدي الخطوة الحالية؛ لا تُحدَّد له أدوار',
+  'Recipient roles must be roles of this company': 'الأدوار المستلمة يجب أن تكون من أدوار هذه الشركة'
 };
 
 // Status words inside finance messages, worded for the record they describe (the shared value words are not all apt).
@@ -108,7 +114,7 @@ const NOUN: Record<string, string> = {
   Drawing: 'الرسم', Document: 'الوثيقة', Inspection: 'الفحص', NCR: 'تقرير عدم المطابقة', Incident: 'الحادث', Permit: 'تصريح العمل',
   Employee: 'الموظف', Equipment: 'المعدة', Asset: 'المعدة', Account: 'الحساب', 'Report pack': 'حزمة التقرير', Snapshot: 'اللقطة',
   Budget: 'الموازنة', Approval: 'الاعتماد', 'Manual journal entry': 'القيد اليدوي', 'Cost transaction': 'حركة التكلفة',
-  'Payroll run': 'دورة المرتبات', Activity: 'النشاط', Baseline: 'الخط الأساسي', Milestone: 'المَعلَم', Notice: 'الإخطار', Currency: 'العملة'
+  'Payroll run': 'دورة المرتبات', Activity: 'النشاط', Baseline: 'الخط الأساسي', Milestone: 'المَعلَم', Notice: 'الإخطار', Currency: 'العملة', Notification: 'الإشعار', Alert: 'التنبيه'
 };
 
 const PATTERNS: [RegExp, (m: RegExpMatchArray) => string][] = [
@@ -123,6 +129,7 @@ const PATTERNS: [RegExp, (m: RegExpMatchArray) => string][] = [
   [/^No exchange rate for (?:the project currency )?([A-Z]{3}) on or before (\d{4}-\d{2}-\d{2}) - record it in the exchange-rate register first$/, m => `لا يوجد سعر صرف لـ ${m[1]} بتاريخ ${m[2]} أو قبله؛ سجّله في سجل أسعار الصرف أولًا`],
   [/^No exchange rate for ([A-Z]{3}) on or before (\d{4}-\d{2}-\d{2}) - record the closing rate first$/, m => `لا يوجد سعر صرف لـ ${m[1]} بتاريخ ${m[2]} أو قبله؛ سجّل سعر الإقفال أولًا`],
   [/^The latest exchange rate for ([A-Z]{3}) is dated (\d{4}-\d{2}-\d{2}), more than (\d+) days before (\d{4}-\d{2}-\d{2}) - record a current rate first$/, m => `آخر سعر صرف لـ ${m[1]} بتاريخ ${m[2]}، أي أقدم من ${m[3]} يوم قبل ${m[4]}؛ سجّل سعرًا حديثًا أولًا`],
+  [/^Unknown alert (AL-\d{2})$/, m => `تنبيه غير معروف: ${m[1]}`],
   [/^Cut-over plan is ([a-z_]+)$/, m => `خطة الانتقال ${PLAN_STATUS[m[1]] ?? m[1]}`],
   [/^Fiscal period is already ([a-z_]+)$/, m => `الفترة المالية ${PERIOD_STATUS[m[1]] ?? m[1]} بالفعل`],
   [/^Manual journal lines are not balanced\. Difference: (-?[\d.]+)$/, m => `سطور القيد اليدوي غير متوازنة. الفرق: ${m[1]}`],

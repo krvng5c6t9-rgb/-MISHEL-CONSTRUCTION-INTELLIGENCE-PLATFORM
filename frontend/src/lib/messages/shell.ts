@@ -77,7 +77,8 @@ export const en = {
   'nav.groupFinance': 'Finance and tax',
   'nav.groupPeople': 'People and administration',
   'nav.groupSystem': 'System, data and AI',
-  'nav.menu': 'Main menu'
+  'nav.menu': 'Main menu',
+  'nav.notifications': 'Notifications'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -157,5 +158,6 @@ export const ar: Record<keyof typeof en, string> = {
   'nav.groupFinance': 'المالية والضرائب',
   'nav.groupPeople': 'الموارد البشرية والإدارة',
   'nav.groupSystem': 'النظام والبيانات والذكاء الاصطناعي',
-  'nav.menu': 'القائمة الرئيسية'
+  'nav.menu': 'القائمة الرئيسية',
+  'nav.notifications': 'الإشعارات'
 };

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { apiGet, logout } from '../lib/api';
 import { LanguageSwitch, useI18n, type MessageKey } from '../lib/i18n';
-import { ChevronDown, Receipt, BarChart3, ClipboardCheck, FolderKanban, Landmark, PackageCheck, ScrollText, DraftingCompass, CalendarDays, HardHat, UsersRound, Wrench, ShieldCheck, ShieldAlert, FolderArchive, FileBarChart, MonitorCheck, Globe2, Bot, Workflow, BookOpenCheck, BadgeDollarSign } from 'lucide-react';
+import { Bell, ChevronDown, Receipt, BarChart3, ClipboardCheck, FolderKanban, Landmark, PackageCheck, ScrollText, DraftingCompass, CalendarDays, HardHat, UsersRound, Wrench, ShieldCheck, ShieldAlert, FolderArchive, FileBarChart, MonitorCheck, Globe2, Bot, Workflow, BookOpenCheck, BadgeDollarSign } from 'lucide-react';
 
 // R1.3 (MP-06 §3, CC-081): navigation grouped as in MP-06 (groups without a screen yet are not listed: design studio,
 // legal / risk / audit, facility management). An item is shown when the user holds 'view' on one of its permission
@@ -12,6 +12,7 @@ type Item = { to: string; key: MessageKey; icon: typeof BarChart3; perms?: strin
 const navGroups: { key: MessageKey; items: Item[] }[] = [
   { key: 'nav.groupHome', items: [
     { to: '/', key: 'nav.dashboard', icon: BarChart3 },
+    { to: '/notifications', key: 'nav.notifications', icon: Bell },
     { to: '/approvals', key: 'nav.approvals', icon: ClipboardCheck, perms: ['approvals'] },
     { to: '/executive-dashboard', key: 'nav.executiveDashboard', icon: BarChart3, perms: ['dashboards'] }] },
   { key: 'nav.groupBusiness', items: [
@@ -66,6 +67,15 @@ export function Layout() {
   // null until known; if the permissions cannot be read every item is shown (the API refuses what the user may not see).
   const [viewable, setViewable] = useState<Set<string> | 'all' | null>(null);
   const [collapsed, setCollapsed] = useState<string[]>(readCollapsed);
+  // R1.4: unread notifications, refreshed on every screen change and every minute.
+  const [unread, setUnread] = useState<number | null>(null);
+  useEffect(() => {
+    let live = true;
+    const get = () => apiGet<any>('/notifications/count').then(r => { if (live) setUnread(Number(r.data?.unread ?? 0)); }).catch(() => { if (live) setUnread(null); });
+    get();
+    const timer = window.setInterval(get, 60_000);
+    return () => { live = false; window.clearInterval(timer); };
+  }, [pathname]);
   useEffect(() => {
     apiGet<any>('/auth/me')
       .then(r => setViewable(new Set((r.data?.permissions ?? []).filter((p: any) => p.action === 'view').map((p: any) => p.module))))
@@ -89,6 +99,9 @@ export function Layout() {
           </div>
         </div>
         <LanguageSwitch />
+        <Link to="/notifications" className="bell" data-unread={unread ?? ''} aria-label={t('ntf.bell', { count: unread ?? 0 })}>
+          <Bell size={18} aria-hidden="true" />{unread ? <span className="bell-count">{unread}</span> : null}
+        </Link>
         <nav aria-label={t('nav.menu')}>
           {navGroups.map(g => {
             const items = g.items.filter(shown);
