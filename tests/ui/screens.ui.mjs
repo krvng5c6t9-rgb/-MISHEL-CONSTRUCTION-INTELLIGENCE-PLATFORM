@@ -45,6 +45,7 @@ const SCREENS = [
   ['/edms', 'Controlled Documents & Transmittals', 'الوثائق المضبوطة وخطابات التحويل'],
   ['/hr', 'HR / Payroll', 'الموارد البشرية / المرتبات'],
   ['/assets', 'Assets / Equipment', 'الأصول / المعدات'],
+  ['/owner-portfolio', 'Owner Portfolio', 'محفظة المشروعات للمالك'],
   ['/executive-dashboard', 'Executive Dashboard', 'لوحة الإدارة العليا'],
   ['/reports', 'Reports Center', 'مركز التقارير'],
   ['/runtime-validation', 'Runtime Validation', 'التحقق من جاهزية التشغيل', 3],
@@ -216,6 +217,21 @@ try {
       const exKpis = (await page.locator('[data-section="kpis"] small').allInnerTexts()).map(s => s.trim());
       const exCur = (await page.locator('[data-section="financial"] tbody tr td:nth-child(2)').allInnerTexts()).map(s => s.trim());
       check('ar: executive cost tiles are per currency and the financial table names the currency', exKpis.some(s => /^التكلفة الملتزم بها \([A-Z]{3}\)$/.test(s)) && exKpis.some(s => /^التكلفة الفعلية \([A-Z]{3}\)$/.test(s)) && exCur.length > 0 && exCur.every(s => /^[A-Z]{3}$/.test(s)), `${exKpis.join(' | ')} / ${[...new Set(exCur)].join(',')}`);
+      // Owner portfolio (CC-087): the cut-off time, company totals, commercial and delivery tables; a project opens the
+      // project control room on that project.
+      await page.goto(`${BASE}/owner-portfolio`); await page.waitForTimeout(1500);
+      const pfAsOf = (await page.locator('[data-as-of]').innerText()).trim();
+      const pfAsOfLtr = await page.locator('[data-as-of] [dir="ltr"]').count();
+      const pfRows = await page.locator('[data-section="delivery"] tbody tr').count();
+      const pfTotals = await page.locator('[data-section="totals"] tbody tr').count();
+      check('ar: owner portfolio shows its cut-off time (kept left-to-right), company totals per currency and one delivery row per project',
+        /^البيانات حتى \d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC$/.test(pfAsOf) && pfAsOfLtr === 1 && pfTotals >= 1 && pfRows >= 2, `${pfAsOf} | ltr ${pfAsOfLtr} | totals ${pfTotals} | rows ${pfRows}`);
+      const pfLink = page.locator('[data-section="delivery"] tbody tr').first().locator('a').first();
+      const pfHref = await pfLink.getAttribute('href');
+      await pfLink.click(); await page.waitForTimeout(1500);
+      const pfSelected = await page.getByLabel('المشروع', { exact: true }).first().inputValue();
+      check('ar: a portfolio project opens the project control room on that project (drill-down)',
+        new URL(page.url()).pathname === '/project-controls' && pfHref === `/project-controls?project=${pfSelected}` && pfSelected !== '0', `${pfHref} -> ${page.url()} selected ${pfSelected}`);
       // Exchange screen (CC-079): an incomplete settings form is refused by the server; the validation message arrives in
       // Arabic and names the missing fields; the register and the monetary accounts are shown.
       await page.goto(`${BASE}/exchange`); await page.waitForTimeout(1500);

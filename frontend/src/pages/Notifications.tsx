@@ -12,7 +12,7 @@ const TEXT: Record<string, MessageKey> = { 'AL-01': 'alert.approvalPending', 'AL
   'AL-12': 'alert.incident', 'AL-14': 'alert.paymentDue', 'AL-15': 'alert.receivableOverdue',
   'AL-06': 'alert.permitExpiry', 'AL-07': 'alert.eacBreach', 'AL-18': 'alert.aiReview', 'AL-20': 'alert.agentSuspended', 'AL-22': 'alert.supersededInUse', 'AL-23': 'alert.dlpEnd' };
 const PERMIT: Record<string, MessageKey> = { hot_work: 'hse.optHotWork', confined_space: 'hse.optConfinedSpace', height: 'hse.optHeight', other: 'hse.optOther' };
-const NAME: Record<string, MessageKey> = { 'AL-01': 'alert.nameApprovalPending', 'AL-02': 'alert.nameApprovalOverdue', 'AL-03': 'alert.nameTimeBar', 'AL-11': 'alert.nameNcrOpen',
+export const NAME: Record<string, MessageKey> = { 'AL-01': 'alert.nameApprovalPending', 'AL-02': 'alert.nameApprovalOverdue', 'AL-03': 'alert.nameTimeBar', 'AL-11': 'alert.nameNcrOpen',
   'AL-12': 'alert.nameIncident', 'AL-14': 'alert.namePaymentDue', 'AL-15': 'alert.nameReceivableOverdue', 'AL-25': 'alert.nameResponseOverdue',
   'AL-06': 'alert.namePermitExpiry', 'AL-07': 'alert.nameEacBreach', 'AL-18': 'alert.nameAiReview', 'AL-20': 'alert.nameAgentSuspended', 'AL-22': 'alert.nameSupersededInUse', 'AL-23': 'alert.nameDlpEnd' };
 const day = (v: unknown) => (v ? String(v).slice(0, 10) : '—');

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { apiGet, apiPost, apiPatch } from '../lib/api';
 import { useI18n, type MessageKey } from '../lib/i18n';
 
@@ -15,7 +16,9 @@ type Missed = [MessageKey, string];
 export function ProjectControls() {
   const { t, tv } = useI18n();
   const [projects, setProjects] = useState<Row[]>([]);
-  const [projectId, setProjectId] = useState(0);
+  // CC-087: opened from the owner portfolio with ?project=<id>, the screen starts on that project.
+  const [params] = useSearchParams();
+  const [projectId, setProjectId] = useState(Number(params.get('project')) || 0);
   const [me, setMe] = useState<Row | null>(null);
   const [err, setErr] = useState('');
   const [time, setTime] = useState<Row[]>([]);

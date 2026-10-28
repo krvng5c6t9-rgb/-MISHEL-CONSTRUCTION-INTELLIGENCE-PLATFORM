@@ -20,6 +20,7 @@ import { QAQC } from './pages/QAQC';
 import { HSE } from './pages/HSE';
 import { EDMS } from './pages/EDMS';
 import { ExecutiveDashboard } from './pages/ExecutiveDashboard';
+import { OwnerPortfolio } from './pages/OwnerPortfolio';
 import { Reports } from './pages/Reports';
 import { Portals } from './pages/Portals';
 import { RuntimeValidation } from './pages/RuntimeValidation';
@@ -76,6 +77,7 @@ export function App() {
             <Route path="qaqc" element={<QAQC />} />
             <Route path="hse" element={<HSE />} />
             <Route path="edms" element={<EDMS />} />
+            <Route path="owner-portfolio" element={<OwnerPortfolio />} />
             <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
             <Route path="reports" element={<Reports />} />
             <Route path="portals" element={<Portals />} />

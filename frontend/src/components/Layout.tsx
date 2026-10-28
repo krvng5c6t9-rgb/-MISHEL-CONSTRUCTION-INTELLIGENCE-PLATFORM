@@ -14,6 +14,7 @@ const navGroups: { key: MessageKey; items: Item[] }[] = [
     { to: '/', key: 'nav.dashboard', icon: BarChart3 },
     { to: '/notifications', key: 'nav.notifications', icon: Bell },
     { to: '/approvals', key: 'nav.approvals', icon: ClipboardCheck, perms: ['approvals'] },
+    { to: '/owner-portfolio', key: 'nav.ownerPortfolio', icon: BarChart3, perms: ['dashboards'] },
     { to: '/executive-dashboard', key: 'nav.executiveDashboard', icon: BarChart3, perms: ['dashboards'] }] },
   { key: 'nav.groupBusiness', items: [
     { to: '/crm', key: 'nav.crm', icon: UsersRound, perms: ['crm'] },
