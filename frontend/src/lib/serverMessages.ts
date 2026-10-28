@@ -101,6 +101,12 @@ const EXACT: Record<string, string> = {
   // CC-085: printed documents.
   'PDF output is not available on this server (no Chromium); use the print view': 'إخراج ملفات للطباعة غير متاح على هذا الخادم؛ استخدم عرض الطباعة',
   'Document export entries are permanent': 'سجلات تصدير المستندات دائمة ولا تُعدَّل',
+  'Words can be set only for a currency the company uses': 'لا تُضبط الكتابة بالحروف إلا لعملة تستخدمها الشركة',
+  'This currency has no sub-unit': 'هذه العملة ليس لها وحدة فرعية',
+  'Value violates check constraint currency_words_unit_ar_check': 'اسم العملة بالعربية يجب أن يُكتب بحروف عربية',
+  'Value violates check constraint currency_words_subunit_ar_check': 'اسم الوحدة الفرعية بالعربية يجب أن يُكتب بحروف عربية',
+  'Value violates check constraint currency_words_unit_en_check': 'اسم العملة بالإنجليزية يجب أن يُكتب بحروف لاتينية',
+  'Value violates check constraint currency_words_subunit_en_check': 'اسم الوحدة الفرعية بالإنجليزية يجب أن يُكتب بحروف لاتينية',
   'Only the hash of the produced file is added to a document export entry': 'لا يُضاف إلى سجل التصدير إلا بصمة الملف المُنتَج'
 };
 

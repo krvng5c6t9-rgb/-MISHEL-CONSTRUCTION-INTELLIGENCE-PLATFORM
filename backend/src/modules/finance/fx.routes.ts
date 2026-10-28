@@ -38,10 +38,12 @@ const currencyId = (v: string) => z.coerce.number().int().positive().parse(v);
 fxRouter.get('/currencies', asyncHandler(async (req, res) => {
   res.json({ success: true, data: await query(`
     select c.id, c.code, c.name, c.minor_units, c.iso_list_date, (c.id = o.base_currency_id) as is_base,
-           (c.id = o.base_currency_id or oc.id is not null) as enabled, oc.enabled_at, u.full_name as enabled_by_name
+           (c.id = o.base_currency_id or oc.id is not null) as enabled, oc.enabled_at, u.full_name as enabled_by_name,
+           w.unit_ar, w.subunit_ar, w.unit_en, w.subunit_en
       from currencies c cross join (select base_currency_id from organizations where id = $1) o
       left join org_currencies oc on oc.org_id = $1 and oc.currency_id = c.id
       left join users u on u.id = oc.enabled_by
+      left join currency_words w on w.org_id = $1 and w.currency_id = c.id
      where c.is_active order by c.code`, [req.user!.org_id]) });
 }));
 fxRouter.post('/currencies/:id/enable', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
@@ -57,6 +59,19 @@ fxRouter.delete('/currencies/:id/enable', authorize('finance', 'manage'), asyncH
   const rows = await query(`delete from org_currencies where org_id = $1 and currency_id = $2 returning *`, [req.user!.org_id, id]);
   if (!rows.length) throw new AppError(404, 'Currency is not enabled for this company');
   res.json({ success: true, data: rows[0] });
+}));
+
+// CC-088 (F-64, migration 094): the names written after an amount in words on printed documents, set by the company
+// for a currency it uses. An empty name is stored as none (the document then writes the currency code / digits).
+const wordName = z.string().trim().max(40).nullable().optional().transform(v => (v ? v : null));
+fxRouter.put('/currencies/:id/words', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
+  const id = currencyId(req.params.id);
+  const b = z.object({ unit_ar: wordName, subunit_ar: wordName, unit_en: wordName, subunit_en: wordName }).strict().parse(req.body);
+  const [r] = await query(`insert into currency_words(org_id, currency_id, unit_ar, subunit_ar, unit_en, subunit_en, updated_by) values ($1, $2, $3, $4, $5, $6, $7)
+    on conflict (org_id, currency_id) do update set unit_ar = excluded.unit_ar, subunit_ar = excluded.subunit_ar, unit_en = excluded.unit_en,
+      subunit_en = excluded.subunit_en, updated_by = excluded.updated_by, updated_at = now() returning *`,
+    [req.user!.org_id, id, b.unit_ar ?? null, b.subunit_ar ?? null, b.unit_en ?? null, b.subunit_en ?? null, req.user!.id]);
+  res.json({ success: true, data: r });
 }));
 
 fxRouter.patch('/chart-of-accounts/:id/fx-revalue', authorize('finance', 'manage'), asyncHandler(async (req, res) => {

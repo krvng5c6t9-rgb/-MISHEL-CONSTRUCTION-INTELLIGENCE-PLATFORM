@@ -6,7 +6,9 @@
 // views are kept in out/ for review.
 import { createHash } from 'node:crypto';
 import { writeFileSync } from 'node:fs';
-import { ADMIN, TAG, api, must, check, expectStatus, login, sql, finish } from './harness.mjs';
+import { ADMIN, ADMIN_B, TAG, api, must, check, expectStatus, login, sql, finish } from './harness.mjs';
+// CC-088: the amount-in-words module of the backend build (the gate builds the backend before the suites).
+const { amountInWords } = await import(new URL('../../backend/dist/modules/documents/words.js', import.meta.url).href);
 import { BASE } from './lib.mjs';
 
 const OWNER = process.env.OWNER_PSQL_URL;
@@ -139,6 +141,63 @@ try {
   await expectStatus('goods received note without procurement.view is refused', async () => { const r = await get(`/documents/goods-receipt/${grnId}`, fin); return { status: r.status, body: JSON.parse(r.text) }; }, 403);
   await expectStatus('daily diary without site.view is refused', async () => { const r = await get(`/documents/daily-diary/${dySigned}`, fin); return { status: r.status, body: JSON.parse(r.text) }; }, 403);
   await expectStatus('journal voucher without finance.view is refused', async () => { const r = await get(`/documents/journal-voucher/${mjPosted}`, none); return { status: r.status, body: JSON.parse(r.text) }; }, 403);
+
+  // --- CC-088 (F-64): amounts in words. First the conversion itself, on exact cases.
+  const N = { unit_ar: 'جنيه مصري', subunit_ar: 'قرش', unit_en: 'Egyptian pounds', subunit_en: 'piastres' };
+  const cases = [
+    ['ar', '1250500.75', 'EGP', 2, N, 'فقط مليون ومائتان وخمسون ألفًا وخمسمائة جنيه مصري وخمسة وسبعون قرش لا غير'],
+    ['ar', '200000.00', 'EGP', 2, N, 'فقط مائتا ألف جنيه مصري لا غير'],
+    ['ar', '11000', 'EGP', 2, N, 'فقط أحد عشر ألفًا جنيه مصري لا غير'],
+    ['ar', '5003.10', 'EGP', 2, null, 'فقط خمسة آلاف وثلاثة EGP و 10/100 لا غير'],
+    ['ar', '2000000', 'EGP', 2, null, 'فقط مليونان EGP لا غير'],
+    ['en', '1250500.75', 'EGP', 2, N, 'One million two hundred fifty thousand five hundred Egyptian pounds and seventy-five piastres only'],
+    ['en', '0.50', 'EGP', 2, null, 'Zero EGP and 50/100 only'],
+    ['en', '-45000.00', 'EGP', 2, null, 'Minus forty-five thousand EGP only'],
+    ['en', '1.500', 'KWD', 3, null, 'One KWD and 500/1000 only'],
+    ['ar', '150', 'JPY', 0, null, 'فقط مائة وخمسون JPY لا غير'],
+    ['en', '12.345', 'EGP', 2, null, null],
+    ['en', '1000000000000000.00', 'EGP', 2, null, null]];
+  const bad = cases.filter(([l, v, c, m, n, want]) => amountInWords(l, v, c, m, n) !== want);
+  check('amounts in words: Arabic counted forms (آلاف / ألفًا / مائتا / مليونان), English, 0 / 2 / 3 decimals, negatives; nothing rounded or beyond trillions',
+    bad.length === 0, bad.map(([l, v, c, m, n]) => `${l} ${v}: ${amountInWords(l, v, c, m, n)}`).join(' | ') || `${cases.length} cases`);
+
+  const ipcCur = one(`select cur.code || '|' || cur.minor_units || '|' || cur.id from ipcs i join projects p on p.id = i.project_id join currencies cur on cur.id = p.currency_id where i.id = ${finalId}`).split('|');
+  const wordsOf = (r) => /<span data-words>([^<]*)<\/span>/.exec(r.text)?.[1] ?? null;
+  const w0 = await get(`/documents/ipc/${finalId}?format=html&lang=ar`, fin);
+  check('IPC: the net amount due in words, before any name is set: the currency code and the fraction in digits',
+    wordsOf(w0) === escHtml(amountInWords('ar', net, ipcCur[0], Number(ipcCur[1]), null)) && wordsOf(w0).includes(ipcCur[0]), wordsOf(w0));
+  await expectStatus('currency names need finance.manage', () => api('PUT', `/finance/currencies/${ipcCur[2]}/words`, fin, { unit_ar: 'جنيه مصري' }), 403);
+  await expectStatus('an Arabic name written in Latin letters is refused', () => api('PUT', `/finance/currencies/${ipcCur[2]}/words`, admin, { unit_ar: 'Pound' }), 422);
+  await expectStatus('an English name written in Arabic letters is refused', () => api('PUT', `/finance/currencies/${ipcCur[2]}/words`, admin, { unit_en: 'جنيه' }), 422);
+  const unused = one(`select c.id from currencies c where c.is_active and c.id <> (select base_currency_id from organizations where id = ${ADMIN.org_id})
+    and not exists (select 1 from org_currencies oc where oc.org_id = ${ADMIN.org_id} and oc.currency_id = c.id) order by c.code limit 1`);
+  await expectStatus('names for a currency the company does not use are refused', () => api('PUT', `/finance/currencies/${unused}/words`, admin, { unit_en: 'Test' }), 422);
+  const set = must(await api('PUT', `/finance/currencies/${ipcCur[2]}/words`, admin, { ...N, unit_en: '  Egyptian pounds  ' }), 'words');
+  check('the company sets the names (trimmed) for its currency', set.unit_ar === N.unit_ar && set.unit_en === 'Egyptian pounds' && set.subunit_en === 'piastres');
+  const listed = must(await api('GET', '/finance/currencies', fin), 'currencies').find(c => String(c.id) === ipcCur[2]);
+  check('the names are listed with the company\'s currencies', listed?.unit_ar === N.unit_ar && listed?.subunit_ar === N.subunit_ar, JSON.stringify(listed).slice(0, 200));
+  const w1 = await get(`/documents/ipc/${finalId}?format=html&lang=ar`, fin), w1en = await get(`/documents/ipc/${finalId}?format=html&lang=en`, fin);
+  check('IPC: after the names are set, the words use them (Arabic and English) for the stored net amount',
+    wordsOf(w1) === escHtml(amountInWords('ar', net, ipcCur[0], Number(ipcCur[1]), N)) && wordsOf(w1).includes('جنيه مصري')
+      && wordsOf(w1en) === escHtml(amountInWords('en', net, ipcCur[0], Number(ipcCur[1]), N)) && wordsOf(w1en).includes('Egyptian pounds'), `${wordsOf(w1)} || ${wordsOf(w1en)}`);
+  const pvW = await get(`/documents/payment-voucher/${pvId}?format=html&lang=ar`, fin), poW = await get(`/documents/purchase-order/${poId}?format=html&lang=ar`, admin);
+  const scW = await get(`/documents/subcontract-certificate/${scFinal}?format=html&lang=ar`, admin);
+  // Each document in its own currency; the names apply only to the currency they were set for.
+  const curOf = (q) => { const [code, mu] = one(q).split('|'); return [code, Number(mu), code === ipcCur[0] ? N : null]; };
+  const [pvC, pvM, pvN] = curOf(`select c.code || '|' || c.minor_units from payments y join currencies c on c.id = y.currency_id where y.id = ${pvId}`);
+  const [poC, poM, poN] = curOf(`select c.code || '|' || c.minor_units from purchase_orders x join currencies c on c.id = x.currency_id where x.id = ${poId}`);
+  const [scC, scM, scN] = curOf(`select c.code || '|' || c.minor_units from subcontract_certificates x join subcontracts k on k.id = x.subcontract_id join currencies c on c.id = k.currency_id where x.id = ${scFinal}`);
+  check('payment voucher, purchase order and subcontract certificate carry their amount in words',
+    wordsOf(pvW) === escHtml(amountInWords('ar', pvAmount, pvC, pvM, pvN)) && wordsOf(poW) === escHtml(amountInWords('ar', poTotal, poC, poM, poN)) && wordsOf(scW) === escHtml(amountInWords('ar', scNet, scC, scM, scN)),
+    `${wordsOf(pvW)} || ${wordsOf(poW)} || ${wordsOf(scW)}`);
+  check('documents that are not financial carry no amount in words (goods received note, diary)', wordsOf(await get(`/documents/goods-receipt/${grnId}?format=html&lang=ar`, admin)) === null
+    && wordsOf(await get(`/documents/daily-diary/${dySigned}?format=html&lang=ar`, admin)) === null);
+  const bCur = must(await api('GET', '/finance/currencies', await login(ADMIN_B)), 'b currencies').find(c => String(c.id) === ipcCur[2]);
+  check('the names are the company\'s own: the other company does not see them', bCur && !bCur.unit_ar && !bCur.unit_en, JSON.stringify(bCur).slice(0, 160));
+  const zero = one(`select id from currencies where is_active and minor_units = 0 order by code limit 1`);
+  must(await api('POST', `/finance/currencies/${zero}/enable`, admin), 'enable zero-decimal currency');
+  await expectStatus('a sub-unit name for a currency without minor units is refused', () => api('PUT', `/finance/currencies/${zero}/words`, admin, { subunit_en: 'cents' }), 422);
+  must(await api('DELETE', `/finance/currencies/${zero}/enable`, admin), 'disable zero-decimal currency');
 
   // --- Refusals.
   await expectStatus('IPC document without finance.view is refused', async () => { const r = await get(`/documents/ipc/${finalId}`, none); return { status: r.status, body: JSON.parse(r.text) }; }, 403);

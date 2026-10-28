@@ -135,7 +135,8 @@ export const en = {
   amendments: 'Amendments after signing',
   colNote: 'Note',
   colAuthor: 'Author',
-  signed: 'Signed'
+  signed: 'Signed',
+  inWords: 'In words'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -273,7 +274,8 @@ export const ar: Record<keyof typeof en, string> = {
   amendments: 'تعديلات بعد التوقيع',
   colNote: 'الملاحظة',
   colAuthor: 'الكاتب',
-  signed: 'التوقيع'
+  signed: 'التوقيع',
+  inWords: 'بالحروف'
 };
 
 export type LabelKey = keyof typeof en;

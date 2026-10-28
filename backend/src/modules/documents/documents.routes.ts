@@ -19,7 +19,7 @@ export const documentsRouter = Router();
 // journal voucher (DOC-16-020) and daily diary (DOC-12-004) added. A record is printed as final only in the statuses
 // listed in `final`; rejected or cancelled records carry a NOT VALID mark, every other status the DRAFT mark.
 type Doc = { module: string; table: string; load: (c: PoolClient, id: number, org: number) => Promise<any | null>; status: (d: any) => string;
-  final: string[]; void?: string[]; render: (lang: Lang, d: any, mark: Mark, exp: { id: number; at: string; by: string }) => string; name: (d: any) => string };
+  final: string[]; void?: string[]; currency?: (d: any) => string; render: (lang: Lang, d: any, mark: Mark, exp: { id: number; at: string; by: string }) => string; name: (d: any) => string };
 
 const org = async (c: PoolClient, orgId: number) => (await c.query(`select name, legal_name, address, tax_id from organizations where id = $1`, [orgId])).rows[0];
 const steps = async (c: PoolClient, approvalId: number | null) => approvalId ? (await c.query(`
@@ -48,7 +48,7 @@ const DOCS: Record<string, Doc> = {
       const prep = await person(c, ipc.prepared_by);
       return { ipc, org: await org(c, orgId), lines, steps: [{ label: 'prepared', ...prep, at: ipc.created_at }, ...(await steps(c, ipc.approval_instance_id))] };
     },
-    status: d => d.ipc.status, final: ['submitted_to_client', 'client_approved', 'disputed', 'posted', 'paid'],
+    currency: d => d.ipc.currency, status: d => d.ipc.status, final: ['submitted_to_client', 'client_approved', 'disputed', 'posted', 'paid'],
     render: renderIpc,
     name: d => `IPC-${d.ipc.ipc_no}`
   },
@@ -72,7 +72,7 @@ const DOCS: Record<string, Doc> = {
       if (cert.qs_certified_by) st.push({ label: 'qsCertified', ...(await person(c, cert.qs_certified_by)), at: cert.qs_certified_at });
       return { cert, org: await org(c, orgId), lines, steps: [...st, ...(await steps(c, cert.approval_instance_id))] };
     },
-    status: d => d.cert.status, final: ['approved', 'posted', 'paid'], void: ['rejected'],
+    currency: d => d.cert.currency, status: d => d.cert.status, final: ['approved', 'posted', 'paid'], void: ['rejected'],
     render: renderSubcontractCertificate,
     name: d => `SC-${d.cert.certificate_no}`
   },
@@ -90,7 +90,7 @@ const DOCS: Record<string, Doc> = {
         from po_lines l left join project_boq b on b.id = l.boq_item_id where l.po_id = $1 order by l.id`, [id])).rows;
       return { po, org: await org(c, orgId), lines, steps: await steps(c, po.approval_instance_id) };
     },
-    status: d => d.po.status, final: ['approved', 'issued', 'partially_delivered', 'closed'], void: ['cancelled'],
+    currency: d => d.po.currency, status: d => d.po.status, final: ['approved', 'issued', 'partially_delivered', 'closed'], void: ['cancelled'],
     render: renderPurchaseOrder,
     name: d => `PO-${d.po.po_ref}`
   },
@@ -128,7 +128,7 @@ const DOCS: Record<string, Doc> = {
       if (!pay) return null;
       return { pay, org: await org(c, orgId), steps: [{ label: 'prepared', ...(await person(c, pay.created_by)), at: pay.created_at }, ...(await steps(c, pay.approval_instance_id))] };
     },
-    status: d => d.pay.status, final: ['approved', 'posted', 'reconciled'],
+    currency: d => d.pay.currency, status: d => d.pay.status, final: ['approved', 'posted', 'reconciled'],
     render: renderPaymentVoucher,
     name: d => `${d.pay.payment_type === 'outgoing' ? 'PV' : 'RV'}-${d.pay.id}`
   },
@@ -212,6 +212,12 @@ documentsRouter.get('/:type/:id', asyncHandler(async (req, res) => {
     await client.query('begin');
     const data = await doc.load(client, id, orgId);
     if (!data) throw new AppError(404, 'Document not found');
+    // F-64: financial documents carry the amount in words (currency minor units, the company's names if set).
+    if (doc.currency) {
+      const [w] = (await client.query(`select c.minor_units, w.unit_ar, w.subunit_ar, w.unit_en, w.subunit_en, (w.id is not null) as has_names
+        from currencies c left join currency_words w on w.org_id = $1 and w.currency_id = c.id where c.code = $2`, [orgId, doc.currency(data)])).rows;
+      if (w) data.words = { minor_units: Number(w.minor_units), names: w.has_names ? w : null };
+    }
     const status = doc.status(data);
     const mark: Mark = doc.final.includes(status) ? null : doc.void?.includes(status) ? 'void' : 'draft';
     const draft = mark !== null;

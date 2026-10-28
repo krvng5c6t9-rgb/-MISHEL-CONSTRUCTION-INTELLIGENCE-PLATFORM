@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiDelete, apiGet, apiPatch, apiPost } from '../lib/api';
+import { apiDelete, apiGet, apiPatch, apiPost, apiPut } from '../lib/api';
 import { useI18n, type MessageKey } from '../lib/i18n';
 import { localDate } from '../lib/date';
 import { Num } from '../components/RecordTable';
@@ -16,6 +16,9 @@ export function Exchange() {
   const [form, setForm] = useState({ fx_gain_account_id: '', fx_loss_account_id: '', fx_max_rate_age_days: '7' });
   const [rate, setRate] = useState({ currency_id: '', rate_date: localDate(), buy_rate: '', sell_rate: '', source: '' });
   const [periodEnd, setPeriodEnd] = useState(localDate());
+  // CC-088 (F-64): the company's names of a currency for amounts in words.
+  const noWords = { currency_id: '', unit_ar: '', subunit_ar: '', unit_en: '', subunit_en: '' };
+  const [words, setWords] = useState(noWords);
   const [error, setError] = useState(''), [notice, setNotice] = useState<Notice>(null);
 
   async function load() {
@@ -32,6 +35,8 @@ export function Exchange() {
   const codeOf = (id: any) => iso.find(c => String(c.id) === String(id))?.code ?? '';
   const enable = () => { const code = codeOf(toEnable); return act(() => apiPost(`/finance/currencies/${Number(toEnable)}/enable`, {}).then(() => setToEnable('')), { key: 'fx.enabledDone', vars: { code } }); };
   const disable = (c: any) => act(() => apiDelete(`/finance/currencies/${c.id}/enable`), { key: 'fx.disabledDone', vars: { code: c.code } });
+  const pickWords = (id: string) => { const c = iso.find(x => String(x.id) === id); setWords({ currency_id: id, unit_ar: c?.unit_ar ?? '', subunit_ar: c?.subunit_ar ?? '', unit_en: c?.unit_en ?? '', subunit_en: c?.subunit_en ?? '' }); };
+  const saveWords = () => { const code = codeOf(words.currency_id); const { currency_id, ...names } = words; return act(() => apiPut(`/finance/currencies/${Number(currency_id)}/words`, names).then(() => setWords(noWords)), { key: 'fx.wordsSaved', vars: { code } }); };
   const enabled = iso.filter(c => c.enabled), isoDate = String(iso.find(c => c.iso_list_date)?.iso_list_date ?? '').slice(0, 10);
   const toggle = (a: any) => act(() => apiPatch(`/finance/chart-of-accounts/${a.id}/fx-revalue`, { fx_revalue: !a.fx_revalue }), null);
   const revalue = () => act(() => apiPost('/finance/fx-revaluations', { period_end: periodEnd }), { key: 'fx.runDone', vars: { date: periodEnd } });
@@ -58,9 +63,18 @@ export function Exchange() {
         <select aria-label={t('fx.toEnable')} value={toEnable} onChange={e => setToEnable(e.target.value)}><option value="">{t('fx.toEnable')}</option>{iso.filter(c => !c.enabled).map(c => <option key={c.id} value={c.id} lang="en">{c.code} — {c.name}</option>)}</select>
         <button onClick={enable} disabled={!toEnable}>{t('fx.enable')}</button>
       </div>
-      <div className="table-wrap"><table><thead><tr><th>{t('fx.colCode')}</th><th>{t('fx.colName')}</th><th>{t('fx.colDecimals')}</th><th>{t('fx.colEnabledBy')}</th><th></th></tr></thead><tbody>
-        {enabled.map(c => <tr key={c.id}><td>{c.code}</td><td lang="en"><bdi>{c.name}</bdi></td><td><Num v={c.minor_units} /></td><td>{c.is_base ? t('fx.baseTag') : <bdi>{c.enabled_by_name ?? '—'}</bdi>}</td><td>{!c.is_base && <button onClick={() => disable(c)}>{t('fx.disable')}</button>}</td></tr>)}
+      <div className="table-wrap"><table><thead><tr><th>{t('fx.colCode')}</th><th>{t('fx.colName')}</th><th>{t('fx.colDecimals')}</th><th>{t('fx.colEnabledBy')}</th><th>{t('fx.colWords')}</th><th></th></tr></thead><tbody>
+        {enabled.map(c => <tr key={c.id}><td>{c.code}</td><td lang="en"><bdi>{c.name}</bdi></td><td><Num v={c.minor_units} /></td><td>{c.is_base ? t('fx.baseTag') : <bdi>{c.enabled_by_name ?? '—'}</bdi>}</td><td data-words={c.code}>{[c.unit_ar, c.subunit_ar].filter(Boolean).join(' / ') || '—'} · <bdi lang="en">{[c.unit_en, c.subunit_en].filter(Boolean).join(' / ') || '—'}</bdi></td><td>{!c.is_base && <button onClick={() => disable(c)}>{t('fx.disable')}</button>}</td></tr>)}
       </tbody></table></div>
+      <h3>{t('fx.words')}</h3><p className="muted">{t('fx.wordsNote')}</p>
+      <div className="form-row" data-section="currency-words">
+        <select aria-label={t('fx.wordsCurrency')} value={words.currency_id} onChange={e => pickWords(e.target.value)}><option value="">{t('fx.wordsCurrency')}</option>{enabled.map(c => <option key={c.id} value={c.id}>{c.code}</option>)}</select>
+        <input aria-label={t('fx.unitAr')} placeholder={t('fx.unitAr')} value={words.unit_ar} onChange={e => setWords({ ...words, unit_ar: e.target.value })} />
+        <input aria-label={t('fx.subunitAr')} placeholder={t('fx.subunitAr')} value={words.subunit_ar} onChange={e => setWords({ ...words, subunit_ar: e.target.value })} />
+        <input aria-label={t('fx.unitEn')} placeholder={t('fx.unitEn')} value={words.unit_en} onChange={e => setWords({ ...words, unit_en: e.target.value })} dir="ltr" />
+        <input aria-label={t('fx.subunitEn')} placeholder={t('fx.subunitEn')} value={words.subunit_en} onChange={e => setWords({ ...words, subunit_en: e.target.value })} dir="ltr" />
+        <button onClick={saveWords} disabled={!words.currency_id}>{t('fx.saveWords')}</button>
+      </div>
     </div>
 
     <div className="panel" data-section="rates"><h2>{t('fx.rates')}</h2><p className="muted">{t('fx.ratesNote')}</p>

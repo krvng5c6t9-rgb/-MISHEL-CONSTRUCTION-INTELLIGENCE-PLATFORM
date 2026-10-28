@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { ar, en, statusLabels, type LabelKey } from './labels.js';
+import { amountInWords, type CurrencyWords } from './words.js';
 
 // CC-085 (R1.5, MP-03 §1): printed documents as self-contained HTML (fonts embedded), the source of both the print view
 // and the PDF. Every figure is the database value as text (never re-computed); amounts are only grouped by thousands.
@@ -12,6 +13,8 @@ export type ExportInfo = { id: number; at: string; by: string };
 export type Mark = 'draft' | 'void' | null;
 type Row = Record<string, any>;
 type Labels = Record<LabelKey, string>;
+// CC-088: the currency's minor units and the company's names for amounts in words (null when not set).
+export type Words = { minor_units: number; names: CurrencyWords | null };
 
 const require = createRequire(import.meta.url);
 let fontCss: string | null = null;
@@ -55,6 +58,7 @@ tr.total td{font-weight:700;background:#f6f7f9}
 .meta td:first-child{width:32%;background:#f6f7f9;font-weight:700}
 .watermark{position:fixed;top:38%;left:0;right:0;text-align:center;font-size:90pt;font-weight:700;color:rgba(200,30,30,.13);transform:rotate(-28deg);z-index:0;pointer-events:none}
 .draftnote{border:1px solid #c81e1e;color:#c81e1e;padding:4px 8px;margin-bottom:8px;font-weight:700}
+.words{margin:-4px 0 10px;font-weight:700}
 .trace{margin-top:14px;font-size:8.5pt;color:#4a5566;border-top:1px solid #c9ced6;padding-top:6px}
 h2{font-size:11.5pt;margin:12px 0 4px}
 </style></head><body>
@@ -66,6 +70,11 @@ ${body}
 </body></html>`;
 }
 
+// The amount in words, from the database text (F-64); no line when the amount cannot be written exactly.
+const wordsLine = (lang: Lang, L: Labels, value: unknown, currency: string, w?: Words) => {
+  const text = w ? amountInWords(lang, value, currency, w.minor_units, w.names) : null;
+  return text ? `<p class="words">${esc(L.inWords)}: <span data-words>${esc(text)}</span></p>` : '';
+};
 const metaTable = (rows: [string, string][]) => `<table class="meta">${rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${v}</td></tr>`).join('')}</table>`;
 const amountTable = (L: Labels, currency: string, rows: [LabelKey, unknown, boolean?][]) =>
   `<h2>${esc(L.valuation)} (${esc(currency)})</h2><table>${rows.filter(([, v]) => v !== null && v !== undefined).map(([k, v, total]) =>
@@ -77,7 +86,7 @@ function approvalBlock(L: Labels, steps: Row[]): string {
     `<tr><td>${esc((L as any)[s.label] ?? s.label)}</td><td>${esc(s.name ?? '—')}</td><td>${esc(s.role ?? '—')}</td><td>${num(day(s.at))}</td></tr>`).join('')}</tbody></table>`;
 }
 
-export function renderIpc(lang: Lang, d: { ipc: Row; org: Row; lines: Row[]; steps: Row[] }, mark: Mark, exp: ExportInfo): string {
+export function renderIpc(lang: Lang, d: { ipc: Row; org: Row; lines: Row[]; steps: Row[]; words?: Words }, mark: Mark, exp: ExportInfo): string {
   const L = lang === 'ar' ? ar : en, i = d.ipc;
   const meta = metaTable([
     [L.ipcNo, num(esc(i.ipc_no))], [L.status, esc(statusLabels[lang][i.status] ?? i.status)],
@@ -89,14 +98,14 @@ export function renderIpc(lang: Lang, d: { ipc: Row; org: Row; lines: Row[]; ste
     ['grossThisPeriod', i.gross_work_done_this_period], ['grossCumulative', i.cumulative_gross_work_done], ['materialsOnSite', i.materials_on_site_value],
     ['lessRetention', i.less_retention], ['lessAdvance', i.less_advance_recovery], ['lessPrevious', i.less_previous_certified],
     ['outputTax', i.output_tax_amount], ['netDue', i.net_amount_due, true], ['clientCertified', i.client_certified_amount]
-  ]);
+  ]) + wordsLine(lang, L, i.net_amount_due, i.currency, d.words);
   const lines = d.lines.length ? `<h2>${esc(L.lines)}</h2><table><thead><tr><th>${esc(L.colItem)}</th><th>${esc(L.colDescription)}</th><th>${esc(L.colUnit)}</th><th>${esc(L.colQtyPeriod)}</th><th>${esc(L.colQtyCumulative)}</th><th>${esc(L.colRate)}</th><th>${esc(L.colAmountPeriod)}</th><th>${esc(L.colAmountCumulative)}</th></tr></thead><tbody>${d.lines.map(l =>
     `<tr><td>${num(esc(l.item_no ?? '—'))}</td><td>${esc(l.description ?? '—')}</td><td>${esc(l.unit ?? '—')}</td><td class="amount">${num(money(l.quantity_this_period))}</td><td class="amount">${num(money(l.cumulative_quantity))}</td><td class="amount">${num(money(l.unit_rate))}</td><td class="amount">${num(money(l.amount_this_period))}</td><td class="amount">${num(money(l.cumulative_amount))}</td></tr>`).join('')}</tbody></table>`
     : `<h2>${esc(L.lines)}</h2><p>${esc(L.noLines)}</p>`;
   return layout(lang, L.ipcTitle, String(i.ipc_no), mark, meta + amounts + lines + approvalBlock(L, d.steps), exp, d.org);
 }
 
-export function renderSubcontractCertificate(lang: Lang, d: { cert: Row; org: Row; lines: Row[]; steps: Row[] }, mark: Mark, exp: ExportInfo): string {
+export function renderSubcontractCertificate(lang: Lang, d: { cert: Row; org: Row; lines: Row[]; steps: Row[]; words?: Words }, mark: Mark, exp: ExportInfo): string {
   const L = lang === 'ar' ? ar : en, c = d.cert;
   const meta = metaTable([
     [L.scNo, num(esc(c.certificate_no))], [L.status, esc(statusLabels[lang][c.status] ?? c.status)],
@@ -107,7 +116,7 @@ export function renderSubcontractCertificate(lang: Lang, d: { cert: Row; org: Ro
     ['grossThisPeriod', c.gross_work_done], ['previousCumulative', c.previous_cumulative_gross], ['grossCumulative', c.cumulative_gross_to_date],
     ['lessRetention', c.less_retention], ['lessAdvance', c.less_advance_recovery], ['lessPreviousPaid', c.less_previous_paid],
     ['lessPenalties', c.penalties_deductions], ['inputTax', c.input_tax_amount], ['netDue', c.net_amount_due, true]
-  ]);
+  ]) + wordsLine(lang, L, c.net_amount_due, c.currency, d.words);
   const lines = d.lines.length ? `<h2>${esc(L.lines)}</h2><table><thead><tr><th>${esc(L.colDescription)}</th><th>${esc(L.colQtyPeriod)}</th><th>${esc(L.colQtyCumulative)}</th><th>${esc(L.colRate)}</th><th>${esc(L.colAmount)}</th></tr></thead><tbody>${d.lines.map(l =>
     `<tr><td>${esc(l.description)}</td><td class="amount">${num(money(l.quantity_this_period))}</td><td class="amount">${num(money(l.cumulative_quantity))}</td><td class="amount">${num(money(l.unit_rate))}</td><td class="amount">${num(money(l.amount))}</td></tr>`).join('')}</tbody></table>`
     : `<h2>${esc(L.lines)}</h2><p>${esc(L.noLines)}</p>`;
@@ -127,7 +136,7 @@ const grid = (L: Labels, heading: LabelKey, cols: Col[], rows: Row[], foot?: str
 const amt = (v: unknown) => num(money(v));
 const project = (r: Row) => (r.project_code ? `${num(esc(r.project_code))} — ${esc(r.project_name)}` : '—');
 
-export function renderPurchaseOrder(lang: Lang, d: { po: Row; org: Row; lines: Row[]; steps: Row[] }, mark: Mark, exp: ExportInfo): string {
+export function renderPurchaseOrder(lang: Lang, d: { po: Row; org: Row; lines: Row[]; steps: Row[]; words?: Words }, mark: Mark, exp: ExportInfo): string {
   const L = lang === 'ar' ? ar : en, p = d.po;
   const meta = metaTable([
     [L.poNo, num(esc(p.po_ref))], [L.date, num(day(p.po_date))], [L.status, code(lang, p.status)], [L.project, project(p)],
@@ -137,7 +146,7 @@ export function renderPurchaseOrder(lang: Lang, d: { po: Row; org: Row; lines: R
   ]);
   const lines = grid(L, 'poLines', [['colItem', r => num(esc(r.item_no ?? '—'))], ['colDescription', r => text(r.item_description)], ['colUnit', r => text(r.unit_of_measure)],
     ['colQty', r => amt(r.quantity), true], ['colRate', r => amt(r.unit_rate), true], ['colAmount', r => amt(r.amount), true]], d.lines,
-    `<tr class="total"><td colspan="5">${lbl(L, 'total')} (${esc(p.currency)})</td><td class="amount">${amt(p.total_amount)}</td></tr>`);
+    `<tr class="total"><td colspan="5">${lbl(L, 'total')} (${esc(p.currency)})</td><td class="amount">${amt(p.total_amount)}</td></tr>`) + wordsLine(lang, L, p.total_amount, p.currency, d.words);
   return layout(lang, L.poTitle, String(p.po_ref), mark, meta + lines + approvalBlock(L, d.steps), exp, d.org);
 }
 
@@ -153,7 +162,7 @@ export function renderGoodsReceipt(lang: Lang, d: { grn: Row; org: Row; lines: R
   return layout(lang, L.grnTitle, String(g.grn_no), mark, meta + lines + approvalBlock(L, d.steps), exp, d.org);
 }
 
-export function renderPaymentVoucher(lang: Lang, d: { pay: Row; org: Row; steps: Row[] }, mark: Mark, exp: ExportInfo): string {
+export function renderPaymentVoucher(lang: Lang, d: { pay: Row; org: Row; steps: Row[]; words?: Words }, mark: Mark, exp: ExportInfo): string {
   const L = lang === 'ar' ? ar : en, p = d.pay, out = p.payment_type === 'outgoing';
   const meta = metaTable([
     [L.voucherNo, num(esc(String(p.id)))], [L.date, num(day(p.payment_date))], [L.status, code(lang, p.status)],
@@ -163,7 +172,7 @@ export function renderPaymentVoucher(lang: Lang, d: { pay: Row; org: Row; steps:
   ]);
   const rows: [string, string, boolean][] = [[L.amount, amt(p.amount), true]];
   if (!isZero(p.withheld_tax_amount)) rows.push([L.withheldTax, amt(p.withheld_tax_amount), false]);
-  const amounts = `<h2>${lbl(L, 'amount')} (${esc(p.currency)})</h2><table>${rows.map(([k, v, total]) => `<tr${total ? ' class="total"' : ''}><td>${esc(k)}</td><td class="amount">${v}</td></tr>`).join('')}</table>`
+  const amounts = `<h2>${lbl(L, 'amount')} (${esc(p.currency)})</h2><table>${rows.map(([k, v, total]) => `<tr${total ? ' class="total"' : ''}><td>${esc(k)}</td><td class="amount">${v}</td></tr>`).join('')}</table>` + wordsLine(lang, L, p.amount, p.currency, d.words)
     + (p.withholding_certificate_ref ? metaTable([[L.withholdingCertificate, esc(p.withholding_certificate_ref)]]) : '');
   return layout(lang, out ? L.pvTitle : L.rvTitle, String(p.id), mark, meta + amounts + approvalBlock(L, d.steps), exp, d.org);
 }
