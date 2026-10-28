@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { useI18n } from '../lib/i18n';
 import { Num } from '../components/RecordTable';
+import { openDocument } from '../lib/documents';
 
 // R1.2: labels from messages/site.ts; statuses through tv(). CC-074: the tiles counted only the first 8 rows loaded
 // (the tables show 8; the counts now use every row the API returned), and a failed load left the page empty with no
 // message (the server message is now shown).
 export function SiteExecution() {
-  const { t, tv } = useI18n();
+  const { t, tv, lang } = useI18n();
   const [diaries, setDiaries] = useState<any[]>([]);
   const [punch, setPunch] = useState<any[]>([]);
   const [qs, setQs] = useState<any[]>([]);
@@ -32,8 +33,8 @@ export function SiteExecution() {
       </div>
       <div className="panel" data-section="diaries">
         <h2>{t('site.recentDiaries')}</h2>
-        <div className="table-wrap"><table><thead><tr><th>{t('site.colDate')}</th><th>{t('site.colWeather')}</th><th>{t('site.colWork')}</th><th>{t('site.colDelays')}</th></tr></thead><tbody>
-          {diaries.slice(0, 8).map((d) => <tr key={d.id}><td><Num text={d.diary_date || '-'} /></td><td>{d.weather || '-'}</td><td>{d.work_performed || '-'}</td><td>{d.delays_notes || '-'}</td></tr>)}
+        <div className="table-wrap"><table><thead><tr><th>{t('site.colDate')}</th><th>{t('site.colWeather')}</th><th>{t('site.colWork')}</th><th>{t('site.colDelays')}</th><th>{t('site.colStatus')}</th><th /></tr></thead><tbody>
+          {diaries.slice(0, 8).map((d) => <tr key={d.id}><td><Num text={d.diary_date || '-'} /></td><td>{d.weather || '-'}</td><td>{d.work_performed || '-'}</td><td>{d.delays_notes || '-'}</td><td>{tv(d.status)}</td><td><button onClick={() => openDocument('daily-diary', Number(d.id), lang).catch((e: any) => setError(e.message))}>{t('doc.printPdf')}</button></td></tr>)}
         </tbody></table></div>
       </div>
       <div className="panel" data-section="punch">

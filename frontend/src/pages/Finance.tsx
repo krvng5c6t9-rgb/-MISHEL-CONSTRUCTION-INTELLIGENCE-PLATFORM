@@ -3,6 +3,7 @@ import { useEffect,useState } from 'react';
 import { apiGet,apiPost } from '../lib/api';
 import { useI18n, type MessageKey } from '../lib/i18n';
 import { Table as RecordTable, type Row } from '../components/RecordTable';
+import { openDocument, type DocumentType } from '../lib/documents';
 // R1.2: labels from messages/finance.ts; stored codes through tv(); success messages kept as keys (follow the language).
 // CC-072: each record table has defined, labelled columns — it used to show the first 8 raw API fields (internal ids and
 // org_id, while the General Ledger had no credit column and IPCs / payments no status); manual journals choose their
@@ -11,11 +12,12 @@ type Any=Record<string,any>;type Resp<T>={success:boolean;data:T};const n=(v:any
 type Msg={key:MessageKey}|{text:string}|null;
 type Col=[string,MessageKey,('code'|'date')?];
 const ACCOUNT_TYPES=['asset','liability','equity','revenue','expense'],REASONS=['correction','reclassification','accrual','write_off','other'];
-function Section({title,rows,cols}:{title:MessageKey;rows:Any[];cols:Col[]}){
- const{t,tv}=useI18n();
+// CC-086: a section of printable records shows a Print / PDF button per row (payment / receipt and journal vouchers).
+function Section({title,rows,cols,print,onError}:{title:MessageKey;rows:Any[];cols:Col[];print?:DocumentType;onError?:(m:string)=>void}){
+ const{t,tv,lang}=useI18n();
  const shown:Row[]=rows.slice(0,30).map(r=>({...r,...Object.fromEntries(cols.filter(([,,k])=>k).map(([c,,k])=>[c,k==='code'?tv(r[c]):(r[c]?String(r[c]).slice(0,10):r[c])]))}));
  return <section className="panel" data-section={`table-${title}`}><div className="panel-header"><h2>{t(title)}</h2><span>{t('fin.rows',{n:rows.length})}</span></div>
-  {rows.length?<RecordTable rows={shown} cols={cols.map(([c,h])=>[c,t(h)])}/>:<p className="muted">{t('fin.none')}</p>}</section>}
+  {rows.length?<RecordTable rows={shown} cols={cols.map(([c,h])=>[c,t(h)])} actions={print?r=><button onClick={()=>openDocument(print,Number(r.id),lang).catch((x:any)=>onError?.(x.message))}>{t('doc.printPdf')}</button>:undefined}/>:<p className="muted">{t('fin.none')}</p>}</section>}
 export function Finance(){
  const{t,tv}=useI18n();
  const[refs,setRefs]=useState<any>({projects:[],clients:[],vendors:[],currencies:[],accounts:[],banks:[],contracts:[]}),[coa,setCoa]=useState<Any[]>([]),[gl,setGl]=useState<Any[]>([]),[ipcs,setIpcs]=useState<Any[]>([]),[payments,setPayments]=useState<Any[]>([]),[periods,setPeriods]=useState<Any[]>([]),[fx,setFx]=useState<Any[]>([]),[journals,setJournals]=useState<Any[]>([]),[msg,setMsg]=useState<Msg>(null);
@@ -33,8 +35,8 @@ export function Finance(){
  <Section title="fin.coa" rows={coa} cols={[['account_code','fin.colCode'],['account_name','fin.colName'],['account_type','fin.colType','code'],['is_active','fin.colActive','code']]}/>
  <Section title="fin.gl" rows={gl} cols={[['transaction_date','fin.colDate','date'],['account_code','fin.colAccount'],['account_name','fin.colName'],['project_name','fin.colProject'],['debit','fin.colDebit'],['credit','fin.colCredit'],['currency_code','fin.colCurrency'],['fx_rate_to_base','fin.colRate'],['fx_rate_side','fin.colSide','code'],['debit_base','fin.colDebitBase'],['credit_base','fin.colCreditBase'],['source_module','fin.colSource','code'],['description','fin.colDescription']]}/>
  <Section title="fin.ipcs" rows={ipcs} cols={[['ipc_no','fin.colIpc'],['period_from','fin.colFrom','date'],['period_to','fin.colTo','date'],['cumulative_gross_work_done','fin.colCumulative'],['net_amount_due','fin.colNetDue'],['status','fin.colStatus','code']]}/>
- <Section title="fin.payments" rows={payments.map(p=>({...p,currency:currencyCode(p.currency_id)}))} cols={[['payment_date','fin.colDate','date'],['payment_type','fin.colType','code'],['party_type','fin.colPartyType','code'],['amount','fin.colAmount'],['currency','fin.colCurrency'],['bank_name','fin.colBank'],['method','fin.colMethod','code'],['reference_no','fin.colReference'],['status','fin.colStatus','code']]}/>
- <Section title="fin.journals" rows={journals} cols={[['entry_date','fin.colDate','date'],['description','fin.colDescription'],['reason_category','fin.colReason','code'],['status','fin.colStatus','code'],['posted_at','fin.colPostedAt','date']]}/>
+ <Section title="fin.payments" rows={payments.map(p=>({...p,currency:currencyCode(p.currency_id)}))} cols={[['payment_date','fin.colDate','date'],['payment_type','fin.colType','code'],['party_type','fin.colPartyType','code'],['amount','fin.colAmount'],['currency','fin.colCurrency'],['bank_name','fin.colBank'],['method','fin.colMethod','code'],['reference_no','fin.colReference'],['status','fin.colStatus','code']]} print="payment-voucher" onError={m=>setMsg({text:m})}/>
+ <Section title="fin.journals" rows={journals} cols={[['entry_date','fin.colDate','date'],['description','fin.colDescription'],['reason_category','fin.colReason','code'],['status','fin.colStatus','code'],['posted_at','fin.colPostedAt','date']]} print="journal-voucher" onError={m=>setMsg({text:m})}/>
  <Section title="fin.periods" rows={periods} cols={[['fiscal_year','fin.colYear'],['period_no','fin.colPeriod'],['start_date','fin.colStart','date'],['end_date','fin.colEnd','date'],['status','fin.colStatus','code']]}/>
  <Section title="fin.fxRates" rows={fx} cols={[['rate_date','fin.colDate','date'],['currency_code','fin.colCurrency'],['buy_rate','fin.colBuy'],['sell_rate','fin.colSell'],['source','fin.colSource']]}/>
  </section>
