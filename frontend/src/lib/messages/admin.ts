@@ -53,7 +53,26 @@ export const en = {
   'admin.retire': 'Retire',
   'admin.saveDraft': 'Save draft',
   'admin.confirm': 'Confirm',
-  'admin.askRetireReason': 'Reason for retiring this DOA rule'
+  'admin.askRetireReason': 'Reason for retiring this DOA rule',
+  // CC-089 (F-64): confidentiality class per printed document type.
+  'admin.docClass': 'Confidentiality of printed documents',
+  'admin.docClassNote': 'The class chosen for a document type is printed on every copy and recorded with its export. A type without a class is printed without one.',
+  'admin.colDocType': 'Document',
+  'admin.colClass': 'Classification',
+  'admin.colUpdated': 'Last set',
+  'admin.classNone': 'No class',
+  'admin.classPublic': 'Public',
+  'admin.classInternal': 'Internal',
+  'admin.classConfidential': 'Confidential',
+  'admin.classRestricted': 'Restricted',
+  'admin.docIpc': 'Interim payment certificate (client)',
+  'admin.docSubcontractCertificate': 'Subcontractor payment certificate',
+  'admin.docPurchaseOrder': 'Purchase order',
+  'admin.docGoodsReceipt': 'Goods received note',
+  'admin.docPayment': 'Payment / receipt voucher',
+  'admin.docManualJournal': 'Journal voucher',
+  'admin.docSiteDiary': 'Daily site diary',
+  'admin.docClassSaved': 'Saved'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -108,5 +127,23 @@ export const ar: Record<keyof typeof en, string> = {
   'admin.retire': 'إيقاف',
   'admin.saveDraft': 'حفظ المسودة',
   'admin.confirm': 'تأكيد',
-  'admin.askRetireReason': 'سبب إيقاف قاعدة صلاحية الاعتماد'
+  'admin.askRetireReason': 'سبب إيقاف قاعدة صلاحية الاعتماد',
+  'admin.docClass': 'تصنيف سرية المستندات المطبوعة',
+  'admin.docClassNote': 'يُطبع التصنيف المختار لنوع المستند على كل نسخة ويُسجَّل مع تصديرها. النوع الذي لم يُحدَّد له تصنيف يُطبع بدون تصنيف.',
+  'admin.colDocType': 'المستند',
+  'admin.colClass': 'التصنيف',
+  'admin.colUpdated': 'آخر ضبط',
+  'admin.classNone': 'بدون تصنيف',
+  'admin.classPublic': 'عام',
+  'admin.classInternal': 'داخلي',
+  'admin.classConfidential': 'سري',
+  'admin.classRestricted': 'سري للغاية',
+  'admin.docIpc': 'مستخلص جاري (العميل)',
+  'admin.docSubcontractCertificate': 'مستخلص مقاول الباطن',
+  'admin.docPurchaseOrder': 'أمر شراء',
+  'admin.docGoodsReceipt': 'إذن استلام بضاعة',
+  'admin.docPayment': 'سند صرف / قبض',
+  'admin.docManualJournal': 'قيد يومية',
+  'admin.docSiteDiary': 'يومية الموقع',
+  'admin.docClassSaved': 'تم الحفظ'
 };

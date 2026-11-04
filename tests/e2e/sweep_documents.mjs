@@ -10,6 +10,10 @@ import { ADMIN, ADMIN_B, TAG, api, must, check, expectStatus, login, sql, finish
 // CC-088: the amount-in-words module of the backend build (the gate builds the backend before the suites).
 const { amountInWords } = await import(new URL('../../backend/dist/modules/documents/words.js', import.meta.url).href);
 import { BASE } from './lib.mjs';
+// CC-089: the printed QR code is read back with an independent decoder (jsQR, a backend development dependency),
+// not with the library that drew it.
+import { createRequire } from 'node:module';
+const jsQR = createRequire(new URL('../../backend/package.json', import.meta.url))('jsqr');
 
 const OWNER = process.env.OWNER_PSQL_URL;
 const one = (text) => { const r = sql(OWNER, text); if (!r.ok) throw new Error(r.out.slice(0, 300)); return r.out; };
@@ -20,6 +24,23 @@ const get = async (path, token) => {
 };
 const sha = (b) => createHash('sha256').update(b).digest('hex');
 const grouped = (v) => v.replace(/^(-?)(\d+)/, (_, s, d) => s + d.replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+// The QR code is an inline SVG of horizontal runs ("M x y.5 h w m dx dy h w ..."): it is drawn into a bitmap
+// (8 pixels per module) and decoded.
+const decodeQr = (html) => {
+  const svg = /<div class="qr"[^>]*>(<svg[\s\S]*?<\/svg>)<\/div>/.exec(html)?.[1];
+  if (!svg) return null;
+  const size = Number(/viewBox="0 0 (\d+) \d+"/.exec(svg)[1]), d = /<path stroke="#000000" d="([^"]+)"/.exec(svg)[1];
+  const S = 8, W = size * S, px = new Uint8ClampedArray(W * W * 4).fill(255);
+  let x = 0, y = 0;
+  for (const [, op, a, b] of d.matchAll(/([MmHh])(-?[\d.]+)(?:[ ,](-?[\d.]+))?/g)) {
+    if (op === 'M') { x = Number(a); y = Number(b); } else if (op === 'm') { x += Number(a); y += Number(b); }
+    else { const n = op === 'h' ? Number(a) : Number(a) - x; const row = Math.floor(y);
+      for (let cx = x; cx < x + n; cx++) for (let yy = row * S; yy < row * S + S; yy++) for (let xx = cx * S; xx < cx * S + S; xx++) { const i = (yy * W + xx) * 4; px[i] = px[i + 1] = px[i + 2] = 0; }
+      x += n; }
+  }
+  return jsQR(px, W, W)?.data ?? null;
+};
+const fields = (text) => text && text.startsWith('MARC-DOC/1?') ? Object.fromEntries(new URLSearchParams(text.slice(11))) : null;
 const escHtml = (v) => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 try {
   const admin = await login(ADMIN);
@@ -199,6 +220,58 @@ try {
   await expectStatus('a sub-unit name for a currency without minor units is refused', () => api('PUT', `/finance/currencies/${zero}/words`, admin, { subunit_en: 'cents' }), 422);
   must(await api('DELETE', `/finance/currencies/${zero}/enable`, admin), 'disable zero-decimal currency');
 
+  // --- CC-089 (F-64): QR code on every printed copy, read back with an independent decoder.
+  const q1 = await get(`/documents/ipc/${finalId}?format=html&lang=ar`, fin);
+  const q1text = decodeQr(q1.text), q1f = fields(q1text);
+  const q1entry = must(await api('GET', `/documents/exports/${q1.id}`, fin), 'qr entry');
+  check('IPC: the printed QR code decodes to the text recorded with its export entry', !!q1text && q1text === q1entry.qr_payload, q1text);
+  check('IPC QR: export number, company, type, record, document number, status, not draft, net amount as stored and currency',
+    q1f && Number(q1f.exp) === q1.id && Number(q1f.org) === ADMIN.org_id && q1f.type === 'ipc' && Number(q1f.rec) === Number(finalId) && q1f.no === ipcNo
+      && q1f.status === one(`select status from ipcs where id = ${finalId}`) && q1f.draft === '0' && q1f.amount === net && q1f.cur === ipcCur[0] && !q1f.class, JSON.stringify(q1f));
+  const qd = fields(decodeQr((await get(`/documents/ipc/${draftId}?format=html&lang=en`, fin)).text));
+  check('draft IPC: the QR code says draft', qd?.draft === '1' && qd?.status === 'draft', JSON.stringify(qd));
+  const qg = await get(`/documents/goods-receipt/${grnId}?format=html&lang=ar`, admin), qgf = fields(decodeQr(qg.text));
+  check('goods received note: QR code without an amount (not a financial document)', qgf?.type === 'goods_receipt' && Number(qgf.exp) === qg.id && qgf.amount === undefined && qgf.cur === undefined, JSON.stringify(qgf));
+  const qp = await get(`/documents/payment-voucher/${pvId}?format=html&lang=en`, fin), qpf = fields(decodeQr(qp.text));
+  check('payment voucher QR: the amount as stored', qpf?.type === 'payment' && qpf.amount === pvAmount, JSON.stringify(qpf));
+  const qpdf = await get(`/documents/ipc/${finalId}?format=pdf&lang=en`, fin);
+  check('PDF export: its entry records the QR text of that export', qpdf.status === 200 && fields(must(await api('GET', `/documents/exports/${qpdf.id}`, fin), 'pdf qr').qr_payload)?.exp === String(qpdf.id));
+
+  const v1 = must(await api('POST', '/documents/verify', fin, { payload: q1text }), 'verify');
+  check('verify the scanned text: matches its entry, record unchanged since printing', v1.matches_entry === true && v1.status_changed === false && v1.amount_changed === false
+    && Number(v1.export.id) === q1.id && v1.export.sha256 === q1.sha, JSON.stringify(v1).slice(0, 240));
+  const forged = q1text.replace(/amount=[^&]+/, 'amount=1.00');
+  const v2 = must(await api('POST', '/documents/verify', fin, { payload: forged }), 'verify forged');
+  check('a QR text with a changed amount does not match its entry and is reported as differing from the record', v2.matches_entry === false && v2.amount_changed === true, JSON.stringify(v2).slice(0, 200));
+  await expectStatus('a text that is not a MARC document code is refused', () => api('POST', '/documents/verify', fin, { payload: 'https://example.com/x' }), 422);
+  await expectStatus('verifying a code without the permission of its document is refused', () => api('POST', '/documents/verify', none, { payload: q1text }), 403);
+  const adminB = await login(ADMIN_B);
+  await expectStatus('another company cannot verify this company\'s code (not found)', () => api('POST', '/documents/verify', adminB, { payload: q1text }), 404);
+  check('verification writes no export entry', Number(one(`select count(*) from document_exports where id > ${qpdf.id}`)) === 0);
+
+  // --- CC-089 (F-64): confidentiality class per document type, set by the company; none assumed.
+  const cl0 = await api('GET', '/documents/classifications', admin);
+  check('classifications: the seven printed document types, none set by default, four classes offered', cl0.status === 200 && cl0.body.data.length === 7 && cl0.body.data.every(x => x.classification === null)
+    && cl0.body.classes.join() === 'public,internal,confidential,restricted', JSON.stringify(cl0.body).slice(0, 240));
+  check('no class set: none printed', !q1.text.includes('data-classification'));
+  await expectStatus('setting a class needs admin.manage', () => api('PUT', '/documents/classifications/ipc', fin, { classification: 'confidential' }), 403);
+  await expectStatus('an unknown class is refused', () => api('PUT', '/documents/classifications/ipc', admin, { classification: 'secret' }), 400);
+  await expectStatus('an unknown document type is not found', () => api('PUT', '/documents/classifications/invoice', admin, { classification: 'internal' }), 404);
+  must(await api('PUT', '/documents/classifications/ipc', admin, { classification: 'confidential' }), 'set class');
+  const c1 = await get(`/documents/ipc/${finalId}?format=html&lang=ar`, fin), c1en = await get(`/documents/ipc/${finalId}?format=html&lang=en`, fin);
+  check('IPC printed with its class in Arabic and English', c1.text.includes('data-classification="confidential">التصنيف: سري</div>') && c1en.text.includes('data-classification="confidential">Classification: Confidential</div>'));
+  const c1e = must(await api('GET', `/documents/exports/${c1.id}`, fin), 'class entry');
+  check('the class is recorded with the export entry and in its QR code', c1e.classification === 'confidential' && fields(decodeQr(c1.text))?.class === 'confidential' && fields(c1e.qr_payload)?.class === 'confidential');
+  check('other document types stay without a class', !(await get(`/documents/payment-voucher/${pvId}?format=html&lang=ar`, fin)).text.includes('data-classification'));
+  const bCl = await api('GET', '/documents/classifications', adminB);
+  check('the class is the company\'s own: the other company\'s IPC stays without a class', bCl.status === 200 && bCl.body.data.find(x => x.type === 'ipc')?.classification === null
+    && Number(one(`select count(*) from document_classifications where org_id = ${ADMIN_B.org_id}`)) === 0, JSON.stringify(bCl.body.data?.find(x => x.type === 'ipc')));
+  check('the class setting is audited', Number(one(`select count(*) from audit_log where table_name = 'document_classifications' and org_id = ${ADMIN.org_id}`)) >= 1);
+  must(await api('PUT', '/documents/classifications/ipc', admin, { classification: null }), 'unset class');
+  const c2 = await get(`/documents/ipc/${finalId}?format=html&lang=ar`, fin);
+  check('class removed: printed without a class again; the earlier entry keeps its class', !c2.text.includes('data-classification')
+    && must(await api('GET', `/documents/exports/${c2.id}`, fin), 'entry').classification === null && one(`select classification from document_exports where id = ${c1.id}`) === 'confidential');
+
   // --- Refusals.
   await expectStatus('IPC document without finance.view is refused', async () => { const r = await get(`/documents/ipc/${finalId}`, none); return { status: r.status, body: JSON.parse(r.text) }; }, 403);
   await expectStatus('certificate document without contracts.view is refused (finance.view is not enough)', async () => { const r = await get(`/documents/subcontract-certificate/${scFinal}`, fin); return { status: r.status, body: JSON.parse(r.text) }; }, 403);
@@ -215,6 +288,10 @@ try {
   probe('DB: an export entry cannot be deleted', `delete from document_exports where id = ${ar.id}`);
   probe('DB: the hash of an export entry cannot be replaced', `update document_exports set sha256 = repeat('0', 64) where id = ${ar.id}`);
   probe('DB: the record of an export entry cannot be changed', `update document_exports set record_id = record_id + 1 where id = ${ar.id}`);
+  probe('DB: the QR text of an export entry cannot be changed (CC-089)', `update document_exports set qr_payload = replace(qr_payload, 'draft=0', 'draft=1') where id = ${c1.id}`);
+  probe('DB: the class of an export entry cannot be changed (CC-089)', `update document_exports set classification = 'public' where id = ${c1.id}`);
+  { const r = sql(OWNER, `insert into document_classifications(org_id, doc_type, classification, updated_by) values (${ADMIN.org_id}, 'payment', 'top_secret', 1)`);
+    check('DB: only the four classes can be stored', !r.ok && /check constraint|violates/.test(r.out), r.out.split('\n').find(l => /ERROR/.test(l)) ?? r.out.slice(0, 160)); }
   check('DB: the entry is unchanged after the refused writes', one(`select sha256 from document_exports where id = ${ar.id}`) === sha(ar.bytes));
 } catch (e) {
   check('suite completed', false, e.message.slice(0, 300));

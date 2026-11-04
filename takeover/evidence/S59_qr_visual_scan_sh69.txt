@@ -1,0 +1,7 @@
+# Stage 59 / CC-089: QR codes of printed documents (gate RUN sh69) rendered by Chromium Google Chrome for Testing 153.0.8010.12  at A4 print size and decoded from the screenshot with jsQR 1.4.0 (independent of the qrcode library that drew them). Date 2026-11-04.
+doc_diary_sh69.html 99x99px SCAN_OK MARC-DOC/1?exp=14&org=1&type=site_diary&rec=2&no=2026-11-04&status=signed&draft=0
+doc_grn_sh69.html 99x99px SCAN_OK MARC-DOC/1?exp=8&org=1&type=goods_receipt&rec=1&no=GRN-sh69&status=confirmed&draft=0
+doc_jv_sh69.html 99x99px SCAN_OK MARC-DOC/1?exp=12&org=1&type=manual_journal&rec=1&no=1&status=posted&draft=0
+doc_po_sh69.html 99x99px SCAN_OK MARC-DOC/1?exp=6&org=1&type=purchase_order&rec=1&no=PO-sh69&status=partially_delivered&draft=0&amount=20000.00&cur=EGP
+doc_pv_sh69.html 99x99px SCAN_OK MARC-DOC/1?exp=9&org=1&type=payment&rec=1&no=1&status=posted&draft=0&amount=20000.00&cur=EGP
+doc_rv_sh69.html 99x99px SCAN_OK MARC-DOC/1?exp=10&org=1&type=payment&rec=18&no=18&status=posted&draft=0&amount=50000.00&cur=EGP

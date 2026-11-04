@@ -125,6 +125,23 @@ try {
     && (await page.locator('[data-section="roles"] tbody td').first().innerText()).trim() === 'الإدارة', matrixHead.join(' | '));
   const doaModules = await page.locator('[data-section="doa"] tbody tr td:first-child').allInnerTexts();
   check('Arabic: DOA rules list their modules in Arabic', doaModules.length > 0 && doaModules.some(s => /أمر الشراء|فاتورة المورد|الدفع/.test(s)), doaModules.slice(0, 4).join(' | '));
+  // CC-089 (F-64): confidentiality class per printed document type, set from this screen in Arabic; after saving, the
+  // screen reloads the list from the server, so the value and "last set" shown are the stored ones.
+  const dcSec = page.locator('[data-section="doc-classification"]');
+  const dcNames = (await dcSec.locator('tbody tr td:first-child').allInnerTexts()).map(x => x.trim());
+  const ipcClass = dcSec.getByLabel('التصنيف — مستخلص جاري (العميل)');
+  await ipcClass.selectOption({ label: 'سري' });
+  await dcSec.locator('[role="status"]').waitFor({ timeout: 10000 });
+  await page.waitForTimeout(800);
+  const kept = await dcSec.getByLabel('التصنيف — مستخلص جاري (العميل)').inputValue();
+  const keptRow = (await dcSec.locator('tr[data-doc-type="ipc"]').innerText()).replace(/\s+/g, ' ');
+  check('Arabic: document confidentiality - seven document types named in Arabic; a class chosen for the IPC is saved and shown as stored, with when and by whom',
+    dcNames.length === 7 && dcNames.includes('سند صرف / قبض') && dcNames.includes('يومية الموقع') && kept === 'confidential' && /\d{4}-\d{2}-\d{2} — \S/.test(keptRow),
+    `${dcNames.join(' | ')} || ${kept} || ${keptRow}`);
+  await dcSec.getByLabel('التصنيف — مستخلص جاري (العميل)').selectOption({ value: '' });
+  await dcSec.locator('[role="status"]').waitFor({ timeout: 10000 });
+  await page.waitForTimeout(800);
+  check('Arabic: the class can be removed again (no class)', (await dcSec.getByLabel('التصنيف — مستخلص جاري (العميل)').inputValue()) === '');
   const adminAr = await page.locator('main').evaluate(m => [...m.querySelectorAll('h1, h2, th, button, label')].map(e => e.matches('label') ? e.firstChild?.textContent ?? '' : e.textContent ?? '')
     .concat([...m.querySelectorAll('[aria-label], input[placeholder]')].map(e => e.getAttribute('aria-label') ?? e.getAttribute('placeholder') ?? '')).map(s => s.trim()).filter(Boolean));
   check('Arabic: no Latin letters in headings, column headings, buttons, field labels and placeholders', adminAr.length > 50 && !adminAr.some(s => /[A-Za-z]/.test(s)),

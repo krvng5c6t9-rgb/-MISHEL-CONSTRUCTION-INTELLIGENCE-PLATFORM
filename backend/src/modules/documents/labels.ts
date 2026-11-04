@@ -6,7 +6,7 @@ export const en = {
   exportNo: 'Export No.',
   exportedAt: 'Exported',
   exportedBy: 'by',
-  verify: 'Verify a copy with its export number in MARC (the SHA-256 of the exported file is recorded).',
+  verify: 'Verify a copy by scanning its QR code or with its export number in MARC (the SHA-256 of the exported file is recorded).',
   taxId: 'Tax registration',
   status: 'Status',
   project: 'Project',
@@ -136,7 +136,13 @@ export const en = {
   colNote: 'Note',
   colAuthor: 'Author',
   signed: 'Signed',
-  inWords: 'In words'
+  inWords: 'In words',
+  classification: 'Classification',
+  class_public: 'Public',
+  class_internal: 'Internal',
+  class_confidential: 'Confidential',
+  class_restricted: 'Restricted',
+  qrAlt: 'Verification code'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -145,7 +151,7 @@ export const ar: Record<keyof typeof en, string> = {
   exportNo: 'رقم التصدير',
   exportedAt: 'تاريخ التصدير',
   exportedBy: 'بواسطة',
-  verify: 'تحقق من أي نسخة برقم تصديرها في MARC (البصمة SHA-256 للملف المُصدَّر مسجلة).',
+  verify: 'تحقق من أي نسخة بمسح رمز QR أو برقم تصديرها في MARC (البصمة SHA-256 للملف المُصدَّر مسجلة).',
   taxId: 'رقم التسجيل الضريبي',
   status: 'الحالة',
   project: 'المشروع',
@@ -275,7 +281,13 @@ export const ar: Record<keyof typeof en, string> = {
   colNote: 'الملاحظة',
   colAuthor: 'الكاتب',
   signed: 'التوقيع',
-  inWords: 'بالحروف'
+  inWords: 'بالحروف',
+  classification: 'التصنيف',
+  class_public: 'عام',
+  class_internal: 'داخلي',
+  class_confidential: 'سري',
+  class_restricted: 'سري للغاية',
+  qrAlt: 'رمز التحقق'
 };
 
 export type LabelKey = keyof typeof en;

@@ -1,6 +1,6 @@
 import {useEffect,useMemo,useState} from 'react';
 import {apiGet,apiPost,apiPatch,apiPut} from '../lib/api';
-import {useI18n} from '../lib/i18n';
+import {useI18n,type MessageKey} from '../lib/i18n';
 
 // R1.2: labels from messages/admin.ts; permission modules, actions, scopes, user types and DOA modules are stored codes
 // shown through tv() (messages/values.ts); server messages are shown as sent.
@@ -10,6 +10,9 @@ const ACTIONS=['view','create','edit','approve','delete','export','manage','post
 const SCOPES=['own','department','all'] as const;
 
 type Permission={module:string;action:string;scope:'own'|'department'|'all'};
+// CC-089 (F-64): names of the printed document types (stored table codes) and of the confidentiality classes.
+const DOC_NAME:Record<string,MessageKey>={ipc:'admin.docIpc',subcontract_certificate:'admin.docSubcontractCertificate',purchase_order:'admin.docPurchaseOrder',goods_receipt:'admin.docGoodsReceipt',payment:'admin.docPayment',manual_journal:'admin.docManualJournal',site_diary:'admin.docSiteDiary'};
+const CLASS_NAME:Record<string,MessageKey>={public:'admin.classPublic',internal:'admin.classInternal',confidential:'admin.classConfidential',restricted:'admin.classRestricted'};
 
 export function Admin(){
   const{t,tv}=useI18n();
@@ -19,10 +22,13 @@ export function Admin(){
   const[selectedRole,setSelectedRole]=useState<number>(0);
   const[perms,setPerms]=useState<Record<string,Permission>>({});
 
+  // CC-089 (F-64): confidentiality class per printed document type ('' = no class).
+  const[dc,setDc]=useState<any[]>([]),[dcClasses,setDcClasses]=useState<string[]>([]),[dcSaved,setDcSaved]=useState('');
   async function load(){
-    const[a,b,c]=await Promise.all([apiGet<any>('/users'),apiGet<any>('/roles'),apiGet<any>('/approvals/configuration/doa')]);
-    setU(a.data);setR(b.data);setD(c.data);
+    const[a,b,c,k]=await Promise.all([apiGet<any>('/users'),apiGet<any>('/roles'),apiGet<any>('/approvals/configuration/doa'),apiGet<any>('/documents/classifications')]);
+    setU(a.data);setR(b.data);setD(c.data);setDc(k.data);setDcClasses(k.classes??[]);
   }
+  async function setDocClass(type:string,value:string){try{setE('');setDcSaved('');await apiPut(`/documents/classifications/${type}`,{classification:value||null});await load();setDcSaved(type)}catch(x:any){setE(x.message)}}
   useEffect(()=>{load().catch(x=>setE(x.message))},[]);
 
   async function addUser(){try{setE('');await apiPost('/users',f);setF({...f,full_name:'',email:'',password:''});await load()}catch(x:any){setE(x.message)}}
@@ -59,5 +65,6 @@ export function Admin(){
     {selectedRole>0&&<><h3>{t('admin.permissionsFor',{role:selectedRoleName})}</h3><div className="table-wrap"><table><thead><tr><th>{t('admin.colModule')}</th>{ACTIONS.map(a=><th key={a}>{tv(a)}</th>)}</tr></thead><tbody>{MODULES.map(m=><tr key={m}><td>{tv(m)}</td>{ACTIONS.map(a=>{const k=`${m}:${a}`,p=perms[k];return <td key={a}><input type="checkbox" aria-label={`${tv(m)} — ${tv(a)}`} checked={!!p} onChange={()=>togglePermission(m,a)}/>{p&&<select value={p.scope} onChange={x=>setScope(m,a,x.target.value as any)}>{SCOPES.map(s=><option key={s} value={s}>{tv(s)}</option>)}</select>}</td>})}</tr>)}</tbody></table></div><button onClick={savePermissions}>{t('admin.savePermissions')}</button></>}</div>
 
     <div className="panel" data-section="doa"><h2>{t('admin.doa')}</h2><p>{t('admin.doaNote')}</p><div className="table-wrap"><table><thead><tr><th>{t('admin.colModule')}</th><th>{t('admin.colLevel')}</th><th>{t('admin.colMin')}</th><th>{t('admin.colMax')}</th><th>{t('admin.colApprover')}</th><th>{t('admin.colActive')}</th><th>{t('admin.colConfirmed')}</th><th>{t('admin.colAction')}</th></tr></thead><tbody>{d.map(x=><tr key={x.id}><td>{tv(x.module)}</td><td><input type="number" min="1" value={x.approval_level} onChange={q=>updateDoa(x.id,'approval_level',q.target.value)}/></td><td><input type="number" min="0" value={x.min_amount} onChange={q=>updateDoa(x.id,'min_amount',q.target.value)}/></td><td><input type="number" min="0" value={x.max_amount??''} placeholder={t('admin.unlimited')} onChange={q=>updateDoa(x.id,'max_amount',q.target.value)}/></td><td><select value={x.approver_role_id} onChange={q=>updateDoa(x.id,'approver_role_id',Number(q.target.value))}>{r.map(z=><option key={z.id} value={z.id}>{z.role_name}</option>)}</select></td><td><input type="checkbox" checked={!!x.is_active} onChange={q=>updateDoa(x.id,'is_active',q.target.checked)}/></td><td>{x.is_confirmed?(x.is_active?t('admin.doaConfirmed'):t('admin.doaRetired')):t('admin.doaDraft')}</td><td>{x.is_confirmed?<>{x.is_active&&<><button onClick={()=>newDoaVersion(x)}>{t('admin.newVersion')}</button><button onClick={()=>retireDoa(x)}>{t('admin.retire')}</button></>}</>:<><button onClick={()=>saveDoa(x)}>{t('admin.saveDraft')}</button>{x.is_active&&<button onClick={()=>confirmDoa(x)}>{t('admin.confirm')}</button>}</>}</td></tr>)}</tbody></table></div></div>
+    <div className="panel" data-section="doc-classification"><h2>{t('admin.docClass')}</h2><p>{t('admin.docClassNote')}</p><div className="table-wrap"><table><thead><tr><th>{t('admin.colDocType')}</th><th>{t('admin.colClass')}</th><th>{t('admin.colUpdated')}</th></tr></thead><tbody>{dc.map(x=><tr key={x.type} data-doc-type={x.doc_type}><td>{t(DOC_NAME[x.doc_type])}</td><td><select aria-label={`${t('admin.colClass')} — ${t(DOC_NAME[x.doc_type])}`} value={x.classification??''} onChange={q=>setDocClass(x.type,q.target.value)}><option value="">{t('admin.classNone')}</option>{dcClasses.map(c=><option key={c} value={c}>{t(CLASS_NAME[c])}</option>)}</select>{dcSaved===x.type&&<span className="muted" role="status"> {t('admin.docClassSaved')}</span>}</td><td>{x.updated_at?<><span dir="ltr">{String(x.updated_at).slice(0,10)}</span> — {x.updated_by_name}</>:'—'}</td></tr>)}</tbody></table></div></div>
   </section>
 }

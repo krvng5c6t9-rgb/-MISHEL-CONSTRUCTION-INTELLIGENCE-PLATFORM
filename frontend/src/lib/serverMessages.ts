@@ -107,7 +107,9 @@ const EXACT: Record<string, string> = {
   'Value violates check constraint currency_words_subunit_ar_check': 'اسم الوحدة الفرعية بالعربية يجب أن يُكتب بحروف عربية',
   'Value violates check constraint currency_words_unit_en_check': 'اسم العملة بالإنجليزية يجب أن يُكتب بحروف لاتينية',
   'Value violates check constraint currency_words_subunit_en_check': 'اسم الوحدة الفرعية بالإنجليزية يجب أن يُكتب بحروف لاتينية',
-  'Only the hash of the produced file is added to a document export entry': 'لا يُضاف إلى سجل التصدير إلا بصمة الملف المُنتَج'
+  'Only the hash of the produced file is added to a document export entry': 'لا يُضاف إلى سجل التصدير إلا بصمة الملف المُنتَج',
+  // CC-089: QR verification.
+  'This is not a MARC document code': 'هذا الرمز ليس رمز مستند صادر من MARC'
 };
 
 // Status words inside finance messages, worded for the record they describe (the shared value words are not all apt).

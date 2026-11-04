@@ -6,8 +6,10 @@ import { getClient, releaseClient, query } from '../../db/pool.js';
 import { asyncHandler } from '../../middleware/asyncHandler.js';
 import { AppError } from '../../middleware/errors.js';
 import { htmlToPdf } from './pdf.js';
+import { CLASSES, parseQrPayload, qrPayload, qrSvg } from './qr.js';
+import { authorize } from '../../middleware/authorize.js';
 import { pageFooter, renderDailyDiary, renderGoodsReceipt, renderIpc, renderJournalVoucher, renderPaymentVoucher, renderPurchaseOrder, renderSubcontractCertificate,
-  type Lang, type Mark } from './templates.js';
+  type ExportInfo, type Lang, type Mark } from './templates.js';
 
 // CC-085 (R1.5 first part, MP-03 §1 / §5): print view (HTML) and PDF of the client IPC (DOC-15-001) and the
 // subcontractor payment certificate (DOC-15-004). An export needs the same permission as the screen that shows the
@@ -19,7 +21,10 @@ export const documentsRouter = Router();
 // journal voucher (DOC-16-020) and daily diary (DOC-12-004) added. A record is printed as final only in the statuses
 // listed in `final`; rejected or cancelled records carry a NOT VALID mark, every other status the DRAFT mark.
 type Doc = { module: string; table: string; load: (c: PoolClient, id: number, org: number) => Promise<any | null>; status: (d: any) => string;
-  final: string[]; void?: string[]; currency?: (d: any) => string; render: (lang: Lang, d: any, mark: Mark, exp: { id: number; at: string; by: string }) => string; name: (d: any) => string };
+  final: string[]; void?: string[]; currency?: (d: any) => string; render: (lang: Lang, d: any, mark: Mark, exp: ExportInfo) => string; name: (d: any) => string;
+  // CC-089: the key amount encoded in the QR code of a financial document (the database text, as printed), and the
+  // document number as printed after the title.
+  amount?: (d: any) => string | null; no: (d: any) => string };
 
 const org = async (c: PoolClient, orgId: number) => (await c.query(`select name, legal_name, address, tax_id from organizations where id = $1`, [orgId])).rows[0];
 const steps = async (c: PoolClient, approvalId: number | null) => approvalId ? (await c.query(`
@@ -48,9 +53,9 @@ const DOCS: Record<string, Doc> = {
       const prep = await person(c, ipc.prepared_by);
       return { ipc, org: await org(c, orgId), lines, steps: [{ label: 'prepared', ...prep, at: ipc.created_at }, ...(await steps(c, ipc.approval_instance_id))] };
     },
-    currency: d => d.ipc.currency, status: d => d.ipc.status, final: ['submitted_to_client', 'client_approved', 'disputed', 'posted', 'paid'],
+    currency: d => d.ipc.currency, amount: d => d.ipc.net_amount_due, status: d => d.ipc.status, final: ['submitted_to_client', 'client_approved', 'disputed', 'posted', 'paid'],
     render: renderIpc,
-    name: d => `IPC-${d.ipc.ipc_no}`
+    name: d => `IPC-${d.ipc.ipc_no}`, no: d => String(d.ipc.ipc_no)
   },
   'subcontract-certificate': {
     module: 'contracts', table: 'subcontract_certificate',
@@ -72,9 +77,9 @@ const DOCS: Record<string, Doc> = {
       if (cert.qs_certified_by) st.push({ label: 'qsCertified', ...(await person(c, cert.qs_certified_by)), at: cert.qs_certified_at });
       return { cert, org: await org(c, orgId), lines, steps: [...st, ...(await steps(c, cert.approval_instance_id))] };
     },
-    currency: d => d.cert.currency, status: d => d.cert.status, final: ['approved', 'posted', 'paid'], void: ['rejected'],
+    currency: d => d.cert.currency, amount: d => d.cert.net_amount_due, status: d => d.cert.status, final: ['approved', 'posted', 'paid'], void: ['rejected'],
     render: renderSubcontractCertificate,
-    name: d => `SC-${d.cert.certificate_no}`
+    name: d => `SC-${d.cert.certificate_no}`, no: d => String(d.cert.certificate_no)
   },
   'purchase-order': {
     module: 'procurement', table: 'purchase_order',
@@ -90,9 +95,9 @@ const DOCS: Record<string, Doc> = {
         from po_lines l left join project_boq b on b.id = l.boq_item_id where l.po_id = $1 order by l.id`, [id])).rows;
       return { po, org: await org(c, orgId), lines, steps: await steps(c, po.approval_instance_id) };
     },
-    currency: d => d.po.currency, status: d => d.po.status, final: ['approved', 'issued', 'partially_delivered', 'closed'], void: ['cancelled'],
+    currency: d => d.po.currency, amount: d => d.po.total_amount, status: d => d.po.status, final: ['approved', 'issued', 'partially_delivered', 'closed'], void: ['cancelled'],
     render: renderPurchaseOrder,
-    name: d => `PO-${d.po.po_ref}`
+    name: d => `PO-${d.po.po_ref}`, no: d => String(d.po.po_ref)
   },
   'goods-receipt': {
     module: 'procurement', table: 'goods_receipt',
@@ -111,7 +116,7 @@ const DOCS: Record<string, Doc> = {
     },
     status: d => d.grn.status, final: ['confirmed'],
     render: renderGoodsReceipt,
-    name: d => `GRN-${d.grn.grn_no}`
+    name: d => `GRN-${d.grn.grn_no}`, no: d => String(d.grn.grn_no)
   },
   'payment-voucher': {
     module: 'finance', table: 'payment',
@@ -128,9 +133,9 @@ const DOCS: Record<string, Doc> = {
       if (!pay) return null;
       return { pay, org: await org(c, orgId), steps: [{ label: 'prepared', ...(await person(c, pay.created_by)), at: pay.created_at }, ...(await steps(c, pay.approval_instance_id))] };
     },
-    currency: d => d.pay.currency, status: d => d.pay.status, final: ['approved', 'posted', 'reconciled'],
+    currency: d => d.pay.currency, amount: d => d.pay.amount, status: d => d.pay.status, final: ['approved', 'posted', 'reconciled'],
     render: renderPaymentVoucher,
-    name: d => `${d.pay.payment_type === 'outgoing' ? 'PV' : 'RV'}-${d.pay.id}`
+    name: d => `${d.pay.payment_type === 'outgoing' ? 'PV' : 'RV'}-${d.pay.id}`, no: d => String(d.pay.id)
   },
   'journal-voucher': {
     module: 'finance', table: 'manual_journal',
@@ -150,7 +155,7 @@ const DOCS: Record<string, Doc> = {
     },
     status: d => d.mj.status, final: ['approved', 'posted'], void: ['rejected', 'cancelled'],
     render: renderJournalVoucher,
-    name: d => `JV-${d.mj.id}`
+    name: d => `JV-${d.mj.id}`, no: d => String(d.mj.id)
   },
   'daily-diary': {
     module: 'site', table: 'site_diary',
@@ -173,7 +178,7 @@ const DOCS: Record<string, Doc> = {
     },
     status: d => d.diary.status, final: ['signed'],
     render: renderDailyDiary,
-    name: d => `DIARY-${d.diary.diary_date}`
+    name: d => `DIARY-${d.diary.diary_date}`, no: d => String(d.diary.diary_date ?? '').slice(0, 10)
   }
 };
 
@@ -202,6 +207,62 @@ documentsRouter.get('/exports/:id', asyncHandler(async (req, res) => {
   res.json({ success: true, data: e });
 }));
 
+// CC-089 (F-64): confidentiality class per printed document type, set by the company (administration). MP-03 defines
+// no class per type, so none is assumed: a type without a class is printed without one.
+const typeOfTable = (table: string) => Object.keys(DOCS).find(k => DOCS[k].table === table)!;
+documentsRouter.get('/classifications', authorize('admin', 'view'), asyncHandler(async (req, res) => {
+  const rows = await query<any>(`select c.doc_type, c.classification, c.updated_at, u.full_name as updated_by_name from document_classifications c
+    join users u on u.id = c.updated_by where c.org_id = $1`, [req.user!.org_id]);
+  res.json({ success: true, data: Object.entries(DOCS).map(([type, d]) => {
+    const r = rows.find(x => x.doc_type === d.table);
+    return { type, doc_type: d.table, classification: r?.classification ?? null, updated_at: r?.updated_at ?? null, updated_by_name: r?.updated_by_name ?? null };
+  }), classes: CLASSES });
+}));
+
+documentsRouter.put('/classifications/:type', authorize('admin', 'manage'), asyncHandler(async (req, res) => {
+  const doc = DOCS[req.params.type];
+  if (!doc) throw new AppError(404, 'Document type not found');
+  const b = z.object({ classification: z.enum(CLASSES).nullable() }).parse(req.body);
+  if (b.classification === null) {
+    await query(`delete from document_classifications where org_id = $1 and doc_type = $2`, [req.user!.org_id, doc.table]);
+    return res.json({ success: true, data: { type: req.params.type, doc_type: doc.table, classification: null } });
+  }
+  const [r] = await query<any>(`insert into document_classifications(org_id, doc_type, classification, updated_by) values ($1, $2, $3, $4)
+    on conflict (org_id, doc_type) do update set classification = excluded.classification, updated_by = excluded.updated_by, updated_at = now()
+    returning doc_type, classification, updated_at`, [req.user!.org_id, doc.table, b.classification, req.user!.id]);
+  res.json({ success: true, data: { type: req.params.type, ...r } });
+}));
+
+// CC-089 (F-64): verification of a scanned QR code. The text must be the one recorded with its export entry; the answer
+// also says whether the record has moved on since the copy was printed (status or key amount changed). Nothing is
+// written. A code of another company reads as not found (its existence is not disclosed).
+documentsRouter.post('/verify', asyncHandler(async (req, res) => {
+  const b = z.object({ payload: z.string().min(1).max(600) }).parse(req.body);
+  const f = parseQrPayload(b.payload);
+  if (!f) throw new AppError(422, 'This is not a MARC document code');
+  const orgId = Number(req.user!.org_id);
+  if (Number(f.org) !== orgId) throw new AppError(404, 'Export not found');
+  const [e] = await query<any>(`select e.*, u.full_name as exported_by_name from document_exports e join users u on u.id = e.exported_by where e.id = $1 and e.org_id = $2`, [Number(f.exp), orgId]);
+  if (!e) throw new AppError(404, 'Export not found');
+  const type = typeOfTable(e.doc_type);
+  const doc = docOf(type, req);
+  const client = await getClient();
+  try {
+    await client.query('begin read only');
+    const data = await doc.load(client, Number(e.record_id), orgId);
+    await client.query('commit');
+    const current = data ? { status: doc.status(data), amount: doc.amount?.(data) ?? null } : null;
+    const matchesEntry = e.qr_payload !== null && e.qr_payload === b.payload;
+    res.json({ success: true, data: {
+      export: e, type, matches_entry: matchesEntry,
+      record_exists: current !== null,
+      current_status: current?.status ?? null,
+      status_changed: current !== null && current.status !== e.record_status,
+      amount_changed: current !== null && f.amount !== undefined && current.amount !== f.amount
+    } });
+  } catch (err) { await client.query('rollback'); throw err; } finally { await releaseClient(client); }
+}));
+
 documentsRouter.get('/:type/:id', asyncHandler(async (req, res) => {
   const doc = docOf(req.params.type, req);
   const id = z.coerce.number().int().positive().parse(req.params.id);
@@ -221,10 +282,15 @@ documentsRouter.get('/:type/:id', asyncHandler(async (req, res) => {
     const status = doc.status(data);
     const mark: Mark = doc.final.includes(status) ? null : doc.void?.includes(status) ? 'void' : 'draft';
     const draft = mark !== null;
-    const e = (await client.query(`insert into document_exports(org_id, doc_type, record_id, record_status, is_draft, format, lang, exported_by)
-      values ($1, $2, $3, $4, $5, $6, $7, $8) returning id, to_char(exported_at at time zone 'UTC', 'YYYY-MM-DD HH24:MI "UTC"') as at`,
-      [orgId, doc.table, id, status, draft, q.format, q.lang, req.user!.id])).rows[0];
-    const html = doc.render(q.lang, data, mark, { id: Number(e.id), at: e.at, by: req.user!.full_name });
+    // CC-089 (F-64): the company's confidentiality class for this document type (none when not set) and the QR code.
+    // The export number is drawn first so that the QR text, which carries it, is recorded with the entry itself.
+    const cls = (await client.query(`select classification from document_classifications where org_id = $1 and doc_type = $2`, [orgId, doc.table])).rows[0]?.classification ?? null;
+    const expId = Number((await client.query(`select nextval(pg_get_serial_sequence('document_exports', 'id')) as id`)).rows[0].id);
+    const payload = qrPayload({ exp: expId, org: orgId, type: doc.table, rec: id, no: doc.no(data), status, draft, amount: doc.amount?.(data) ?? null, cur: doc.currency?.(data) ?? null, cls });
+    const e = (await client.query(`insert into document_exports(id, org_id, doc_type, record_id, record_status, is_draft, format, lang, exported_by, classification, qr_payload)
+      values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) returning id, to_char(exported_at at time zone 'UTC', 'YYYY-MM-DD HH24:MI "UTC"') as at`,
+      [expId, orgId, doc.table, id, status, draft, q.format, q.lang, req.user!.id, cls, payload])).rows[0];
+    const html = doc.render(q.lang, data, mark, { id: Number(e.id), at: e.at, by: req.user!.full_name, qr: await qrSvg(payload), cls });
     const bytes = q.format === 'pdf' ? await htmlToPdf(html, pageFooter(Number(e.id))) : Buffer.from(html, 'utf8');
     const sha = createHash('sha256').update(bytes).digest('hex');
     await client.query(`update document_exports set sha256 = $2, size_bytes = $3 where id = $1`, [e.id, sha, bytes.length]);

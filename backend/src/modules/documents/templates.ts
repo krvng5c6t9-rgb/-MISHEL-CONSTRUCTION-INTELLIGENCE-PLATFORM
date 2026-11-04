@@ -2,13 +2,15 @@ import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { ar, en, statusLabels, type LabelKey } from './labels.js';
 import { amountInWords, type CurrencyWords } from './words.js';
+import type { Classification } from './qr.js';
 
 // CC-085 (R1.5, MP-03 §1): printed documents as self-contained HTML (fonts embedded), the source of both the print view
 // and the PDF. Every figure is the database value as text (never re-computed); amounts are only grouped by thousands.
 // A document whose record is not approved carries a DRAFT watermark; the approval block comes from the workflow
 // records, never from typed names; the export number links the copy to its entry in document_exports.
 export type Lang = 'ar' | 'en';
-export type ExportInfo = { id: number; at: string; by: string };
+// CC-089 (F-64): qr is the inline SVG of the copy's QR code; cls the company's confidentiality class (null: none set).
+export type ExportInfo = { id: number; at: string; by: string; qr?: string; cls?: Classification | null };
 // DRAFT: not yet final; VOID: rejected or cancelled (CC-086: a rejected certificate printed as DRAFT before).
 export type Mark = 'draft' | 'void' | null;
 type Row = Record<string, any>;
@@ -59,14 +61,18 @@ tr.total td{font-weight:700;background:#f6f7f9}
 .watermark{position:fixed;top:38%;left:0;right:0;text-align:center;font-size:90pt;font-weight:700;color:rgba(200,30,30,.13);transform:rotate(-28deg);z-index:0;pointer-events:none}
 .draftnote{border:1px solid #c81e1e;color:#c81e1e;padding:4px 8px;margin-bottom:8px;font-weight:700}
 .words{margin:-4px 0 10px;font-weight:700}
-.trace{margin-top:14px;font-size:8.5pt;color:#4a5566;border-top:1px solid #c9ced6;padding-top:6px}
+.trace{margin-top:14px;font-size:8.5pt;color:#4a5566;border-top:1px solid #c9ced6;padding-top:6px;display:flex;gap:10px;align-items:center;page-break-inside:avoid}
+.trace .qr{flex:0 0 26mm;width:26mm;height:26mm}
+.trace .qr svg{width:100%;height:100%;display:block}
+.classification{display:inline-block;border:1.5px solid #1B2A41;padding:1px 8px;font-weight:700;font-size:9.5pt;margin-top:2px}
+.classification.confidential,.classification.restricted{border-color:#c81e1e;color:#c81e1e}
 h2{font-size:11.5pt;margin:12px 0 4px}
 </style></head><body>
 ${mark ? `<div class="watermark">${esc(mark === 'draft' ? L.draft : L.void)}</div><div class="draftnote">${esc(mark === 'draft' ? L.draftNote : L.voidNote)}</div>` : ''}
 <header><div class="org"><strong>${esc(org.legal_name || org.name)}</strong>${org.address ? `<div>${esc(org.address)}</div>` : ''}${org.tax_id ? `<div>${esc(L.taxId)}: ${num(esc(org.tax_id))}</div>` : ''}</div>
-<div><h1>${esc(title)} ${num(esc(no))}</h1></div></header>
+<div><h1>${esc(title)} ${num(esc(no))}</h1>${exp.cls ? `<div class="classification ${exp.cls}" data-classification="${exp.cls}">${esc(L.classification)}: ${esc(L[`class_${exp.cls}`])}</div>` : ''}</div></header>
 ${body}
-<div class="trace">${esc(L.exportNo)} ${num(String(exp.id))} · ${esc(L.exportedAt)} ${num(esc(exp.at))} ${esc(L.exportedBy)} ${esc(exp.by)}<br>${esc(L.verify)}</div>
+<div class="trace">${exp.qr ? `<div class="qr" role="img" aria-label="${esc(L.qrAlt)}">${exp.qr}</div>` : ''}<div>${esc(L.exportNo)} ${num(String(exp.id))} · ${esc(L.exportedAt)} ${num(esc(exp.at))} ${esc(L.exportedBy)} ${esc(exp.by)}<br>${esc(L.verify)}</div></div>
 </body></html>`;
 }
 
