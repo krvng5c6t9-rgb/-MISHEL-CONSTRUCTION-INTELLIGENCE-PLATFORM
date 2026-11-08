@@ -29,9 +29,9 @@ export function Profitability() {
       </div>
 
       <div className="panel" data-section="projects"><h2>{t('pr.projects')}</h2>
-        <div className="table-wrap"><table><thead><tr><th>{t('pr.colProject')}</th><th>{t('pr.colCurrency')}</th><th>{t('pr.colContract')}</th><th>{t('pr.colRevenue')}</th><th>{t('pr.colCost')}</th><th>{t('pr.colProfit')}</th><th>{t('pr.colMargin')}</th><th>{t('pr.colProgress')}</th><th>{t('pr.colPosition')}</th><th>{t('pr.colPrice')}</th><th>{t('pr.colEac')}</th><th>{t('pr.colForecastProfit')}</th><th>{t('pr.colForecastMargin')}</th><th>{t('pr.colActual')}</th><th>{t('pr.colCommitted')}</th></tr></thead>
+        <div className="table-wrap"><table><thead><tr><th className="col-project">{t('pr.colProject')}</th><th>{t('pr.colCurrency')}</th><th>{t('pr.colContract')}</th><th>{t('pr.colRevenue')}</th><th>{t('pr.colCost')}</th><th>{t('pr.colProfit')}</th><th>{t('pr.colMargin')}</th><th>{t('pr.colProgress')}</th><th>{t('pr.colPosition')}</th><th>{t('pr.colPrice')}</th><th>{t('pr.colEac')}</th><th>{t('pr.colForecastProfit')}</th><th>{t('pr.colForecastMargin')}</th><th>{t('pr.colActual')}</th><th>{t('pr.colCommitted')}</th></tr></thead>
           <tbody>{d.projects.map((p: Row) => <tr key={p.id} data-project={p.project_code} data-loss={neg(p.recognised_profit) || neg(p.forecast_profit) ? 'yes' : 'no'}>
-            <td>{project(p)}<div className="muted">{tv(p.status)}</div></td><td><bdi>{p.currency}</bdi></td><td>{money(p.contract_value)}</td>
+            <td className="col-project">{project(p)}<div className="muted">{tv(p.status)}</div></td><td><bdi>{p.currency}</bdi></td><td>{money(p.contract_value)}</td>
             {p.recognised_revenue === null ? <td colSpan={6} className="muted" data-note="no-run">{t('pr.noRun')}</td> : <>
               <td>{money(p.recognised_revenue)}</td><td>{money(p.recognised_cost)}</td><td>{money(p.recognised_profit)}{neg(p.recognised_profit) && <span className="badge-loss"> {t('pr.lossMaking')}</span>}</td>
               <td><Num text={pct(p.recognised_margin_pct)} /></td><td><Num text={pct(p.progress_pct)} /></td><td>{money(p.contract_position)}</td></>}

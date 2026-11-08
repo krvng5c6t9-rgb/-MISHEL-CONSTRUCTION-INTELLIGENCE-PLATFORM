@@ -23,6 +23,7 @@ import { ExecutiveDashboard } from './pages/ExecutiveDashboard';
 import { OwnerPortfolio } from './pages/OwnerPortfolio';
 import { VerifyDocument } from './pages/VerifyDocument';
 import { Profitability } from './pages/Profitability';
+import { Guarantees } from './pages/Guarantees';
 import { Reports } from './pages/Reports';
 import { Portals } from './pages/Portals';
 import { RuntimeValidation } from './pages/RuntimeValidation';
@@ -82,6 +83,7 @@ export function App() {
             <Route path="owner-portfolio" element={<OwnerPortfolio />} />
             <Route path="verify" element={<VerifyDocument />} />
             <Route path="profitability" element={<Profitability />} />
+            <Route path="guarantees" element={<Guarantees />} />
             <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
             <Route path="reports" element={<Reports />} />
             <Route path="portals" element={<Portals />} />

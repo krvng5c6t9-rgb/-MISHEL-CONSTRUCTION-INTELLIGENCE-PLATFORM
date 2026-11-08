@@ -112,7 +112,30 @@ const EXACT: Record<string, string> = {
   'This is not a MARC document code': 'هذا الرمز ليس رمز مستند صادر من MARC',
   // CC-090: verification screen.
   'Give one of: the QR text, the export number or the file fingerprint': 'أدخل واحدًا فقط: نص رمز QR أو رقم التصدير أو بصمة الملف',
-  'No export of this company matches this file': 'لا يوجد تصدير لهذه الشركة يطابق هذا الملف'
+  'No export of this company matches this file': 'لا يوجد تصدير لهذه الشركة يطابق هذا الملف',
+  // CC-092: letters of guarantee (API and database rules).
+  'Only a draft guarantee is edited; an active one changes by an amendment': 'تُعدَّل المسودة فقط؛ خطاب الضمان الساري يتغيّر بتعديل من البنك',
+  'Only a draft guarantee is activated': 'تُفعَّل المسودة فقط',
+  'The person who recorded a guarantee cannot activate it': 'لا يجوز لمن سجّل خطاب الضمان أن يفعّله',
+  'An extension gives a new expiry; a reduction or increase gives a new amount': 'المد يحدد تاريخ انتهاء جديدًا؛ والتخفيض أو الزيادة يحددان قيمة جديدة',
+  'Only an active guarantee is released, claimed or marked expired': 'الإفراج والتسييل وتسجيل الانتهاء لخطاب ضمان ساري فقط',
+  'A release needs the reference of the release letter': 'الإفراج يحتاج مرجع خطاب الإفراج',
+  'A claim needs the amount claimed and the reason': 'التسييل يحتاج القيمة المُسيَّلة والسبب',
+  'A guarantee that was activated is never deleted': 'لا يُحذف خطاب ضمان تم تفعيله',
+  'A closed guarantee is never changed': 'لا يُعدَّل خطاب ضمان مُغلق',
+  'The terms of an active guarantee change only by an amendment': 'شروط خطاب الضمان الساري لا تتغيّر إلا بتعديل',
+  'The current amount and expiry of a guarantee follow its amendments': 'القيمة والانتهاء الحاليان يتبعان تعديلات الخطاب',
+  'A guarantee cannot be released before it was issued': 'لا يُفرج عن خطاب ضمان قبل تاريخ إصداره',
+  'A guarantee can be claimed only while it is valid': 'لا يُسيَّل خطاب الضمان إلا وهو ساري',
+  'A guarantee is marked expired only after its expiry date': 'لا يُسجَّل انتهاء خطاب الضمان قبل تاريخ انتهائه',
+  'Guarantee amendments are permanent': 'تعديلات خطابات الضمان دائمة',
+  'Only an active guarantee is amended': 'يُعدَّل خطاب الضمان الساري فقط',
+  'An extension must move the expiry later': 'المد يجب أن يؤخر تاريخ الانتهاء',
+  'A reduction must lower the amount': 'التخفيض يجب أن يقلل القيمة',
+  'An increase must raise the amount': 'الزيادة يجب أن ترفع القيمة',
+  'An amendment cannot take effect before the guarantee was issued': 'لا يسري التعديل قبل تاريخ إصدار الخطاب',
+  'Subcontract not found for this project and subcontractor': 'عقد الباطن غير موجود لهذا المشروع ومقاول الباطن',
+  'Contract not found in this project': 'العقد غير موجود في هذا المشروع'
 };
 
 // Status words inside finance messages, worded for the record they describe (the shared value words are not all apt).

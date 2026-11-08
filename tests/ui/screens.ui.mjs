@@ -58,6 +58,7 @@ const SCREENS = [
   ['/notifications', 'Notifications', 'الإشعارات'],
   ['/verify', 'Verify a Document', 'التحقق من مستند'],
   ['/profitability', 'Project Profitability', 'ربحية المشروعات'],
+  ['/guarantees', 'Letters of Guarantee', 'خطابات الضمان'],
   ['/setup', 'Initialize Construction ERP', 'تهيئة النظام']
 ];
 
@@ -259,8 +260,8 @@ try {
       // Whatever an earlier suite left set, an empty threshold with the alert on is refused.
       await al03.getByLabel('اقتراب موعد إخطار تعاقدي — الحد').fill('');
       await al03.getByRole('button', { name: 'حفظ', exact: true }).click(); await page.waitForTimeout(800);
-      check('ar: notification centre - bell with the unread count, 14 alerts in the settings, threshold refusal in Arabic',
-        /^الإشعارات \(\d+ غير مقروءة\)$/.test(bell ?? '') && alertRows === 14 && /حدِّد حدّ هذا التنبيه قبل تشغيله/.test(await alert()), `${bell} || ${alertRows} || ${await alert()}`);
+      check('ar: notification centre - bell with the unread count, 15 alerts in the settings (AL-04 added by CC-092), threshold refusal in Arabic',
+        /^الإشعارات \(\d+ غير مقروءة\)$/.test(bell ?? '') && alertRows === 15 && /حدِّد حدّ هذا التنبيه قبل تشغيله/.test(await alert()), `${bell} || ${alertRows} || ${await alert()}`);
       // Portals (CC-075): a validation notice follows the language (it was a fixed English sentence).
       await page.goto(`${BASE}/portals`); await page.waitForTimeout(1200);
       await page.locator('[data-section="grant-client"]').getByRole('button', { name: 'حفظ الصلاحية', exact: true }).click(); await page.waitForTimeout(300);

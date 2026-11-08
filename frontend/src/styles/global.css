@@ -97,3 +97,8 @@ code.sha { font-size: 12px; word-break: break-all; }
 /* CC-091: profitability - losses shown in red. */
 .amount-negative { color: #b42318; font-weight: 700; }
 .badge-loss { color: #b42318; font-weight: 700; font-size: 12px; }
+
+/* CC-092: form grid (guarantee form); CC-091 fix: the project column of wide tables keeps a readable width. */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px; }
+.form-grid label { display: flex; flex-direction: column; gap: 4px; font-weight: 700; }
+td.col-project, th.col-project { min-width: 240px; }

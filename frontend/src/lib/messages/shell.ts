@@ -81,7 +81,8 @@ export const en = {
   'nav.menu': 'Main menu',
   'nav.notifications': 'Notifications',
   'nav.verify': 'Verify a Document',
-  'nav.profitability': 'Project Profitability'
+  'nav.profitability': 'Project Profitability',
+  'nav.guarantees': 'Letters of Guarantee'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -165,5 +166,6 @@ export const ar: Record<keyof typeof en, string> = {
   'nav.menu': 'القائمة الرئيسية',
   'nav.notifications': 'الإشعارات',
   'nav.verify': 'التحقق من مستند',
-  'nav.profitability': 'ربحية المشروعات'
+  'nav.profitability': 'ربحية المشروعات',
+  'nav.guarantees': 'خطابات الضمان'
 };

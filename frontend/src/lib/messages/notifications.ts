@@ -62,7 +62,9 @@ export const en = {
   'alert.aiReview': 'AI run #{run} ({agent}) awaits human review',
   'alert.agentSuspended': 'AI agent {agent} is suspended',
   'alert.supersededInUse': 'Draft transmittal {transmittal} holds a superseded revision of {document}',
-  'alert.dlpEnd': 'Defects liability period of {certificate} ends on {date}'
+  'alert.dlpEnd': 'Defects liability period of {certificate} ends on {date}',
+  'alert.nameGuaranteeExpiry': 'Letter of guarantee expiring',
+  'alert.guaranteeExpiry': 'Letter of guarantee {reference} ({bank}) of {amount} {currency} expires on {expiry}'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -127,5 +129,7 @@ export const ar: Record<keyof typeof en, string> = {
   'alert.aiReview': 'تشغيل الذكاء الاصطناعي رقم {run} ({agent}) بانتظار مراجعة بشرية',
   'alert.agentSuspended': 'تم إيقاف وكيل الذكاء الاصطناعي {agent}',
   'alert.supersededInUse': 'خطاب التحويل المسودة {transmittal} يحتوي إصدارًا مُستبدَلًا من {document}',
-  'alert.dlpEnd': 'فترة ضمان العيوب لشهادة {certificate} تنتهي في {date}'
+  'alert.dlpEnd': 'فترة ضمان العيوب لشهادة {certificate} تنتهي في {date}',
+  'alert.nameGuaranteeExpiry': 'قرب انتهاء خطاب ضمان',
+  'alert.guaranteeExpiry': 'خطاب الضمان {reference} ({bank}) بقيمة {amount} {currency} ينتهي في {expiry}'
 };

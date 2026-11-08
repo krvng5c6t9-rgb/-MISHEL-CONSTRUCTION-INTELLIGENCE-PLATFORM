@@ -28,8 +28,8 @@ try {
 
   // --- Settings: the catalogue, validation, permissions.
   const rules = must(await api('GET', '/notifications/alert-rules', admin), 'rules');
-  check('alert catalogue (CC-083 + CC-084): AL-01, 02, 03, 06, 07, 11, 12, 14, 15, 18, 20, 22, 23, 25; only AL-01 active before the company sets anything',
-    rules.map(r => r.alert_code).join(',') === 'AL-01,AL-02,AL-03,AL-06,AL-07,AL-11,AL-12,AL-14,AL-15,AL-18,AL-20,AL-22,AL-23,AL-25' && rules.filter(r => r.active).map(r => r.alert_code).join(',') === 'AL-01',
+  check('alert catalogue (CC-083 + CC-084 + CC-092): AL-01, 02, 03, 04, 06, 07, 11, 12, 14, 15, 18, 20, 22, 23, 25; only AL-01 active before the company sets anything',
+    rules.map(r => r.alert_code).join(',') === 'AL-01,AL-02,AL-03,AL-04,AL-06,AL-07,AL-11,AL-12,AL-14,AL-15,AL-18,AL-20,AL-22,AL-23,AL-25' && rules.filter(r => r.active).map(r => r.alert_code).join(',') === 'AL-01',
     rules.map(r => `${r.alert_code}:${r.active}`).join(' '));
   const collect = await mkRole('AL Collections', [['finance', 'view']]);
   const noFin = await mkRole('AL No finance', [['projects', 'view']]);
