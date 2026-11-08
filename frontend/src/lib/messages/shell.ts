@@ -80,7 +80,8 @@ export const en = {
   'nav.groupSystem': 'System, data and AI',
   'nav.menu': 'Main menu',
   'nav.notifications': 'Notifications',
-  'nav.verify': 'Verify a Document'
+  'nav.verify': 'Verify a Document',
+  'nav.profitability': 'Project Profitability'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -163,5 +164,6 @@ export const ar: Record<keyof typeof en, string> = {
   'nav.groupSystem': 'النظام والبيانات والذكاء الاصطناعي',
   'nav.menu': 'القائمة الرئيسية',
   'nav.notifications': 'الإشعارات',
-  'nav.verify': 'التحقق من مستند'
+  'nav.verify': 'التحقق من مستند',
+  'nav.profitability': 'ربحية المشروعات'
 };

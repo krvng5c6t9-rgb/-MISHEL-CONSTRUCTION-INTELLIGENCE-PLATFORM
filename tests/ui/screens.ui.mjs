@@ -57,6 +57,7 @@ const SCREENS = [
   ['/exchange', 'Exchange Rates & Revaluation', 'أسعار الصرف وإعادة التقييم'],
   ['/notifications', 'Notifications', 'الإشعارات'],
   ['/verify', 'Verify a Document', 'التحقق من مستند'],
+  ['/profitability', 'Project Profitability', 'ربحية المشروعات'],
   ['/setup', 'Initialize Construction ERP', 'تهيئة النظام']
 ];
 

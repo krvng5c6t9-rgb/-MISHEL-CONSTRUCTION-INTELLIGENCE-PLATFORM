@@ -41,6 +41,7 @@ import * as exchange from './messages/exchange';
 import * as notifications from './messages/notifications';
 import * as portfolio from './messages/portfolio';
 import * as verifyMsg from './messages/verify';
+import * as profitabilityMsg from './messages/profitability';
 
 // R1.1 / R1.2 (MP-06 §1): Arabic-first, fully bilingual interface. Every user-visible string of a translated screen
 // comes from the dictionaries in ./messages (one file per area); the language also sets the document language and
@@ -53,13 +54,13 @@ const en = { ...shell.en, ...common.en, ...dashboard.en, ...cutover.en, ...value
   ...projectsMsg.en, ...crm.en, ...tendering.en, ...boq.en, ...contracts.en, ...claims.en, ...subcontracts.en,
   ...costControl.en, ...approvals.en, ...inventory.en, ...procurement.en, ...finance.en,
   ...technicalOffice.en, ...planning.en, ...site.en, ...qaqc.en, ...hse.en, ...edms.en, ...hr.en, ...assets.en,
-  ...executive.en, ...reports.en, ...runtime.en, ...portals.en, ...aiPlatform.en, ...automation.en, ...knowledge.en, ...commercialPlatform.en, ...setup.en, ...exchange.en, ...notifications.en, ...portfolio.en, ...verifyMsg.en };
+  ...executive.en, ...reports.en, ...runtime.en, ...portals.en, ...aiPlatform.en, ...automation.en, ...knowledge.en, ...commercialPlatform.en, ...setup.en, ...exchange.en, ...notifications.en, ...portfolio.en, ...verifyMsg.en, ...profitabilityMsg.en };
 export type MessageKey = keyof typeof en;
 const ar: Record<MessageKey, string> = { ...shell.ar, ...common.ar, ...dashboard.ar, ...cutover.ar, ...values.ar, ...revenue.ar, ...payments.ar, ...admin.ar, ...projectControls.ar,
   ...projectsMsg.ar, ...crm.ar, ...tendering.ar, ...boq.ar, ...contracts.ar, ...claims.ar, ...subcontracts.ar,
   ...costControl.ar, ...approvals.ar, ...inventory.ar, ...procurement.ar, ...finance.ar,
   ...technicalOffice.ar, ...planning.ar, ...site.ar, ...qaqc.ar, ...hse.ar, ...edms.ar, ...hr.ar, ...assets.ar,
-  ...executive.ar, ...reports.ar, ...runtime.ar, ...portals.ar, ...aiPlatform.ar, ...automation.ar, ...knowledge.ar, ...commercialPlatform.ar, ...setup.ar, ...exchange.ar, ...notifications.ar, ...portfolio.ar, ...verifyMsg.ar };
+  ...executive.ar, ...reports.ar, ...runtime.ar, ...portals.ar, ...aiPlatform.ar, ...automation.ar, ...knowledge.ar, ...commercialPlatform.ar, ...setup.ar, ...exchange.ar, ...notifications.ar, ...portfolio.ar, ...verifyMsg.ar, ...profitabilityMsg.ar };
 export type MessageVars = Record<string, string | number>;
 
 export const dictionaries: Record<Lang, Record<MessageKey, string>> = { en, ar };
