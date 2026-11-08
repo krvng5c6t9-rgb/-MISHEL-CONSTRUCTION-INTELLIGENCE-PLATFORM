@@ -135,7 +135,22 @@ const EXACT: Record<string, string> = {
   'An increase must raise the amount': 'الزيادة يجب أن ترفع القيمة',
   'An amendment cannot take effect before the guarantee was issued': 'لا يسري التعديل قبل تاريخ إصدار الخطاب',
   'Subcontract not found for this project and subcontractor': 'عقد الباطن غير موجود لهذا المشروع ومقاول الباطن',
-  'Contract not found in this project': 'العقد غير موجود في هذا المشروع'
+  'Contract not found in this project': 'العقد غير موجود في هذا المشروع',
+  // CC-093: site attendance (API and database rules).
+  'An employee appears twice in the sheet': 'الموظف مكرر في الكشف',
+  'Attendance you recorded is approved by someone else': 'الحضور الذي سجّلته يعتمده شخص آخر',
+  'The period ends before it starts': 'نهاية الفترة قبل بدايتها',
+  'Approved attendance is never deleted': 'لا يُحذف حضور معتمد',
+  'Approved attendance is never changed': 'لا يُعدَّل حضور معتمد',
+  'Employee not found in this organization': 'الموظف غير موجود في هذه الشركة',
+  'The employee was not employed on this date': 'الموظف لم يكن على رأس العمل في هذا التاريخ',
+  'An absence or leave carries no hours': 'الغياب أو الإجازة بلا ساعات',
+  'A present day needs the hours worked': 'يوم الحضور يحتاج عدد ساعات العمل',
+  'Leave needs an approved leave request covering the date': 'الإجازة تحتاج طلب إجازة معتمدًا يشمل التاريخ',
+  'The employee is on approved leave on this date': 'الموظف في إجازة معتمدة في هذا التاريخ',
+  'Attendance is approved as recorded': 'يُعتمد الحضور كما سُجِّل',
+  'Value violates check constraint attendance_hours_check': 'الساعات بين صفر و٢٤، ومجموع العادي والإضافي لا يتجاوز ٢٤',
+  'Value violates check constraint attendance_approval_check': 'يعتمد الحضور شخص غير الذي سجّله'
 };
 
 // Status words inside finance messages, worded for the record they describe (the shared value words are not all apt).

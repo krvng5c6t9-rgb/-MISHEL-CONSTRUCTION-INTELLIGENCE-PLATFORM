@@ -53,7 +53,8 @@ const navGroups: { key: MessageKey; items: Item[] }[] = [
     { to: '/revenue-position', key: 'nav.revenue', icon: BadgeDollarSign, perms: ['finance'] },
     { to: '/cutover', key: 'nav.cutover', icon: BookOpenCheck, perms: ['finance'] }] },
   { key: 'nav.groupPeople', items: [
-    { to: '/hr', key: 'nav.hr', icon: UsersRound, perms: ['hr'] }] },
+    { to: '/hr', key: 'nav.hr', icon: UsersRound, perms: ['hr'] },
+    { to: '/site-attendance', key: 'nav.siteAttendance', icon: UsersRound, perms: ['hr'] }] },
   { key: 'nav.groupSystem', items: [
     { to: '/users', key: 'nav.users', icon: UsersRound, perms: ['admin'] },
     { to: '/portals', key: 'nav.portals', icon: Globe2, perms: ['portals'] },

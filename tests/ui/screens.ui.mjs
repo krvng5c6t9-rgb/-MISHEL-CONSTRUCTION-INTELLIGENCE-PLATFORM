@@ -59,6 +59,7 @@ const SCREENS = [
   ['/verify', 'Verify a Document', 'التحقق من مستند'],
   ['/profitability', 'Project Profitability', 'ربحية المشروعات'],
   ['/guarantees', 'Letters of Guarantee', 'خطابات الضمان'],
+  ['/site-attendance', 'Site Attendance', 'حضور الموقع', 3],
   ['/setup', 'Initialize Construction ERP', 'تهيئة النظام']
 ];
 
@@ -202,16 +203,18 @@ try {
 
       // HR (CC-074): the tile counts every employee the API returned (it counted at most the first 8).
       // More than 8 employees are made first (through the API the screen uses) so the check can tell a cap from a count.
-      let empResp = page.waitForResponse(r => r.url().includes('/api/hr/employees') && r.request().method() === 'GET');
+      // F-61 (fixed in CC-093): the counts come from direct API requests, not from the body of a response the browser
+      // may already have released after navigation ("No resource with given identifier found").
+      const empResp = page.waitForResponse(r => r.url().includes('/api/hr/employees') && r.request().method() === 'GET');
       await page.goto(`${BASE}/hr`);
-      const first = await empResp;
+      const empUrl = (await empResp).url();
       const token = await page.evaluate(() => localStorage.getItem('construction_erp_token'));
-      for (let i = (await first.json()).data.length; i <= 9; i++) {
-        await page.request.post(first.url(), { headers: { Authorization: `Bearer ${token}` }, data: { employee_code: `E${TAG}${i}`, full_name: `UI Employee ${TAG} ${i}` } });
+      const count = async () => { const r = await page.request.get(empUrl, { headers: { Authorization: `Bearer ${token}` } }); return r.ok() ? (await r.json()).data.length : -1; };
+      for (let i = await count(); i <= 9; i++) {
+        await page.request.post(empUrl, { headers: { Authorization: `Bearer ${token}` }, data: { employee_code: `E${TAG}${i}`, full_name: `UI Employee ${TAG} ${i}` } });
       }
-      empResp = page.waitForResponse(r => r.url().includes('/api/hr/employees') && r.request().method() === 'GET');
       await page.reload();
-      const apiCount = await empResp.then(async r => r.ok() ? (await r.json()).data.length : -1);
+      const apiCount = await count();
       await page.waitForTimeout(1200);
       const tile = (await page.locator('.metric-card').first().locator('strong').innerText()).trim();
       // Executive Dashboard (CC-075): cost tiles are per currency (they added currencies together) and the financial

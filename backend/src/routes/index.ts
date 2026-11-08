@@ -21,6 +21,7 @@ import { technicalOfficeRouter } from '../modules/technicalOffice/technicalOffic
 import { planningRouter } from '../modules/planning/planning.routes.js';
 import { siteRouter } from '../modules/site/site.routes.js';
 import { hrRouter } from '../modules/hr/hr.routes.js';
+import { attendanceRouter } from '../modules/hr/attendance.routes.js';
 import { assetsRouter } from '../modules/assets/assets.routes.js';
 import { qaqcRouter } from '../modules/qaqc/qaqc.routes.js';
 import { hseRouter } from '../modules/hse/hse.routes.js';
@@ -89,6 +90,7 @@ apiRouter.use('/finance', cutoverRouter);
 apiRouter.use('/technical-office', technicalOfficeRouter);
 apiRouter.use('/planning', planningRouter);
 apiRouter.use('/site', siteRouter);
+apiRouter.use('/hr', attendanceRouter);
 apiRouter.use('/hr', hrRouter);
 apiRouter.use('/assets', assetsRouter);
 apiRouter.use('/qaqc', qaqcRouter);

@@ -76,16 +76,7 @@ hrRouter.get('/attendance', asyncHandler(async (req, res) => {
   res.json({ success: true, data: rows });
 }));
 
-hrRouter.post('/attendance', authorize('hr', 'create'), asyncHandler(async (req, res) => {
-  const b = z.object({ employee_id: z.number().int().positive(), project_id: z.number().int().positive().optional(), attendance_date: z.string(), status: z.enum(['present','absent','leave','overtime']), hours_worked: z.number().nonnegative().optional() }).parse(req.body);
-  const [created] = await query(`
-    insert into attendance (employee_id, project_id, attendance_date, status, hours_worked)
-    values ($1,$2,$3,$4,$5)
-    on conflict (employee_id, attendance_date) do update set project_id=excluded.project_id, status=excluded.status, hours_worked=excluded.hours_worked
-    returning *
-  `, [b.employee_id, b.project_id ?? null, b.attendance_date, b.status, b.hours_worked ?? null]);
-  res.status(201).json({ success: true, data: created });
-}));
+// POST /attendance moved to attendance.routes.ts (CC-093: integrity, recorder, overtime, approval).
 
 hrRouter.get('/timesheets', asyncHandler(async (req, res) => {
   const projectId = Number(req.query.project_id || 0);

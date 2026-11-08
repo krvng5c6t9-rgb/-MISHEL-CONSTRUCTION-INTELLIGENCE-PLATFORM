@@ -24,6 +24,7 @@ import { OwnerPortfolio } from './pages/OwnerPortfolio';
 import { VerifyDocument } from './pages/VerifyDocument';
 import { Profitability } from './pages/Profitability';
 import { Guarantees } from './pages/Guarantees';
+import { SiteAttendance } from './pages/SiteAttendance';
 import { Reports } from './pages/Reports';
 import { Portals } from './pages/Portals';
 import { RuntimeValidation } from './pages/RuntimeValidation';
@@ -84,6 +85,7 @@ export function App() {
             <Route path="verify" element={<VerifyDocument />} />
             <Route path="profitability" element={<Profitability />} />
             <Route path="guarantees" element={<Guarantees />} />
+            <Route path="site-attendance" element={<SiteAttendance />} />
             <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
             <Route path="reports" element={<Reports />} />
             <Route path="portals" element={<Portals />} />
