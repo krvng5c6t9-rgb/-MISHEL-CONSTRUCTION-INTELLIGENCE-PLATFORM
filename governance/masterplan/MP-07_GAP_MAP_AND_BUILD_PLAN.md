@@ -78,6 +78,19 @@ The owner's target of one to two months for everything (OVD-001 §3) is therefor
 what fits a short horizon is R1 (and R0). Calendar time follows the pace of stages and owner
 reviews; each release is re-estimated at its start and the estimate replaced by the actual count.
 
+### 3a. Amendment of 2026-11-08 (owner instruction, OVD-002, COMPETITOR_SCAN_002; approval A-006)
+- **Priority change:** after Stage 60 the next stages are the Egyptian-market parity gaps, in this order: (1) profitability
+  per project and company from existing data; (2) letters of guarantee / bonds register with expiry alerts; (3) labour
+  attendance and allocation to projects with cost; (4) Egyptian e-invoice / e-receipt (document preparation to the ETA
+  specification and a submission queue; live submission only with the company's credentials, OI-2, and after a test
+  against the authority's pre-production system). Then the AI layer (R3) is brought forward ahead of the rest of R1,
+  R2 and the remaining R1 items, because AI agents in roles are the decisive difference (COMPETITOR_SCAN_002 §4).
+- **Scope additions (OVD-002 §2):** A1 structural analysis / design (SAP2000 / ETABS connector, open-source engine
+  evaluation) in R5; A2 Odoo and Power BI integration in R1 import and R7; A3 Gulf e-invoicing, VAT, labour rules and
+  Hijri dates in R7 (earlier when a Gulf customer requires it); A4 company profiles for all engineering categories
+  (consultancy, design office, developer, specialist contractor, FM, workshops, individual engineer) in R7.
+- Estimates (E4) grow accordingly: about +12–20 stages over §3; replaced by actual counts per release.
+
 ## 4. Test plan (applies to every release)
 | Layer | What | When |
 |---|---|---|
