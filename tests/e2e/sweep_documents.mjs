@@ -249,6 +249,24 @@ try {
   await expectStatus('another company cannot verify this company\'s code (not found)', () => api('POST', '/documents/verify', adminB, { payload: q1text }), 404);
   check('verification writes no export entry', Number(one(`select count(*) from document_exports where id > ${qpdf.id}`)) === 0);
 
+  // --- CC-090 (Stage 60): verification by export number and by the fingerprint of a digital copy.
+  const vn = must(await api('POST', '/documents/verify', fin, { export_id: q1.id }), 'verify by number');
+  check('verify by export number: the entry and the record unchanged (amount compared with the one recorded in the entry\'s code)',
+    vn.method === 'export_id' && Number(vn.export.id) === q1.id && vn.matches_entry === null && vn.status_changed === false && vn.amount_changed === false, JSON.stringify(vn).slice(0, 200));
+  const vf = must(await api('POST', '/documents/verify', fin, { sha256: sha(q1.bytes).toUpperCase() }), 'verify by file');
+  check('verify a digital copy by its SHA-256 (any letter case): finds its own export entry', vf.method === 'file' && Number(vf.export.id) === q1.id && vf.export.sha256 === sha(q1.bytes), JSON.stringify(vf).slice(0, 200));
+  const vpf = must(await api('POST', '/documents/verify', fin, { sha256: sha(qpdf.bytes) }), 'verify pdf by file');
+  check('verify a PDF copy by its SHA-256', Number(vpf.export.id) === qpdf.id && vpf.export.format === 'pdf');
+  const altered = Buffer.concat([q1.bytes, Buffer.from(' ')]);
+  await expectStatus('a changed file (one byte added) matches no export', () => api('POST', '/documents/verify', fin, { sha256: sha(altered) }), 404);
+  await expectStatus('the other company cannot find this company\'s file by its fingerprint', () => api('POST', '/documents/verify', adminB, { sha256: sha(q1.bytes) }), 404);
+  await expectStatus('the other company cannot verify this company\'s export number', () => api('POST', '/documents/verify', adminB, { export_id: q1.id }), 404);
+  await expectStatus('verifying by number without the permission of the document is refused', () => api('POST', '/documents/verify', none, { export_id: q1.id }), 403);
+  await expectStatus('two ways at once are refused', () => api('POST', '/documents/verify', fin, { export_id: q1.id, sha256: sha(q1.bytes) }), 422);
+  await expectStatus('no way given is refused', () => api('POST', '/documents/verify', fin, {}), 422);
+  await expectStatus('a malformed fingerprint is refused', () => api('POST', '/documents/verify', fin, { sha256: 'abc' }), 400);
+  check('verification by number or file writes no export entry', Number(one(`select count(*) from document_exports where id > ${qpdf.id}`)) === 0);
+
   // --- CC-089 (F-64): confidentiality class per document type, set by the company; none assumed.
   const cl0 = await api('GET', '/documents/classifications', admin);
   check('classifications: the seven printed document types, none set by default, four classes offered', cl0.status === 200 && cl0.body.data.length === 7 && cl0.body.data.every(x => x.classification === null)

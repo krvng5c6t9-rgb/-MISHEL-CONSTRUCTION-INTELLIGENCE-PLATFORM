@@ -56,6 +56,7 @@ const SCREENS = [
   ['/commercial-platform', 'Commercial SaaS Control Center', 'مركز التحكم التجاري للمنصة', 5],
   ['/exchange', 'Exchange Rates & Revaluation', 'أسعار الصرف وإعادة التقييم'],
   ['/notifications', 'Notifications', 'الإشعارات'],
+  ['/verify', 'Verify a Document', 'التحقق من مستند'],
   ['/setup', 'Initialize Construction ERP', 'تهيئة النظام']
 ];
 

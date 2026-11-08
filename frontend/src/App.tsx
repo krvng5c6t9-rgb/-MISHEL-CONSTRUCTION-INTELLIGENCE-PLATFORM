@@ -21,6 +21,7 @@ import { HSE } from './pages/HSE';
 import { EDMS } from './pages/EDMS';
 import { ExecutiveDashboard } from './pages/ExecutiveDashboard';
 import { OwnerPortfolio } from './pages/OwnerPortfolio';
+import { VerifyDocument } from './pages/VerifyDocument';
 import { Reports } from './pages/Reports';
 import { Portals } from './pages/Portals';
 import { RuntimeValidation } from './pages/RuntimeValidation';
@@ -78,6 +79,7 @@ export function App() {
             <Route path="hse" element={<HSE />} />
             <Route path="edms" element={<EDMS />} />
             <Route path="owner-portfolio" element={<OwnerPortfolio />} />
+            <Route path="verify" element={<VerifyDocument />} />
             <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
             <Route path="reports" element={<Reports />} />
             <Route path="portals" element={<Portals />} />

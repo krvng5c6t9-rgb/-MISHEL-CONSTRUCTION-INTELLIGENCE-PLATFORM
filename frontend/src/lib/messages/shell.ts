@@ -79,7 +79,8 @@ export const en = {
   'nav.groupPeople': 'People and administration',
   'nav.groupSystem': 'System, data and AI',
   'nav.menu': 'Main menu',
-  'nav.notifications': 'Notifications'
+  'nav.notifications': 'Notifications',
+  'nav.verify': 'Verify a Document'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -161,5 +162,6 @@ export const ar: Record<keyof typeof en, string> = {
   'nav.groupPeople': 'الموارد البشرية والإدارة',
   'nav.groupSystem': 'النظام والبيانات والذكاء الاصطناعي',
   'nav.menu': 'القائمة الرئيسية',
-  'nav.notifications': 'الإشعارات'
+  'nav.notifications': 'الإشعارات',
+  'nav.verify': 'التحقق من مستند'
 };

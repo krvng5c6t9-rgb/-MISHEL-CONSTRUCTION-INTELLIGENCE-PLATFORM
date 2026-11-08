@@ -233,32 +233,52 @@ documentsRouter.put('/classifications/:type', authorize('admin', 'manage'), asyn
   res.json({ success: true, data: { type: req.params.type, ...r } });
 }));
 
-// CC-089 (F-64): verification of a scanned QR code. The text must be the one recorded with its export entry; the answer
-// also says whether the record has moved on since the copy was printed (status or key amount changed). Nothing is
-// written. A code of another company reads as not found (its existence is not disclosed).
+// CC-089 (F-64): verification of a printed or digital copy. CC-090 (Stage 60): by exactly one of - the scanned QR text,
+// the export number printed on the copy, or the SHA-256 of a digital copy (the PDF / HTML file as exported; its hash
+// finds the entry, so no number is needed). The answer says whether a scanned text is exactly the one recorded with its
+// entry, whether the record has moved on since the copy was made (status or key amount changed), and returns the entry.
+// Nothing is written. A copy of another company reads as not found (its existence is not disclosed).
+const exportSelect = `select e.*, u.full_name as exported_by_name from document_exports e join users u on u.id = e.exported_by`;
 documentsRouter.post('/verify', asyncHandler(async (req, res) => {
-  const b = z.object({ payload: z.string().min(1).max(600) }).parse(req.body);
-  const f = parseQrPayload(b.payload);
-  if (!f) throw new AppError(422, 'This is not a MARC document code');
+  const b = z.object({ payload: z.string().min(1).max(600).optional(), export_id: z.coerce.number().int().positive().optional(),
+    sha256: z.string().regex(/^[0-9a-fA-F]{64}$/).optional() }).parse(req.body);
+  const given = [b.payload, b.export_id, b.sha256].filter(v => v !== undefined).length;
+  if (given !== 1) throw new AppError(422, 'Give one of: the QR text, the export number or the file fingerprint');
   const orgId = Number(req.user!.org_id);
-  if (Number(f.org) !== orgId) throw new AppError(404, 'Export not found');
-  const [e] = await query<any>(`select e.*, u.full_name as exported_by_name from document_exports e join users u on u.id = e.exported_by where e.id = $1 and e.org_id = $2`, [Number(f.exp), orgId]);
+  let e: any, f: Record<string, string> | null = null, method: 'qr' | 'export_id' | 'file';
+  if (b.payload !== undefined) {
+    method = 'qr';
+    f = parseQrPayload(b.payload);
+    if (!f) throw new AppError(422, 'This is not a MARC document code');
+    if (Number(f.org) !== orgId) throw new AppError(404, 'Export not found');
+    [e] = await query<any>(`${exportSelect} where e.id = $1 and e.org_id = $2`, [Number(f.exp), orgId]);
+  } else if (b.export_id !== undefined) {
+    method = 'export_id';
+    [e] = await query<any>(`${exportSelect} where e.id = $1 and e.org_id = $2`, [b.export_id, orgId]);
+  } else {
+    method = 'file';
+    [e] = await query<any>(`${exportSelect} where e.sha256 = $1 and e.org_id = $2 order by e.id desc limit 1`, [b.sha256!.toLowerCase(), orgId]);
+    if (!e) throw new AppError(404, 'No export of this company matches this file');
+  }
   if (!e) throw new AppError(404, 'Export not found');
   const type = typeOfTable(e.doc_type);
   const doc = docOf(type, req);
+  // The amount on the copy: from the scanned text, else from the text recorded with the entry (entries made before
+  // migration 095 have none).
+  const printedAmount = f ? f.amount : e.qr_payload ? parseQrPayload(e.qr_payload)?.amount : undefined;
   const client = await getClient();
   try {
     await client.query('begin read only');
     const data = await doc.load(client, Number(e.record_id), orgId);
     await client.query('commit');
     const current = data ? { status: doc.status(data), amount: doc.amount?.(data) ?? null } : null;
-    const matchesEntry = e.qr_payload !== null && e.qr_payload === b.payload;
     res.json({ success: true, data: {
-      export: e, type, matches_entry: matchesEntry,
+      method, export: e, type,
+      matches_entry: method === 'qr' ? e.qr_payload !== null && e.qr_payload === b.payload : null,
       record_exists: current !== null,
       current_status: current?.status ?? null,
       status_changed: current !== null && current.status !== e.record_status,
-      amount_changed: current !== null && f.amount !== undefined && current.amount !== f.amount
+      amount_changed: current !== null && printedAmount !== undefined && current.amount !== printedAmount
     } });
   } catch (err) { await client.query('rollback'); throw err; } finally { await releaseClient(client); }
 }));

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { apiGet, logout } from '../lib/api';
 import { LanguageSwitch, useI18n, type MessageKey } from '../lib/i18n';
-import { Bell, ChevronDown, Receipt, BarChart3, ClipboardCheck, FolderKanban, Landmark, PackageCheck, ScrollText, DraftingCompass, CalendarDays, HardHat, UsersRound, Wrench, ShieldCheck, ShieldAlert, FolderArchive, FileBarChart, MonitorCheck, Globe2, Bot, Workflow, BookOpenCheck, BadgeDollarSign } from 'lucide-react';
+import { Bell, ChevronDown, Receipt, BarChart3, ClipboardCheck, FolderKanban, Landmark, PackageCheck, ScrollText, DraftingCompass, CalendarDays, HardHat, UsersRound, Wrench, ShieldCheck, ShieldAlert, FolderArchive, FileBarChart, MonitorCheck, Globe2, Bot, Workflow, BookOpenCheck, BadgeDollarSign, ScanQrCode } from 'lucide-react';
 
 // R1.3 (MP-06 §3, CC-081): navigation grouped as in MP-06 (groups without a screen yet are not listed: design studio,
 // legal / risk / audit, facility management). An item is shown when the user holds 'view' on one of its permission
@@ -13,6 +13,8 @@ const navGroups: { key: MessageKey; items: Item[] }[] = [
   { key: 'nav.groupHome', items: [
     { to: '/', key: 'nav.dashboard', icon: BarChart3 },
     { to: '/notifications', key: 'nav.notifications', icon: Bell },
+    // CC-090: verification of printed / digital copies, for users who may view any of the printed document types.
+    { to: '/verify', key: 'nav.verify', icon: ScanQrCode, perms: ['finance', 'contracts', 'procurement', 'site'] },
     { to: '/approvals', key: 'nav.approvals', icon: ClipboardCheck, perms: ['approvals'] },
     { to: '/owner-portfolio', key: 'nav.ownerPortfolio', icon: BarChart3, perms: ['dashboards'] },
     { to: '/executive-dashboard', key: 'nav.executiveDashboard', icon: BarChart3, perms: ['dashboards'] }] },
