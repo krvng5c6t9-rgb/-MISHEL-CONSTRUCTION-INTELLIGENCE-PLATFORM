@@ -102,3 +102,10 @@ code.sha { font-size: 12px; word-break: break-all; }
 .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px; }
 .form-grid label { display: flex; flex-direction: column; gap: 4px; font-weight: 700; }
 td.col-project, th.col-project { min-width: 240px; }
+
+/* CC-095: tender study - quotes verified / not found; block labels; check labels. */
+.quote-ok { color: #14532d; font-size: 13px; margin-top: 4px; }
+.quote-bad { color: #b42318; font-size: 13px; margin-top: 4px; font-weight: 700; }
+.block-label { display: flex; flex-direction: column; gap: 4px; font-weight: 700; margin-bottom: 10px; }
+.block-label textarea { width: 100%; font-family: inherit; }
+label.check { flex-direction: row; align-items: center; gap: 8px; }

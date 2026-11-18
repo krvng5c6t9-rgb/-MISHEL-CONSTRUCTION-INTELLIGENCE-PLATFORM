@@ -26,9 +26,14 @@ export MFA_ENFORCEMENT=off
 export JWT_SECRET="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
 export BOOTSTRAP_ADMIN_TOKEN="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
 # F-13: run the API in a non-UTC zone (Egypt-first target) so date-handling defects surface in every run.
+# Stage 66 / CC-095: a local stand-in for the AI provider API (no real key or paid request in the gate).
+MOCK_AI_PORT_=$((PORT_ + 30))
+(cd "$ROOT/tests/e2e" && MOCK_ANTHROPIC_PORT="$MOCK_AI_PORT_" exec node mock_anthropic.mjs > "${TMPDIR:-/tmp}/erp_e2e_mock_ai_$RUN.log" 2>&1) &
+MOCK_AI_PID=$!
+export AI_PROVIDER_BASE_URL="http://localhost:$MOCK_AI_PORT_" MOCK_ANTHROPIC_URL="http://localhost:$MOCK_AI_PORT_"
 TZ="${API_TZ:-Africa/Cairo}" node dist/server.js > "${TMPDIR:-/tmp}/erp_e2e_server_$RUN.log" 2>&1 &
 SERVER_PID=$!
-trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+trap 'kill $SERVER_PID ${MOCK_AI_PID:-} 2>/dev/null || true' EXIT
 for _ in $(seq 1 30); do curl -sf "http://localhost:$PORT_/api/health" >/dev/null && break; sleep 0.5; done
 
 cd "$ROOT/tests/e2e"; mkdir -p out
@@ -91,6 +96,8 @@ OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_guarantees.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_attendance.mjs
 # Stage 65 / CC-094: payroll cost by approved timesheet hours (company setting).
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_payroll_allocation.mjs
+# Stage 66 / CC-095: AI layer and tender study agent (against the mock provider).
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_tender_study.mjs
 PROBE_OUT="out/G015_RUNTIME_PROBE_$RUN.csv" python3 "$ROOT/governance/tools/probe_shared_guards.py" "$OWNER_URL_BASE/$DB$Q"
 # F-25: Golden Case step statuses must agree with the suites this gate runs.
 (cd "$ROOT" && python3 governance/tools/gc_status_check.py)
@@ -101,7 +108,7 @@ if [ "${UI_CHECK:-0}" = "1" ]; then
   (cd "$ROOT/frontend" && VITE_API_BASE_URL="$API_BASE" npx vite build --outDir "$UI_DIST" --emptyOutDir >/dev/null)
   (cd "$ROOT/frontend" && npx vite preview --outDir "$UI_DIST" --port "$UI_PORT_" --strictPort > "${TMPDIR:-/tmp}/erp_ui_preview_$RUN.log" 2>&1) &
   UI_PID=$!
-  trap 'kill $SERVER_PID $UI_PID 2>/dev/null || true; pkill -f "vite preview --outDir $UI_DIST" 2>/dev/null || true' EXIT
+  trap 'kill $SERVER_PID ${MOCK_AI_PID:-} $UI_PID 2>/dev/null || true; pkill -f "vite preview --outDir $UI_DIST" 2>/dev/null || true' EXIT
   for _ in $(seq 1 30); do curl -sf "http://localhost:$UI_PORT_/login" >/dev/null && break; sleep 0.5; done
   mkdir -p out/ui
   UI_BASE="http://localhost:$UI_PORT_" UI_API="$API_BASE" RUN_ID="$RUN" OUT_DIR="$ROOT/tests/e2e/out/ui" node "$ROOT/tests/ui/project_controls.ui.mjs" | tee "out/ui/project_controls_ui_$RUN.txt"
@@ -120,7 +127,7 @@ MFA_PORT_=$((PORT_ + 7))
 MFA_UI_PORT_=$((UI_PORT_ + 1))
 (cd "$ROOT/backend" && MFA_ENFORCEMENT=required PORT="$MFA_PORT_" CORS_ORIGIN="http://localhost:$MFA_UI_PORT_" TZ="${API_TZ:-Africa/Cairo}" exec node dist/server.js > "${TMPDIR:-/tmp}/erp_e2e_mfa_server_$RUN.log" 2>&1) &
 MFA_PID=$!
-trap 'kill $SERVER_PID $MFA_PID ${UI_PID:-} 2>/dev/null || true; pkill -f "vite preview --outDir ${UI_DIST:-none}" 2>/dev/null || true' EXIT
+trap 'kill $SERVER_PID ${MOCK_AI_PID:-} $MFA_PID ${UI_PID:-} 2>/dev/null || true; pkill -f "vite preview --outDir ${UI_DIST:-none}" 2>/dev/null || true' EXIT
 for _ in $(seq 1 30); do curl -sf "http://localhost:$MFA_PORT_/api/health" >/dev/null && break; sleep 0.5; done
 MFA_API_BASE="http://localhost:$MFA_PORT_/api" BACKEND_DIR="$ROOT/backend" OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_mfa.mjs
 if [ "${UI_CHECK:-0}" = "1" ]; then

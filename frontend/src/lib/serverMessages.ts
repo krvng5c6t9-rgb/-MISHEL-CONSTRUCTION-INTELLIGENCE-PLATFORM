@@ -156,7 +156,17 @@ const EXACT: Record<string, string> = {
   'The payroll line has no gross pay to allocate': 'سطر المرتب ليس له إجمالي يُوزَّع',
   'Approved timesheets of the period have no cost code': 'بطاقات العمل المعتمدة في الفترة بدون بند تكلفة',
   'No approved timesheet hours in the payroll period': 'لا توجد ساعات بطاقات عمل معتمدة في فترة المرتب',
-  'Payroll cost allocations are permanent': 'توزيع تكلفة المرتبات دائم ولا يُعدَّل'
+  'Payroll cost allocations are permanent': 'توزيع تكلفة المرتبات دائم ولا يُعدَّل',
+  // CC-095: AI layer and tender studies.
+  'Accept that submitted documents are sent to the provider before enabling AI': 'وافق على إرسال المستندات المقدمة إلى المزوّد قبل تفعيل الذكاء الاصطناعي',
+  'Enter the company provider key': 'أدخل مفتاح الشركة لدى المزوّد',
+  'AI is not enabled for this company: enter the provider key and accept data processing in the AI settings': 'الذكاء الاصطناعي غير مُفعَّل لهذه الشركة: أدخل مفتاح المزوّد ووافق على معالجة البيانات في إعدادات الذكاء الاصطناعي',
+  'The person who requested a study cannot review it': 'لا يجوز لمن طلب الدراسة أن يراجعها',
+  'Only a completed study is reviewed': 'تُراجَع الدراسة المكتملة فقط',
+  'Tender studies are permanent': 'دراسات المناقصات دائمة',
+  'A closed tender study never changes': 'لا تتغير دراسة مغلقة',
+  'A completed study is only approved or rejected': 'الدراسة المكتملة تُعتمد أو تُرفض فقط',
+  'The documents and request of a tender study never change': 'مستندات الدراسة وطلبها لا يتغيران'
 };
 
 // Status words inside finance messages, worded for the record they describe (the shared value words are not all apt).

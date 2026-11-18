@@ -21,6 +21,7 @@ const navGroups: { key: MessageKey; items: Item[] }[] = [
   { key: 'nav.groupBusiness', items: [
     { to: '/crm', key: 'nav.crm', icon: UsersRound, perms: ['crm'] },
     { to: '/tendering', key: 'nav.tendering', icon: ClipboardCheck, perms: ['tendering'] },
+    { to: '/tender-study', key: 'nav.tenderStudy', icon: Bot, perms: ['tendering'] },
     { to: '/boq', key: 'nav.boq', icon: ScrollText, perms: ['boq'] }] },
   { key: 'nav.groupCommercial', items: [
     { to: '/contracts', key: 'nav.contracts', icon: ScrollText, perms: ['contracts'] },
