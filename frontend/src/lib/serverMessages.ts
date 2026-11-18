@@ -150,7 +150,13 @@ const EXACT: Record<string, string> = {
   'The employee is on approved leave on this date': 'الموظف في إجازة معتمدة في هذا التاريخ',
   'Attendance is approved as recorded': 'يُعتمد الحضور كما سُجِّل',
   'Value violates check constraint attendance_hours_check': 'الساعات بين صفر و٢٤، ومجموع العادي والإضافي لا يتجاوز ٢٤',
-  'Value violates check constraint attendance_approval_check': 'يعتمد الحضور شخص غير الذي سجّله'
+  'Value violates check constraint attendance_approval_check': 'يعتمد الحضور شخص غير الذي سجّله',
+  // CC-094: payroll cost allocation.
+  'Payroll line already posted': 'سطر المرتب مُرحَّل بالفعل',
+  'The payroll line has no gross pay to allocate': 'سطر المرتب ليس له إجمالي يُوزَّع',
+  'Approved timesheets of the period have no cost code': 'بطاقات العمل المعتمدة في الفترة بدون بند تكلفة',
+  'No approved timesheet hours in the payroll period': 'لا توجد ساعات بطاقات عمل معتمدة في فترة المرتب',
+  'Payroll cost allocations are permanent': 'توزيع تكلفة المرتبات دائم ولا يُعدَّل'
 };
 
 // Status words inside finance messages, worded for the record they describe (the shared value words are not all apt).

@@ -17,7 +17,15 @@ export const en = {
   'hr.colTotal': 'Total',
   'hr.empActive': 'active',
   'hr.empOnLeave': 'on_leave',
-  'hr.empTerminated': 'terminated'
+  'hr.empTerminated': 'terminated',
+  'hr.costBasis': 'Payroll cost to projects',
+  'hr.costBasisNote': 'How an approved payroll line becomes project cost: the project and cost code chosen on the line, or split by the employee\'s approved timesheet hours of the month.',
+  'hr.costBasisNotChosen': 'Not chosen',
+  'hr.basisLineProject': 'Project on the payroll line',
+  'hr.basisTimesheetHours': 'Split by approved timesheet hours',
+  'hr.saveBasis': 'Save',
+  'hr.basisSaved': 'Saved',
+  'hr.basisDefault': 'Until the company chooses, the project on the payroll line is used.'
 } as const;
 
 export const ar: Record<keyof typeof en, string> = {
@@ -36,5 +44,13 @@ export const ar: Record<keyof typeof en, string> = {
   'hr.colTotal': 'الإجمالي',
   'hr.empActive': 'على رأس العمل',
   'hr.empOnLeave': 'في إجازة',
-  'hr.empTerminated': 'انتهت خدمته'
+  'hr.empTerminated': 'انتهت خدمته',
+  'hr.costBasis': 'تحميل تكلفة المرتبات على المشروعات',
+  'hr.costBasisNote': 'كيف يصبح سطر المرتب المعتمد تكلفة مشروع: المشروع وبند التكلفة المحددان على السطر، أو التوزيع بساعات بطاقات العمل المعتمدة للموظف في الشهر.',
+  'hr.costBasisNotChosen': 'لم تُحدَّد',
+  'hr.basisLineProject': 'المشروع المحدد على سطر المرتب',
+  'hr.basisTimesheetHours': 'التوزيع بساعات بطاقات العمل المعتمدة',
+  'hr.saveBasis': 'حفظ',
+  'hr.basisSaved': 'تم الحفظ',
+  'hr.basisDefault': 'إلى أن تحدد الشركة الطريقة، يُستخدم المشروع المحدد على سطر المرتب.'
 };

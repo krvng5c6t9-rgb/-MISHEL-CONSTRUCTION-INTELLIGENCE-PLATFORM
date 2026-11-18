@@ -13,6 +13,10 @@ export function HR() {
   const [attendance, setAttendance] = useState<any[]>([]);
   const [payroll, setPayroll] = useState<any[]>([]);
   const [error, setError] = useState('');
+  // CC-094 (F-68): the company's payroll cost basis.
+  const [basis, setBasis] = useState<any>(null), [basisPick, setBasisPick] = useState(''), [basisSaved, setBasisSaved] = useState(false);
+  const loadBasis = () => api.get('/hr/payroll-settings').then((r: any) => { setBasis(r.data); setBasisPick(r.data.cost_basis ?? ''); });
+  async function saveBasis() { try { setError(''); setBasisSaved(false); await api.put('/hr/payroll-settings', { cost_basis: basisPick }); await loadBasis(); setBasisSaved(true); } catch (x: any) { setError(x.message); } }
 
   useEffect(() => {
     Promise.all([api.get('/hr/employees'), api.get('/hr/attendance'), api.get('/hr/payroll-runs')]).then(([e, a, p]) => {
@@ -20,6 +24,7 @@ export function HR() {
       setAttendance(a.data);
       setPayroll(p.data);
     }).catch((x: any) => setError(x.message));
+    loadBasis().catch((x: any) => setError(x.message));
   }, []);
 
   return (
@@ -43,6 +48,12 @@ export function HR() {
           {payroll.slice(0, 8).map((p) => <tr key={p.id}><td><Num text={String(p.period_month ?? '-')} /></td><td>{tv(p.status)}</td><td>{p.total_amount ? <Num v={p.total_amount} /> : '-'}</td></tr>)}
         </tbody></table></div>
       </div>
+      {basis && <div className="panel" data-section="cost-basis">
+        <h2>{t('hr.costBasis')}</h2><p>{t('hr.costBasisNote')}</p>
+        <div className="form-row"><select aria-label={t('hr.costBasis')} value={basisPick} onChange={e => setBasisPick(e.target.value)}>
+          <option value="" disabled>{t('hr.costBasisNotChosen')}</option><option value="line_project">{t('hr.basisLineProject')}</option><option value="timesheet_hours">{t('hr.basisTimesheetHours')}</option></select>
+          <button onClick={saveBasis} disabled={!basisPick}>{t('hr.saveBasis')}</button>{basisSaved && <span className="muted" role="status"> {t('hr.basisSaved')}</span>}</div>
+        {!basis.cost_basis && <p className="muted">{t('hr.basisDefault')}</p>}</div>}
     </section>
   );
 }

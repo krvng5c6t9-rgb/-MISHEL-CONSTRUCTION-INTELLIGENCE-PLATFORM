@@ -172,10 +172,21 @@ hrRouter.patch('/payroll-runs/:id/approve', authorize('hr', 'approve'), asyncHan
   }
 }));
 
+// CC-094 (F-68): the company's payroll cost basis decides how a line reaches projects - the line's own project /
+// cost code ('line_project', also when the company has not chosen) or its approved timesheet hours of the month
+// ('timesheet_hours', split by the database function allocate_payroll_line, migration 099).
 hrRouter.post('/payroll-lines/:id/post-cost', authorize('finance', 'create'), asyncHandler(async (req, res) => {
   const client = await getClient();
   try {
     await client.query('begin');
+    const basis = (await client.query(`select cost_basis from payroll_settings where org_id = $1`, [req.user!.org_id])).rows[0]?.cost_basis ?? 'line_project';
+    if (basis === 'timesheet_hours') {
+      const n = (await client.query(`select allocate_payroll_line($1, $2) as n`, [Number(req.params.id), req.user!.id])).rows[0].n;
+      const shares = (await client.query(`select a.*, a.amount::text as amount, a.hours::text as hours, p.project_code, cc.code as cost_code
+        from payroll_line_allocations a join projects p on p.id = a.project_id join cost_codes cc on cc.id = a.cost_code_id where a.payroll_line_id = $1 order by a.id`, [Number(req.params.id)])).rows;
+      await client.query('commit');
+      return res.status(201).json({ success: true, data: { basis, shares: n, allocations: shares } });
+    }
     const result = await postPayrollLineToCostTransaction(client, Number(req.params.id));
     await client.query('commit');
     res.status(201).json({ success: true, data: result });
@@ -230,4 +241,21 @@ hrRouter.patch('/leave-requests/:id/:action', authorize('hr', 'approve'), asyncH
   `, [Number(req.params.id), status, req.user.id, req.user.org_id]);
   if (!updated) throw new AppError(409, 'Leave request cannot be decided: it may be missing, already decided, unattributed, cross-tenant, or created by the same user');
   res.json({ success: true, data: updated });
+}));
+
+// CC-094 (F-68): the company's payroll cost basis (finance.manage to change; no choice = 'line_project').
+hrRouter.get('/payroll-settings', asyncHandler(async (req, res) => {
+  const [r] = await query<any>(`select s.cost_basis, s.updated_at, u.full_name as updated_by_name from payroll_settings s join users u on u.id = s.updated_by where s.org_id = $1`, [req.user!.org_id]);
+  res.json({ success: true, data: { cost_basis: r?.cost_basis ?? null, effective_basis: r?.cost_basis ?? 'line_project', updated_at: r?.updated_at ?? null, updated_by_name: r?.updated_by_name ?? null } });
+}));
+hrRouter.put('/payroll-settings', authorize('finance', 'manage'), asyncHandler(async (req, res) => {
+  const b = z.object({ cost_basis: z.enum(['line_project', 'timesheet_hours']) }).parse(req.body);
+  const [r] = await query(`insert into payroll_settings(org_id, cost_basis, updated_by) values ($1, $2, $3)
+    on conflict (org_id) do update set cost_basis = excluded.cost_basis, updated_by = excluded.updated_by, updated_at = now() returning *`, [req.user!.org_id, b.cost_basis, req.user!.id]);
+  res.json({ success: true, data: r });
+}));
+hrRouter.get('/payroll-lines/:id/allocations', asyncHandler(async (req, res) => {
+  res.json({ success: true, data: await query(`select a.*, a.amount::text as amount, a.hours::text as hours, p.project_code, p.project_name, cc.code as cost_code
+    from payroll_line_allocations a join projects p on p.id = a.project_id join cost_codes cc on cc.id = a.cost_code_id
+   where a.org_id = $1 and a.payroll_line_id = $2 order by a.id`, [req.user!.org_id, Number(req.params.id)]) });
 }));
