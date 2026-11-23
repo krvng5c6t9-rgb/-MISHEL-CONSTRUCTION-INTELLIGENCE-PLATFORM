@@ -32,6 +32,7 @@ const navGroups: { key: MessageKey; items: Item[] }[] = [
     { to: '/projects', key: 'nav.projects', icon: FolderKanban, perms: ['projects'] },
     { to: '/project-controls', key: 'nav.projectControls', icon: ShieldCheck, perms: ['projects'] },
     { to: '/planning', key: 'nav.planning', icon: CalendarDays, perms: ['planning'] },
+    { to: '/schedule', key: 'nav.schedule', icon: CalendarDays, perms: ['planning'] },
     { to: '/cost-control', key: 'nav.costControl', icon: Landmark, perms: ['cost_control'] },
     { to: '/reports', key: 'nav.reports', icon: FileBarChart, perms: ['reports'] }] },
   { key: 'nav.groupEngineering', items: [

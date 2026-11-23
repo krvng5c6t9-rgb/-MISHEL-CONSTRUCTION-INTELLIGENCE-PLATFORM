@@ -104,6 +104,7 @@ OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_payroll_allocati
 # Stage 66 / CC-095: AI layer and tender study agent (against the mock provider).
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_tender_study.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_einvoice.mjs
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_schedule.mjs
 PROBE_OUT="out/G015_RUNTIME_PROBE_$RUN.csv" python3 "$ROOT/governance/tools/probe_shared_guards.py" "$OWNER_URL_BASE/$DB$Q"
 # F-25: Golden Case step statuses must agree with the suites this gate runs.
 (cd "$ROOT" && python3 governance/tools/gc_status_check.py)

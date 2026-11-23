@@ -60,6 +60,7 @@ const SCREENS = [
   ['/profitability', 'Project Profitability', 'ربحية المشروعات'],
   ['/guarantees', 'Letters of Guarantee', 'خطابات الضمان'],
   ['/e-invoicing', 'Electronic Invoicing', 'الفاتورة الإلكترونية'],
+  ['/schedule', 'Schedule & Exchange', 'الجدول الزمني وتبادل الملفات'],
   ['/site-attendance', 'Site Attendance', 'حضور الموقع', 3],
   ['/tender-study', 'Tender Study (AI)', 'دراسة المناقصة بالذكاء الاصطناعي', 5],
   ['/setup', 'Initialize Construction ERP', 'تهيئة النظام']
