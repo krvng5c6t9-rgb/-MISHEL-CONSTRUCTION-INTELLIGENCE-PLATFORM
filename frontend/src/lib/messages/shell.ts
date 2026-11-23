@@ -83,6 +83,7 @@ export const en = {
   'nav.verify': 'Verify a Document',
   'nav.profitability': 'Project Profitability',
   'nav.guarantees': 'Letters of Guarantee',
+  'nav.einvoicing': 'Electronic Invoicing',
   'nav.siteAttendance': 'Site Attendance',
   'nav.tenderStudy': 'Tender Study (AI)'
 } as const;
@@ -170,6 +171,7 @@ export const ar: Record<keyof typeof en, string> = {
   'nav.verify': 'التحقق من مستند',
   'nav.profitability': 'ربحية المشروعات',
   'nav.guarantees': 'خطابات الضمان',
+  'nav.einvoicing': 'الفاتورة الإلكترونية',
   'nav.siteAttendance': 'حضور الموقع',
   'nav.tenderStudy': 'دراسة المناقصة الذكية'
 };

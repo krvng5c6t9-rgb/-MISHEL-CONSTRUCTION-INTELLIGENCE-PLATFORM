@@ -51,6 +51,7 @@ const navGroups: { key: MessageKey; items: Item[] }[] = [
     { to: '/exchange', key: 'nav.exchange', icon: Landmark, perms: ['finance'] },
     { to: '/profitability', key: 'nav.profitability', icon: BadgeDollarSign, perms: ['finance'] },
     { to: '/guarantees', key: 'nav.guarantees', icon: Landmark, perms: ['finance'] },
+    { to: '/e-invoicing', key: 'nav.einvoicing', icon: BadgeDollarSign, perms: ['finance'] },
     { to: '/revenue-position', key: 'nav.revenue', icon: BadgeDollarSign, perms: ['finance'] },
     { to: '/cutover', key: 'nav.cutover', icon: BookOpenCheck, perms: ['finance'] }] },
   { key: 'nav.groupPeople', items: [

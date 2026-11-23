@@ -113,6 +113,20 @@ const EXACT: Record<string, string> = {
   // CC-090: verification screen.
   'Give one of: the QR text, the export number or the file fingerprint': 'أدخل واحدًا فقط: نص رمز QR أو رقم التصدير أو بصمة الملف',
   'No export of this company matches this file': 'لا يوجد تصدير لهذه الشركة يطابق هذا الملف',
+  // CC-096: electronic invoicing (API and database rules).
+  'Enter the credentials issued by the tax authority before enabling electronic invoicing': 'أدخل بيانات الدخول الصادرة من مصلحة الضرائب قبل تفعيل الفاتورة الإلكترونية',
+  'Electronic invoicing is not enabled for this company': 'الفاتورة الإلكترونية غير مفعّلة لهذه الشركة',
+  'Only an IPC certified by the client is invoiced electronically': 'لا تصدر فاتورة إلكترونية إلا لمستخلص معتمد من العميل',
+  'Data needed for the electronic invoice is missing': 'بيانات لازمة للفاتورة الإلكترونية ناقصة',
+  'This IPC already has an active electronic invoice': 'لهذا المستخلص فاتورة إلكترونية قائمة بالفعل',
+  'Only a prepared electronic invoice is submitted': 'تُرسل الفاتورة الإلكترونية المُجهّزة فقط',
+  'The person who prepared an electronic invoice cannot submit it': 'من جهّز الفاتورة الإلكترونية لا يرسلها',
+  'Only a submitted electronic invoice has a status to read': 'لا تُقرأ الحالة إلا لفاتورة إلكترونية مُرسلة',
+  'The tax authority refused the company credentials': 'رفضت مصلحة الضرائب بيانات دخول الشركة',
+  'The company signing service did not return a signature': 'لم تُرجع خدمة التوقيع للشركة توقيعًا',
+  'A prepared electronic invoice never changes; prepare a new one': 'الفاتورة الإلكترونية المُجهّزة لا تتغير؛ جهّز فاتورة جديدة',
+  'A closed electronic invoice never changes': 'الفاتورة الإلكترونية المغلقة لا تتغير',
+  'Electronic invoice documents are permanent': 'مستندات الفاتورة الإلكترونية دائمة',
   // CC-092: letters of guarantee (API and database rules).
   'Only a draft guarantee is edited; an active one changes by an amendment': 'تُعدَّل المسودة فقط؛ خطاب الضمان الساري يتغيّر بتعديل من البنك',
   'Only a draft guarantee is activated': 'تُفعَّل المسودة فقط',

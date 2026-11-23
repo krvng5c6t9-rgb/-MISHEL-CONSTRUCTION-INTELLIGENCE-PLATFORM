@@ -24,6 +24,7 @@ import { OwnerPortfolio } from './pages/OwnerPortfolio';
 import { VerifyDocument } from './pages/VerifyDocument';
 import { Profitability } from './pages/Profitability';
 import { Guarantees } from './pages/Guarantees';
+import { EInvoicing } from './pages/EInvoicing';
 import { SiteAttendance } from './pages/SiteAttendance';
 import { TenderStudy } from './pages/TenderStudy';
 import { Reports } from './pages/Reports';
@@ -86,6 +87,7 @@ export function App() {
             <Route path="verify" element={<VerifyDocument />} />
             <Route path="profitability" element={<Profitability />} />
             <Route path="guarantees" element={<Guarantees />} />
+            <Route path="e-invoicing" element={<EInvoicing />} />
             <Route path="site-attendance" element={<SiteAttendance />} />
             <Route path="tender-study" element={<TenderStudy />} />
             <Route path="executive-dashboard" element={<ExecutiveDashboard />} />

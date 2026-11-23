@@ -31,6 +31,11 @@ MOCK_AI_PORT_=$((PORT_ + 30))
 (cd "$ROOT/tests/e2e" && MOCK_ANTHROPIC_PORT="$MOCK_AI_PORT_" exec node mock_anthropic.mjs > "${TMPDIR:-/tmp}/erp_e2e_mock_ai_$RUN.log" 2>&1) &
 MOCK_AI_PID=$!
 export AI_PROVIDER_BASE_URL="http://localhost:$MOCK_AI_PORT_" MOCK_ANTHROPIC_URL="http://localhost:$MOCK_AI_PORT_"
+# Stage 67 / CC-096: a local stand-in for the tax authority e-invoicing API and a company signing service.
+MOCK_ETA_PORT_=$((PORT_ + 40))
+(cd "$ROOT/tests/e2e" && MOCK_ETA_PORT="$MOCK_ETA_PORT_" exec node mock_eta.mjs > "${TMPDIR:-/tmp}/erp_e2e_mock_eta_$RUN.log" 2>&1) &
+MOCK_AI_PID="$MOCK_AI_PID $!"
+export EINVOICE_EG_ID_HOST="http://localhost:$MOCK_ETA_PORT_" EINVOICE_EG_API_HOST="http://localhost:$MOCK_ETA_PORT_" MOCK_ETA_URL="http://localhost:$MOCK_ETA_PORT_"
 TZ="${API_TZ:-Africa/Cairo}" node dist/server.js > "${TMPDIR:-/tmp}/erp_e2e_server_$RUN.log" 2>&1 &
 SERVER_PID=$!
 trap 'kill $SERVER_PID ${MOCK_AI_PID:-} 2>/dev/null || true' EXIT
@@ -98,6 +103,7 @@ OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_attendance.mjs
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_payroll_allocation.mjs
 # Stage 66 / CC-095: AI layer and tender study agent (against the mock provider).
 OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_tender_study.mjs
+OWNER_PSQL_URL="$OWNER_URL_BASE/$DB$Q" RUN_ID="$RUN" node sweep_einvoice.mjs
 PROBE_OUT="out/G015_RUNTIME_PROBE_$RUN.csv" python3 "$ROOT/governance/tools/probe_shared_guards.py" "$OWNER_URL_BASE/$DB$Q"
 # F-25: Golden Case step statuses must agree with the suites this gate runs.
 (cd "$ROOT" && python3 governance/tools/gc_status_check.py)

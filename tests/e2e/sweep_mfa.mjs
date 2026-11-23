@@ -50,7 +50,8 @@ try {
   check('authenticator URI is a standard otpauth TOTP URI (SHA1, 6 digits, 30 s)', /^otpauth:\/\/totp\/.+secret=[A-Z2-7]+.*digits=6&period=30/.test(en.otpauth_uri), en.otpauth_uri);
   check('authenticator entry is labelled with the brand MARC (default issuer, DEC-020)', /^otpauth:\/\/totp\/MARC%3A[^?]+\?.*&issuer=MARC&/.test(en.otpauth_uri), en.otpauth_uri.replace(/secret=[A-Z2-7]+/, 'secret=…'));
   await expectStatus('a wrong code does not complete the set-up', () => mfa('POST', '/auth/mfa/enroll/confirm', null, { challenge_token: f1.data.challenge_token, code: totp(en.secret, 5) }), 401);
-  const done = await run('the code from the authenticator completes the set-up', async () => { const r = await mfa('POST', '/auth/mfa/enroll/confirm', null, { challenge_token: f1.data.challenge_token, code: totp(en.secret) }); if (!r.ok) throw new Error(JSON.stringify(r.body)); return r.data; });
+  const usedCode = totp(en.secret); // F-69: kept so the replay check below re-sends exactly this code, even across a 30 s step boundary
+  const done = await run('the code from the authenticator completes the set-up', async () => { const r = await mfa('POST', '/auth/mfa/enroll/confirm', null, { challenge_token: f1.data.challenge_token, code: usedCode }); if (!r.ok) throw new Error(JSON.stringify(r.body)); return r.data; });
   check('set-up returns a session and ten one-time recovery codes', !!done.token && Array.isArray(done.recovery_codes) && done.recovery_codes.length === 10, String(done.recovery_codes?.length));
   const st = await mfa('GET', '/auth/mfa/status', done.token);
   check('status: MFA enabled and required, enforcement on, 10 codes left', st.data?.enabled === true && st.data?.required === true && st.data?.enforcement === 'required' && st.data?.recovery_codes_remaining === 10, JSON.stringify(st.data));
@@ -59,7 +60,7 @@ try {
   // --- Sign-in with the second factor.
   const f2 = await signIn(fin);
   check('an enrolled user is asked for the code', f2.data?.mfa_required === true && !f2.data?.token);
-  await expectStatus('the code just used cannot be replayed', () => mfa('POST', '/auth/mfa/verify', null, { challenge_token: f2.data.challenge_token, code: totp(en.secret) }), 401);
+  await expectStatus('the code just used cannot be replayed', () => mfa('POST', '/auth/mfa/verify', null, { challenge_token: f2.data.challenge_token, code: usedCode }), 401);
   const ok2 = await mfa('POST', '/auth/mfa/verify', null, { challenge_token: f2.data.challenge_token, code: totp(en.secret, 1) });
   check('the next code signs in', ok2.status === 200 && !!ok2.data?.token, `HTTP ${ok2.status} ${JSON.stringify(ok2.body?.error ?? '')}`);
   await expectStatus('the session works', () => mfa('GET', '/auth/me', ok2.data?.token), 200);
