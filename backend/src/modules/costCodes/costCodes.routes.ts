@@ -21,17 +21,21 @@ costCodesRouter.get('/', asyncHandler(async (req, res) => {
 }));
 
 // G-014 (migration 042): tenants maintain their own cost-code structure; no codes are defaulted.
-const costType = z.enum(['labor', 'material', 'equipment', 'subcontract', 'overhead', 'preliminaries']);
-const ccBody = z.object({
+export const costType = z.enum(['labor', 'material', 'equipment', 'subcontract', 'overhead', 'preliminaries']);
+export const ccBody = z.object({
   code: z.string().trim().min(1).max(30), description: z.string().trim().min(2).max(255), cost_type: costType,
   unit_of_measure: z.string().trim().max(20).nullable().optional(), parent_code_id: z.number().int().positive().nullable().optional(),
   project_id: z.number().int().positive().nullable().optional()
 });
+// CC-098: one insert used by this route and by the Excel import.
+export async function insertCostCode(exec: (text: string, params: unknown[]) => Promise<any[]>, orgId: number, b: z.infer<typeof ccBody>) {
+  const [r] = await exec(`insert into cost_codes(org_id,project_id,code,description,parent_code_id,cost_type,unit_of_measure) values($1,$2,$3,$4,$5,$6,$7) returning *`,
+    [orgId, b.project_id ?? null, b.code, b.description, b.parent_code_id ?? null, b.cost_type, b.unit_of_measure ?? null]);
+  return r;
+}
 costCodesRouter.post('/', authorize('cost_control', 'manage'), asyncHandler(async (req, res) => {
   const b = ccBody.parse(req.body);
-  const [r] = await query(`insert into cost_codes(org_id,project_id,code,description,parent_code_id,cost_type,unit_of_measure) values($1,$2,$3,$4,$5,$6,$7) returning *`,
-    [req.user!.org_id, b.project_id ?? null, b.code, b.description, b.parent_code_id ?? null, b.cost_type, b.unit_of_measure ?? null]);
-  res.status(201).json({ success: true, data: r });
+  res.status(201).json({ success: true, data: await insertCostCode(query, Number(req.user!.org_id), b) });
 }));
 costCodesRouter.patch('/:id', authorize('cost_control', 'manage'), asyncHandler(async (req, res) => {
   const id = Number(req.params.id);

@@ -26,6 +26,7 @@ import { Profitability } from './pages/Profitability';
 import { Guarantees } from './pages/Guarantees';
 import { EInvoicing } from './pages/EInvoicing';
 import { Schedule } from './pages/Schedule';
+import { DataExchange } from './pages/DataExchange';
 import { SiteAttendance } from './pages/SiteAttendance';
 import { TenderStudy } from './pages/TenderStudy';
 import { Reports } from './pages/Reports';
@@ -79,6 +80,7 @@ export function App() {
             <Route path="technical-office" element={<TechnicalOffice />} />
             <Route path="planning" element={<Planning />} />
             <Route path="schedule" element={<Schedule />} />
+            <Route path="data-exchange" element={<DataExchange />} />
             <Route path="site" element={<SiteExecution />} />
             <Route path="hr" element={<HR />} />
             <Route path="assets" element={<Assets />} />

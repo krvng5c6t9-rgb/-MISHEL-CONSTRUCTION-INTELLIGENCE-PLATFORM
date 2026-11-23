@@ -113,6 +113,18 @@ const EXACT: Record<string, string> = {
   // CC-090: verification screen.
   'Give one of: the QR text, the export number or the file fingerprint': 'أدخل واحدًا فقط: نص رمز QR أو رقم التصدير أو بصمة الملف',
   'No export of this company matches this file': 'لا يوجد تصدير لهذه الشركة يطابق هذا الملف',
+  // CC-098: Excel import / export.
+  'Unknown record type': 'نوع سجل غير معروف',
+  'Give either a project or a tender': 'حدّد مشروعًا أو مناقصة',
+  'Tender not found': 'المناقصة غير موجودة',
+  'Some rows were refused; nothing was saved': 'رُفضت بعض السطور؛ لم يُحفظ شيء',
+  'The sheet has no data rows': 'الورقة لا تحتوي على سطور بيانات',
+  'Not an Excel workbook (.xlsx)': 'الملف ليس ملف إكسل',
+  'The workbook archive is damaged': 'ملف إكسل تالف',
+  'The workbook has too many parts': 'ملف إكسل يحتوي على أجزاء كثيرة جدًا',
+  'A part of the workbook is too large': 'جزء من ملف إكسل كبير جدًا',
+  'The workbook uses an unsupported compression method': 'ملف إكسل يستخدم طريقة ضغط غير مدعومة',
+  'Data import records are permanent': 'سجلات استيراد البيانات دائمة',
   // CC-097: schedule, calendars and exchange (API and database rules).
   'Choose the project calendar and data date first': 'اختر تقويم المشروع وتاريخ البيانات أولًا',
   'The project has no schedule activities to export': 'لا توجد أنشطة في الجدول الزمني للمشروع لتصديرها',

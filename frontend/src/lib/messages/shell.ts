@@ -85,6 +85,7 @@ export const en = {
   'nav.profitability': 'Project Profitability',
   'nav.guarantees': 'Letters of Guarantee',
   'nav.einvoicing': 'Electronic Invoicing',
+  'nav.dataExchange': 'Excel Import & Export',
   'nav.siteAttendance': 'Site Attendance',
   'nav.tenderStudy': 'Tender Study (AI)'
 } as const;
@@ -174,6 +175,7 @@ export const ar: Record<keyof typeof en, string> = {
   'nav.profitability': 'ربحية المشروعات',
   'nav.guarantees': 'خطابات الضمان',
   'nav.einvoicing': 'الفاتورة الإلكترونية',
+  'nav.dataExchange': 'استيراد وتصدير إكسل',
   'nav.siteAttendance': 'حضور الموقع',
   'nav.tenderStudy': 'دراسة المناقصة الذكية'
 };

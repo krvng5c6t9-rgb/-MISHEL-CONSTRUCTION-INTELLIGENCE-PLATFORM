@@ -14,7 +14,7 @@ vendorsRouter.use(authorize('vendors', 'view'));
 
 const pid = (v: string) => { const n = Number(v); if (!Number.isSafeInteger(n) || n <= 0) throw new AppError(400, 'Invalid id'); return n; };
 const reason = z.string().trim().min(5).max(2000);
-const details = z.object({
+export const details = z.object({
   vendor_name: z.string().trim().min(2).max(200),
   vendor_type: z.enum(['supplier', 'subcontractor', 'both']).default('supplier'),
   trade_category: z.string().trim().max(100).optional().nullable(),
@@ -44,6 +44,15 @@ async function lockVendor(c: PoolClient, id: number) {
 const event = (c: PoolClient, v: any, ev: string, actor: number, why: string | null, detail: object = {}) =>
   c.query(`insert into vendor_status_events(org_id,vendor_id,event,reason,detail,actor_id) values($1,$2,$3,$4,$5,$6)`, [v.org_id, v.id, ev, why, JSON.stringify(detail), actor]);
 
+// CC-098: one insert (with its 'created' event) used by this route and by the Excel import; the caller runs it inside
+// a transaction flagged app.vendor_governed.
+export async function insertVendor(c: PoolClient, orgId: number, userId: number, b: z.infer<typeof details>) {
+  const row = (await c.query(`insert into vendors_subcontractors(org_id,vendor_name,vendor_type,trade_category,contact_person,phone,email,tax_id,created_by)
+    values($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *`, [orgId, b.vendor_name, b.vendor_type, b.trade_category ?? null, b.contact_person ?? null, b.phone ?? null, b.email ?? null, b.tax_id ?? null, userId])).rows[0];
+  await event(c, row, 'created', userId, null);
+  return row;
+}
+
 vendorsRouter.get('/', asyncHandler(async (req, res) => {
   const rows = await query<any>(`select id,vendor_name,vendor_type,trade_category,contact_person,phone,email,tax_id,bank_name,bank_account_no,prequalification_status,is_blacklisted,is_active,created_at
     from vendors_subcontractors where ($1::text is null or vendor_type=$1 or vendor_type='both') order by vendor_name`, [typeof req.query.type === 'string' ? req.query.type : null]);
@@ -64,12 +73,7 @@ vendorsRouter.get('/:id', asyncHandler(async (req, res) => {
 
 vendorsRouter.post('/', authorize('vendors', 'create'), asyncHandler(async (req, res) => {
   const b = details.parse(req.body);
-  const v = await governed(async c => {
-    const row = (await c.query(`insert into vendors_subcontractors(org_id,vendor_name,vendor_type,trade_category,contact_person,phone,email,tax_id,created_by)
-      values($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *`, [req.user!.org_id, b.vendor_name, b.vendor_type, b.trade_category ?? null, b.contact_person ?? null, b.phone ?? null, b.email ?? null, b.tax_id ?? null, req.user!.id])).rows[0];
-    await event(c, row, 'created', req.user!.id, null);
-    return row;
-  });
+  const v = await governed(c => insertVendor(c, Number(req.user!.org_id), Number(req.user!.id), b));
   res.status(201).json({ success: true, data: v });
 }));
 

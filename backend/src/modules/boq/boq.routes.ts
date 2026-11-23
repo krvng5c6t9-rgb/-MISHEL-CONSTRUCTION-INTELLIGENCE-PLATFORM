@@ -15,15 +15,20 @@ const masterBase = z.object({
   unit_rate_labor:z.number().nonnegative().default(0), unit_rate_equipment:z.number().nonnegative().default(0), unit_rate_subcontract:z.number().nonnegative().default(0),
   overhead_percent:z.number().min(0).max(100).default(0), profit_percent:z.number().min(0).max(100).default(0)
 });
-const masterSchema = masterBase.refine(v=>v.tender_id||v.project_id,{message:'tender_id or project_id is required'});
+export const masterSchema = masterBase.refine(v=>v.tender_id||v.project_id,{message:'tender_id or project_id is required'});
 
 boqRouter.get('/master', asyncHandler(async(req,res)=>{
  const tenderId=Number(req.query.tender_id||0), projectId=Number(req.query.project_id||0);
  const rows=await query(`select b.*,c.code cost_code from boq_master b left join cost_codes c on c.id=b.cost_code_id where ($1::bigint=0 or b.tender_id=$1) and ($2::bigint=0 or b.project_id=$2) order by b.section nulls first,b.item_no`,[tenderId,projectId]);
  res.json({success:true,data:rows});
 }));
+// CC-098: one insert used by this route and by the Excel import.
+export async function insertBoqMaster(exec: (text: string, params: unknown[]) => Promise<any[]>, orgId: number, userId: number, b: z.infer<typeof masterSchema>) {
+ const [r]=await exec(`insert into boq_master(org_id,tender_id,project_id,item_no,section,description,unit_of_measure,quantity,cost_code_id,unit_rate_material,unit_rate_labor,unit_rate_equipment,unit_rate_subcontract,overhead_percent,profit_percent,created_by) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) returning *`,[orgId,b.tender_id??null,b.project_id??null,b.item_no,b.section??null,b.description,b.unit_of_measure,b.quantity,b.cost_code_id??null,b.unit_rate_material,b.unit_rate_labor,b.unit_rate_equipment,b.unit_rate_subcontract,b.overhead_percent,b.profit_percent,userId]);
+ return r;
+}
 boqRouter.post('/master', authorize('boq','create'), asyncHandler(async(req,res)=>{
- const b=masterSchema.parse(req.body); const [r]=await query(`insert into boq_master(org_id,tender_id,project_id,item_no,section,description,unit_of_measure,quantity,cost_code_id,unit_rate_material,unit_rate_labor,unit_rate_equipment,unit_rate_subcontract,overhead_percent,profit_percent,created_by) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) returning *`,[req.user!.org_id,b.tender_id??null,b.project_id??null,b.item_no,b.section??null,b.description,b.unit_of_measure,b.quantity,b.cost_code_id??null,b.unit_rate_material,b.unit_rate_labor,b.unit_rate_equipment,b.unit_rate_subcontract,b.overhead_percent,b.profit_percent,req.user!.id]); res.status(201).json({success:true,data:r});
+ const b=masterSchema.parse(req.body); res.status(201).json({success:true,data:await insertBoqMaster(query,Number(req.user!.org_id),Number(req.user!.id),b)});
 }));
 boqRouter.patch('/master/:id', authorize('boq','edit'), asyncHandler(async(req,res)=>{
  const id=Number(req.params.id), b=masterBase.partial().parse(req.body); const fields:any[]=[]; const vals:any[]=[]; for(const [k,v] of Object.entries(b)){fields.push(`${k}=$${fields.length+2}`);vals.push(v);} if(!fields.length)throw new AppError(400,'No fields to update');

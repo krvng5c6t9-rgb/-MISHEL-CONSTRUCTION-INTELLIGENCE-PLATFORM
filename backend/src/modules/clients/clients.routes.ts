@@ -7,7 +7,7 @@ import { AppError } from '../../middleware/errors.js';
 
 export const clientsRouter = Router();
 
-const clientSchema = z.object({
+export const clientSchema = z.object({
   client_name: z.string().min(2).max(200),
   client_type: z.enum(['private','government','developer']).default('private'),
   contact_person: z.string().max(150).optional().nullable(),
@@ -17,6 +17,13 @@ const clientSchema = z.object({
   tax_id: z.string().max(50).optional().nullable(),
   source: z.enum(['referral','tender','direct','other']).optional().nullable()
 });
+
+// CC-098: one insert used by this route and by the Excel import (same rules either way).
+export type Exec = (text: string, params: unknown[]) => Promise<any[]>;
+export async function insertClient(exec: Exec, orgId: number, userId: number, b: z.infer<typeof clientSchema>) {
+  const rows = await exec(`insert into clients (org_id,client_name,client_type,contact_person,phone,email,address,tax_id,source,created_by) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning *`,[orgId,b.client_name,b.client_type,b.contact_person??null,b.phone??null,b.email??null,b.address??null,b.tax_id??null,b.source??null,userId]);
+  return rows[0];
+}
 
 clientsRouter.get('/', authorize('crm','view'), asyncHandler(async (_req,res) => {
   const rows = await query(`select id,client_name,client_type,contact_person,phone,email,address,tax_id,source,is_active,created_at,updated_at from clients order by created_at desc limit 500`);
@@ -34,8 +41,7 @@ clientsRouter.get('/:id', authorize('crm','view'), asyncHandler(async (req,res) 
 clientsRouter.post('/', authorize('crm','create'), asyncHandler(async (req,res) => {
   if (!req.user) throw new AppError(401,'Authentication required');
   const b = clientSchema.parse(req.body);
-  const rows = await query(`insert into clients (org_id,client_name,client_type,contact_person,phone,email,address,tax_id,source,created_by) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning *`,[req.user.org_id,b.client_name,b.client_type,b.contact_person??null,b.phone??null,b.email??null,b.address??null,b.tax_id??null,b.source??null,req.user.id]);
-  res.status(201).json({ success:true, data:rows[0] });
+  res.status(201).json({ success:true, data: await insertClient(query, Number(req.user.org_id), Number(req.user.id), b) });
 }));
 
 clientsRouter.patch('/:id', authorize('crm','edit'), asyncHandler(async (req,res) => {

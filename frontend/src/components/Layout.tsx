@@ -65,7 +65,8 @@ const navGroups: { key: MessageKey; items: Item[] }[] = [
     { to: '/ai-platform', key: 'nav.aiPlatform', icon: Bot, perms: ['ai_platform'] },
     { to: '/automation', key: 'nav.automation', icon: Workflow, perms: ['automation'] },
     { to: '/knowledge', key: 'nav.knowledge', icon: BookOpenCheck, perms: ['knowledge'] },
-    { to: '/commercial-platform', key: 'nav.commercialPlatform', icon: BadgeDollarSign, perms: ['commercial_platform'] }] }
+    { to: '/commercial-platform', key: 'nav.commercialPlatform', icon: BadgeDollarSign, perms: ['commercial_platform'] },
+    { to: '/data-exchange', key: 'nav.dataExchange', icon: FolderArchive, perms: ['crm', 'vendors', 'cost_control', 'boq'] }] }
 ];
 const COLLAPSED_KEY = 'marc.nav.collapsed';
 const readCollapsed = (): string[] => { try { const v = JSON.parse(localStorage.getItem(COLLAPSED_KEY) ?? '[]'); return Array.isArray(v) ? v : []; } catch { return []; } };
