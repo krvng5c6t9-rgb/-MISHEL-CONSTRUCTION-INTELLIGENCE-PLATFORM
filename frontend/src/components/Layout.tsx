@@ -34,7 +34,8 @@ const navGroups: { key: MessageKey; items: Item[] }[] = [
     { to: '/planning', key: 'nav.planning', icon: CalendarDays, perms: ['planning'] },
     { to: '/schedule', key: 'nav.schedule', icon: CalendarDays, perms: ['planning'] },
     { to: '/cost-control', key: 'nav.costControl', icon: Landmark, perms: ['cost_control'] },
-    { to: '/reports', key: 'nav.reports', icon: FileBarChart, perms: ['reports'] }] },
+    { to: '/reports', key: 'nav.reports', icon: FileBarChart, perms: ['reports'] },
+    { to: '/analytics', key: 'nav.analytics', icon: BarChart3, perms: ['cost_control', 'finance', 'procurement', 'hr', 'boq'] }] },
   { key: 'nav.groupEngineering', items: [
     { to: '/technical-office', key: 'nav.technicalOffice', icon: DraftingCompass, perms: ['technical_office'] },
     { to: '/edms', key: 'nav.edms', icon: FolderArchive, perms: ['edms'] }] },

@@ -27,6 +27,7 @@ import { Guarantees } from './pages/Guarantees';
 import { EInvoicing } from './pages/EInvoicing';
 import { Schedule } from './pages/Schedule';
 import { DataExchange } from './pages/DataExchange';
+import { Analytics } from './pages/Analytics';
 import { SiteAttendance } from './pages/SiteAttendance';
 import { TenderStudy } from './pages/TenderStudy';
 import { Reports } from './pages/Reports';
@@ -96,6 +97,7 @@ export function App() {
             <Route path="tender-study" element={<TenderStudy />} />
             <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="analytics" element={<Analytics />} />
             <Route path="portals" element={<Portals />} />
             <Route path="runtime-validation" element={<RuntimeValidation />} />
             <Route path="ai-platform" element={<AIPlatform />} />

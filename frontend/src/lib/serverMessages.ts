@@ -113,6 +113,11 @@ const EXACT: Record<string, string> = {
   // CC-090: verification screen.
   'Give one of: the QR text, the export number or the file fingerprint': 'أدخل واحدًا فقط: نص رمز QR أو رقم التصدير أو بصمة الملف',
   'No export of this company matches this file': 'لا يوجد تصدير لهذه الشركة يطابق هذا الملف',
+  // CC-099: analytics dashboards.
+  'Unknown data source': 'مصدر بيانات غير معروف',
+  'Dashboard not found or not yours': 'اللوحة غير موجودة أو ليست ملكك',
+  'The dashboard owner must belong to the company': 'يجب أن يكون مالك اللوحة من الشركة',
+  'A dashboard keeps its owner': 'اللوحة تحتفظ بمالكها',
   // CC-098: Excel import / export.
   'Unknown record type': 'نوع سجل غير معروف',
   'Give either a project or a tender': 'حدّد مشروعًا أو مناقصة',
