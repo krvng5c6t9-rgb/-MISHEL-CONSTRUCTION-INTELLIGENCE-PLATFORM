@@ -9,7 +9,7 @@ This document is the plan of record. It extends MP-01…MP-07; MP-07 §3 release
 ## 1. What the owner's plan contains (read, measured)
 | Part | Content | Measured status in the package itself |
 |---|---|---|
-| Program list | `ORIGINAL_451_SOURCE_ORDER.csv`: 451 entries in 16 categories, each with role, sources, integration route, licence status | 451 rows, **437 distinct names** (14 names repeated across categories, 2 marked as aliases); every row "RETAIN_FOR_FULL_FEATURE_RESEARCH", "NOT_TESTED", licence "ASSUMED_AVAILABLE_NOT_VALIDATED" |
+| Program list | `ORIGINAL_451_SOURCE_ORDER.csv`: 451 entries in 16 categories, each with role, sources, integration route, licence status | 451 rows = **420 distinct programs** by the counting rules of §8a (16 repeated entries, 12 same-product names / editions, 2 aliases, 2 generic groups; one entry holds two products); every row "RETAIN_FOR_FULL_FEATURE_RESEARCH", "NOT_TESTED", licence "ASSUMED_AVAILABLE_NOT_VALIDATED" |
 | Organisation | 14 divisions, 634 roles (General Assembly … database administrator), one candidate AI agent profile per role | role IDs are candidates, not permissions (package's own note) |
 | Data model | 175 tables in 4 schemas (`nx_design` 28, `nx_org` 43, `nx_market` 103, `nx_auth` 1) | "proposed transactional data model, not executable business engines"; checked by a template checker and SQLite, not by PostgreSQL; RLS placeholders untested |
 | Market gaps | G01–G20 with priorities | "domain workflow and negative fixtures still required" for each |
@@ -130,6 +130,20 @@ Vantagepoint / BQE CORE, Kantata / Monograph); scheduling 5 (Phoenix, Spider Pro
 Fuzor); visual 5 (Premiere Pro, After Effects, Canva, Figma, CorelDRAW); structural 5 (Prokon, spColumn / CSiCol, Hilti
 PROFIS, ADAPT-Builder, OpenSees); project management 4; estimating 4; real estate 3; construction field / HSE 2; MEP 1;
 AI 1. The search continues as part of every wave (a program found missing is added to this register before its wave starts).
+
+### 8a. Exact count of distinct programs (owner instruction 2026-11-26: verified count before approval)
+Rules: R1 a separately named product counts 1; R2 an entry naming several distinct products counts each; R3 another name
+of the same product counts once (regional editions, edition tiers, a family entry covered by its listed editions, an AI
+layer of a listed product); R4 a repeated entry counts once; R5 an entry the source marks as alias counts 0; R6 a generic
+group (partner / ISV editions) counts 0; R7 a suite sold under its own name counts 1. Every decision is listed by entry in
+`MARC_PROGRAM_COUNT.csv`, computed by `governance/tools/program_count.py` (self-check: decisions all matched).
+| List | Entries | Distinct programs | Arithmetic |
+|---|---:|---:|---|
+| Owner list | 451 | **420** | 451 − 32 entries counted 0 (R4 16, R3 12, R5 2, R6 2) + 1 (LangChain / LangGraph) |
+| MARC supplement | 65 | **77** | 65 + 12 (entries holding 2–3 products, R2) |
+| **Total in the plan** | 516 | **497** | each of the 77 checked individually against the owner list: none present |
+Earlier figures superseded: "437 distinct names" (did not merge same-product names and editions) and "502" (said in chat
+only; counted grouped entries as one). Judgement entries are visible in the CSV and can be re-decided by the owner.
 
 ## 9. Next step
 Start W1 stage 71: group hierarchy and consolidation (companies under a group, intercompany accounts, elimination
