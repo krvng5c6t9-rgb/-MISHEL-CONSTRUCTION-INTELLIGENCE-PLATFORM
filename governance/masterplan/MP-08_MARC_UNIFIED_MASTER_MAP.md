@@ -117,7 +117,21 @@ licence checked first (LGPL / GPL code is read for reference only unless the own
 | L6 Release board | owner sign-off on scope, evidence and the honest announcement text (MP-07 §5) | signed release record |
 Today MARC operates L1 and L2 on every stage and has executed red-team rounds; L3–L6 are added per wave from W1.
 
-## 8. Next step
+## 8. Programs missing from the owner list (owner instruction 2026-11-26: "inventory everything missing")
+Method: 121 programs in common use across documents / office, general and construction project management,
+scheduling, estimating, CAD / BIM, visual design, structural / geotechnical, MEP, infrastructure / survey, finance / HR,
+facilities, real estate and AI were checked by name against the owner list (`governance/tools/supplementary_programs_check.py`;
+two false matches - Microsoft Planner vs "Planner 5D", Workday HCM vs Workday Financial - corrected by hand).
+Result: 56 already in the list, **65 missing**, added to `MARC_SUPPLEMENTARY_PROGRAMS_REGISTER.csv` with strategy and wave:
+documents / office 14 (Adobe Acrobat, Foxit, Nitro, Excel, Word, PowerPoint, Outlook, Teams, Visio, OneDrive / Dropbox / Box,
+DocuSign, Acrobat Sign, Zoom, Slack); CAD / BIM 7 (AutoCAD LT, BricsCAD, ZWCAD, GstarCAD, DraftSight, Rhino + Grasshopper,
+AutoCAD Map 3D); infrastructure / survey 7; finance / HR 7 (Zoho Books, Sage 50, Workday HCM, ADP, Jisr, Deltek
+Vantagepoint / BQE CORE, Kantata / Monograph); scheduling 5 (Phoenix, Spider Project, Deltek Open Plan, Safran Project,
+Fuzor); visual 5 (Premiere Pro, After Effects, Canva, Figma, CorelDRAW); structural 5 (Prokon, spColumn / CSiCol, Hilti
+PROFIS, ADAPT-Builder, OpenSees); project management 4; estimating 4; real estate 3; construction field / HSE 2; MEP 1;
+AI 1. The search continues as part of every wave (a program found missing is added to this register before its wave starts).
+
+## 9. Next step
 Start W1 stage 71: group hierarchy and consolidation (companies under a group, intercompany accounts, elimination
 rules, consolidation runs reproducible with FX), with the full gate and records; then the remaining W1 stages in the
 order of §6.

@@ -1,0 +1,66 @@
+supp_id,domain,program,marc_strategy,wave,marc_status,source
+S.001,Documents / office,Adobe Acrobat Pro,"REPLACE_NATIVE (PDF viewer, markup, stamps, compare, sign workflow)",W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.002,Documents / office,Foxit PDF Editor,REPLACE_NATIVE (PDF tools),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.003,Documents / office,Nitro PDF Pro,REPLACE_NATIVE (PDF tools),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.004,Documents / office,Microsoft Excel,INTEGRATE (xlsx exchange - built CC-098) + native grid views,W1,PARTIAL,MARC review 2026-11-26: not in the owner list
+S.005,Documents / office,Microsoft Word,"INTEGRATE (docx generation of letters, reports, contracts)",W1,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.006,Documents / office,Microsoft PowerPoint,INTEGRATE (pptx report packs),W5,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.007,Documents / office,Microsoft Outlook / Exchange,INTEGRATE (mail capture to correspondence register),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.008,Documents / office,Microsoft Teams,"INTEGRATE (notifications, meetings)",W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.009,Documents / office,Microsoft Visio,"REPLACE_NATIVE (org charts, process diagrams)",W5,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.010,Documents / office,Microsoft OneDrive / Dropbox / Box,INTEGRATE (file sources for EDMS),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.011,Documents / office,DocuSign,INTEGRATE (e-signature) + native signing workflow,W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.012,Documents / office,Adobe Acrobat Sign,INTEGRATE (e-signature),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.013,Documents / office,Zoom,INTEGRATE (meetings to minutes),W5,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.014,Documents / office,Slack,INTEGRATE (notifications),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.015,Project management (general),Trello,REPLACE_NATIVE,W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.016,Project management (general),Airtable,REPLACE_NATIVE,W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.017,Project management (general),Microsoft Planner,REPLACE_NATIVE,W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.018,Project management (general),Planisware,REPLACE_NATIVE (portfolio),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.019,Scheduling,Phoenix Project Manager,REPLACE_NATIVE (CPM),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.020,Scheduling,Spider Project,REPLACE_NATIVE (resource scheduling),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.021,Scheduling,Deltek Open Plan,REPLACE_NATIVE,W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.022,Scheduling,Safran Project,REPLACE_NATIVE,W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.023,Scheduling,Fuzor,INNOVATE (4D),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.024,Construction PM / field,SafetyCulture (iAuditor),"REPLACE_NATIVE (inspections, HSE)",W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.025,Construction PM / field,Intelex / Cority / Enablon (EHS),REPLACE_NATIVE (HSE),W3,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.026,Estimating / take-off,Causeway CATO,REPLACE_NATIVE (QS),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.027,Estimating / take-off,Glodon Cubicost,REPLACE_NATIVE (BIM take-off),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.028,Estimating / take-off,Vico Office,INNOVATE (5D),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.029,Estimating / take-off,Destini Estimator,REPLACE_NATIVE,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.030,CAD / BIM,AutoCAD LT,INTEGRATE (DWG/DXF) + native viewer / markup,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.031,CAD / BIM,BricsCAD,INTEGRATE (DWG),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.032,CAD / BIM,ZWCAD,INTEGRATE (DWG),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.033,CAD / BIM,GstarCAD,INTEGRATE (DWG),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.034,CAD / BIM,DraftSight,INTEGRATE (DWG),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.035,CAD / BIM,Rhinoceros (Rhino) + Grasshopper,INTEGRATE (3DM / IFC),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.036,CAD / BIM,Autodesk AutoCAD Map 3D,INTEGRATE (GIS + CAD),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.037,Visual / graphics,Adobe Premiere Pro,INTEGRATE (site video),W8,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.038,Visual / graphics,Adobe After Effects,INTEGRATE,W8,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.039,Visual / graphics,Canva,INNOVATE (report / proposal templates),W5,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.040,Visual / graphics,Figma,INTEGRATE,W8,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.041,Visual / graphics,CorelDRAW,INTEGRATE,W8,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.042,Structural / geotechnical,Prokon,INTEGRATE_CONNECTOR,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.043,Structural / geotechnical,spColumn / CSiCol,"NATIVE_CALCULATOR (section checks, signed)",W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.044,Structural / geotechnical,Hilti PROFIS Engineering,INTEGRATE_CONNECTOR,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.045,Structural / geotechnical,ADAPT-Builder,INTEGRATE_CONNECTOR,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.046,Structural / geotechnical,OpenSees (open source),CANDIDATE ENGINE (licence and verification first),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.047,MEP / energy,Pipe Flow Expert,INTEGRATE,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.048,Infrastructure / survey,12d Model,INTEGRATE,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.049,Infrastructure / survey,AutoTURN,INTEGRATE,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.050,Infrastructure / survey,PTV Vissim / Synchro traffic,INTEGRATE,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.051,Infrastructure / survey,Global Mapper,INTEGRATE (GIS),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.052,Infrastructure / survey,Golden Surfer,INTEGRATE (contours),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.053,Infrastructure / survey,Carlson Survey,INTEGRATE (survey),W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.054,Infrastructure / survey,Bentley WaterCAD / SewerCAD / StormCAD,INTEGRATE,W6,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.055,Finance / ERP / HR,Zoho Books,REPLACE_NATIVE + migration import,W1,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.056,Finance / ERP / HR,Sage 50,REPLACE_NATIVE + migration import,W1,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.057,Finance / ERP / HR,Workday HCM,REPLACE_NATIVE,W1,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.058,Finance / ERP / HR,ADP,REPLACE_NATIVE (payroll),W1,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.059,Finance / ERP / HR,Jisr,REPLACE_NATIVE (KSA HR / payroll),W1,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.060,Finance / ERP / HR,Deltek Vantagepoint / BQE CORE (A&E practice),REPLACE_NATIVE (design-office profile),W1,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.061,Finance / ERP / HR,Kantata / Monograph (professional services),REPLACE_NATIVE (design-office profile),W1,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.062,Real estate,Yardi,REPLACE_NATIVE (W4 developer suite),W4,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.063,Real estate,MRI Software,REPLACE_NATIVE (W4 developer suite),W4,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.064,Real estate,Property Finder / Bayut (portals),INTEGRATE (listing feeds),W4,NOT_STARTED,MARC review 2026-11-26: not in the owner list
+S.065,BI / data / AI,Google Gemini,AI_NATIVE (provider-neutral AI layer),W5,NOT_STARTED,MARC review 2026-11-26: not in the owner list
