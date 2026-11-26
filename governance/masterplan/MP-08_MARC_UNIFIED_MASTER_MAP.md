@@ -6,6 +6,13 @@ reference copies in `governance/sources/nexora/`; the MARC code and gate as of C
 CI green). Owner instruction: "the most correct, complete and best according to the hard reviews and committees - do it".
 This document is the plan of record. It extends MP-01…MP-07; MP-07 §3 releases are re-sequenced by §6 below.
 
+## 0. Owner amendment 2026-11-26 (binding)
+Every program in the plan is answered by a **native MARC function** that does its work. Strategy values that read
+"INTEGRATE" in the registers now mean "native function to build; file / API bridge used only for exchange until and after
+it exists". Engineering engines (drafting, modelling, clash, analysis, calculation, rendering) are built in MARC and
+verified against reference results before release; results remain signed by the accountable licensed engineer (D6).
+Open-source engines may be used as building blocks after licence review and owner approval (OVD-003 §1).
+
 ## 1. What the owner's plan contains (read, measured)
 | Part | Content | Measured status in the package itself |
 |---|---|---|
@@ -26,7 +33,7 @@ proven engine stays; the plan's breadth becomes MARC's scope, catalogue and road
 | D2 | Do **not** import the 175-table DDL wholesale. Each proposed table is mapped to an existing MARC table, merged into one, or built as part of its gap (G-item) with its invariants and tests | the DDL is untested and overlaps MARC (e.g. journal, invoice, RFI, punch, FX already exist with guards) |
 | D3 | The 634-role catalogue and 14 divisions become a **role template library**: a company adopts, renames or removes roles; MARC permissions and DOA stay the source of authority | product sold to many companies; roles differ per company; nothing assumed |
 | D4 | One AI agent profile per division first (14), then per role family, on the existing AI layer (company key, verified quotes, human approval, AI register) | quality before quantity; every agent needs an evaluation set |
-| D5 | Programs are answered by four strategies (register column `marc_strategy`): **REPLACE_NATIVE** (MARC does the job itself), **INTEGRATE** (connector / open formats with the client's licensed tool), **INNOVATE / AI_NATIVE** (beyond the reference product), **INTEGRATE_ONLY** (outside the construction core) | authoring CAD/BIM and FEM solvers cannot be re-implemented credibly in one step; open formats (IFC, DXF, BCF, XER, MSPDI, XLSX, GeoJSON) and vendor APIs give working value now, native engines follow in later waves with verification |
+| D5 | **(Amended 2026-11-26 by the owner - supersedes the first wording.)** MARC itself does the work of every program in the list: 2D drafting (AutoCAD role), BIM modelling (Revit role), coordination and clash detection (Navisworks role), structural / geotechnical analysis (SAP2000 / ETABS / PLAXIS role), MEP, lighting and energy calculation, estimating and take-off, scheduling, rendering, GIS, documents - all merged into one integrated program. Reading and writing the other programs' files (DWG, DXF, RVT via IFC, IFC, BCF, XER, MSPDI, XLSX, PDF) is kept only as a bridge for importing and exchanging data, never as a substitute for the native function | owner instruction 2026-11-26: "MARC does the same work as the programs - as if all programs were merged into one" |
 | D6 | Engineering results (structural, MEP, energy) are always records signed by the accountable licensed engineer; AI never signs | OVD-001 §5 |
 | D7 | Country packs are data + rules per country (tax, e-invoice, payroll, labour law, calendar): Egypt first (exists partly), KSA and UAE next, then Gulf and Arab states, then EU/US | OVD-003 market order |
 | D8 | Duplicated / alias entries of the list are kept for traceability and flagged in the register; coverage is counted on distinct products | honesty of counts |
@@ -37,22 +44,22 @@ feature parity with the named product (parity is proven only by a per-product ac
 
 | Cat | Area | Entries | Strategy | MARC status | Wave |
 |---|---|---:|---|---|---|
-| 01 | General ERP suites | 31 | replace + coexistence connectors | PARTIAL (consolidation, treasury, depreciation missing) | W1 |
+| 01 | General ERP suites | 31 | native (data bridges for migration) | PARTIAL (consolidation, treasury, depreciation missing) | W1 |
 | 02 | Construction ERP | 34 | replace | BUILT & TESTED core | W1 |
 | 03 | Construction PM / CDE | 24 | replace | PARTIAL (offline mobile, model-based CDE missing) | W3 |
 | 04 | Construction AI | 29 | AI-native | PARTIAL (tender study agent only) | W5 |
 | 05 | Estimating / take-off | 23 | replace + innovate | PARTIAL (take-off from drawings missing) | W6 |
 | 06 | Scheduling | 14 | replace | PARTIAL (resources, Monte Carlo risk, 4D missing) | W3 |
-| 07 | BIM / CAD coordination | 23 | open formats + native viewer | NOT STARTED | W6 |
+| 07 | BIM / CAD coordination | 23 | native (clash, coordination) | NOT STARTED | W6 |
 | 08 | Arab / regional ERP | 28 | replace and compete | PARTIAL (KSA / UAE packs missing) | W1 |
 | 09 | CRM, HCM, BI, collaboration | 58 | replace | PARTIAL | W1 |
 | 10 | AI agents / automation | 24 | AI-native | PARTIAL | W5 |
-| 11 | Autodesk AEC portfolio | 26 | open formats + APIs under client licence | NOT STARTED | W6 |
-| 12 | Architecture / interior | 42 | integrate + innovate | NOT STARTED | W6 |
-| 13 | Structural / geotechnical | 26 | connector now, verified engine later | NOT STARTED | W6 |
-| 14 | MEP, lighting, energy | 27 | integrate + native calculators | NOT STARTED | W6 |
-| 15 | Infrastructure / GIS / survey | 24 | open formats | NOT STARTED | W6 |
-| 16 | Mechanical / PLM / simulation | 18 | integrate only | NOT STARTED | W8 |
+| 11 | Autodesk AEC portfolio | 26 | native drafting and BIM modelling | NOT STARTED | W6 |
+| 12 | Architecture / interior | 42 | native design + innovate | NOT STARTED | W6 |
+| 13 | Structural / geotechnical | 26 | native verified engines | NOT STARTED | W6 |
+| 14 | MEP, lighting, energy | 27 | native calculation | NOT STARTED | W6 |
+| 15 | Infrastructure / GIS / survey | 24 | native infrastructure / GIS | NOT STARTED | W6 |
+| 16 | Mechanical / PLM / simulation | 18 | native, lowest priority | NOT STARTED | W8 |
 Totals: BUILT_TESTED_CORE 34, PARTIAL 231, NOT_STARTED 186.
 
 ## 4. Coverage of the 14 divisions (634 roles)
@@ -63,7 +70,7 @@ Totals: BUILT_TESTED_CORE 34, PARTIAL 231, NOT_STARTED 186.
 | 03 | Business development (41) | CRM leads, opportunities, activities | company prequalification library, key accounts (W1) |
 | 04 | Tendering and estimating (42) | tenders, clarifications, documents, BOQ, rate build-up, AI tender study | take-off from drawings/models (W6) |
 | 05 | Commercial, contracts, claims (41) | contracts, clauses, notices, claims, EOT, variations, compensation events, LDs | delay-analysis methods (TIA) on the schedule (W3) |
-| 06 | Design and engineering (63) | design links, revision impacts, drawings | engineering calculation records, model viewer, connectors (W6) |
+| 06 | Design and engineering (63) | design links, revision impacts, drawings | native drafting, BIM modelling, analysis and calculation engines (W6) |
 | 07 | Technical office and document control (39) | RFIs, submittals, transmittals, EDMS, method statements, QR verification | model-based CDE workflows (W3) |
 | 08 | PMO and planning (41) | projects, controls, EVM, risks, dated CPM, XER/MSPDI | resources, Monte Carlo risk, 4D (W3) |
 | 09 | Construction and site (50) | site diary, manpower, equipment, instructions, permits, punch, NCR, HSE, attendance | offline mobile app, photo progress (W3) |
@@ -99,7 +106,7 @@ Totals: BUILT_TESTED_CORE 34, PARTIAL 231, NOT_STARTED 186.
 | **W3 Field, schedule and offline** | offline mobile site app with conflict-safe sync; photo progress; resources and Monte Carlo risk on the schedule; 5D link BOQ ↔ activity; escalations; delay analysis | daily users on sites |
 | **W4 Developer / real estate suite** | units, price books, reservations, sales instalments, leases, brokers and commissions, unit handover, FM service requests and SLA, portal feeds | the Emaar / developer market (G05–G10) |
 | **W5 AI agents per division** | 14 division agents then role families: contract risk review, claims assistant, schedule optimisation, progress from photos, procurement assistant, finance close assistant, HR assistant; evaluation sets per agent | AI-first product, built on governed data |
-| **W6 Design and engineering integration** | IFC / DXF / BCF viewer and model quantities; take-off from PDF / DXF; drawing review agent; connectors to licensed Revit / AutoCAD (APS), SAP2000 / ETABS (OAPI), Primavera API; MEP / lighting / energy calculators; GIS layers; later a verified open-source analysis engine | replaces the design-side programs step by step with open formats and verified engines |
+| **W6 Design and engineering (native)** | native 2D drafting (DWG / DXF), native BIM modelling, federated viewer and clash detection, take-off from drawings and models, drawing-review agent, native structural / geotechnical engines, MEP / lighting / energy calculation, rendering, GIS and survey - each verified against reference results; exchange bridges (IFC, DWG, BCF, APIs) for importing existing work | MARC does the work of the design-side programs itself (owner amendment §0) |
 | **W7 Construction marketplace (OVD-003 §3)** | catalogue, RFQ, orders, payments with licensed providers, delivery tracking, ratings; linked to procurement, stores and cost | revenue line; shares the supplier directory of W2 |
 | **W8 Global raise** | EU / US country packs, GDPR, SOC 2 / ISO 27001 evidence, accessibility conformance, multi-region hosting | OVD-003 §1 second stage |
 
