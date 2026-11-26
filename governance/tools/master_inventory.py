@@ -36,19 +36,37 @@ SUPP = [  # verified absent from the inventory (name and keyword search, 2026-11
  ('ERP & finance', 'BQE Software', 'BQE CORE'), ('ERP & finance', 'Kantata', 'Kantata'), ('ERP & finance', 'Monograph', 'Monograph'),
  ('CRM marketing & business', 'Property Finder', 'Property Finder'), ('CRM marketing & business', 'Bayut', 'Bayut'),
 ]
+# Owner decisions 2026-11-26 (CC-106): (1) marketing / SEO / advertising / social / e-commerce tools -> a separate MARC
+# marketing and e-commerce application, phase 2 after the program; CRM, sales and customer-service tools stay in MARC;
+# (2) graphics / video / media tools are built natively in MARC at the level of the leading paid programs, with AI;
+# (3) IT infrastructure products are MARC's own technology (platform), not functions to replace.
+CRM_CORE = {'SW-0182', 'SW-0186', 'SW-0188', 'SW-0189', 'SW-0190', 'SW-0191', 'SW-0192', 'SW-0193', 'SW-0198', 'SW-0201', 'SW-0203',
+            'SW-0204', 'SW-0205', 'SW-0206', 'SW-0208', 'SW-0219', 'SW-0220', 'SW-0221', 'SW-0224', 'SW-0228', 'SW-0233', 'SW-0234',
+            'SW-0241', 'SW-0242', 'SW-0243', 'SW-0244', 'SW-0246', 'SW-0247'}
+def decide(rid, disc, f, st, wv, ai, note):
+    if disc == 'CRM marketing & business':
+        if rid in CRM_CORE:
+            return ('Native CRM, sales, customer service and field service', 'PARTIAL', 'W1', 'AI follows up leads, drafts offers and answers customers; approval by the responsible person', '')
+        return ('Separate MARC marketing and e-commerce application (phase 2, after the program)', 'SEPARATE_APP_PHASE2', 'PHASE2', 'AI writes and runs campaigns, SEO and store operations', 'owner decision 2026-11-26: separate app, phase 2')
+    if disc == 'Graphic design & media':
+        return ('Native graphics, photo, video, audio, font and media tools at the level of the leading paid programs, with AI', 'NOT_STARTED', 'W6', 'AI creates and edits images, videos, presentations and designs on request', 'owner decision 2026-11-26: native in MARC')
+    if disc == 'IT software & cybersecurity':
+        return ("MARC's own technology stack and IT administration (platform)", 'PLATFORM', 'PLATFORM', 'AI assists IT administration inside MARC', 'owner decision 2026-11-26: platform components, not replaced')
+    return (f, st, wv, ai, note)
 wb = openpyxl.load_workbook(xlsx, read_only=True, data_only=True)
 M = list(wb['Master Inventory'].iter_rows(values_only=True)); h = M[0]
 rows = [dict(zip(h, r)) for r in M[1:] if any(r)]
 outr = []
 for r in rows:
-    f, st, wv, ai, note = D[r['Discipline']]
+    f, st, wv, ai, note = decide(r['ID'], r['Discipline'], *D[r['Discipline']])
     outr.append([r['ID'], 'owner inventory', r['Discipline'], r['Vendor / developer'], r['Program / named tool'], r['Short description'], f, st, wv, ai, note])
 for i, (disc, ven, prog) in enumerate(SUPP, 1):
-    f, st, wv, ai, note = D[disc]
+    f, st, wv, ai, note = decide(f'MARC-S{i:03d}', disc, *D[disc])
     outr.append([f'MARC-S{i:03d}', 'MARC supplement (verified absent)', disc, ven, prog, '', f, st, wv, ai, note])
 with open(out, 'w', newline='', encoding='utf-8') as fo:
     w = csv.writer(fo); w.writerow(['id', 'source', 'discipline', 'vendor', 'program', 'description', 'marc_function', 'marc_status', 'wave', 'ai_assistant', 'scope_note']); w.writerows(outr)
 import collections
 print('rows', len(outr), '= inventory', len(rows), '+ supplement', len(SUPP))
 print('by status', dict(collections.Counter(x[7] for x in outr)))
-print('owner decision rows', sum(1 for x in outr if x[10]), dict(collections.Counter(x[2] for x in outr if x[10])))
+print('by wave', dict(collections.Counter(x[8] for x in outr)))
+print('CRM core kept', sum(1 for x in outr if x[2] == 'CRM marketing & business' and x[7] == 'PARTIAL'), '| pending decisions', sum(1 for x in outr if x[10].startswith('OWNER DECISION')))
