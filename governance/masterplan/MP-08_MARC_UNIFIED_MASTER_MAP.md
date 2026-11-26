@@ -13,6 +13,15 @@ it exists". Engineering engines (drafting, modelling, clash, analysis, calculati
 verified against reference results before release; results remain signed by the accountable licensed engineer (D6).
 Open-source engines may be used as building blocks after licence review and owner approval (OVD-003 §1).
 
+### 0a. Owner amendment 2026-11-26 (binding): an AI assistant in every tool, everything linked
+Every MARC tool and every merged program function has its own AI assistant that can do the work for the user on request
+(for example: draw a floor plan from a description or a sketch when the user does not want to draw by hand; do the take-off;
+build the schedule; run and report the analysis; prepare the IPC; write the letter). The user reviews, edits and approves;
+financial, contractual, engineering and safety results are approved by the accountable person and engineering results are
+signed by the licensed engineer (OVD-001 §5, D6). Everything is linked to everything: a drawing produces quantities, the
+quantities feed pricing, the contract, the schedule, procurement, stores, cost and the accounts, with no re-entry. Column
+`ai_assistant` in both registers states what the assistant does for each program.
+
 ## 1. What the owner's plan contains (read, measured)
 | Part | Content | Measured status in the package itself |
 |---|---|---|
