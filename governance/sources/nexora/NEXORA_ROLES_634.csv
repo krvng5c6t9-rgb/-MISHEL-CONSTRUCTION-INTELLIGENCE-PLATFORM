@@ -1,0 +1,635 @@
+role_id,division,role_title,agent_id
+T3-R001,01,General Assembly,RP-T3-R001
+T3-R002,01,Board Chair,RP-T3-R002
+T3-R003,01,Board Director,RP-T3-R003
+T3-R004,01,Corporate Secretary,RP-T3-R004
+T3-R005,01,Audit Committee Chair,RP-T3-R005
+T3-R006,01,Risk Committee Chair,RP-T3-R006
+T3-R007,01,Investment Committee Chair,RP-T3-R007
+T3-R008,01,Group CEO,RP-T3-R008
+T3-R009,01,Group COO,RP-T3-R009
+T3-R010,01,Group CFO,RP-T3-R010
+T3-R011,01,Group CTO,RP-T3-R011
+T3-R012,01,Group CLO,RP-T3-R012
+T3-R013,01,Group CSO,RP-T3-R013
+T3-R014,01,Regional Managing Director,RP-T3-R014
+T3-R015,01,Country General Manager,RP-T3-R015
+T3-R016,02,Strategy Director,RP-T3-R016
+T3-R017,02,M&A Manager,RP-T3-R017
+T3-R018,02,Due Diligence Analyst,RP-T3-R018
+T3-R019,02,PPP Investment Manager,RP-T3-R019
+T3-R020,02,JV Director,RP-T3-R020
+T3-R021,02,JV Controller,RP-T3-R021
+T3-R022,03,BD Director,RP-T3-R022
+T3-R023,03,Country BD Manager,RP-T3-R023
+T3-R024,03,Key Account Manager,RP-T3-R024
+T3-R025,03,Prequalification Engineer,RP-T3-R025
+T3-R026,03,Market Analyst,RP-T3-R026
+T3-R027,04,Tender Director,RP-T3-R027
+T3-R028,04,Bid Manager,RP-T3-R028
+T3-R029,04,Quantity Surveyor,RP-T3-R029
+T3-R030,04,Civil Estimator,RP-T3-R030
+T3-R031,04,MEP Estimator,RP-T3-R031
+T3-R032,04,Fit-out Estimator,RP-T3-R032
+T3-R033,04,VE Engineer,RP-T3-R033
+T3-R034,05,Commercial Director,RP-T3-R034
+T3-R035,05,Contract Administrator,RP-T3-R035
+T3-R036,05,Claims Manager,RP-T3-R036
+T3-R037,05,Delay Analyst,RP-T3-R037
+T3-R038,05,Arbitration Counsel,RP-T3-R038
+T3-R039,05,Payment Certificate Engineer,RP-T3-R039
+T3-R040,06,Design Director,RP-T3-R040
+T3-R041,06,Architect,RP-T3-R041
+T3-R042,06,Interior Designer,RP-T3-R042
+T3-R043,06,Structural Engineer,RP-T3-R043
+T3-R044,06,Geotechnical Engineer,RP-T3-R044
+T3-R045,06,Civil Infrastructure Engineer,RP-T3-R045
+T3-R046,06,Road Engineer,RP-T3-R046
+T3-R047,06,Bridge Engineer,RP-T3-R047
+T3-R048,06,Marine Engineer,RP-T3-R048
+T3-R049,06,Mechanical Engineer,RP-T3-R049
+T3-R050,06,Electrical Engineer,RP-T3-R050
+T3-R051,06,Plumbing Engineer,RP-T3-R051
+T3-R052,06,Fire Protection Engineer,RP-T3-R052
+T3-R053,06,BIM Manager,RP-T3-R053
+T3-R054,06,BIM Coordinator,RP-T3-R054
+T3-R055,06,BIM Modeler,RP-T3-R055
+T3-R056,07,Technical Office Manager,RP-T3-R056
+T3-R057,07,Shop Drawing Engineer,RP-T3-R057
+T3-R058,07,As-built Engineer,RP-T3-R058
+T3-R059,07,Document Controller,RP-T3-R059
+T3-R060,07,Change Coordinator,RP-T3-R060
+T3-R061,08,PMO Director,RP-T3-R061
+T3-R062,08,Project Director,RP-T3-R062
+T3-R063,08,Project Manager,RP-T3-R063
+T3-R064,08,Planning Manager,RP-T3-R064
+T3-R065,08,Planning Engineer,RP-T3-R065
+T3-R066,08,4D/5D Coordinator,RP-T3-R066
+T3-R067,08,Risk Engineer,RP-T3-R067
+T3-R068,09,Construction Manager,RP-T3-R068
+T3-R069,09,Site Manager,RP-T3-R069
+T3-R070,09,Site Engineer,RP-T3-R070
+T3-R071,09,General Foreman,RP-T3-R071
+T3-R072,09,Trade Supervisor,RP-T3-R072
+T3-R073,09,Skilled Worker,RP-T3-R073
+T3-R074,09,Subcontract Coordinator,RP-T3-R074
+T3-R075,09,Quality Manager,RP-T3-R075
+T3-R076,09,QC Inspector,RP-T3-R076
+T3-R077,09,HSE Manager,RP-T3-R077
+T3-R078,09,Safety Officer,RP-T3-R078
+T3-R079,09,Sustainability Specialist,RP-T3-R079
+T3-R080,10,Supply Chain Director,RP-T3-R080
+T3-R081,10,Buyer,RP-T3-R081
+T3-R082,10,Vendor Qualification Engineer,RP-T3-R082
+T3-R083,10,Logistics Manager,RP-T3-R083
+T3-R084,10,Customs Specialist,RP-T3-R084
+T3-R085,10,Warehouse Manager,RP-T3-R085
+T3-R086,10,Storekeeper,RP-T3-R086
+T3-R087,11,Equipment Manager,RP-T3-R087
+T3-R088,11,Fleet Dispatcher,RP-T3-R088
+T3-R089,11,Maintenance Engineer,RP-T3-R089
+T3-R090,11,Plant Manager,RP-T3-R090
+T3-R091,11,Precast Production Engineer,RP-T3-R091
+T3-R092,11,Steel Fabrication Planner,RP-T3-R092
+T3-R093,11,Batching Plant Coordinator,RP-T3-R093
+T3-R094,11,Asphalt Plant Coordinator,RP-T3-R094
+T3-R095,12,Group Controller,RP-T3-R095
+T3-R096,12,Treasury Manager,RP-T3-R096
+T3-R097,12,General Ledger Accountant,RP-T3-R097
+T3-R098,12,AP Accountant,RP-T3-R098
+T3-R099,12,AR Accountant,RP-T3-R099
+T3-R100,12,Country Tax Manager,RP-T3-R100
+T3-R101,12,Cost Control Manager,RP-T3-R101
+T3-R102,12,Cost Engineer,RP-T3-R102
+T3-R103,12,Internal Auditor,RP-T3-R103
+T3-R104,13,HR Director,RP-T3-R104
+T3-R105,13,Talent Acquisition Specialist,RP-T3-R105
+T3-R106,13,Expat Mobility Coordinator,RP-T3-R106
+T3-R107,13,Payroll Manager,RP-T3-R107
+T3-R108,13,Timekeeper,RP-T3-R108
+T3-R109,13,Labor Productivity Analyst,RP-T3-R109
+T3-R110,13,HR Data Privacy Officer,RP-T3-R110
+T3-R111,14,CIO / IT Director,RP-T3-R111
+T3-R112,14,Enterprise Architect,RP-T3-R112
+T3-R113,14,CISO,RP-T3-R113
+T3-R114,14,IAM Administrator,RP-T3-R114
+T3-R115,14,Database Administrator,RP-T3-R115
+T3-R116,14,Data Steward,RP-T3-R116
+T3-R117,14,AI Platform Engineer,RP-T3-R117
+T3-R118,14,SRE,RP-T3-R118
+T3-R119,14,Service Desk Analyst,RP-T3-R119
+ROLE-01-1,01,Group Chairman,RP-ROLE-01-1
+ROLE-01-3,01,Entity Administrator,RP-ROLE-01-3
+ROLE-02-1,14,Chief Information Security Officer,RP-ROLE-02-1
+ROLE-02-2,14,Identity Governance Analyst,RP-ROLE-02-2
+ROLE-03-1,12,Chief Financial Officer,RP-ROLE-03-1
+ROLE-03-2,12,Financial Controller,RP-ROLE-03-2
+ROLE-03-3,12,GL Accountant,RP-ROLE-03-3
+ROLE-04-1,12,Group Treasurer,RP-ROLE-04-1
+ROLE-04-3,12,Cash Operations Analyst,RP-ROLE-04-3
+ROLE-05-1,12,Group Tax Director,RP-ROLE-05-1
+ROLE-05-2,12,Tax Compliance Manager,RP-ROLE-05-2
+ROLE-05-3,12,Tax Accountant,RP-ROLE-05-3
+ROLE-06-1,12,Chief Strategy & Performance Officer,RP-ROLE-06-1
+ROLE-06-2,12,FP&A Manager,RP-ROLE-06-2
+ROLE-06-3,12,Budget Analyst,RP-ROLE-06-3
+ROLE-07-1,03,Chief Commercial Officer,RP-ROLE-07-1
+ROLE-07-2,03,CRM Manager,RP-ROLE-07-2
+ROLE-07-3,03,Sales Operations Specialist,RP-ROLE-07-3
+ROLE-08-1,03,Business Development Director,RP-ROLE-08-1
+ROLE-08-2,03,Bid Capture Manager,RP-ROLE-08-2
+ROLE-08-3,03,Opportunity Analyst,RP-ROLE-08-3
+ROLE-09-1,04,Tendering Director,RP-ROLE-09-1
+ROLE-09-2,04,Senior Estimator,RP-ROLE-09-2
+ROLE-09-3,04,Tender Coordinator,RP-ROLE-09-3
+ROLE-10-1,04,Head of Quantity Surveying,RP-ROLE-10-1
+ROLE-10-2,04,Cost Estimation Engineer,RP-ROLE-10-2
+ROLE-11-1,05,Contracts Director,RP-ROLE-11-1
+ROLE-11-2,05,Contracts Manager,RP-ROLE-11-2
+ROLE-11-3,05,Contracts Administrator,RP-ROLE-11-3
+ROLE-12-1,05,Commercial Claims Director,RP-ROLE-12-1
+ROLE-12-3,05,Claims Engineer,RP-ROLE-12-3
+ROLE-13-1,08,Chief Projects Officer,RP-ROLE-13-1
+ROLE-13-2,08,Portfolio PMO Director,RP-ROLE-13-2
+ROLE-13-3,08,Portfolio Coordinator,RP-ROLE-13-3
+ROLE-14-1,08,Project Controls Director,RP-ROLE-14-1
+ROLE-15-1,12,Cost Control Director,RP-ROLE-15-1
+ROLE-16-1,10,Chief Procurement Officer,RP-ROLE-16-1
+ROLE-16-2,10,Procurement Manager,RP-ROLE-16-2
+ROLE-18-1,09,Subcontracts Director,RP-ROLE-18-1
+ROLE-18-2,09,Subcontract Manager,RP-ROLE-18-2
+ROLE-18-3,09,Subcontract QS,RP-ROLE-18-3
+ROLE-19-1,09,Construction Director,RP-ROLE-19-1
+ROLE-20-1,09,Quality Director,RP-ROLE-20-1
+ROLE-20-2,09,QA/QC Manager,RP-ROLE-20-2
+ROLE-20-3,09,Quality Inspector,RP-ROLE-20-3
+ROLE-21-1,09,HSE Director,RP-ROLE-21-1
+ROLE-22-1,07,Information Management Director,RP-ROLE-22-1
+ROLE-22-2,07,Document Control Manager,RP-ROLE-22-2
+ROLE-23-1,07,Technical Director,RP-ROLE-23-1
+ROLE-23-3,07,Technical Office Engineer,RP-ROLE-23-3
+ROLE-24-1,06,CAD Discipline Lead,RP-ROLE-24-1
+ROLE-24-2,06,CAD Coordinator,RP-ROLE-24-2
+ROLE-24-3,06,CAD Drafter,RP-ROLE-24-3
+ROLE-25-1,06,BIM Design Director,RP-ROLE-25-1
+ROLE-26-1,06,Digital Delivery Director,RP-ROLE-26-1
+ROLE-26-2,06,BIM Coordination Lead,RP-ROLE-26-2
+ROLE-26-3,06,Clash Coordinator,RP-ROLE-26-3
+ROLE-27-1,06,Chief Structural Engineer,RP-ROLE-27-1
+ROLE-27-2,06,Structural Design Lead,RP-ROLE-27-2
+ROLE-28-1,06,Architecture & Interiors Director,RP-ROLE-28-1
+ROLE-28-2,06,Architectural Design Manager,RP-ROLE-28-2
+ROLE-29-1,06,MEP Director,RP-ROLE-29-1
+ROLE-29-2,06,MEP Coordination Manager,RP-ROLE-29-2
+ROLE-29-3,06,MEP Engineer,RP-ROLE-29-3
+ROLE-30-1,06,Infrastructure Design Director,RP-ROLE-30-1
+ROLE-30-2,06,Civil/GIS Lead,RP-ROLE-30-2
+ROLE-30-3,06,Civil Design Engineer,RP-ROLE-30-3
+ROLE-31-1,11,Industrial Engineering Director,RP-ROLE-31-1
+ROLE-31-2,11,Plant Design Manager,RP-ROLE-31-2
+ROLE-31-3,11,P&ID Engineer,RP-ROLE-31-3
+ROLE-32-1,13,Chief People Officer,RP-ROLE-32-1
+ROLE-32-2,13,HR Operations Manager,RP-ROLE-32-2
+ROLE-32-3,13,Payroll Specialist,RP-ROLE-32-3
+ROLE-33-1,11,Plant & Equipment Director,RP-ROLE-33-1
+ROLE-33-2,11,Fleet Manager,RP-ROLE-33-2
+ROLE-33-3,11,Equipment Coordinator,RP-ROLE-33-3
+ROLE-34-1,11,Asset Management Director,RP-ROLE-34-1
+ROLE-34-2,11,Facilities Manager,RP-ROLE-34-2
+ROLE-34-3,11,Maintenance Planner,RP-ROLE-34-3
+ROLE-35-1,01,Chief Legal & Risk Officer,RP-ROLE-35-1
+ROLE-35-2,01,Enterprise Risk Manager,RP-ROLE-35-2
+ROLE-35-3,01,Compliance Analyst,RP-ROLE-35-3
+ROLE-36-1,14,Chief Data Officer,RP-ROLE-36-1
+ROLE-36-2,14,BI Analytics Lead,RP-ROLE-36-2
+ROLE-36-3,14,BI Analyst,RP-ROLE-36-3
+ROLE-37-1,14,Chief AI Officer,RP-ROLE-37-1
+ROLE-37-2,14,Agent Operations Lead,RP-ROLE-37-2
+ROLE-37-3,14,AI Evaluation Engineer,RP-ROLE-37-3
+ROLE-38-1,14,Business Process Director,RP-ROLE-38-1
+ROLE-38-2,14,Workflow Architect,RP-ROLE-38-2
+ROLE-38-3,14,Automation Specialist,RP-ROLE-38-3
+ROLE-39-1,14,Chief Integration Officer,RP-ROLE-39-1
+ROLE-39-2,14,Integration Architect,RP-ROLE-39-2
+ROLE-39-3,14,Data Migration Engineer,RP-ROLE-39-3
+ROLE-40-1,14,Chief Technology Officer,RP-ROLE-40-1
+ROLE-40-2,14,Platform Reliability Manager,RP-ROLE-40-2
+ROLE-40-3,14,Platform Operations Engineer,RP-ROLE-40-3
+T4-R001,01,Board Secretariat Officer,RP-T4-R001
+T4-R002,01,Committee Agenda Coordinator,RP-T4-R002
+T4-R003,01,Shareholder Registry Officer,RP-T4-R003
+T4-R004,01,General Assembly Voting Auditor,RP-T4-R004
+T4-R005,01,Board Governance Counsel,RP-T4-R005
+T4-R006,01,Director Independence Analyst,RP-T4-R006
+T4-R007,01,Board Resolution Tracker,RP-T4-R007
+T4-R008,01,Executive Chief of Staff,RP-T4-R008
+T4-R009,01,Group Performance Analyst,RP-T4-R009
+T4-R010,01,Regional Executive Coordinator,RP-T4-R010
+T4-R011,01,Executive Operations Analyst,RP-T4-R011
+T4-R012,01,Corporate Policy Custodian,RP-T4-R012
+T4-R013,01,Group Delegation Controller,RP-T4-R013
+T4-R014,01,Committee Risk Secretary,RP-T4-R014
+T4-R015,01,Internal Audit Planning Manager,RP-T4-R015
+T4-R016,01,Internal Audit Field Lead,RP-T4-R016
+T4-R017,01,Internal Audit Data Analyst,RP-T4-R017
+T4-R018,01,Internal Audit Remediation Officer,RP-T4-R018
+T4-R019,01,Group Ethics Officer,RP-T4-R019
+T4-R020,01,Conflict of Interest Reviewer,RP-T4-R020
+T4-R021,01,Related Party Transaction Reviewer,RP-T4-R021
+T4-R022,01,Board Investment Secretariat,RP-T4-R022
+T4-R023,01,Group Assurance Director,RP-T4-R023
+T4-R024,01,Executive Communications Officer,RP-T4-R024
+T4-R025,01,Governance Records Archivist,RP-T4-R025
+T4-R026,01,Subsidiary Governance Officer,RP-T4-R026
+T4-R027,01,Corporate Compliance Monitoring Analyst,RP-T4-R027
+T4-R028,01,Group Risk Reporting Officer,RP-T4-R028
+T4-R029,01,Executive KPI Assurance Reviewer,RP-T4-R029
+T4-R030,01,Board Decision Evidence Analyst,RP-T4-R030
+T4-R031,02,M&A Origination Analyst,RP-T4-R031
+T4-R032,02,M&A Financial Due Diligence Lead,RP-T4-R032
+T4-R033,02,M&A Legal Due Diligence Coordinator,RP-T4-R033
+T4-R034,02,M&A Technical Due Diligence Engineer,RP-T4-R034
+T4-R035,02,Post Merger Integration Manager,RP-T4-R035
+T4-R036,02,Corporate Portfolio Analyst,RP-T4-R036
+T4-R037,02,Strategic Scenario Economist,RP-T4-R037
+T4-R038,02,Country Entry Analyst,RP-T4-R038
+T4-R039,02,PPP Bid Investment Analyst,RP-T4-R039
+T4-R040,02,BOT Concession Finance Analyst,RP-T4-R040
+T4-R041,02,PPP Performance Monitoring Officer,RP-T4-R041
+T4-R042,02,Infrastructure Investment Director,RP-T4-R042
+T4-R043,02,JV Formation Counsel,RP-T4-R043
+T4-R044,02,Consortium Interface Manager,RP-T4-R044
+T4-R045,02,JV Equity Accounting Liaison,RP-T4-R045
+T4-R046,02,JV Commercial Analyst,RP-T4-R046
+T4-R047,02,JV Partner Performance Analyst,RP-T4-R047
+T4-R048,02,Corporate Restructuring Analyst,RP-T4-R048
+T4-R049,02,Divestment Transaction Analyst,RP-T4-R049
+T4-R050,02,Investment Committee Financial Reviewer,RP-T4-R050
+T4-R051,02,Corporate Valuation Specialist,RP-T4-R051
+T4-R052,02,Strategic Partnership Officer,RP-T4-R052
+T4-R053,02,Concession Lifecycle Analyst,RP-T4-R053
+T4-R054,02,Country Political Risk Analyst,RP-T4-R054
+T4-R055,02,Strategic Procurement Alliance Analyst,RP-T4-R055
+T4-R056,02,Acquisition Integration Data Lead,RP-T4-R056
+T4-R057,02,Portfolio Benefits Controller,RP-T4-R057
+T4-R058,02,Investment Covenant Monitor,RP-T4-R058
+T4-R059,02,Corporate Development Researcher,RP-T4-R059
+T4-R060,02,Strategic Exit Planning Analyst,RP-T4-R060
+T4-R061,03,Regional Market Intelligence Analyst,RP-T4-R061
+T4-R062,03,Country Opportunity Scout,RP-T4-R062
+T4-R063,03,Client Account Researcher,RP-T4-R063
+T4-R064,03,Key Account Relationship Manager,RP-T4-R064
+T4-R065,03,CRM Data Steward,RP-T4-R065
+T4-R066,03,Prequalification Civil Coordinator,RP-T4-R066
+T4-R067,03,Prequalification MEP Coordinator,RP-T4-R067
+T4-R068,03,Prequalification Infrastructure Coordinator,RP-T4-R068
+T4-R069,03,Prequalification Industrial Coordinator,RP-T4-R069
+T4-R070,03,Prequalification Financial Analyst,RP-T4-R070
+T4-R071,03,Prequalification HSE Analyst,RP-T4-R071
+T4-R072,03,Prequalification Quality Analyst,RP-T4-R072
+T4-R073,03,Bid Opportunity Screening Officer,RP-T4-R073
+T4-R074,03,Go No Go Secretariat,RP-T4-R074
+T4-R075,03,Client Workshop Facilitator,RP-T4-R075
+T4-R076,03,Market Pricing Research Analyst,RP-T4-R076
+T4-R077,03,Competitor Intelligence Analyst,RP-T4-R077
+T4-R078,03,Proposal Capture Manager,RP-T4-R078
+T4-R079,03,Government Client Liaison,RP-T4-R079
+T4-R080,03,Private Developer Account Manager,RP-T4-R080
+T4-R081,03,Consultant Relationship Coordinator,RP-T4-R081
+T4-R082,03,Partner Qualification Analyst,RP-T4-R082
+T4-R083,03,Client Feedback Analyst,RP-T4-R083
+T4-R084,03,Marketing Credentials Writer,RP-T4-R084
+T4-R085,03,Project Reference Librarian,RP-T4-R085
+T4-R086,03,International Registration Coordinator,RP-T4-R086
+T4-R087,03,Lead Conversion Analyst,RP-T4-R087
+T4-R088,03,Sales Forecast Analyst,RP-T4-R088
+T4-R089,03,Bid Calendar Controller,RP-T4-R089
+T4-R090,03,Client Satisfaction Coordinator,RP-T4-R090
+T4-R091,04,Civil Quantity Surveyor Tender,RP-T4-R091
+T4-R092,04,Architectural Quantity Surveyor Tender,RP-T4-R092
+T4-R093,04,MEP Quantity Surveyor Tender,RP-T4-R093
+T4-R094,04,Infrastructure Quantity Surveyor Tender,RP-T4-R094
+T4-R095,04,Marine Quantity Surveyor Tender,RP-T4-R095
+T4-R096,04,Steelwork Quantity Surveyor Tender,RP-T4-R096
+T4-R097,04,Geotechnical Estimator,RP-T4-R097
+T4-R098,04,Civil Cost Estimator,RP-T4-R098
+T4-R099,04,Architectural Cost Estimator,RP-T4-R099
+T4-R100,04,Mechanical Cost Estimator,RP-T4-R100
+T4-R101,04,Electrical Cost Estimator,RP-T4-R101
+T4-R102,04,Infrastructure Cost Estimator,RP-T4-R102
+T4-R103,04,Marine Cost Estimator,RP-T4-R103
+T4-R104,04,Industrial Cost Estimator,RP-T4-R104
+T4-R105,04,Tender Planning Engineer,RP-T4-R105
+T4-R106,04,Tender Procurement Engineer,RP-T4-R106
+T4-R107,04,Tender Subcontract Analyst,RP-T4-R107
+T4-R108,04,Tender Risk Quantifier,RP-T4-R108
+T4-R109,04,Tender Document Controller,RP-T4-R109
+T4-R110,04,Tender Compliance Reviewer,RP-T4-R110
+T4-R111,04,Value Engineering Civil Engineer,RP-T4-R111
+T4-R112,04,Value Engineering MEP Engineer,RP-T4-R112
+T4-R113,04,Value Engineering Architect,RP-T4-R113
+T4-R114,04,Bid Cash Flow Analyst,RP-T4-R114
+T4-R115,04,Bid Insurance Analyst,RP-T4-R115
+T4-R116,04,Bid Bond Coordinator,RP-T4-R116
+T4-R117,04,Proposal Technical Writer,RP-T4-R117
+T4-R118,04,Tender Rate Database Steward,RP-T4-R118
+T4-R119,04,Tender Arithmetic Reviewer,RP-T4-R119
+T4-R120,04,Tender Handover Coordinator,RP-T4-R120
+T4-R121,05,FIDIC Contract Administrator,RP-T4-R121
+T4-R122,05,NEC Contract Administrator,RP-T4-R122
+T4-R123,05,JCT Contract Administrator,RP-T4-R123
+T4-R124,05,Forensic Delay Engineer,RP-T4-R124
+T4-R125,05,Claims Quantum Engineer,RP-T4-R125
+T4-R126,05,Claims Entitlement Analyst,RP-T4-R126
+T4-R127,05,Extension of Time Coordinator,RP-T4-R127
+T4-R128,05,Disruption Analysis Engineer,RP-T4-R128
+T4-R129,05,Variation Order Engineer,RP-T4-R129
+T4-R130,05,Civil Postcontract QS,RP-T4-R130
+T4-R131,05,Architectural Postcontract QS,RP-T4-R131
+T4-R132,05,MEP Postcontract QS,RP-T4-R132
+T4-R133,05,Infrastructure Postcontract QS,RP-T4-R133
+T4-R134,05,Subcontract Commercial Manager,RP-T4-R134
+T4-R135,05,Subcontract Payment Surveyor,RP-T4-R135
+T4-R136,05,Main Contract Payment Surveyor,RP-T4-R136
+T4-R137,05,Final Account Surveyor,RP-T4-R137
+T4-R138,05,Retention Release Officer,RP-T4-R138
+T4-R139,05,Commercial Correspondence Controller,RP-T4-R139
+T4-R140,05,Contract Obligation Analyst,RP-T4-R140
+T4-R141,05,Contract Risk Reviewer,RP-T4-R141
+T4-R142,05,Contract Change Register Controller,RP-T4-R142
+T4-R143,05,International Arbitration Case Manager,RP-T4-R143
+T4-R144,05,Dispute Evidence Archivist,RP-T4-R144
+T4-R145,05,Settlement Financial Analyst,RP-T4-R145
+T4-R146,05,Commercial Forecast Analyst,RP-T4-R146
+T4-R147,05,Contract Insurance Coordinator,RP-T4-R147
+T4-R148,05,Contract Guarantee Administrator,RP-T4-R148
+T4-R149,05,Contract Closeout Manager,RP-T4-R149
+T4-R150,05,Commercial Compliance Auditor,RP-T4-R150
+T4-R151,06,Geotechnical Investigation Engineer,RP-T4-R151
+T4-R152,06,Geotechnical Foundation Engineer,RP-T4-R152
+T4-R153,06,Tunnel Geotechnical Engineer,RP-T4-R153
+T4-R154,06,Structural Concrete Design Engineer,RP-T4-R154
+T4-R155,06,Structural Steel Design Engineer,RP-T4-R155
+T4-R156,06,Bridge Structural Engineer,RP-T4-R156
+T4-R157,06,Marine Structural Engineer,RP-T4-R157
+T4-R158,06,Highway Geometric Design Engineer,RP-T4-R158
+T4-R159,06,Pavement Design Engineer,RP-T4-R159
+T4-R160,06,Drainage Infrastructure Engineer,RP-T4-R160
+T4-R161,06,Water Network Engineer,RP-T4-R161
+T4-R162,06,Wastewater Network Engineer,RP-T4-R162
+T4-R163,06,Substation Electrical Engineer,RP-T4-R163
+T4-R164,06,Electrical Power Systems Engineer,RP-T4-R164
+T4-R165,06,Lighting Design Engineer,RP-T4-R165
+T4-R166,06,ELV Systems Engineer,RP-T4-R166
+T4-R167,06,HVAC Design Engineer,RP-T4-R167
+T4-R168,06,Plumbing Design Engineer,RP-T4-R168
+T4-R169,06,Fire Protection Design Engineer,RP-T4-R169
+T4-R170,06,Architectural Concept Designer,RP-T4-R170
+T4-R171,06,Architectural Detail Designer,RP-T4-R171
+T4-R172,06,Healthcare Planning Architect,RP-T4-R172
+T4-R173,06,Facade Consulting Engineer,RP-T4-R173
+T4-R174,06,Acoustic Consulting Engineer,RP-T4-R174
+T4-R175,06,BIM VDC 4D Coordinator,RP-T4-R175
+T4-R176,06,BIM VDC 5D Coordinator,RP-T4-R176
+T4-R177,06,BIM VDC 6D Coordinator,RP-T4-R177
+T4-R178,06,Geospatial Engineering Specialist,RP-T4-R178
+T4-R179,06,Engineering Design Checker,RP-T4-R179
+T4-R180,06,Engineering Interface Coordinator,RP-T4-R180
+T4-R181,07,Civil Shop Drawing Engineer,RP-T4-R181
+T4-R182,07,Architectural Shop Drawing Engineer,RP-T4-R182
+T4-R183,07,Steel Shop Drawing Engineer,RP-T4-R183
+T4-R184,07,Mechanical Shop Drawing Engineer,RP-T4-R184
+T4-R185,07,Electrical Shop Drawing Engineer,RP-T4-R185
+T4-R186,07,Plumbing Shop Drawing Engineer,RP-T4-R186
+T4-R187,07,Infrastructure Shop Drawing Engineer,RP-T4-R187
+T4-R188,07,Facade Shop Drawing Engineer,RP-T4-R188
+T4-R189,07,Civil As Built Engineer,RP-T4-R189
+T4-R190,07,MEP As Built Engineer,RP-T4-R190
+T4-R191,07,Architectural As Built Engineer,RP-T4-R191
+T4-R192,07,RFI Coordinator Civil,RP-T4-R192
+T4-R193,07,RFI Coordinator MEP,RP-T4-R193
+T4-R194,07,Material Submittal Engineer Civil,RP-T4-R194
+T4-R195,07,Material Submittal Engineer Architectural,RP-T4-R195
+T4-R196,07,Material Submittal Engineer MEP,RP-T4-R196
+T4-R197,07,Method Statement Coordinator,RP-T4-R197
+T4-R198,07,Engineering Change Analyst,RP-T4-R198
+T4-R199,07,Drawing Revision Controller,RP-T4-R199
+T4-R200,07,Technical Document Controller,RP-T4-R200
+T4-R201,07,BIM Model Federation Coordinator,RP-T4-R201
+T4-R202,07,BIM Clash Resolution Coordinator,RP-T4-R202
+T4-R203,07,Digital Handover Coordinator,RP-T4-R203
+T4-R204,07,Technical Specifications Engineer,RP-T4-R204
+T4-R205,07,Site Technical Query Engineer,RP-T4-R205
+T4-R206,07,Technical Interface Scheduler,RP-T4-R206
+T4-R207,07,Technical Compliance Reviewer,RP-T4-R207
+T4-R208,07,Design Freeze Coordinator,RP-T4-R208
+T4-R209,07,Technical Procurement Liaison,RP-T4-R209
+T4-R210,07,CAD Standards Coordinator,RP-T4-R210
+T4-R211,08,Portfolio Scheduling Manager,RP-T4-R211
+T4-R212,08,Civil Planning Engineer,RP-T4-R212
+T4-R213,08,MEP Planning Engineer,RP-T4-R213
+T4-R214,08,Infrastructure Planning Engineer,RP-T4-R214
+T4-R215,08,Industrial Planning Engineer,RP-T4-R215
+T4-R216,08,CPM Schedule Analyst,RP-T4-R216
+T4-R217,08,Baseline Schedule Controller,RP-T4-R217
+T4-R218,08,Progress Measurement Engineer,RP-T4-R218
+T4-R219,08,Lookahead Planning Coordinator,RP-T4-R219
+T4-R220,08,Resource Loading Engineer,RP-T4-R220
+T4-R221,08,Schedule Risk Analyst,RP-T4-R221
+T4-R222,08,Forensic Schedule Reviewer,RP-T4-R222
+T4-R223,08,4D Simulation Engineer,RP-T4-R223
+T4-R224,08,5D Cost Schedule Analyst,RP-T4-R224
+T4-R225,08,Earned Value Analyst,RP-T4-R225
+T4-R226,08,Project Controls Data Steward,RP-T4-R226
+T4-R227,08,Programme Interface Planner,RP-T4-R227
+T4-R228,08,Project Reporting Analyst,RP-T4-R228
+T4-R229,08,PMO Standards Officer,RP-T4-R229
+T4-R230,08,Project Risk Register Coordinator,RP-T4-R230
+T4-R231,08,Change Control Board Secretary,RP-T4-R231
+T4-R232,08,Project Recovery Planning Engineer,RP-T4-R232
+T4-R233,08,Commissioning Planning Engineer,RP-T4-R233
+T4-R234,08,Project Mobilization Planner,RP-T4-R234
+T4-R235,08,Project Closeout Planner,RP-T4-R235
+T4-R236,08,Productivity Controls Engineer,RP-T4-R236
+T4-R237,08,Schedule Assurance Auditor,RP-T4-R237
+T4-R238,08,Portfolio Capacity Analyst,RP-T4-R238
+T4-R239,08,Project Benefits Analyst,RP-T4-R239
+T4-R240,08,PMO Dashboard QA Analyst,RP-T4-R240
+T4-R241,09,Civil Site Engineer,RP-T4-R241
+T4-R242,09,Architectural Site Engineer,RP-T4-R242
+T4-R243,09,Mechanical Site Engineer,RP-T4-R243
+T4-R244,09,Electrical Site Engineer,RP-T4-R244
+T4-R245,09,Infrastructure Site Engineer,RP-T4-R245
+T4-R246,09,Marine Site Engineer,RP-T4-R246
+T4-R247,09,Earthworks Superintendent,RP-T4-R247
+T4-R248,09,Concrete Works Superintendent,RP-T4-R248
+T4-R249,09,Steel Erection Superintendent,RP-T4-R249
+T4-R250,09,Finishing Superintendent,RP-T4-R250
+T4-R251,09,Civil General Foreman,RP-T4-R251
+T4-R252,09,MEP General Foreman,RP-T4-R252
+T4-R253,09,Subcontractor Site Coordinator,RP-T4-R253
+T4-R254,09,Site Survey Technician,RP-T4-R254
+T4-R255,09,Concrete QA QC Inspector,RP-T4-R255
+T4-R256,09,Welding QA QC Inspector,RP-T4-R256
+T4-R257,09,Electrical QA QC Inspector,RP-T4-R257
+T4-R258,09,Mechanical QA QC Inspector,RP-T4-R258
+T4-R259,09,Architectural QA QC Inspector,RP-T4-R259
+T4-R260,09,Testing Laboratory Coordinator,RP-T4-R260
+T4-R261,09,Nonconformance Control Officer,RP-T4-R261
+T4-R262,09,Site HSE Officer,RP-T4-R262
+T4-R263,09,Environmental Compliance Officer,RP-T4-R263
+T4-R264,09,ESG Site Reporting Analyst,RP-T4-R264
+T4-R265,09,Incident Investigation Coordinator,RP-T4-R265
+T4-R266,09,Site Permit Records Coordinator,RP-T4-R266
+T4-R267,09,Commissioning Records Engineer,RP-T4-R267
+T4-R268,09,Field Logistics Coordinator,RP-T4-R268
+T4-R269,09,Site Daily Report Clerk,RP-T4-R269
+T4-R270,09,Site Handover Inspector,RP-T4-R270
+T4-R271,10,Strategic Category Manager Steel,RP-T4-R271
+T4-R272,10,Strategic Category Manager Cement,RP-T4-R272
+T4-R273,10,Strategic Category Manager MEP,RP-T4-R273
+T4-R274,10,Strategic Category Manager Finishes,RP-T4-R274
+T4-R275,10,Civil Procurement Engineer,RP-T4-R275
+T4-R276,10,MEP Procurement Engineer,RP-T4-R276
+T4-R277,10,Architectural Procurement Engineer,RP-T4-R277
+T4-R278,10,International Sourcing Analyst,RP-T4-R278
+T4-R279,10,Supplier Qualification Auditor,RP-T4-R279
+T4-R280,10,Supplier Performance Analyst,RP-T4-R280
+T4-R281,10,Procurement Tender Officer,RP-T4-R281
+T4-R282,10,Purchase Order Administrator,RP-T4-R282
+T4-R283,10,Expediting Engineer,RP-T4-R283
+T4-R284,10,International Freight Expediter,RP-T4-R284
+T4-R285,10,Customs Clearance Officer,RP-T4-R285
+T4-R286,10,Customs Classification Analyst,RP-T4-R286
+T4-R287,10,Import Export Compliance Coordinator,RP-T4-R287
+T4-R288,10,Logistics Cost Analyst,RP-T4-R288
+T4-R289,10,Central Warehouse Manager,RP-T4-R289
+T4-R290,10,Warehouse Inventory Controller,RP-T4-R290
+T4-R291,10,Warehouse Receiving Clerk,RP-T4-R291
+T4-R292,10,Warehouse Dispatch Clerk,RP-T4-R292
+T4-R293,10,Materials Reservation Coordinator,RP-T4-R293
+T4-R294,10,Material Traceability Officer,RP-T4-R294
+T4-R295,10,Inventory Replenishment Analyst,RP-T4-R295
+T4-R296,10,Intercompany Transfer Coordinator,RP-T4-R296
+T4-R297,10,Procurement Contract Analyst,RP-T4-R297
+T4-R298,10,Supplier Invoice Matching Clerk,RP-T4-R298
+T4-R299,10,Reverse Logistics Coordinator,RP-T4-R299
+T4-R300,10,Supply Chain Risk Analyst,RP-T4-R300
+T4-R301,11,Heavy Equipment Fleet Manager,RP-T4-R301
+T4-R302,11,Fleet Maintenance Planner,RP-T4-R302
+T4-R303,11,Fleet Reliability Analyst,RP-T4-R303
+T4-R304,11,Fleet Asset Register Controller,RP-T4-R304
+T4-R305,11,Fleet Dispatch Coordinator,RP-T4-R305
+T4-R306,11,Equipment Fuel Analyst,RP-T4-R306
+T4-R307,11,Equipment Cost Controller,RP-T4-R307
+T4-R308,11,Fleet Spare Parts Planner,RP-T4-R308
+T4-R309,11,Equipment Inspection Records Officer,RP-T4-R309
+T4-R310,11,Workshop Service Coordinator,RP-T4-R310
+T4-R311,11,Precast Factory Manager,RP-T4-R311
+T4-R312,11,Precast Production Planner,RP-T4-R312
+T4-R313,11,Precast Quality Records Inspector,RP-T4-R313
+T4-R314,11,Precast Mold Register Coordinator,RP-T4-R314
+T4-R315,11,Concrete Batching Plant Manager,RP-T4-R315
+T4-R316,11,Batching Plant Production Scheduler,RP-T4-R316
+T4-R317,11,Batching Plant Quality Analyst,RP-T4-R317
+T4-R318,11,Batching Plant Dispatch Clerk,RP-T4-R318
+T4-R319,11,Asphalt Plant Manager,RP-T4-R319
+T4-R320,11,Asphalt Quality Records Analyst,RP-T4-R320
+T4-R321,11,Steel Fabrication Factory Manager,RP-T4-R321
+T4-R322,11,Steel Fabrication Production Planner,RP-T4-R322
+T4-R323,11,Steel Fabrication Traceability Clerk,RP-T4-R323
+T4-R324,11,Factory Inventory Controller,RP-T4-R324
+T4-R325,11,Industrial Maintenance Engineer,RP-T4-R325
+T4-R326,11,Industrial Energy Analyst,RP-T4-R326
+T4-R327,11,Plant Production Cost Analyst,RP-T4-R327
+T4-R328,11,Factory Quality Assurance Engineer,RP-T4-R328
+T4-R329,11,Plant Safety Records Coordinator,RP-T4-R329
+T4-R330,11,Industrial Capacity Analyst,RP-T4-R330
+T4-R331,12,International Tax Specialist,RP-T4-R331
+T4-R332,12,Transfer Pricing Specialist,RP-T4-R332
+T4-R333,12,Egypt VAT Compliance Specialist,RP-T4-R333
+T4-R334,12,Saudi ZATCA Compliance Specialist,RP-T4-R334
+T4-R335,12,UAE Corporate Tax Specialist,RP-T4-R335
+T4-R336,12,EU VAT Compliance Specialist,RP-T4-R336
+T4-R337,12,US State Sales Tax Specialist,RP-T4-R337
+T4-R338,12,Tax Data Governance Officer,RP-T4-R338
+T4-R339,12,Treasury Cash Manager,RP-T4-R339
+T4-R340,12,Foreign Exchange Treasury Analyst,RP-T4-R340
+T4-R341,12,Letter of Credit Officer,RP-T4-R341
+T4-R342,12,Letter of Guarantee Officer,RP-T4-R342
+T4-R343,12,Bank Reconciliation Accountant,RP-T4-R343
+T4-R344,12,Accounts Payable Accountant,RP-T4-R344
+T4-R345,12,Accounts Receivable Accountant,RP-T4-R345
+T4-R346,12,Project Cost Controller Civil,RP-T4-R346
+T4-R347,12,Project Cost Controller MEP,RP-T4-R347
+T4-R348,12,Project Cost Controller Infra,RP-T4-R348
+T4-R349,12,EVM Financial Analyst,RP-T4-R349
+T4-R350,12,Fixed Asset Accountant,RP-T4-R350
+T4-R351,12,IFRS Consolidation Specialist,RP-T4-R351
+T4-R352,12,Intercompany Reconciliation Analyst,RP-T4-R352
+T4-R353,12,Financial Reporting Controller,RP-T4-R353
+T4-R354,12,Budgeting and Forecast Analyst,RP-T4-R354
+T4-R355,12,Revenue Recognition Accountant,RP-T4-R355
+T4-R356,12,Project Cash Flow Analyst,RP-T4-R356
+T4-R357,12,Payroll Finance Reconciliation Accountant,RP-T4-R357
+T4-R358,12,Finance Controls Auditor,RP-T4-R358
+T4-R359,12,Country Statutory Reporting Accountant,RP-T4-R359
+T4-R360,13,Global Workforce Planning Analyst,RP-T4-R360
+T4-R361,13,Recruitment Civil Specialist,RP-T4-R361
+T4-R362,13,Recruitment MEP Specialist,RP-T4-R362
+T4-R363,13,Recruitment Industrial Specialist,RP-T4-R363
+T4-R364,13,Talent Acquisition Coordinator,RP-T4-R364
+T4-R365,13,Expat Mobility Specialist,RP-T4-R365
+T4-R366,13,Immigration Compliance Coordinator,RP-T4-R366
+T4-R367,13,International Assignment Tax Liaison,RP-T4-R367
+T4-R368,13,Relocation Case Coordinator,RP-T4-R368
+T4-R369,13,Multi Country Payroll Specialist,RP-T4-R369
+T4-R370,13,Egypt Payroll Specialist,RP-T4-R370
+T4-R371,13,Saudi Payroll Specialist,RP-T4-R371
+T4-R372,13,UAE Payroll Specialist,RP-T4-R372
+T4-R373,13,Site Payroll Clerk,RP-T4-R373
+T4-R374,13,Time Attendance Controller,RP-T4-R374
+T4-R375,13,Biometric Privacy Officer,RP-T4-R375
+T4-R376,13,Site Workforce Coordinator,RP-T4-R376
+T4-R377,13,Training Competency Coordinator,RP-T4-R377
+T4-R378,13,Technical Training Administrator,RP-T4-R378
+T4-R379,13,Performance Management Analyst,RP-T4-R379
+T4-R380,13,Compensation Benchmark Analyst,RP-T4-R380
+T4-R381,13,Benefits Administration Officer,RP-T4-R381
+T4-R382,13,Employee Relations Case Officer,RP-T4-R382
+T4-R383,13,Labor Compliance Officer,RP-T4-R383
+T4-R384,13,HR Data Privacy Analyst,RP-T4-R384
+T4-R385,13,Succession Planning Analyst,RP-T4-R385
+T4-R386,13,HR Business Partner Project,RP-T4-R386
+T4-R387,13,HR Shared Services Officer,RP-T4-R387
+T4-R388,13,Workforce Demobilization Coordinator,RP-T4-R388
+T4-R389,14,Enterprise Solution Architect,RP-T4-R389
+T4-R390,14,Data Platform Engineer,RP-T4-R390
+T4-R391,14,Database Reliability Engineer,RP-T4-R391
+T4-R392,14,PostgreSQL RLS Engineer,RP-T4-R392
+T4-R393,14,Identity Access Engineer,RP-T4-R393
+T4-R394,14,SOC Tier One Analyst,RP-T4-R394
+T4-R395,14,SOC Tier Two Analyst,RP-T4-R395
+T4-R396,14,SOC Detection Engineer,RP-T4-R396
+T4-R397,14,Cyber Incident Response Coordinator,RP-T4-R397
+T4-R398,14,Cloud Security Engineer,RP-T4-R398
+T4-R399,14,Application Security Engineer,RP-T4-R399
+T4-R400,14,Security Architecture Reviewer,RP-T4-R400
+T4-R401,14,Security Compliance Analyst,RP-T4-R401
+T4-R402,14,Privacy Engineering Specialist,RP-T4-R402
+T4-R403,14,Cryptographic Key Custodian,RP-T4-R403
+T4-R404,14,Endpoint Management Engineer,RP-T4-R404
+T4-R405,14,Network Reliability Engineer,RP-T4-R405
+T4-R406,14,Site Connectivity Engineer,RP-T4-R406
+T4-R407,14,Offline Synchronization Engineer,RP-T4-R407
+T4-R408,14,DevSecOps Engineer,RP-T4-R408
+T4-R409,14,Software License Compliance Officer,RP-T4-R409
+T4-R410,14,AI Model Governance Officer,RP-T4-R410
+T4-R411,14,AI Agent Orchestration Engineer,RP-T4-R411
+T4-R412,14,AI Evaluation Analyst,RP-T4-R412
+T4-R413,14,AI Data Steward,RP-T4-R413
+T4-R414,14,MLOps Engineer,RP-T4-R414
+T4-R415,14,Quality Automation Engineer,RP-T4-R415
+T4-R416,14,Disaster Recovery Coordinator,RP-T4-R416
+T4-R417,14,Service Desk Escalation Lead,RP-T4-R417
+T4-R418,14,IT Asset Configuration Analyst,RP-T4-R418
