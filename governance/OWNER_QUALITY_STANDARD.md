@@ -26,3 +26,8 @@ PG 16/17) before any claim.
 ## Honesty clause
 A claim of "no error" is made only to the extent the evidence covers it; any residual uncertainty is written in the
 deliverable, never hidden.
+
+## Owner rule added 2026-11-26 (verbatim): "no mistakes no mistakes no mistakes, need full brain power. Do not provide unverified results or information that hasn't been thoroughly reviewed by you."
+Applied as: nothing is reported to the owner - in chat or in a document - unless it was checked against its source
+(code, gate output, file, official reference) in the same session; counts are computed, never estimated; a figure that
+groups several items says so; any result found wrong afterwards is corrected openly in the next message and in the record.
