@@ -1,0 +1,106 @@
+"""Source category -> MARC directory trade codes (CC-107). A category gets every trade whose rule matches; rules are
+ordered regular expressions on the normalised category text (lower case, '_' and '-' and '&' as spaces).
+Every source category used by the loader must map to at least one trade (checked by load_directory.py)."""
+import re
+
+RULES = [
+    (r'\bmarble|granite|\bstones?\b', ['marble_granite']),
+    (r'ceramic|porcelain|(?<!interlock )\btiles?\b(?!.*roof)|tile (glue|grout|trim)', ['ceramic_porcelain']),
+    (r'interlock|\bbricks?\b|\bblocks?\b(?! valve)', ['blocks_bricks']),
+    (r'\broof', ['cladding_facades']),
+    (r'bathroom|sanitary ware|washroom', ['sanitary_ware']),
+    (r'floor|parquet|vinyl|linoleum|raised access|spc ', ['flooring']),
+    (r'ceiling(?! lights)|partition', ['ceilings_partitions']),
+    (r'automatic doors|garage doors|\bgates?\b(?! valves?)', ['automatic_doors']),
+    (r'door|window|shutter', ['doors_windows']),
+    (r'(?<!fiber)glass|glazing|mirror', ['glass_glazing']),
+    (r'kitchen cabinet', ['kitchens']),
+    (r'joinery|carpent|wood(?! ?(coating|working tools))|furniture', ['joinery_carpentry']),
+    (r'plywood|timber|multiwood', ['timber_plywood']),
+    (r'cladding|facade|sandwich panel|insulated panels', ['cladding_facades']),
+    (r'interior|decor|fit ?out|exhibition', ['interior_design_fitout']),
+    (r'(?<!air )curtain|carpet|wall ?paper|rugs', ['curtains_wallpaper']),
+    (r'air ?condition|hvac|ventilat|air curtain|heat pump|heating|boiler', ['hvac']),
+    (r'chiller|refrigerat|cooling|cold storage|freez|water cooler', ['chillers_cooling']),
+    (r'\bduct', ['ducts']),
+    (r'plumb', ['plumbing']),
+    (r'pipe(?!line)|(?<!glass )fitting|hdpe|ppr|\bpvc\b(?! flooring)|upvc pipes', ['pipes_fittings']),
+    (r'valve|water hammer', ['valves']),
+    (r'pump', ['pumps']),
+    (r'fire alarm', ['fire_alarm']),
+    (r'fire(?! alarm)|sprinkler', ['fire_fighting']),
+    (r'water (treat|purif|filter|heater)|purification|waste water|water tank|grp water|storage tank|pressure tank|stainless steel tanks|\btanks?\b(?!er)|mixing tank|water pumps', ['water_treatment_tanks']),
+    (r'\bgas\b', ['gas']),
+    (r'electrical contractor|electrical works|electrical service', ['electrical_contractors']),
+    (r'electromechanical|\bmep\b', ['mep_contractors']),
+    (r'cable|(?<!nails )wires?|conduit', ['cables_wires']),
+    (r'switch|circuit breaker|(?<!solar )(?<!sandwich )panel(?!s and doors)|socket|board|power protection', ['switchgear_panels']),
+    (r'transformer|stabili[sz]er', ['transformers']),
+    (r'light(?!ning)|\blamps?\b|\bled\b|chandelier|beacon', ['lighting']),
+    (r'generator|\bups\b', ['generators_ups']),
+    (r'earthing|lightning', ['earthing_lightning']),
+    (r'solar', ['solar_energy']),
+    (r'electric motor|^motors?$', ['electric_motors']),
+    (r'electrical (supplies|equipment|goods|tools|connectors)|electric(al)? supplies|electronic', ['electrical_supplies']),
+    (r'elevator|escalator|passenger lifts|lifts and escalators', ['elevators_escalators']),
+    (r'cctv|surveillance|camera|security|alarm systems', ['cctv_security']),
+    (r'access control|intercom', ['access_control']),
+    (r'network', ['networks_cabling']),
+    (r'audio|visual', ['audio_visual']),
+    (r'automation', ['building_automation']),
+    (r'road|pavement|asphalt|parking safety', ['roads_asphalt']),
+    (r'sewer|drainage|sanitary treatment', ['water_sewer_networks']),
+    (r'pipeline', ['pipelines']),
+    (r'dewater', ['dewatering']),
+    (r'landscap|irrigation|garden', ['landscaping_irrigation']),
+    (r'swimming pool', ['swimming_pools']),
+    (r'construction (equipment|machinery)|^machinery|machinery (repair|spare)|earth ?moving|concrete pump|industrial equipment', ['construction_equipment']),
+    (r'crane|lifting|rigging|material handling', ['cranes_lifting']),
+    (r'rental|\bhire\b', ['equipment_rental']),
+    (r'tools?\b|welding|instruments$', ['tools']),
+    (r'safety(?! switch)', ['safety_equipment']),
+    (r'testing|measure|calibration|surveying instruments|surveying equipment|flow measurement', ['testing_instruments']),
+    (r'compressor|hydraulic|pneumatic', ['compressors_hydraulics']),
+    (r'architect', ['architects']),
+    (r'engineer|general consultants|civil consultants', ['engineering_consultants']),
+    (r'project management', ['project_management']),
+    (r'survey|\bgis\b|geographical', ['surveying_gis']),
+    (r'\biso\b|inspection|certification', ['inspection_testing']),
+    (r'general contractor|^construction$|construction services|tradesmen construction', ['general_contractors']),
+    (r'foundation', ['foundation_piling']),
+    (r'digging|excavat', ['excavation_earthworks']),
+    (r'builders|developers|^buildings$', ['builders_developers']),
+    (r'building maintenance|restoration|concrete (repairs|drilling)', ['building_maintenance']),
+    (r'prefab|portable', ['prefab_buildings']),
+    (r'scaffold|formwork', ['scaffolding_formwork']),
+    (r'cement', ['cement']),
+    (r'concrete(?! (pump|drilling|repairs))', ['concrete_precast']),
+    (r'\bsand\b(?! blasting)|aggregate|silica', ['sand_aggregates']),
+    (r'sand ?blast', ['paints_coatings']),
+    (r'chemical|adhesive|glue|anchoring|sealant', ['construction_chemicals']),
+    (r'insulat|water ?proof|fiberglass|\bfrp\b|\bgrp\b|thermal|geotextile|fireproofing|fire stopping', ['insulation_waterproofing']),
+    (r'gypsum', ['gypsum']),
+    (r'paint|coating', ['paints_coatings']),
+    (r'hardware|ironmongery|nails|door accessories', ['hardware_ironmongery']),
+    (r'building materials?$|construction material(?! testing)|decoration supplies|^building materials', ['building_materials_general']),
+    (r'rebar|iron and steel|steel bars|steel stock|steel plates|steel products|galvanized steel|^metals?$|metal stockholders', ['rebar_steel']),
+    (r'steel structure|structural steel|steel fabricat|metal works|sheet metal|stainless steel fabrication', ['structural_steel']),
+    (r'stainless', ['stainless_steel']),
+    (r'alumin', ['aluminium']),
+    (r'galvani|metal sheets?|metal|copper|lathing|forge|extruded products|rolled products', ['metal_works_general']),
+    (r'polyurethane', ['insulation_waterproofing']),
+    (r'wrought iron|forge iron', ['wrought_iron']),
+]
+_COMPILED = [(re.compile(p), codes) for p, codes in RULES]
+
+def norm(cat: str) -> str:
+    c = re.sub(r'-c\d+$', '', cat.strip().lower())
+    return re.sub(r'\s+', ' ', re.sub(r'[_&\-]+', ' ', c)).strip()
+
+def trades_for(cat: str) -> list[str]:
+    n = norm(cat); out = []
+    for rx, codes in _COMPILED:
+        if rx.search(n):
+            for c in codes:
+                if c not in out: out.append(c)
+    return out

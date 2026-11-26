@@ -46,6 +46,7 @@ const navGroups: { key: MessageKey; items: Item[] }[] = [
     { to: '/hse', key: 'nav.hse', icon: ShieldAlert, perms: ['hse'] }] },
   { key: 'nav.groupSupply', items: [
     { to: '/procurement', key: 'nav.procurement', icon: PackageCheck, perms: ['procurement'] },
+    { to: '/supplier-directory', key: 'nav.supplierDirectory', icon: Globe2, perms: ['vendors'] },
     { to: '/inventory', key: 'nav.inventory', icon: PackageCheck, perms: ['procurement'] },
     { to: '/assets', key: 'nav.assets', icon: Wrench, perms: ['assets'] }] },
   { key: 'nav.groupFinance', items: [

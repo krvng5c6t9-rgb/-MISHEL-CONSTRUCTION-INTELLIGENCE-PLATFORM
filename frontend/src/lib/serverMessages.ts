@@ -113,6 +113,10 @@ const EXACT: Record<string, string> = {
   // CC-090: verification screen.
   'Give one of: the QR text, the export number or the file fingerprint': 'أدخل واحدًا فقط: نص رمز QR أو رقم التصدير أو بصمة الملف',
   'No export of this company matches this file': 'لا يوجد تصدير لهذه الشركة يطابق هذا الملف',
+  // CC-107: supplier directory.
+  'Directory supplier not found': 'المورد غير موجود في الدليل',
+  'This directory supplier is already one of your vendors': 'هذا المورد ضمن مورديك بالفعل',
+  'A directory link is permanent': 'ربط المورد بالدليل دائم',
   // CC-099: analytics dashboards.
   'Unknown data source': 'مصدر بيانات غير معروف',
   'Dashboard not found or not yours': 'اللوحة غير موجودة أو ليست ملكك',

@@ -28,6 +28,7 @@ import { EInvoicing } from './pages/EInvoicing';
 import { Schedule } from './pages/Schedule';
 import { DataExchange } from './pages/DataExchange';
 import { Analytics } from './pages/Analytics';
+import { SupplierDirectory } from './pages/SupplierDirectory';
 import { SiteAttendance } from './pages/SiteAttendance';
 import { TenderStudy } from './pages/TenderStudy';
 import { Reports } from './pages/Reports';
@@ -98,6 +99,7 @@ export function App() {
             <Route path="executive-dashboard" element={<ExecutiveDashboard />} />
             <Route path="reports" element={<Reports />} />
             <Route path="analytics" element={<Analytics />} />
+            <Route path="supplier-directory" element={<SupplierDirectory />} />
             <Route path="portals" element={<Portals />} />
             <Route path="runtime-validation" element={<RuntimeValidation />} />
             <Route path="ai-platform" element={<AIPlatform />} />
